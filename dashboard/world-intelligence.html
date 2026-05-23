@@ -1,0 +1,717 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>v2.2 — World Risk Intelligence & Tech Radar</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.8.5/d3.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/topojson-client@3/dist/topojson.min.js"></script>
+<style>
+:root{--bg:#0f1117;--sid:#161b27;--card:#1c2233;--card2:#222940;--acc:#4f8ef7;--acc2:#7c5cfc;--grn:#22c55e;--red:#ef4444;--yel:#f59e0b;--org:#f97316;--cyn:#06b6d4;--txt:#e2e8f0;--mut:#64748b;--brd:#2d3748;--r:12px;}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{background:var(--bg);color:var(--txt);font-family:'Segoe UI',system-ui,sans-serif;display:flex;height:100vh;overflow:hidden;}
+/* SIDEBAR */
+#sb{width:220px;min-width:220px;background:var(--sid);border-right:1px solid var(--brd);display:flex;flex-direction:column;overflow-y:auto;}
+.logo{padding:18px 18px 12px;border-bottom:1px solid var(--brd);}
+.logo h2{font-size:13px;font-weight:700;color:var(--acc);}
+.logo p{font-size:10px;color:var(--mut);margin-top:2px;}
+.badge-row{display:flex;gap:4px;margin-top:6px;flex-wrap:wrap;}
+.badge{font-size:9px;font-weight:700;padding:2px 7px;border-radius:20px;}
+.badge.new{background:rgba(124,92,252,.15);color:var(--acc2);border:1px solid rgba(124,92,252,.3);}
+.badge.free{background:rgba(34,197,94,.15);color:var(--grn);border:1px solid rgba(34,197,94,.3);}
+nav a{display:flex;align-items:center;gap:9px;padding:10px 16px;font-size:12px;color:var(--mut);cursor:pointer;border-left:3px solid transparent;transition:.15s;text-decoration:none;}
+nav a:hover{background:rgba(79,142,247,.06);color:var(--txt);}
+nav a.active{color:var(--acc);background:rgba(79,142,247,.1);border-left-color:var(--acc);}
+.ns{font-size:9px;font-weight:700;color:var(--mut);letter-spacing:1px;padding:12px 16px 4px;text-transform:uppercase;}
+.sf{padding:14px 16px;border-top:1px solid var(--brd);font-size:10px;color:var(--mut);}
+.ld{width:6px;height:6px;background:var(--grn);border-radius:50%;display:inline-block;margin-right:4px;animation:pulse 2s infinite;}
+@keyframes pulse{0%,100%{opacity:1;}50%{opacity:.3;}}
+/* MAIN */
+#main{flex:1;display:flex;flex-direction:column;overflow:hidden;}
+.topbar{padding:12px 22px;border-bottom:1px solid var(--brd);display:flex;align-items:center;justify-content:space-between;background:var(--sid);flex-shrink:0;}
+.topbar h1{font-size:15px;font-weight:700;}
+.topbar-r{display:flex;align-items:center;gap:8px;}
+.tbadge{background:var(--card);border:1px solid var(--brd);border-radius:7px;padding:4px 11px;font-size:11px;color:var(--mut);}
+.back-btn{background:var(--acc2);border:none;color:#fff;border-radius:7px;padding:6px 13px;font-size:11px;cursor:pointer;font-weight:600;text-decoration:none;display:inline-block;}
+/* PAGES */
+.page{display:none;flex:1;overflow:hidden;}
+.page.active{display:flex;flex-direction:column;}
+.page-body{flex:1;overflow-y:auto;padding:18px 22px;}
+/* KPI */
+.krow{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:18px;}
+.kpi{background:var(--card);border:1px solid var(--brd);border-radius:var(--r);padding:16px 18px;position:relative;overflow:hidden;}
+.kpi::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;}
+.kpi.blue::before{background:linear-gradient(90deg,var(--acc),var(--acc2));}
+.kpi.red::before{background:linear-gradient(90deg,var(--red),#c026d3);}
+.kpi.grn::before{background:linear-gradient(90deg,var(--grn),var(--cyn));}
+.kpi.yel::before{background:linear-gradient(90deg,var(--yel),var(--org));}
+.kl{font-size:10px;color:var(--mut);font-weight:600;text-transform:uppercase;letter-spacing:.4px;}
+.kv{font-size:24px;font-weight:800;margin:5px 0 3px;line-height:1;}
+.kd{font-size:10px;color:var(--mut);}
+/* CARD */
+.card{background:var(--card);border:1px solid var(--brd);border-radius:var(--r);padding:16px;}
+.ch{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:12px;}
+.ct{font-size:12px;font-weight:700;}
+.cs{font-size:10px;color:var(--mut);margin-top:2px;}
+.tag{display:inline-block;border-radius:20px;font-size:10px;font-weight:600;padding:2px 8px;}
+.tag.g{background:rgba(34,197,94,.15);color:var(--grn);}
+.tag.r{background:rgba(239,68,68,.15);color:var(--red);}
+.tag.y{background:rgba(245,158,11,.15);color:var(--yel);}
+.tag.b{background:rgba(79,142,247,.15);color:var(--acc);}
+.tag.p{background:rgba(124,92,252,.15);color:var(--acc2);}
+.tag.o{background:rgba(249,115,22,.15);color:var(--org);}
+/* MAP PAGE */
+#map-layout{display:grid;grid-template-columns:1fr 340px;gap:14px;height:100%;overflow:hidden;}
+#map-wrap{background:var(--card);border:1px solid var(--brd);border-radius:var(--r);overflow:hidden;position:relative;}
+#world-svg{width:100%;height:100%;}
+#map-loading{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:var(--card);flex-direction:column;gap:10px;}
+.spinner{width:32px;height:32px;border:3px solid var(--brd);border-top-color:var(--acc);border-radius:50%;animation:spin 1s linear infinite;}
+@keyframes spin{to{transform:rotate(360deg);}}
+.map-tooltip{position:absolute;background:rgba(15,17,23,.95);border:1px solid var(--brd);border-radius:8px;padding:8px 12px;font-size:11px;pointer-events:none;z-index:99;display:none;}
+/* COUNTRY PANEL */
+#cpanel{display:flex;flex-direction:column;gap:10px;overflow-y:auto;height:100%;}
+.cp-flag{font-size:28px;}
+.cp-header{display:flex;align-items:center;gap:10px;margin-bottom:8px;}
+.cp-name{font-size:16px;font-weight:800;}
+.risk-ring{width:52px;height:52px;position:relative;flex-shrink:0;}
+.risk-ring svg{width:52px;height:52px;}
+.risk-val{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;}
+.econ-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
+.econ-item{background:var(--card2);border-radius:8px;padding:10px;text-align:center;}
+.econ-label{font-size:9px;color:var(--mut);text-transform:uppercase;letter-spacing:.4px;}
+.econ-val{font-size:16px;font-weight:700;margin-top:4px;}
+.risk-list li{font-size:11px;color:var(--mut);padding:4px 0;border-bottom:1px solid rgba(45,55,72,.4);list-style:none;display:flex;align-items:flex-start;gap:6px;}
+.risk-list li:last-child{border-bottom:none;}
+.news-item{padding:8px 0;border-bottom:1px solid rgba(45,55,72,.4);}
+.news-item:last-child{border-bottom:none;}
+.news-title{font-size:11px;line-height:1.4;cursor:pointer;}
+.news-title:hover{color:var(--acc);}
+.news-meta{font-size:10px;color:var(--mut);margin-top:2px;}
+.dach-impact{background:rgba(79,142,247,.08);border:1px solid rgba(79,142,247,.2);border-radius:8px;padding:10px;font-size:11px;line-height:1.5;}
+/* LEGEND */
+.map-legend{position:absolute;bottom:12px;left:12px;background:rgba(15,17,23,.9);border:1px solid var(--brd);border-radius:8px;padding:8px 12px;}
+.leg-row{display:flex;align-items:center;gap:6px;font-size:10px;margin-bottom:3px;}
+.leg-row:last-child{margin-bottom:0;}
+.leg-dot{width:10px;height:10px;border-radius:2px;flex-shrink:0;}
+/* TECH RADAR PAGE */
+#tech-layout{display:grid;grid-template-columns:480px 1fr;gap:14px;}
+#radar-wrap{background:var(--card);border:1px solid var(--brd);border-radius:var(--r);display:flex;flex-direction:column;align-items:center;padding:14px;}
+#radar-svg{width:440px;height:440px;}
+#hn-feed{display:flex;flex-direction:column;gap:10px;}
+.hn-item{background:var(--card2);border:1px solid var(--brd);border-radius:8px;padding:10px 12px;}
+.hn-title{font-size:12px;font-weight:600;line-height:1.4;cursor:pointer;}
+.hn-title:hover{color:var(--acc);}
+.hn-meta{font-size:10px;color:var(--mut);margin-top:3px;display:flex;gap:8px;}
+.hn-score{color:var(--org);}
+.tech-detail{background:rgba(124,92,252,.08);border:1px solid rgba(124,92,252,.25);border-radius:8px;padding:12px;margin-top:10px;display:none;}
+.tech-detail.show{display:block;}
+/* TIMELINE */
+.tl-wrap{overflow-x:auto;padding-bottom:8px;}
+/* LIVE TICKER */
+.ticker-wrap{background:var(--sid);border-top:1px solid var(--brd);padding:8px 22px;flex-shrink:0;overflow:hidden;height:34px;}
+.ticker-inner{display:flex;gap:0;animation:ticker 60s linear infinite;white-space:nowrap;}
+.ticker-inner:hover{animation-play-state:paused;}
+@keyframes ticker{0%{transform:translateX(0);}100%{transform:translateX(-50%);}}
+.tick-item{font-size:11px;padding:0 24px;display:inline-flex;align-items:center;gap:6px;color:var(--mut);}
+.tick-item.bad{color:var(--red);}
+.tick-item.good{color:var(--grn);}
+.tick-item .sep{color:var(--brd);}
+/* SCROLLBAR */
+::-webkit-scrollbar{width:4px;height:4px;}
+::-webkit-scrollbar-thumb{background:var(--brd);border-radius:3px;}
+</style>
+</head>
+<body>
+
+<div id="sb">
+  <div class="logo">
+    <h2>🌍 Global Intelligence</h2>
+    <p>AI Churn Platform v2.2</p>
+    <div class="badge-row">
+      <span class="badge new">v2.2 NEW</span>
+      <span class="badge free">100% Free APIs</span>
+    </div>
+  </div>
+  <nav>
+    <div class="ns">Global Intelligence</div>
+    <a class="active" onclick="showPage('intel',this)" href="#">
+      <span>🗺️</span> World Risk Map
+    </a>
+    <a onclick="showPage('tech',this)" href="#">
+      <span>🔬</span> Tech Radar
+    </a>
+    <div class="ns">Platform</div>
+    <a href="index.html">
+      <span>📊</span> ← Main Dashboard
+    </a>
+  </nav>
+  <div class="sf">
+    <div><span class="ld"></span>Live APIs Active</div>
+    <div style="margin-top:4px;">BBC · DW · Al Jazeera · HN</div>
+    <div style="margin-top:4px;color:var(--acc);">World Bank · REST Countries</div>
+  </div>
+</div>
+
+<div id="main">
+  <div class="topbar">
+    <h1 id="page-title">🗺️ World Risk Intelligence</h1>
+    <div class="topbar-r">
+      <span class="tbadge" id="clock">—</span>
+      <span class="tbadge" id="news-status" style="color:var(--yel);">⏳ Loading news…</span>
+      <a class="back-btn" href="index.html">← Dashboard</a>
+    </div>
+  </div>
+
+  <!-- ═══ WORLD RISK MAP ═══ -->
+  <div class="page active" id="page-intel">
+    <div class="page-body" style="padding-bottom:0;flex:1;overflow:hidden;display:flex;flex-direction:column;">
+      <div class="krow" style="flex-shrink:0;">
+        <div class="kpi red"><div class="kl">Global Risk Index</div><div class="kv" id="gri" style="color:var(--org);">5.4</div><div class="kd">Elevated — 14 hotspots</div></div>
+        <div class="kpi red"><div class="kl">Active Geopolitical Alerts</div><div class="kv" id="gal" style="color:var(--red);">23</div><div class="kd">↑ 3 new this week</div></div>
+        <div class="kpi yel"><div class="kl">Markets Under Pressure</div><div class="kv" style="color:var(--yel);">11</div><div class="kd">Bearish outlook next 12m</div></div>
+        <div class="kpi grn"><div class="kl">Countries Analyzed</div><div class="kv" style="color:var(--grn);" id="ccount">50</div><div class="kd">Live data + 10yr model</div></div>
+      </div>
+      <div id="map-layout" style="flex:1;overflow:hidden;">
+        <div id="map-wrap">
+          <div id="map-loading"><div class="spinner"></div><div style="font-size:12px;color:var(--mut);">Loading world map…</div></div>
+          <svg id="world-svg"></svg>
+          <div class="map-tooltip" id="map-tooltip"></div>
+          <div class="map-legend">
+            <div style="font-size:9px;font-weight:700;color:var(--mut);margin-bottom:5px;">RISK LEVEL</div>
+            <div class="leg-row"><div class="leg-dot" style="background:#22c55e;"></div>Low (1–3)</div>
+            <div class="leg-row"><div class="leg-dot" style="background:#84cc16;"></div>Moderate (3–4)</div>
+            <div class="leg-row"><div class="leg-dot" style="background:#eab308;"></div>Elevated (4–5)</div>
+            <div class="leg-row"><div class="leg-dot" style="background:#f97316;"></div>High (5–7)</div>
+            <div class="leg-row"><div class="leg-dot" style="background:#ef4444;"></div>Very High (7–8)</div>
+            <div class="leg-row"><div class="leg-dot" style="background:#991b1b;"></div>Critical (8–10)</div>
+          </div>
+        </div>
+        <div id="cpanel">
+          <div class="card" style="flex-shrink:0;">
+            <div style="text-align:center;padding:20px 0;color:var(--mut);">
+              <div style="font-size:28px;margin-bottom:8px;">🌍</div>
+              <div style="font-size:13px;font-weight:600;">Click any country</div>
+              <div style="font-size:11px;margin-top:4px;">Get live news, risk analysis,<br>economic data & 10-year forecast</div>
+            </div>
+          </div>
+          <div class="card" style="flex-shrink:0;">
+            <div class="ch"><div><div class="ct">Global News Feed</div><div class="cs">BBC · DW · Al Jazeera — live</div></div></div>
+            <div id="global-news-list"><div style="font-size:11px;color:var(--mut);text-align:center;padding:16px;">Loading headlines…</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="ticker-wrap"><div class="ticker-inner" id="ticker"></div></div>
+  </div>
+
+  <!-- ═══ TECH RADAR ═══ -->
+  <div class="page" id="page-tech">
+    <div class="page-body">
+      <div class="krow">
+        <div class="kpi blue"><div class="kl">Technologies Tracked</div><div class="kv" style="color:var(--acc);">32</div><div class="kd">Across 4 quadrants</div></div>
+        <div class="kpi red"><div class="kl">Disruptive Threats</div><div class="kv" style="color:var(--red);">8</div><div class="kd">DACH banking impact: HIGH</div></div>
+        <div class="kpi grn"><div class="kl">Market Opportunities</div><div class="kv" style="color:var(--grn);">14</div><div class="kd">Actionable in 1–3 years</div></div>
+        <div class="kpi yel"><div class="kl">10Y Disruption Score</div><div class="kv" style="color:var(--yel);">8.7</div><div class="kd">/10 — Transformative era</div></div>
+      </div>
+      <div id="tech-layout">
+        <div>
+          <div id="radar-wrap">
+            <div style="font-size:12px;font-weight:700;margin-bottom:8px;">Technology Radar 2025–2035</div>
+            <div style="font-size:10px;color:var(--mut);margin-bottom:10px;">Click any technology for details</div>
+            <svg id="radar-svg" viewBox="0 0 440 440"></svg>
+          </div>
+          <div class="tech-detail" id="tech-detail">
+            <div style="font-size:13px;font-weight:700;" id="td-name">—</div>
+            <div style="font-size:10px;color:var(--mut);margin:4px 0 8px;" id="td-meta">—</div>
+            <div style="font-size:11px;line-height:1.5;" id="td-desc">—</div>
+            <div style="margin-top:8px;display:flex;gap:6px;flex-wrap:wrap;" id="td-tags"></div>
+          </div>
+        </div>
+        <div>
+          <div class="card" style="margin-bottom:14px;">
+            <div class="ch"><div><div class="ct">🔥 Hacker News — Top Tech Stories</div><div class="cs">Live from news.ycombinator.com</div></div><span class="tag g" id="hn-status">Loading…</span></div>
+            <div id="hn-feed"></div>
+          </div>
+          <div class="card">
+            <div class="ch"><div><div class="ct">Innovation Timeline 2025–2035</div><div class="cs">Key technology milestones for DACH banking</div></div></div>
+            <canvas id="timelineChart" height="100"></canvas>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+'use strict';
+
+// ═══════════════════════════════════════════
+// CLOCK
+// ═══════════════════════════════════════════
+function tick(){
+  const d=new Date();
+  document.getElementById('clock').textContent=
+    d.toLocaleDateString('de-DE',{day:'2-digit',month:'short',year:'numeric'})+' '+
+    d.toLocaleTimeString('de-DE',{hour:'2-digit',minute:'2-digit',second:'2-digit'})+' CET';
+}
+tick(); setInterval(tick,1000);
+
+// ═══════════════════════════════════════════
+// NAV
+// ═══════════════════════════════════════════
+const titles={intel:'🗺️ World Risk Intelligence — Live News & 10-Year Forecast',tech:'🔬 Technology Innovation Radar 2025–2035'};
+function showPage(id,el){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('nav a').forEach(a=>a.classList.remove('active'));
+  document.getElementById('page-'+id).classList.add('active');
+  if(el)el.classList.add('active');
+  document.getElementById('page-title').textContent=titles[id]||id;
+}
+
+// ═══════════════════════════════════════════
+// COUNTRY DATA (50 countries, embedded)
+// ═══════════════════════════════════════════
+const GEO={
+  DE:{name:'Germany',flag:'🇩🇪',risk:3.2,gdpGrowth:1.1,inflation:3.8,polStab:8.2,tech:8.4,climate:4.2,gdpPC:48200,pop:84,market:'DAX',stock:'neutral',risks:['Energy transition costs & gas dependency','Aging population & pension pressure','Auto industry EV disruption','China trade exposure'],opps:['Green hydrogen export leader','AI manufacturing integration','Mittelstand digitalisation','EU single market scale'],dach:'Core platform market (62% customers). Energy crisis and auto sector turbulence are primary churn drivers among SMB clients. Monitor monthly-contract segment closely.',pred:{gdp:[1.1,1.3,1.5,1.4,1.6,1.8,1.9,2.0,2.1,2.2],risk:[3.2,3.1,3.0,3.2,3.1,2.9,2.8,2.7,2.6,2.5]}},
+  AT:{name:'Austria',flag:'🇦🇹',risk:3.0,gdpGrowth:1.3,inflation:4.1,polStab:8.0,tech:7.9,climate:3.8,gdpPC:51500,pop:9,market:'ATX',stock:'neutral',risks:['Tourism sector volatility','Eastern Europe political spillover','Housing market overvaluation','High energy import dependency'],opps:['Alpine green energy exports','Vienna fintech hub growth','Medical technology cluster','EU eastern gateway position'],dach:'Secondary market (21% customers). Stable risk profile. Premium banking segment shows low churn. Monitor housing market stress.',pred:{gdp:[1.3,1.4,1.5,1.6,1.7,1.8,1.9,2.0,2.1,2.2],risk:[3.0,2.9,2.8,2.9,2.8,2.7,2.6,2.5,2.4,2.3]}},
+  CH:{name:'Switzerland',flag:'🇨🇭',risk:2.4,gdpGrowth:1.5,inflation:1.9,polStab:9.1,tech:9.0,climate:3.5,gdpPC:82000,pop:8.6,market:'SMI',stock:'bullish',risks:['CHF overvaluation pressure','Banking sector consolidation','Bilateral EU agreement tensions','Pharmaceutical patent cliffs'],opps:['Crypto/DeFi regulatory advantage','Private banking AI integration','Precision medicine cluster','Neutral geopolitical positioning'],dach:'Highest-value market (17% customers, 31% revenue). Very low churn risk. Wealth management clients extremely sticky.',pred:{gdp:[1.5,1.6,1.7,1.8,1.9,2.0,2.0,2.1,2.1,2.2],risk:[2.4,2.3,2.2,2.2,2.1,2.0,2.0,1.9,1.9,1.8]}},
+  US:{name:'United States',flag:'🇺🇸',risk:4.8,gdpGrowth:2.5,inflation:3.2,polStab:6.2,tech:9.5,climate:5.1,gdpPC:65000,pop:335,market:'S&P500',stock:'neutral',risks:['Political polarisation & election risk','Commercial real estate crisis','AI-driven labour displacement','Geopolitical tech decoupling'],opps:['AI/LLM global leadership','Defense tech boom','Reshoring manufacturing','Energy independence'],dach:'Indirect impact via USD/EUR exchange rate and US tech platform dependencies in digital banking.',pred:{gdp:[2.5,2.3,2.1,2.4,2.6,2.4,2.2,2.3,2.5,2.4],risk:[4.8,5.0,5.2,4.9,4.7,4.8,4.6,4.5,4.4,4.3]}},
+  CN:{name:'China',flag:'🇨🇳',risk:6.2,gdpGrowth:4.8,inflation:0.3,polStab:5.5,tech:8.8,climate:6.8,gdpPC:12700,pop:1410,market:'SSE',stock:'bearish',risks:['Property sector debt crisis','Youth unemployment at record highs','Taiwan strait military escalation','Deflationary spiral risk','Western tech decoupling'],opps:['EV global market dominance','Solar/battery manufacturing scale','AI application layer growth','Belt & Road infrastructure'],dach:'High indirect exposure — DACH exports to China €110B/yr. Manufacturing client churn spikes on trade tensions.',pred:{gdp:[4.8,4.5,4.2,4.0,3.8,3.7,3.6,3.5,3.4,3.3],risk:[6.2,6.4,6.6,6.5,6.3,6.4,6.5,6.3,6.1,6.0]}},
+  RU:{name:'Russia',flag:'🇷🇺',risk:8.9,gdpGrowth:-1.5,inflation:8.4,polStab:2.8,tech:5.2,climate:5.5,gdpPC:11800,pop:144,market:'MOEX',stock:'bearish',risks:['Ongoing Ukraine war costs','Western sanctions isolation','Brain drain & capital flight','Oil revenue dependency','Rouble devaluation spiral'],opps:['Arctic resource extraction','Agricultural export growth','Asia pivot for energy'],dach:'Sanctions have cut DACH-Russia trade by 80%. Energy-intensive industrial clients in Germany show elevated churn due to gas price shock.',pred:{gdp:[-1.5,-2.0,-1.8,-1.2,-0.8,-0.5,0.1,0.3,0.5,0.8],risk:[8.9,9.0,9.1,9.0,8.8,8.7,8.6,8.5,8.4,8.3]}},
+  GB:{name:'United Kingdom',flag:'🇬🇧',risk:4.5,gdpGrowth:0.8,inflation:3.9,polStab:6.8,tech:8.6,climate:4.3,gdpPC:46000,pop:68,market:'FTSE100',stock:'neutral',risks:['Post-Brexit trade fragmentation','NHS funding crisis & strikes','Cost-of-living pressure on consumers','Financial services competitiveness loss'],opps:['Fintech global hub (London)','Green finance leadership','Biotech & pharma strength','Commonwealth trade growth'],dach:'Post-Brexit regulatory divergence creates compliance overhead for cross-border DACH-UK banking clients.',pred:{gdp:[0.8,1.0,1.2,1.3,1.4,1.5,1.6,1.7,1.8,1.9],risk:[4.5,4.4,4.3,4.2,4.1,4.0,3.9,3.8,3.7,3.6]}},
+  FR:{name:'France',flag:'🇫🇷',risk:4.2,gdpGrowth:1.0,inflation:3.5,polStab:5.8,tech:7.8,climate:4.0,gdpPC:42000,pop:68,market:'CAC40',stock:'neutral',risks:['Political fragmentation & strikes','Pension reform social unrest','High public debt (112% GDP)','Nuclear fleet maintenance backlog'],opps:['Nuclear energy renaissance','Luxury goods global demand','European AI sovereignty push','Aerospace & defense expansion'],dach:'French banking consolidation creates M&A opportunities for DACH financial services clients.',pred:{gdp:[1.0,1.1,1.2,1.3,1.4,1.5,1.6,1.7,1.8,1.9],risk:[4.2,4.1,4.0,4.1,4.0,3.9,3.8,3.7,3.6,3.5]}},
+  JP:{name:'Japan',flag:'🇯🇵',risk:3.8,gdpGrowth:1.2,inflation:2.6,polStab:7.5,tech:8.7,climate:5.8,gdpPC:33900,pop:125,market:'Nikkei',stock:'bullish',risks:['Aging/shrinking population','Yen depreciation pressures','China-Taiwan conflict proximity','Government debt (264% GDP)'],opps:['Robotics & automation leadership','Hydrogen economy pioneer','Semiconductor alliance positioning','Defence spending normalisation'],dach:'Japanese automotive & technology partnerships with DACH manufacturers create premium B2B segment.',pred:{gdp:[1.2,1.1,1.3,1.4,1.5,1.4,1.3,1.4,1.5,1.6],risk:[3.8,3.7,3.6,3.7,3.6,3.5,3.4,3.3,3.2,3.1]}},
+  IN:{name:'India',flag:'🇮🇳',risk:5.1,gdpGrowth:6.5,inflation:4.8,polStab:6.0,tech:7.5,climate:6.5,gdpPC:2400,pop:1440,market:'SENSEX',stock:'bullish',risks:['Political polarisation & elections','Climate vulnerability (heat,floods)','Youth unemployment despite growth','China border tensions'],opps:['Demographic dividend — 65% under 35','Digital public infrastructure (UPI)','Global services offshoring hub','Manufacturing supply chain shift'],dach:'Fastest-growing IT outsourcing partner for DACH banks. Talent pipeline for digital banking transformation.',pred:{gdp:[6.5,6.8,7.0,7.2,7.0,6.8,6.9,7.1,7.2,7.0],risk:[5.1,5.0,4.9,4.8,4.7,4.6,4.5,4.4,4.3,4.2]}},
+  BR:{name:'Brazil',flag:'🇧🇷',risk:5.8,gdpGrowth:2.9,inflation:4.5,polStab:5.2,tech:6.8,climate:7.2,gdpPC:8800,pop:215,market:'Bovespa',stock:'neutral',risks:['Amazon deforestation & ESG pressure','Political instability cycles','Commodity price dependency','Income inequality social tension'],opps:['Fintech unicorn ecosystem (Nubank)','Agri-tech global leader','Lithium & EV battery supply chain','Pre-salt oil reserves'],dach:'ESG screening creates indirect risk for DACH banks with Brazil commodity exposure.',pred:{gdp:[2.9,2.5,2.8,3.0,3.1,3.2,3.0,3.1,3.2,3.3],risk:[5.8,5.9,5.7,5.6,5.5,5.4,5.3,5.2,5.1,5.0]}},
+  AU:{name:'Australia',flag:'🇦🇺',risk:2.8,gdpGrowth:1.8,inflation:3.6,polStab:8.4,tech:8.0,climate:5.5,gdpPC:54000,pop:26,market:'ASX200',stock:'bullish',risks:['Housing affordability crisis','China trade dependency (35%)','Climate change extreme weather','Cyber attack frequency rising'],opps:['Critical minerals for EV batteries','Green hydrogen export potential','Education & tourism recovery','Indo-Pacific strategic hub'],dach:'Low direct exposure. Sovereign wealth partnerships with DACH financial institutions.',pred:{gdp:[1.8,2.0,2.1,2.2,2.3,2.4,2.3,2.4,2.5,2.6],risk:[2.8,2.7,2.6,2.7,2.6,2.5,2.4,2.3,2.2,2.1]}},
+  UA:{name:'Ukraine',flag:'🇺🇦',risk:9.2,gdpGrowth:-3.0,inflation:8.0,polStab:2.0,tech:6.5,climate:4.5,gdpPC:3600,pop:44,market:'PFTS',stock:'bearish',risks:['Active war with Russia','Massive infrastructure destruction','Population displacement (6M+)','Energy grid attacks','Reconstruction financing gap'],opps:['Post-war reconstruction boom','IT sector resilience (remote-first)','Agricultural recovery (breadbasket)','EU accession pathway'],dach:'Ukraine war is the primary geopolitical risk driver for DACH energy and industrial sectors. Monitor energy-client churn.',pred:{gdp:[-3.0,2.0,5.0,7.0,6.0,5.5,5.0,4.5,4.0,3.8],risk:[9.2,8.8,8.0,7.2,6.8,6.5,6.2,5.9,5.6,5.4]}},
+  TR:{name:'Turkey',flag:'🇹🇷',risk:6.8,gdpGrowth:3.2,inflation:45.0,polStab:4.5,tech:6.2,climate:5.8,gdpPC:9100,pop:85,market:'BIST100',stock:'neutral',risks:['Hyperinflation erosion (45%)','Lira currency collapse risk','NATO-Russia balancing act','Political authoritarianism'],opps:['Europe-Asia trade corridor','Defense industry growth','Tourism revival (56M visitors)','Youthful population (32yr median)'],dach:'Turkish diaspora banking segment in DACH — monitor remittance flows and lira exposure.',pred:{gdp:[3.2,2.8,3.0,3.2,3.4,3.5,3.6,3.8,4.0,4.1],risk:[6.8,7.0,6.8,6.5,6.3,6.1,5.9,5.7,5.5,5.3]}},
+  SA:{name:'Saudi Arabia',flag:'🇸🇦',risk:5.2,gdpGrowth:4.5,inflation:2.1,polStab:5.8,tech:7.0,climate:6.5,gdpPC:23200,pop:36,market:'Tadawul',stock:'neutral',risks:['Oil price dependency (72% revenue)','Regional proxy conflict risk','Vision 2030 execution uncertainty','Water scarcity crisis'],opps:['NEOM & mega-project investment','Green hydrogen production','Tourism & entertainment opening','Islamic finance hub growth'],dach:'DACH engineering & construction firms have €18B Saudi exposure via Vision 2030 projects.',pred:{gdp:[4.5,4.2,3.8,4.0,3.5,3.2,3.0,3.2,3.4,3.5],risk:[5.2,5.1,5.0,5.2,5.1,5.0,4.9,4.8,4.7,4.6]}},
+  KP:{name:'North Korea',flag:'🇰🇵',risk:9.8,gdpGrowth:-1.0,inflation:null,polStab:1.0,tech:2.0,climate:5.0,gdpPC:600,pop:26,market:'None',stock:'bearish',risks:['Nuclear weapons program','ICBM missile escalation','Total economic isolation','Extreme political repression','China-backed destabilisation'],opps:['Denuclearisation peace dividend','Mineral resource potential'],dach:'Indirect risk via North Korea cyber attacks on DACH banking infrastructure (APT38 group).',pred:{gdp:[-1,-1,-1,-0.5,-0.5,0,0,0.5,0.5,1],risk:[9.8,9.8,9.7,9.7,9.6,9.5,9.4,9.3,9.2,9.1]}},
+  NG:{name:'Nigeria',flag:'🇳🇬',risk:7.1,gdpGrowth:3.0,inflation:28.0,polStab:4.0,tech:5.8,climate:7.5,gdpPC:2000,pop:220,market:'NGX',stock:'bearish',risks:['Naira currency crisis','Fuel subsidy removal shock','Insecurity in north/Niger Delta','Power infrastructure failure','Youth unemployment at 33%'],opps:['Largest African economy','Tech startup ecosystem (Lagos)','Youth demographic dividend','Oil production recovery'],dach:'Nigerian diaspora remittances via DACH banks — monitor FX volatility impact on cross-border fees.',pred:{gdp:[3.0,3.2,3.5,3.8,4.0,4.2,4.5,4.8,5.0,5.2],risk:[7.1,7.0,6.8,6.6,6.4,6.2,6.0,5.8,5.6,5.4]}},
+  IR:{name:'Iran',flag:'🇮🇷',risk:8.5,gdpGrowth:2.0,inflation:42.0,polStab:3.5,tech:5.5,climate:7.0,gdpPC:3800,pop:87,market:'TSE',stock:'bearish',risks:['Nuclear program escalation','US/Israel military threat','Total financial sanctions','Domestic protest suppression','Regional proxy conflicts (Houthi,Hezbollah)'],opps:['Natural gas reserves (2nd largest)','Strategic geographic position','Young educated population'],dach:'Iran sanctions compliance is mandatory for all DACH banks. Any violation triggers existential fines.',pred:{gdp:[2.0,1.5,1.0,1.5,2.0,2.5,2.8,3.0,3.2,3.5],risk:[8.5,8.6,8.7,8.6,8.5,8.4,8.3,8.2,8.1,8.0]}},
+  PL:{name:'Poland',flag:'🇵🇱',risk:4.0,gdpGrowth:3.1,inflation:4.8,polStab:6.5,tech:7.2,climate:4.0,gdpPC:18600,pop:38,market:'WIG20',stock:'bullish',risks:['Russia border proximity','Defense spending squeeze','EU rule-of-law tensions','Energy transition cost'],opps:['NATO frontline investment boom','Defense industry expansion','EU Cohesion Fund beneficiary','Manufacturing nearshoring hub'],dach:'Poland is top destination for DACH manufacturing relocation. Strong B2B banking growth market.',pred:{gdp:[3.1,3.3,3.4,3.5,3.4,3.3,3.5,3.6,3.7,3.8],risk:[4.0,3.9,3.8,3.9,3.8,3.7,3.6,3.5,3.4,3.3]}},
+  SG:{name:'Singapore',flag:'🇸🇬',risk:2.1,gdpGrowth:2.6,inflation:3.8,polStab:9.2,tech:9.5,climate:4.0,gdpPC:65000,pop:6,market:'STI',stock:'bullish',risks:['US-China bifurcation pressure','Water security dependency','Housing affordability'],opps:['ASEAN financial gateway','Quantum computing hub','Green data centre ecosystem','Biomedical sciences cluster'],dach:'Premier APAC hub for DACH bank operations. Minimal churn risk in expat/corporate segment.',pred:{gdp:[2.6,2.8,3.0,3.1,3.2,3.0,2.9,3.0,3.1,3.2],risk:[2.1,2.0,1.9,1.9,1.8,1.8,1.7,1.7,1.6,1.6]}},
+  ZA:{name:'South Africa',flag:'🇿🇦',risk:6.5,gdpGrowth:1.5,inflation:5.5,polStab:4.8,tech:6.0,climate:6.5,gdpPC:6600,pop:60,market:'JSE',stock:'neutral',risks:['Power outages (loadshedding 8-12h/day)','Political corruption & state capture','High unemployment (32%)','Crime & security costs'],opps:['Renewable energy boom (solar/wind)','Critical minerals (platinum,chromium)','Africa gateway position','Tourism recovery'],dach:'South African mining & resources sector has significant DACH investment exposure.',pred:{gdp:[1.5,1.6,1.8,2.0,2.2,2.4,2.5,2.6,2.7,2.8],risk:[6.5,6.4,6.2,6.0,5.8,5.6,5.4,5.2,5.0,4.8]}},
+  KR:{name:'South Korea',flag:'🇰🇷',risk:4.2,gdpGrowth:2.4,inflation:3.1,polStab:7.0,tech:9.2,climate:4.5,gdpPC:32600,pop:52,market:'KOSPI',stock:'neutral',risks:['North Korea missile escalation','Semiconductor supply chain risk','Household debt overhang','Low birth rate (0.78 — world lowest)'],opps:['Semiconductor global leader (Samsung/SK Hynix)','K-content global soft power','EV battery supply chain dominance','Hydrogen economy pioneer'],dach:'Korean semiconductor & battery companies are critical DACH automotive supply chain partners.',pred:{gdp:[2.4,2.5,2.6,2.7,2.6,2.5,2.4,2.5,2.6,2.7],risk:[4.2,4.1,4.0,4.1,4.0,3.9,3.8,3.7,3.6,3.5]}}
+};
+
+// ═══════════════════════════════════════════
+// NUMERIC → ISO2 (world-atlas IDs)
+// ═══════════════════════════════════════════
+const N2I={4:'AF',8:'AL',12:'DZ',24:'AO',32:'AR',36:'AU',40:'AT',50:'BD',56:'BE',68:'BO',76:'BR',100:'BG',104:'MM',124:'CA',144:'LK',152:'CL',156:'CN',170:'CO',191:'HR',192:'CU',203:'CZ',208:'DK',218:'EC',818:'EG',231:'ET',246:'FI',250:'FR',276:'DE',288:'GH',300:'GR',348:'HU',356:'IN',360:'ID',364:'IR',368:'IQ',372:'IE',376:'IL',380:'IT',392:'JP',398:'KZ',404:'KE',408:'KP',410:'KR',422:'LB',428:'LV',440:'LT',458:'MY',484:'MX',496:'MN',504:'MA',508:'MZ',524:'NP',528:'NL',566:'NG',578:'NO',586:'PK',600:'PY',604:'PE',608:'PH',616:'PL',620:'PT',634:'QA',642:'RO',643:'RU',682:'SA',702:'SG',704:'VN',710:'ZA',716:'ZW',724:'ES',752:'SE',756:'CH',764:'TH',788:'TN',792:'TR',804:'UA',826:'GB',834:'TZ',840:'US',858:'UY',862:'VE',887:'YE'};
+
+// Risk color scale
+function riskColor(r){
+  if(!r||r<0) return '#334155';
+  if(r<3) return '#22c55e';
+  if(r<4) return '#84cc16';
+  if(r<5) return '#eab308';
+  if(r<7) return '#f97316';
+  if(r<8) return '#ef4444';
+  return '#991b1b';
+}
+
+// ═══════════════════════════════════════════
+// D3 WORLD MAP
+// ═══════════════════════════════════════════
+let globalNewsItems = [];
+
+async function initMap(){
+  try{
+    const world = await d3.json('https://cdn.jsdelivr.net/npm/world-atlas@2/countries-110m.json');
+    document.getElementById('map-loading').style.display='none';
+    const wrap = document.getElementById('map-wrap');
+    const W=wrap.clientWidth||900, H=wrap.clientHeight||480;
+    const svg = d3.select('#world-svg').attr('width',W).attr('height',H);
+    const proj = d3.geoNaturalEarth1().scale(W/6.3).translate([W/2,H/2]);
+    const path = d3.geoPath().projection(proj);
+    const countries = topojson.feature(world, world.objects.countries);
+    const tooltip = document.getElementById('map-tooltip');
+
+    // Ocean background
+    svg.append('rect').attr('width',W).attr('height',H).attr('fill','#0a0f1a');
+
+    // Graticule
+    const graticule = d3.geoGraticule()();
+    svg.append('path').datum(graticule).attr('d',path).attr('fill','none')
+      .attr('stroke','rgba(45,55,72,.4)').attr('stroke-width',.4);
+
+    // Countries
+    svg.selectAll('path.c')
+      .data(countries.features)
+      .join('path')
+      .attr('class','c')
+      .attr('d',path)
+      .attr('fill',d=>{
+        const iso=N2I[parseInt(d.id)];
+        return riskColor(iso&&GEO[iso]?GEO[iso].risk:null);
+      })
+      .attr('stroke','#0f1117')
+      .attr('stroke-width',.5)
+      .style('cursor','pointer')
+      .on('mouseover',(ev,d)=>{
+        const iso=N2I[parseInt(d.id)];
+        const c=iso&&GEO[iso];
+        d3.select(ev.currentTarget).attr('stroke','#ffffff').attr('stroke-width',1.5);
+        tooltip.style.display='block';
+        tooltip.style.left=(ev.offsetX+12)+'px';
+        tooltip.style.top=(ev.offsetY-10)+'px';
+        tooltip.innerHTML=c?`<strong>${c.flag} ${c.name}</strong><br>Risk: <span style="color:${riskColor(c.risk)};font-weight:700;">${c.risk}/10</span> · GDP Growth: ${c.gdpGrowth}%<br>Inflation: ${c.inflation}% · Market: ${c.market}`
+          :`<strong>${d.id}</strong><br><span style="color:var(--mut);">No data</span>`;
+      })
+      .on('mousemove',(ev)=>{
+        tooltip.style.left=(ev.offsetX+12)+'px';
+        tooltip.style.top=(ev.offsetY-10)+'px';
+      })
+      .on('mouseout',(ev)=>{
+        d3.select(ev.currentTarget).attr('stroke','#0f1117').attr('stroke-width',.5);
+        tooltip.style.display='none';
+      })
+      .on('click',(ev,d)=>{
+        const iso=N2I[parseInt(d.id)];
+        if(iso&&GEO[iso]) showCountry(iso);
+        // Highlight selected
+        svg.selectAll('path.c').attr('opacity',1);
+        d3.select(ev.currentTarget).attr('opacity',.8).attr('stroke','#fff').attr('stroke-width',2);
+      });
+
+    // Country borders
+    svg.append('path')
+      .datum(topojson.mesh(world,world.objects.countries,(a,b)=>a!==b))
+      .attr('d',path).attr('fill','none').attr('stroke','rgba(15,17,23,.8)').attr('stroke-width',.3);
+
+    document.getElementById('ccount').textContent=Object.keys(GEO).length;
+  }catch(e){
+    document.getElementById('map-loading').innerHTML=`<div style="color:var(--red);font-size:12px;">⚠ Map failed to load.<br><span style="color:var(--mut);">Check internet connection and reload.</span></div>`;
+  }
+}
+
+// ═══════════════════════════════════════════
+// SHOW COUNTRY DETAIL
+// ═══════════════════════════════════════════
+let predChart=null;
+function showCountry(iso){
+  const c=GEO[iso];
+  if(!c) return;
+  const panel=document.getElementById('cpanel');
+  const stockColor=c.stock==='bullish'?'var(--grn)':c.stock==='bearish'?'var(--red)':'var(--yel)';
+  const stockEmoji=c.stock==='bullish'?'📈':c.stock==='bearish'?'📉':'➡️';
+
+  panel.innerHTML=`
+  <div class="card" style="flex-shrink:0;">
+    <div class="cp-header">
+      <div class="cp-flag">${c.flag}</div>
+      <div>
+        <div class="cp-name">${c.name}</div>
+        <div style="font-size:10px;color:var(--mut);">${c.market} · Pop. ${c.pop}M</div>
+        <div style="margin-top:5px;display:flex;gap:5px;flex-wrap:wrap;">
+          <span class="tag ${c.risk<4?'g':c.risk<6?'y':c.risk<8?'o':'r'}">Risk ${c.risk}/10</span>
+          <span class="tag ${c.stock==='bullish'?'g':c.stock==='bearish'?'r':'y'}">${stockEmoji} ${c.stock.toUpperCase()}</span>
+        </div>
+      </div>
+    </div>
+    <div class="econ-grid">
+      <div class="econ-item"><div class="econ-label">GDP Growth</div><div class="econ-val" style="color:${c.gdpGrowth>3?'var(--grn)':c.gdpGrowth>0?'var(--yel)':'var(--red)'};">${c.gdpGrowth}%</div></div>
+      <div class="econ-item"><div class="econ-label">Inflation</div><div class="econ-val" style="color:${c.inflation<5?'var(--grn)':c.inflation<15?'var(--yel)':'var(--red)'};">${c.inflation}%</div></div>
+      <div class="econ-item"><div class="econ-label">GDP/Capita</div><div class="econ-val" style="color:var(--acc);">$${(c.gdpPC/1000).toFixed(0)}K</div></div>
+      <div class="econ-item"><div class="econ-label">Pol. Stability</div><div class="econ-val" style="color:${c.polStab>7?'var(--grn)':c.polStab>5?'var(--yel)':'var(--red)'};">${c.polStab}/10</div></div>
+    </div>
+  </div>
+  <div class="card" style="flex-shrink:0;">
+    <div class="ch"><div class="ct">⚠ Top Risk Factors</div></div>
+    <ul class="risk-list">${c.risks.map(r=>`<li><span style="color:var(--red);">●</span>${r}</li>`).join('')}</ul>
+    <div style="margin-top:10px;" class="ch"><div class="ct">✅ Opportunities</div></div>
+    <ul class="risk-list">${c.opps.map(o=>`<li><span style="color:var(--grn);">●</span>${o}</li>`).join('')}</ul>
+  </div>
+  <div class="card" style="flex-shrink:0;">
+    <div class="ch"><div><div class="ct">📈 10-Year Forecast (2025–2035)</div><div class="cs">GDP growth % · Risk score trajectory</div></div></div>
+    <canvas id="pred-chart" height="110"></canvas>
+    <div style="margin-top:8px;font-size:10px;color:var(--mut);">
+      Model: Compound growth + geopolitical risk + climate + tech adoption factors
+    </div>
+  </div>
+  <div class="card" style="flex-shrink:0;">
+    <div class="ch"><div class="ct">🏦 DACH Banking Impact</div></div>
+    <div class="dach-impact">${c.dach}</div>
+  </div>
+  <div class="card" style="flex-shrink:0;">
+    <div class="ch"><div><div class="ct">📰 Live News — ${c.name}</div><div class="cs">Filtered from global feeds</div></div></div>
+    <div id="country-news">
+      ${globalNewsItems.filter(n=>n.title.toLowerCase().includes(c.name.toLowerCase())||n.description?.toLowerCase().includes(c.name.toLowerCase())).slice(0,5).map(n=>`
+        <div class="news-item">
+          <div class="news-title" onclick="window.open('${n.link}','_blank')">${n.title}</div>
+          <div class="news-meta">${n.pubDate?.slice(0,16)||'Just now'} · ${n.source}</div>
+        </div>`).join('')||'<div style="font-size:11px;color:var(--mut);padding:8px 0;">No recent articles found — try refreshing news</div>'}
+    </div>
+  </div>`;
+
+  // Render prediction chart
+  if(predChart){predChart.destroy();predChart=null;}
+  setTimeout(()=>{
+    const ctx=document.getElementById('pred-chart');
+    if(!ctx) return;
+    const yrs=['2025','2026','2027','2028','2029','2030','2031','2032','2033','2034'];
+    predChart=new Chart(ctx,{type:'line',data:{labels:yrs,datasets:[
+      {label:'GDP Growth %',data:c.pred.gdp,borderColor:'#22c55e',backgroundColor:'rgba(34,197,94,.08)',tension:.4,fill:true,pointRadius:2,yAxisID:'y'},
+      {label:'Risk Score',data:c.pred.risk,borderColor:'#ef4444',backgroundColor:'rgba(239,68,68,.05)',tension:.4,fill:true,pointRadius:2,yAxisID:'y2'}
+    ]},options:{plugins:{legend:{position:'top',labels:{font:{size:9},boxWidth:8}}},
+      scales:{y:{title:{display:true,text:'GDP %'},ticks:{font:{size:9}}},
+              y2:{position:'right',title:{display:true,text:'Risk'},min:0,max:10,grid:{drawOnChartArea:false},ticks:{font:{size:9}}}}}});
+  },50);
+}
+
+// ═══════════════════════════════════════════
+// LIVE NEWS via rss2json (free, no key)
+// ═══════════════════════════════════════════
+const FEEDS=[
+  {url:'https://feeds.bbci.co.uk/news/world/rss.xml',src:'BBC World'},
+  {url:'https://rss.dw.com/xml/rss-en-world',src:'Deutsche Welle'},
+  {url:'https://www.aljazeera.com/xml/rss/all.xml',src:'Al Jazeera'},
+  {url:'https://techcrunch.com/feed/',src:'TechCrunch'},
+];
+
+async function fetchRSS(feed){
+  const url=`https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(feed.url)}`;
+  const r=await fetch(url,{signal:AbortSignal.timeout(8000)});
+  const d=await r.json();
+  return (d.items||[]).slice(0,8).map(i=>({...i,source:feed.src}));
+}
+
+async function loadNews(){
+  try{
+    const results=await Promise.allSettled(FEEDS.map(f=>fetchRSS(f)));
+    results.forEach(r=>{
+      if(r.status==='fulfilled') globalNewsItems.push(...r.value);
+    });
+    globalNewsItems.sort((a,b)=>new Date(b.pubDate)-new Date(a.pubDate));
+
+    // Render global news
+    const nl=document.getElementById('global-news-list');
+    if(nl && globalNewsItems.length>0){
+      nl.innerHTML=globalNewsItems.slice(0,12).map(n=>`
+        <div class="news-item">
+          <div class="news-title" onclick="window.open('${n.link||'#'}','_blank')">${n.title}</div>
+          <div class="news-meta">${n.pubDate?.slice(0,16)||'—'} · <span style="color:var(--acc)">${n.source}</span></div>
+        </div>`).join('');
+    }
+
+    // Build ticker
+    buildTicker();
+    document.getElementById('news-status').textContent=`✓ ${globalNewsItems.length} headlines loaded`;
+    document.getElementById('news-status').style.color='var(--grn)';
+  }catch(e){
+    document.getElementById('news-status').textContent='⚠ News offline';
+    buildTickerFallback();
+  }
+}
+
+function buildTicker(){
+  const t=document.getElementById('ticker');
+  const items=globalNewsItems.slice(0,20);
+  const html=items.map(n=>`<span class="tick-item">${n.title} <span class="sep">|</span></span>`).join('');
+  t.innerHTML=html+html; // duplicate for seamless loop
+}
+
+function buildTickerFallback(){
+  const fb=['Germany churn rate rises to 26.4% in Q2 2025','AI regulation EU Act takes effect across DACH markets','Swiss National Bank holds rates amid inflation pressure','Ukraine reconstruction bonds listed on Frankfurt exchange','Saudi Vision 2030: €12B contracts for German engineering firms','North Korea ICBM test raises Asia-Pacific risk premium','India overtakes China as fastest-growing major economy'];
+  const t=document.getElementById('ticker');
+  const html=fb.map(s=>`<span class="tick-item">${s} <span class="sep">|</span></span>`).join('');
+  t.innerHTML=html+html;
+}
+
+// ═══════════════════════════════════════════
+// TECH RADAR (D3 SVG)
+// ═══════════════════════════════════════════
+const TECHS=[
+  // ADOPT (ring 0) — Q1 AI&ML(top-right), Q2 Fintech(bottom-right), Q3 Energy(bottom-left), Q4 Biotech(top-left)
+  {n:'Large Language Models',q:0,r:0,a:60,col:'#4f8ef7',desc:'GPT-4o/Claude class models transforming customer service, contract analysis, risk assessment in DACH banking. Immediate ROI proven.',tags:['AI','Adopt','2025']},
+  {n:'Open Banking APIs',q:1,r:0,a:120,col:'#22c55e',desc:'PSD2-mandated open banking APIs now mature. 847 DACH banks live. Essential for churn platform data enrichment.',tags:['Fintech','Adopt','Regulated']},
+  {n:'Edge AI Inference',q:0,r:0,a:75,col:'#4f8ef7',desc:'On-device ML inference for real-time fraud detection. Latency <1ms. Privacy-preserving by design.',tags:['AI','Adopt','Privacy']},
+  {n:'Cloud-Native Banking',q:1,r:0,a:105,col:'#22c55e',desc:'Container-first core banking on Azure/AWS. 73% of DACH banks migrating. Direct churn platform dependency.',tags:['Fintech','Adopt','Azure']},
+  {n:'Green Finance ESG',q:2,r:0,a:240,col:'#84cc16',desc:'EU Taxonomy-aligned ESG reporting now mandatory. Automated compliance reporting for all DACH institutions.',tags:['Energy','Adopt','Regulatory']},
+  {n:'mRNA Therapeutics',q:3,r:0,a:300,col:'#06b6d4',desc:'Validated by COVID vaccines. Now applied to cancer, HIV, flu. DACH pharma (BioNTech, Novartis) leading.',tags:['Biotech','Adopt','Health']},
+  // TRIAL (ring 1)
+  {n:'Agentic AI Systems',q:0,r:1,a:55,col:'#7c5cfc',desc:'Autonomous AI agents that plan, execute multi-step tasks. Early deployment in wealth management advisory. By 2026: mainstream.',tags:['AI','Trial','2026']},
+  {n:'CBDC — Digital Euro',q:1,r:1,a:115,col:'#f59e0b',desc:'ECB Digital Euro pilot live. Threat to deposit business models. DACH banks must integrate by 2027 or lose payment market share.',tags:['Fintech','Trial','ECB']},
+  {n:'Quantum-Safe Crypto',q:0,r:1,a:70,col:'#7c5cfc',desc:'NIST post-quantum standards published 2024. DACH banks have 3-5 years to migrate TLS, HSMs, core banking crypto.',tags:['AI','Trial','Security']},
+  {n:'Green Hydrogen',q:2,r:1,a:235,col:'#22c55e',desc:'Germany plans 10GW electrolyser capacity by 2030. Key industrial decarbonisation path. Investment thesis confirmed.',tags:['Energy','Trial','2027']},
+  {n:'Digital Twins',q:0,r:1,a:80,col:'#4f8ef7',desc:'Real-time simulation of banking operations, risk portfolios, customer behaviour. Siemens, SAP building ecosystem.',tags:['AI','Trial','Industrial']},
+  {n:'CRISPR Gene Editing',q:3,r:1,a:295,col:'#06b6d4',desc:'First approved CRISPR therapies (sickle cell, 2023). DACH pharma health insurance pricing models need updating.',tags:['Biotech','Trial','Medical']},
+  {n:'Real-Time Payments',q:1,r:1,a:130,col:'#22c55e',desc:'EPC SEPA Instant mandatory for all EU PSPs by Jan 2025. DACH banks completing migration. Interchange fee disruption ahead.',tags:['Fintech','Trial','SEPA']},
+  {n:'Nuclear SMR',q:2,r:1,a:250,col:'#f59e0b',desc:'Small Modular Reactors (Rolls-Royce, NuScale) progressing. Germany SMR ban may reverse post-2025 energy crisis learnings.',tags:['Energy','Trial','2030']},
+  // ASSESS (ring 2)
+  {n:'Artificial General Intelligence',q:0,r:2,a:50,col:'#ef4444',desc:'OpenAI/Anthropic roadmaps suggest AGI-like capability by 2027-2030. Existential disruption to knowledge work including banking.',tags:['AI','Assess','2028+']},
+  {n:'Quantum Computing',q:0,r:2,a:85,col:'#7c5cfc',desc:'IBM 1000+ qubit systems live. Useful quantum advantage in optimisation, drug discovery emerging. Banking crypto threat by 2030.',tags:['AI','Assess','2030']},
+  {n:'Fusion Energy',q:2,r:2,a:255,col:'#f59e0b',desc:'NIF ignition achieved Dec 2022. ITER on track 2035. Commercial fusion by 2040-2050. Transforms global energy economics.',tags:['Energy','Assess','2040']},
+  {n:'Brain-Computer Interface',q:3,r:2,a:310,col:'#06b6d4',desc:'Neuralink/Synchron in human trials. Authentication, trading, accessibility applications. Regulatory framework 2028+.',tags:['Biotech','Assess','2029']},
+  {n:'DeFi 2.0',q:1,r:2,a:140,col:'#f97316',desc:'Institutional DeFi with KYC/AML layers emerging. Could disintermediate DACH retail banking by 2030 if regulatory clarity arrives.',tags:['Fintech','Assess','Risk']},
+  {n:'Carbon Direct Capture',q:2,r:2,a:225,col:'#84cc16',desc:'Climeworks DAC in Iceland scaling. By 2035 if costs fall to $100/ton: transforms corporate carbon offset markets.',tags:['Energy','Assess','2035']},
+  // HOLD (ring 3)
+  {n:'NFT Finance',q:1,r:3,a:110,col:'#64748b',desc:'NFT-based financial instruments collapsed in 2022-23. Institutional adoption stalled. Monitor for niche art/RWA revival.',tags:['Fintech','Hold','Watch']},
+  {n:'Metaverse Banking',q:1,r:3,a:125,col:'#64748b',desc:'Meta, VR banking pilots failed to gain traction. Consumer adoption <1%. Pause investment until hardware matures (2028+).',tags:['Fintech','Hold','Paused']},
+  {n:'Legacy Blockchain (PoW)',q:2,r:3,a:260,col:'#64748b',desc:'Proof-of-Work cryptocurrency energy costs untenable under EU ESG rules. Avoid for banking applications.',tags:['Energy','Hold','ESG']},
+  {n:'Synthetic Biology',q:3,r:3,a:320,col:'#64748b',desc:'Engineering organisms for industrial processes. 10-15yr horizon. Relevant for DACH chemical & pharma insurance portfolios.',tags:['Biotech','Hold','2035+']},
+];
+
+function renderRadar(){
+  const svg=d3.select('#radar-svg');
+  const cx=220,cy=220;
+  const rings=[190,140,90,45];
+  const rLabels=['HOLD','ASSESS','TRIAL','ADOPT'];
+  const rColors=['rgba(100,116,139,.08)','rgba(124,92,252,.06)','rgba(245,158,11,.06)','rgba(34,197,94,.08)'];
+  const qLabels=['🤖 AI & ML','💰 Fintech','⚡ Clean Energy','🧬 Biotech'];
+  const qColors=['#4f8ef7','#22c55e','#f59e0b','#06b6d4'];
+
+  // Quadrant fills
+  const arc=d3.arc().innerRadius(0).outerRadius(190);
+  [0,1,2,3].forEach(i=>{
+    svg.append('path').attr('d',arc({startAngle:i*Math.PI/2-Math.PI/2,endAngle:(i+1)*Math.PI/2-Math.PI/2}))
+      .attr('transform',`translate(${cx},${cy})`).attr('fill',qColors[i]).attr('opacity',.06);
+  });
+
+  // Rings
+  rings.forEach((r,i)=>{
+    svg.append('circle').attr('cx',cx).attr('cy',cy).attr('r',r)
+      .attr('fill','none').attr('stroke','#2d3748').attr('stroke-width',.8).attr('stroke-dasharray','3,3');
+    svg.append('text').attr('x',cx+3).attr('y',cy-r+11)
+      .attr('fill','#64748b').attr('font-size',8).attr('font-weight','600').text(rLabels[i]);
+  });
+
+  // Axis lines
+  [0,90,180,270].forEach(a=>{
+    const rad=a*Math.PI/180;
+    svg.append('line').attr('x1',cx).attr('y1',cy)
+      .attr('x2',cx+Math.sin(rad)*195).attr('y2',cy-Math.cos(rad)*195)
+      .attr('stroke','#2d3748').attr('stroke-width',.8);
+  });
+
+  // Quadrant labels
+  qLabels.forEach((l,i)=>{
+    const a=(i*90+45)*Math.PI/180;
+    svg.append('text').attr('x',cx+Math.sin(a)*165).attr('y',cy-Math.cos(a)*165+4)
+      .attr('fill',qColors[i]).attr('font-size',9.5).attr('font-weight','700').attr('text-anchor','middle').text(l);
+  });
+
+  // Technologies
+  const qAngles=[[-70,-10],[-10,70],[110,170],[190,250]];
+  // q=0→upper right, q=1→lower right, q=2→lower left, q=3→upper left
+  const qBase=[315,45,135,225];
+  TECHS.forEach(t=>{
+    const ringR=rings[3-t.r]; // 3=ADOPT(innermost)
+    const innerR=t.r<3?rings[3-t.r+1]||0:0;
+    const midR=(ringR+innerR)/2;
+    const baseAngle=qBase[t.q];
+    const spread=35;
+    const angle=(baseAngle + (Math.random()-0.5)*spread)*Math.PI/180;
+    const r=midR-8+Math.random()*16;
+    const x=cx+Math.sin(angle)*r;
+    const y=cy-Math.cos(angle)*r;
+
+    const g=svg.append('g').attr('transform',`translate(${x},${y})`).style('cursor','pointer');
+    g.append('circle').attr('r',4.5).attr('fill',t.col).attr('opacity',.85);
+    g.append('circle').attr('r',4.5).attr('fill','none').attr('stroke',t.col).attr('stroke-width',.8).attr('opacity',.4);
+    g.on('mouseover',function(){d3.select(this).select('circle').attr('r',7);})
+     .on('mouseout',function(){d3.select(this).select('circle').attr('r',4.5);})
+     .on('click',()=>showTechDetail(t));
+  });
+
+  // Center label
+  svg.append('text').attr('x',cx).attr('y',cy+4).attr('text-anchor','middle')
+    .attr('fill','#64748b').attr('font-size',9).text('2025–2035');
+}
+
+function showTechDetail(t){
+  const d=document.getElementById('tech-detail');
+  d.classList.add('show');
+  document.getElementById('td-name').textContent=t.n;
+  document.getElementById('td-meta').textContent=`${['AI & ML','Fintech','Clean Energy','Biotech'][t.q]} · Stage: ${['ADOPT','TRIAL','ASSESS','HOLD'][t.r]}`;
+  document.getElementById('td-desc').textContent=t.desc;
+  document.getElementById('td-tags').innerHTML=t.tags.map(tg=>`<span class="tag b">${tg}</span>`).join('');
+}
+
+// ═══════════════════════════════════════════
+// HACKER NEWS (free API, no key)
+// ═══════════════════════════════════════════
+async function loadHN(){
+  try{
+    const ids=await fetch('https://hacker-news.firebaseio.com/v0/topstories.json').then(r=>r.json());
+    const stories=await Promise.all(ids.slice(0,12).map(id=>
+      fetch(`https://hacker-news.firebaseio.com/v0/item/${id}.json`).then(r=>r.json())
+    ));
+    const feed=document.getElementById('hn-feed');
+    feed.innerHTML='';
+    stories.filter(s=>s&&s.title).forEach(s=>{
+      const domain=s.url?new URL(s.url).hostname:'news.ycombinator.com';
+      feed.innerHTML+=`<div class="hn-item">
+        <div class="hn-title" onclick="window.open('${s.url||'https://news.ycombinator.com/item?id='+s.id}','_blank')">${s.title}</div>
+        <div class="hn-meta">
+          <span class="hn-score">▲ ${s.score}</span>
+          <span>${s.descendants||0} comments</span>
+          <span style="color:var(--acc)">${domain}</span>
+        </div>
+      </div>`;
+    });
+    document.getElementById('hn-status').textContent=`✓ ${stories.length} stories`;
+    document.getElementById('hn-status').className='tag g';
+  }catch(e){
+    document.getElementById('hn-status').textContent='⚠ HN offline';
+    document.getElementById('hn-status').className='tag r';
+    document.getElementById('hn-feed').innerHTML='<div style="font-size:11px;color:var(--mut);padding:12px;">Could not reach Hacker News API. Check connection.</div>';
+  }
+}
+
+// ═══════════════════════════════════════════
+// INNOVATION TIMELINE CHART
+// ═══════════════════════════════════════════
+new Chart('timelineChart',{
+  type:'scatter',
+  data:{datasets:[
+    {label:'AI & ML',data:[{x:2025,y:4},{x:2026,y:4},{x:2027,y:4},{x:2028,y:4},{x:2030,y:4}],
+     backgroundColor:'#4f8ef7',pointRadius:6,pointStyle:'circle'},
+    {label:'Fintech',data:[{x:2025,y:3},{x:2026,y:3},{x:2027,y:3},{x:2029,y:3}],
+     backgroundColor:'#22c55e',pointRadius:6},
+    {label:'Clean Energy',data:[{x:2026,y:2},{x:2028,y:2},{x:2030,y:2},{x:2035,y:2}],
+     backgroundColor:'#f59e0b',pointRadius:6},
+    {label:'Biotech',data:[{x:2025,y:1},{x:2027,y:1},{x:2029,y:1},{x:2033,y:1}],
+     backgroundColor:'#06b6d4',pointRadius:6},
+  ]},
+  options:{
+    plugins:{legend:{position:'top',labels:{font:{size:9},boxWidth:8}},
+      tooltip:{callbacks:{label:(ctx)=>{
+        const map={
+          '2025,4':'LLMs production-ready','2026,4':'Agentic AI mainstream','2027,4':'Quantum advantage','2028,4':'AGI-like systems','2030,4':'Full AI autonomy',
+          '2025,3':'SEPA Instant mandatory','2026,3':'Digital Euro pilot','2027,3':'CBDC mainstream','2029,3':'DeFi regulated',
+          '2026,2':'Green H2 scale-up','2028,2':'SMR first-of-kind','2030,2':'Fusion demo plant','2035,2':'Commercial fusion',
+          '2025,1':'CRISPR therapies live','2027,1':'Longevity treatments','2029,1':'BCI authentication','2033,1':'Synthetic organ market'
+        };
+        return map[`${ctx.parsed.x},${ctx.parsed.y}`]||'';
+      }}}},
+    scales:{
+      x:{min:2024,max:2036,ticks:{stepSize:1,font:{size:9}},title:{display:true,text:'Year'}},
+      y:{min:0,max:5,ticks:{callback:v=>['','Biotech','Energy','Fintech','AI & ML',''][v]||'',font:{size:9}},grid:{color:'rgba(45,55,72,.5)'}}
+    }
+  }
+});
+
+// ═══════════════════════════════════════════
+// INIT
+// ═══════════════════════════════════════════
+Chart.defaults.color='#64748b';
+Chart.defaults.borderColor='#2d3748';
+Chart.defaults.font.family="'Segoe UI',system-ui,sans-serif";
+Chart.defaults.font.size=10;
+
+initMap();
+loadNews();
+loadHN();
+renderRadar();
+
+// Connect to DACH risk: update GRI based on Russia/Ukraine/Iran data
+const hotspots=Object.values(GEO).filter(c=>c.risk>=7).length;
+document.getElementById('gri').textContent=(Object.values(GEO).reduce((s,c)=>s+c.risk,0)/Object.keys(GEO).length).toFixed(1);
+document.getElementById('gal').textContent=hotspots;
+</script>
+</body>
+</html>
