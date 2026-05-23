@@ -323,10 +323,8 @@ async function initMap(){
   await new Promise(r=>requestAnimationFrame(r));
   await new Promise(r=>requestAnimationFrame(r));
   try{
-    // Primary CDN → fallback CDN
-    let world;
-    try{ world = await d3.json('https://cdn.jsdelivr.net/npm/world-atlas@2/countries-110m.json'); }
-    catch(){ world = await d3.json('https://unpkg.com/world-atlas@2/countries-110m.json'); }
+    // Reuse the pre-fetched promise (already in-flight since script start)
+    const world = await _worldData;
     document.getElementById('map-loading').style.display='none';
     const wrap = document.getElementById('map-wrap');
     const W = wrap.offsetWidth  || (window.innerWidth  - 580) || 800;
@@ -490,9 +488,21 @@ async function fetchRSS(feed){
   return (d.items||[]).slice(0,8).map(i=>({...i,source:feed.src}));
 }
 
+// ── PRE-FETCH: kick off all network requests immediately while the page
+//    finishes parsing, so they're already in-flight when initMap / loadNews run ──
+const _worldData = d3.json('https://cdn.jsdelivr.net/npm/world-atlas@2/countries-110m.json')
+  .catch(()=>d3.json('https://unpkg.com/world-atlas@2/countries-110m.json'));
+const _newsPromises = FEEDS.map(f=>fetchRSS(f).catch(()=>[]));
+const _hnTopIds = fetch('https://hacker-news.firebaseio.com/v0/topstories.json')
+  .then(r=>r.json()).catch(()=>[]);
+
 async function loadNews(){
+  // Show instant placeholder so the panel isn't empty while fetches complete
+  const nl=document.getElementById('global-news-list');
+  if(nl) nl.innerHTML=`<div style="padding:10px 0;font-size:11px;color:var(--mut);text-align:center;"><div class="spinner" style="width:18px;height:18px;border-width:2px;margin:0 auto 8px;"></div>Fetching live headlines…</div>`;
   try{
-    const results=await Promise.allSettled(FEEDS.map(f=>fetchRSS(f)));
+    // Reuse pre-fetched promises — already in-flight since script start
+    const results=await Promise.allSettled(_newsPromises);
     results.forEach(r=>{
       if(r.status==='fulfilled') globalNewsItems.push(...r.value);
     });
@@ -647,7 +657,8 @@ function showTechDetail(t){
 // ═══════════════════════════════════════════
 async function loadHN(){
   try{
-    const ids=await fetch('https://hacker-news.firebaseio.com/v0/topstories.json').then(r=>r.json());
+    // Reuse pre-fetched IDs promise
+    const ids=await _hnTopIds;
     const stories=await Promise.all(ids.slice(0,12).map(id=>
       fetch(`https://hacker-news.firebaseio.com/v0/item/${id}.json`).then(r=>r.json())
     ));
@@ -714,12 +725,14 @@ Chart.defaults.borderColor='#2d3748';
 Chart.defaults.font.family="'Segoe UI',system-ui,sans-serif";
 Chart.defaults.font.size=10;
 
-// Defer map + data loading until browser has finished all layout passes
-window.addEventListener('load', ()=>{
-  initMap();
-  loadNews();
-  loadHN();
-  renderRadar();
+// DOMContentLoaded fires as soon as HTML is parsed — far earlier than window.load.
+// Network fetches (_worldData, _newsPromises, _hnTopIds) were already kicked off
+// at script-parse time, so they're well underway by the time we reach here.
+document.addEventListener('DOMContentLoaded', ()=>{
+  renderRadar(); // pure CPU — no network needed
+  initMap();     // awaits _worldData (pre-fetched)
+  loadNews();    // awaits _newsPromises (pre-fetched)
+  loadHN();      // awaits _hnTopIds (pre-fetched)
 });
 
 // Connect to DACH risk: update GRI based on Russia/Ukraine/Iran data
