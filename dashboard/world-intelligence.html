@@ -64,7 +64,7 @@ nav a.active{color:var(--acc);background:rgba(79,142,247,.1);border-left-color:v
 /* MAP PAGE */
 #map-layout{display:grid;grid-template-columns:1fr 340px;gap:14px;height:100%;overflow:hidden;}
 #map-wrap{background:var(--card);border:1px solid var(--brd);border-radius:var(--r);overflow:hidden;position:relative;}
-#world-svg{display:block;width:100%;height:100%;}
+#world-svg{position:absolute;top:0;left:0;width:100%;height:100%;display:block;}
 #map-loading{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:var(--card);flex-direction:column;gap:10px;}
 .spinner{width:32px;height:32px;border:3px solid var(--brd);border-top-color:var(--acc);border-radius:50%;animation:spin 1s linear infinite;}
 @keyframes spin{to{transform:rotate(360deg);}}
@@ -319,21 +319,33 @@ function riskColor(r){
 let globalNewsItems = [];
 
 async function initMap(){
-  // Double RAF ensures the browser has performed layout before we read dimensions
+  // RAF × 2 — let the browser do at least two layout passes
   await new Promise(r=>requestAnimationFrame(r));
   await new Promise(r=>requestAnimationFrame(r));
   try{
-    // Reuse the pre-fetched promise (already in-flight since script start)
     const world = await _worldData;
     document.getElementById('map-loading').style.display='none';
-    const wrap = document.getElementById('map-wrap');
-    const W = wrap.offsetWidth  || (window.innerWidth  - 580) || 800;
-    const H = wrap.offsetHeight || (window.innerHeight - 200) || 460;
-    // Use viewBox so the SVG is responsive — paths are computed in W×H space,
-    // CSS width:100%;height:100% handles display scaling
+
+    // Robust dimension detection — try 4 strategies, take first non-zero result
+    const svgEl = document.getElementById('world-svg');
+    const wrap  = document.getElementById('map-wrap');
+    const r1 = svgEl.getBoundingClientRect();
+    const r2 = wrap.getBoundingClientRect();
+    const W = (r1.width  > 50 ? r1.width  : 0) ||
+              (r2.width  > 50 ? r2.width  : 0) ||
+              svgEl.clientWidth || wrap.clientWidth ||
+              (window.innerWidth - 220 - 340 - 52);   // sidebar + panel + gaps
+    const H = (r1.height > 50 ? r1.height : 0) ||
+              (r2.height > 50 ? r2.height : 0) ||
+              svgEl.clientHeight || wrap.clientHeight ||
+              (window.innerHeight - 50 - 120);         // topbar + krow + padding
+
+    // Set explicit pixel size on the SVG (position:absolute;inset:0 makes it fill wrap)
     const svg = d3.select('#world-svg')
-      .attr('viewBox',`0 0 ${W} ${H}`)
-      .attr('preserveAspectRatio','xMidYMid meet');
+      .attr('width', W)
+      .attr('height', H)
+      .attr('viewBox', `0 0 ${W} ${H}`)
+      .attr('preserveAspectRatio', 'xMidYMid meet');
     const proj = d3.geoNaturalEarth1().scale(W/6.3).translate([W/2,H/2]);
     const path = d3.geoPath().projection(proj);
     const countries = topojson.feature(world, world.objects.countries);
