@@ -688,12 +688,29 @@ const pageTitles={
   chat:'🤖 AI Analyst Chat',sim:'⚡ Scenario Simulator',
   anomaly:'🚨 Live Anomaly Feed',model:'🤖 AI Model Health',gdpr:'🔒 GDPR Monitor'
 };
+// Canvas IDs that belong to each page — used to trigger resize after page becomes visible
+const pageCanvases={
+  exec:['churnTrendChart','segDonut','regionBar','contractBar'],
+  model:['aucTrendChart','psiChart','shapChart'],
+  gdpr:['dsrChart'],
+  sim:['simChart'],
+  anomaly:[],chat:[],risk:[]
+};
+
 function showPage(id,el){
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
   document.querySelectorAll('nav a').forEach(a=>a.classList.remove('active'));
   document.getElementById('page-'+id).classList.add('active');
   if(el)el.classList.add('active');
   document.getElementById('page-title').textContent=pageTitles[id];
+  // After the page is visible, resize any Chart.js instances on it so they
+  // fill their containers (charts in display:none divs render at 0×0)
+  requestAnimationFrame(()=>{
+    (pageCanvases[id]||[]).forEach(cid=>{
+      const c=Chart.getChart(cid);
+      if(c) c.resize();
+    });
+  });
 }
 
 // ═══════════════════════════════════════════
@@ -1237,6 +1254,18 @@ function refreshAll(){
   btn.textContent='↻ Refreshing…';btn.disabled=true;
   setTimeout(()=>{btn.textContent='↻ Refresh';btn.disabled=false;},1200);
 }
+
+// On load: resize ALL registered charts so none have 0×0 dimensions from
+// having been initialised inside display:none pages
+window.addEventListener('load',()=>{
+  requestAnimationFrame(()=>{
+    ['churnTrendChart','segDonut','regionBar','contractBar',
+     'aucTrendChart','psiChart','shapChart','dsrChart','simChart'].forEach(cid=>{
+      const c=Chart.getChart(cid);
+      if(c) c.resize();
+    });
+  });
+});
 </script>
 </body>
 </html>
