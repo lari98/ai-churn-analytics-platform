@@ -1,0 +1,60 @@
+# Secrets — NEVER commit these
+.env
+.env.*
+!.env.example
+docker/secrets/
+*.pem
+*.key
+*.p12
+*.pfx
+
+# Python
+__pycache__/
+*.py[cod]
+*.so
+*.egg
+*.egg-info/
+dist/
+build/
+.venv/
+venv/
+env/
+.Python
+pip-log.txt
+
+# Testing
+.pytest_cache/
+.coverage
+coverage.xml
+htmlcov/
+*.log
+
+# MLflow
+mlruns/
+mlartifacts/
+
+# Jupyter
+.ipynb_checkpoints/
+*.ipynb
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Docker
+docker/secrets/
+
+# Azure credentials
+*.publishsettings
+*.azureauth
+
+# Data — sample data OK, real data NEVER
+data/raw/
+data/production/
+!data/sample/

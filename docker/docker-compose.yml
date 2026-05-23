@@ -1,0 +1,154 @@
+version: "3.9"
+
+# ──────────────────────────────────────────────────────────────────────────────
+# Local Development Environment
+# AI Churn Analytics Platform
+# Usage: docker-compose up -d
+# API: http://localhost:8000/docs
+# MLflow: http://localhost:5000
+# ──────────────────────────────────────────────────────────────────────────────
+
+services:
+
+  # ── FastAPI Application ─────────────────────────────────────────────────────
+  api:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
+    image: churn-analytics-api:local
+    container_name: churn-api
+    ports:
+      - "8000:8000"
+    environment:
+      - ENVIRONMENT=development
+      - DEBUG=true
+      - WORKERS=2
+      - LOG_LEVEL=debug
+      # Load all secrets from .env file (NEVER commit .env to git)
+    env_file:
+      - .env
+    volumes:
+      - ../api:/app/api:ro        # Hot reload in dev
+      - api-logs:/app/logs
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    restart: unless-stopped
+    networks:
+      - churn-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # ── PostgreSQL (local substitute for Azure SQL) ─────────────────────────────
+  postgres:
+    image: postgres:15-alpine
+    container_name: churn-postgres
+    environment:
+      POSTGRES_DB: churn_analytics
+      POSTGRES_USER: churn_user
+      POSTGRES_PASSWORD_FILE: /run/secrets/db_password
+    secrets:
+      - db_password
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+      - ../scripts/init_db.sql:/docker-entrypoint-initdb.d/init.sql:ro
+    networks:
+      - churn-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U churn_user -d churn_analytics"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # ── Redis Cache (local substitute for Azure Cache for Redis) ────────────────
+  redis:
+    image: redis:7-alpine
+    container_name: churn-redis
+    ports:
+      - "6379:6379"
+    command: redis-server --requirepass ${REDIS_PASSWORD:-dev_redis_password}
+    volumes:
+      - redis-data:/data
+    networks:
+      - churn-network
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 3s
+      retries: 5
+
+  # ── MLflow Tracking Server ──────────────────────────────────────────────────
+  mlflow:
+    image: python:3.11-slim
+    container_name: churn-mlflow
+    command: >
+      bash -c "pip install mlflow==2.9.0 psycopg2-binary --quiet &&
+               mlflow server
+               --backend-store-uri postgresql://churn_user:${DB_PASSWORD:-dev_password}@postgres:5432/churn_analytics
+               --default-artifact-root /mlflow/artifacts
+               --host 0.0.0.0
+               --port 5000"
+    ports:
+      - "5000:5000"
+    volumes:
+      - mlflow-artifacts:/mlflow/artifacts
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - churn-network
+    restart: unless-stopped
+
+  # ── Prometheus Metrics ──────────────────────────────────────────────────────
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: churn-prometheus
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml:ro
+    networks:
+      - churn-network
+
+  # ── Grafana Dashboard ───────────────────────────────────────────────────────
+  grafana:
+    image: grafana/grafana:latest
+    container_name: churn-grafana
+    ports:
+      - "3000:3000"
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=${GRAFANA_PASSWORD:-admin}
+    volumes:
+      - grafana-data:/var/lib/grafana
+    depends_on:
+      - prometheus
+    networks:
+      - churn-network
+
+# ── Networks ──────────────────────────────────────────────────────────────────
+networks:
+  churn-network:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.20.0.0/16
+
+# ── Volumes ───────────────────────────────────────────────────────────────────
+volumes:
+  postgres-data:
+  redis-data:
+  mlflow-artifacts:
+  grafana-data:
+  api-logs:
+
+# ── Secrets (Docker secrets — not environment variables) ────────────────────
+secrets:
+  db_password:
+    file: ./secrets/db_password.txt

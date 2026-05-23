@@ -1,0 +1,40 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Customer Record Schema",
+  "description": "Data contract for customer records. All PII fields are pseudonymised (GDPR Art. 5).",
+  "type": "object",
+  "required": ["customer_token", "tenure_months", "monthly_charge_eur", "churned"],
+  "properties": {
+    "customer_token": {
+      "type": "string",
+      "description": "HMAC-SHA256 pseudonymous customer identifier. NOT the raw customer ID.",
+      "minLength": 8, "maxLength": 128,
+      "gdpr": "pseudonymous_identifier"
+    },
+    "tenure_months": {"type": "integer", "minimum": 0, "maximum": 600},
+    "monthly_charge_eur": {"type": "number", "minimum": 0, "maximum": 10000},
+    "total_charges_eur": {"type": "number", "minimum": 0},
+    "num_products": {"type": "integer", "minimum": 1, "maximum": 20},
+    "contract_type": {"type": "string", "enum": ["monthly", "annual", "two_year"]},
+    "payment_method": {"type": "string", "enum": ["auto_debit", "invoice", "credit_card", "digital_wallet"]},
+    "has_internet_service": {"type": "boolean"},
+    "has_phone_service": {"type": "boolean"},
+    "support_tickets_6m": {"type": "integer", "minimum": 0},
+    "avg_monthly_usage_gb": {"type": ["number", "null"], "minimum": 0},
+    "days_since_last_contact": {"type": ["integer", "null"], "minimum": 0},
+    "nps_score": {"type": ["number", "null"], "minimum": 0, "maximum": 10},
+    "payment_delay_count_12m": {"type": "integer", "minimum": 0},
+    "age_bucket": {"type": "string", "enum": ["18-25","26-35","36-50","51-65","65+"], "gdpr": "sensitive_demographic"},
+    "gender_encoded": {"type": "integer", "enum": [0, 1], "gdpr": "sensitive_demographic"},
+    "region": {"type": "string", "description": "ISO 3166-2 region code (e.g. DE-BY, AT-W, CH-ZH)"},
+    "churned": {"type": "integer", "enum": [0, 1], "description": "Target label: 1=churned, 0=active"}
+  },
+  "additionalProperties": false,
+  "x-gdpr": {
+    "classification": "pseudonymised",
+    "legal_basis": "legitimate_interest",
+    "retention_days": 1095,
+    "pii_fields": ["age_bucket", "gender_encoded"],
+    "note": "Raw PII (name, email, phone, IBAN) must NEVER appear in this schema"
+  }
+}

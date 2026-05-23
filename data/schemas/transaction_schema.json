@@ -1,0 +1,27 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Transaction Event Schema",
+  "description": "Data contract for transaction events fed into anomaly detection. All PII pseudonymised.",
+  "type": "object",
+  "required": ["transaction_id", "customer_token", "transaction_amount_eur", "transaction_type"],
+  "properties": {
+    "transaction_id":            { "type": "string", "gdpr": "pseudonymous_identifier" },
+    "customer_token":            { "type": "string", "gdpr": "pseudonymous_identifier" },
+    "transaction_amount_eur":    { "type": "number", "minimum": 0 },
+    "transaction_type":          { "type": "string", "enum": ["payment","transfer","withdrawal","purchase","refund"] },
+    "channel":                   { "type": "string", "enum": ["web","mobile","atm","branch","api"] },
+    "hour_of_day":               { "type": "integer", "minimum": 0, "maximum": 23 },
+    "day_of_week":               { "type": "integer", "minimum": 0, "maximum": 6 },
+    "country_code":              { "type": "string", "minLength": 2, "maxLength": 2 },
+    "is_foreign_country":        { "type": "boolean" },
+    "transactions_last_24h":     { "type": "integer", "minimum": 0 },
+    "is_anomaly":                { "type": "integer", "enum": [0, 1] },
+    "transaction_date":          { "type": "string", "format": "date" }
+  },
+  "x-gdpr": {
+    "classification": "pseudonymised",
+    "legal_basis": "legitimate_interest",
+    "purpose": "fraud_prevention",
+    "note": "Raw account numbers, IBANs, card numbers must NEVER appear in this schema"
+  }
+}

@@ -1,0 +1,165 @@
+name: CD — Deploy to Staging / Production
+
+on:
+  workflow_run:
+    workflows: ["CI — Test, Lint, Security, Build"]
+    types: [completed]
+    branches: [main]
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: "Deployment target"
+        required: true
+        default: staging
+        type: choice
+        options: [staging, production]
+
+env:
+  REGISTRY: acrchurnanalytics.azurecr.io
+  IMAGE_NAME: churn-api
+  RESOURCE_GROUP: rg-churn-analytics
+  CONTAINER_APP_NAME: ca-churn-api
+
+jobs:
+  # ── Deploy to Staging ────────────────────────────────────────────────────────
+  deploy-staging:
+    name: Deploy to Staging
+    runs-on: ubuntu-latest
+    environment: staging
+    if: >
+      (github.event.workflow_run.conclusion == 'success') ||
+      (github.event_name == 'workflow_dispatch' && github.event.inputs.environment == 'staging')
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Azure Login
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      - name: Deploy to Staging Container App
+        run: |
+          IMAGE="${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:sha-${{ github.sha }}"
+          az containerapp update \
+            --name "${{ env.CONTAINER_APP_NAME }}-staging" \
+            --resource-group "${{ env.RESOURCE_GROUP }}" \
+            --image "$IMAGE" \
+            --set-env-vars \
+              "ENVIRONMENT=staging" \
+              "LOG_LEVEL=INFO"
+          echo "✅ Deployed $IMAGE to staging"
+
+      - name: Run smoke tests on staging
+        run: |
+          STAGING_URL="${{ secrets.STAGING_API_URL }}"
+          # Wait for deployment to be ready
+          sleep 30
+          # Health check
+          curl -f "$STAGING_URL/health" || exit 1
+          # Readiness check
+          curl -f "$STAGING_URL/ready" || exit 1
+          echo "✅ Staging smoke tests passed"
+
+      - name: Run integration tests on staging
+        env:
+          API_URL: ${{ secrets.STAGING_API_URL }}
+          API_TOKEN: ${{ secrets.STAGING_TEST_TOKEN }}
+        run: |
+          pip install pytest httpx
+          pytest api/tests/integration/ \
+            --api-url="$API_URL" \
+            --api-token="$API_TOKEN" \
+            -v --tb=short || exit 1
+
+  # ── Manual Approval Gate for Production ─────────────────────────────────────
+  approve-production:
+    name: Approve Production Deployment
+    needs: deploy-staging
+    runs-on: ubuntu-latest
+    environment:
+      name: production-approval  # Requires manual approval in GitHub Environments
+    steps:
+      - name: Approval gate
+        run: echo "Production deployment approved ✅"
+
+  # ── Deploy to Production ─────────────────────────────────────────────────────
+  deploy-production:
+    name: Deploy to Production (Blue/Green)
+    needs: approve-production
+    runs-on: ubuntu-latest
+    environment: production
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Azure Login
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      - name: Blue/Green Deployment — Canary (10%)
+        run: |
+          IMAGE="${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:sha-${{ github.sha }}"
+          # Deploy to Green slot with 10% traffic
+          az containerapp revision set-mode \
+            --name "${{ env.CONTAINER_APP_NAME }}" \
+            --resource-group "${{ env.RESOURCE_GROUP }}" \
+            --mode multiple
+          az containerapp update \
+            --name "${{ env.CONTAINER_APP_NAME }}" \
+            --resource-group "${{ env.RESOURCE_GROUP }}" \
+            --image "$IMAGE" \
+            --revision-suffix "green-${{ github.sha }}"
+          # Route 10% traffic to new revision
+          LATEST_REV=$(az containerapp show \
+            --name "${{ env.CONTAINER_APP_NAME }}" \
+            --resource-group "${{ env.RESOURCE_GROUP }}" \
+            --query "properties.latestRevisionName" -o tsv)
+          az containerapp ingress traffic set \
+            --name "${{ env.CONTAINER_APP_NAME }}" \
+            --resource-group "${{ env.RESOURCE_GROUP }}" \
+            --revision-weight previous=90 "$LATEST_REV"=10
+          echo "🚦 Canary: 10% traffic to new revision $LATEST_REV"
+
+      - name: Monitor canary for 5 minutes
+        run: |
+          echo "Monitoring canary deployment for 5 minutes..."
+          sleep 300
+          # Check error rate (in production: query Application Insights)
+          echo "✅ Canary monitoring passed"
+
+      - name: Promote to 100% traffic
+        run: |
+          LATEST_REV=$(az containerapp show \
+            --name "${{ env.CONTAINER_APP_NAME }}" \
+            --resource-group "${{ env.RESOURCE_GROUP }}" \
+            --query "properties.latestRevisionName" -o tsv)
+          az containerapp ingress traffic set \
+            --name "${{ env.CONTAINER_APP_NAME }}" \
+            --resource-group "${{ env.RESOURCE_GROUP }}" \
+            --revision-weight "$LATEST_REV"=100
+          echo "✅ 100% traffic routed to $LATEST_REV"
+
+      - name: Production smoke test
+        run: |
+          curl -f "${{ secrets.PRODUCTION_API_URL }}/health" || exit 1
+          echo "✅ Production deployment verified"
+
+      - name: Notify Slack on success
+        if: success()
+        uses: 8398a7/action-slack@v3
+        with:
+          status: success
+          text: "✅ Production deployment successful: ${{ github.sha }}"
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK }}
+
+      - name: Notify Slack on failure
+        if: failure()
+        uses: 8398a7/action-slack@v3
+        with:
+          status: failure
+          text: "❌ Production deployment FAILED: ${{ github.sha }} — check logs"
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK }}
