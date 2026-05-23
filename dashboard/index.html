@@ -1,0 +1,903 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>AI Churn Analytics Platform v2 — DACH Enterprise Dashboard</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<style>
+:root{
+  --bg:#0f1117;--sidebar:#161b27;--card:#1c2233;--card2:#222940;
+  --accent:#4f8ef7;--accent2:#7c5cfc;--green:#22c55e;--red:#ef4444;
+  --yellow:#f59e0b;--orange:#f97316;--text:#e2e8f0;--muted:#64748b;
+  --border:#2d3748;--radius:12px;--font:'Segoe UI',system-ui,sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{background:var(--bg);color:var(--text);font-family:var(--font);display:flex;min-height:100vh;overflow-x:hidden;}
+
+/* ── SIDEBAR ── */
+#sidebar{width:240px;min-width:240px;background:var(--sidebar);display:flex;flex-direction:column;border-right:1px solid var(--border);position:fixed;height:100vh;z-index:100;}
+.logo{padding:24px 20px 16px;border-bottom:1px solid var(--border);}
+.logo h2{font-size:15px;font-weight:700;color:var(--accent);letter-spacing:.3px;}
+.logo p{font-size:11px;color:var(--muted);margin-top:3px;}
+.badge-gdpr{display:inline-block;background:rgba(34,197,94,.15);color:var(--green);border:1px solid rgba(34,197,94,.3);border-radius:20px;font-size:10px;padding:2px 8px;margin-top:6px;}
+nav{flex:1;padding:12px 0;overflow-y:auto;}
+nav a{display:flex;align-items:center;gap:10px;padding:11px 20px;font-size:13px;color:var(--muted);cursor:pointer;border-left:3px solid transparent;transition:.15s;text-decoration:none;}
+nav a:hover{background:rgba(79,142,247,.06);color:var(--text);}
+nav a.active{color:var(--accent);background:rgba(79,142,247,.1);border-left-color:var(--accent);}
+nav a .icon{font-size:16px;width:20px;text-align:center;}
+.nav-section{font-size:10px;font-weight:600;color:var(--muted);letter-spacing:1px;padding:16px 20px 6px;text-transform:uppercase;}
+.sidebar-footer{padding:16px 20px;border-top:1px solid var(--border);font-size:11px;color:var(--muted);}
+.live-dot{width:7px;height:7px;background:var(--green);border-radius:50%;display:inline-block;margin-right:5px;animation:pulse 2s infinite;}
+@keyframes pulse{0%,100%{opacity:1;}50%{opacity:.4;}}
+
+/* ── MAIN ── */
+#main{margin-left:240px;flex:1;min-width:0;padding:0;}
+.topbar{padding:16px 28px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;background:var(--sidebar);position:sticky;top:0;z-index:50;}
+.topbar h1{font-size:18px;font-weight:700;}
+.topbar-right{display:flex;align-items:center;gap:12px;}
+.time-badge{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:6px 14px;font-size:12px;color:var(--muted);}
+.refresh-btn{background:var(--accent);border:none;color:#fff;border-radius:8px;padding:7px 16px;font-size:12px;cursor:pointer;font-weight:600;}
+.refresh-btn:hover{background:#3b7de8;}
+
+.page{display:none;padding:24px 28px;}
+.page.active{display:block;}
+
+/* ── CARDS ── */
+.kpi-row{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:24px;}
+.kpi{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:20px 22px;position:relative;overflow:hidden;}
+.kpi::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;}
+.kpi.blue::before{background:linear-gradient(90deg,var(--accent),var(--accent2));}
+.kpi.red::before{background:linear-gradient(90deg,var(--red),#c026d3);}
+.kpi.green::before{background:linear-gradient(90deg,var(--green),#06b6d4);}
+.kpi.yellow::before{background:linear-gradient(90deg,var(--yellow),var(--orange));}
+.kpi-label{font-size:11px;color:var(--muted);font-weight:600;letter-spacing:.5px;text-transform:uppercase;}
+.kpi-value{font-size:28px;font-weight:800;margin:8px 0 4px;line-height:1;}
+.kpi-delta{font-size:12px;display:flex;align-items:center;gap:4px;}
+.kpi-delta.up{color:var(--red);}
+.kpi-delta.down{color:var(--green);}
+.kpi-delta.pos{color:var(--green);}
+.kpi-icon{position:absolute;right:16px;top:16px;font-size:28px;opacity:.15;}
+
+/* ── GRID LAYOUTS ── */
+.row{display:grid;gap:16px;margin-bottom:16px;}
+.row.c2{grid-template-columns:1fr 1fr;}
+.row.c3{grid-template-columns:1fr 1fr 1fr;}
+.row.c7030{grid-template-columns:2fr 1fr;}
+.row.c3070{grid-template-columns:1fr 2fr;}
+.card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:20px;}
+.card-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;}
+.card-title{font-size:13px;font-weight:700;color:var(--text);}
+.card-sub{font-size:11px;color:var(--muted);margin-top:2px;}
+.tag{display:inline-block;border-radius:20px;font-size:10px;font-weight:600;padding:3px 10px;}
+.tag.green{background:rgba(34,197,94,.15);color:var(--green);}
+.tag.red{background:rgba(239,68,68,.15);color:var(--red);}
+.tag.yellow{background:rgba(245,158,11,.15);color:var(--yellow);}
+.tag.blue{background:rgba(79,142,247,.15);color:var(--accent);}
+.tag.purple{background:rgba(124,92,252,.15);color:var(--accent2);}
+
+/* ── TABLE ── */
+table{width:100%;border-collapse:collapse;font-size:12px;}
+th{text-align:left;padding:8px 12px;color:var(--muted);font-weight:600;font-size:11px;border-bottom:1px solid var(--border);text-transform:uppercase;letter-spacing:.5px;}
+td{padding:9px 12px;border-bottom:1px solid rgba(45,55,72,.5);vertical-align:middle;}
+tr:hover td{background:rgba(79,142,247,.04);}
+tr:last-child td{border-bottom:none;}
+.risk-bar{height:6px;border-radius:3px;background:var(--border);overflow:hidden;width:80px;display:inline-block;vertical-align:middle;}
+.risk-fill{height:100%;border-radius:3px;}
+
+/* ── GAUGE ── */
+.gauge-wrap{display:flex;flex-direction:column;align-items:center;padding:10px 0;}
+.gauge-label{font-size:12px;color:var(--muted);margin-top:6px;}
+
+/* ── SEARCH ── */
+.search-bar{display:flex;gap:10px;margin-bottom:16px;flex-wrap:wrap;}
+.search-bar input,.search-bar select{background:var(--card2);border:1px solid var(--border);color:var(--text);border-radius:8px;padding:8px 14px;font-size:12px;outline:none;}
+.search-bar input{flex:1;min-width:200px;}
+.search-bar input:focus,.search-bar select:focus{border-color:var(--accent);}
+.search-bar select option{background:var(--card2);}
+
+/* ── SHAP ── */
+.shap-row{display:flex;align-items:center;gap:8px;margin-bottom:7px;font-size:12px;}
+.shap-feature{width:160px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.shap-bar-wrap{flex:1;height:14px;background:var(--border);border-radius:4px;overflow:hidden;position:relative;}
+.shap-bar{height:100%;border-radius:4px;min-width:2px;}
+.shap-val{width:50px;text-align:right;font-weight:600;font-size:11px;}
+
+/* ── AUDIT LOG ── */
+.log-entry{display:flex;gap:12px;padding:10px 0;border-bottom:1px solid rgba(45,55,72,.5);}
+.log-entry:last-child{border-bottom:none;}
+.log-dot{width:10px;height:10px;border-radius:50%;margin-top:3px;flex-shrink:0;}
+.log-time{font-size:11px;color:var(--muted);white-space:nowrap;min-width:140px;}
+.log-msg{font-size:12px;}
+.log-sub{font-size:11px;color:var(--muted);margin-top:2px;}
+
+/* ── PROGRESS RINGS ── */
+.ring-wrap{display:flex;gap:20px;flex-wrap:wrap;}
+.ring-item{display:flex;flex-direction:column;align-items:center;gap:6px;}
+.ring-label{font-size:11px;color:var(--muted);text-align:center;}
+.ring-val{font-size:14px;font-weight:700;}
+
+/* ── FAIRNESS TABLE ── */
+.fairness-row{display:grid;grid-template-columns:120px 1fr 80px 80px;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid rgba(45,55,72,.4);}
+.fairness-row:last-child{border-bottom:none;}
+.fair-bar-wrap{height:8px;background:var(--border);border-radius:4px;overflow:hidden;}
+.fair-bar{height:100%;border-radius:4px;}
+
+/* ── DETAIL PANEL ── */
+#customer-detail{display:none;background:var(--card2);border:1px solid var(--accent);border-radius:var(--radius);padding:20px;margin-top:16px;}
+#customer-detail.show{display:block;}
+
+/* ── CONSENT CHANNELS ── */
+.consent-row{display:flex;align-items:center;gap:12px;padding:8px 0;border-bottom:1px solid rgba(45,55,72,.4);}
+.consent-row:last-child{border-bottom:none;}
+.consent-channel{width:100px;font-size:12px;font-weight:600;}
+.consent-bar-wrap{flex:1;height:10px;background:var(--border);border-radius:5px;overflow:hidden;}
+.consent-bar{height:100%;border-radius:5px;background:linear-gradient(90deg,var(--green),#06b6d4);}
+.consent-pct{width:45px;text-align:right;font-size:12px;font-weight:700;color:var(--green);}
+
+/* ── SCROLLBAR ── */
+::-webkit-scrollbar{width:5px;height:5px;}
+::-webkit-scrollbar-track{background:transparent;}
+::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px;}
+
+/* ── RESPONSIVE ── */
+@media(max-width:1100px){
+  .kpi-row{grid-template-columns:repeat(2,1fr);}
+  .row.c2,.row.c3,.row.c7030,.row.c3070{grid-template-columns:1fr;}
+}
+</style>
+</head>
+<body>
+
+<!-- SIDEBAR -->
+<nav id="sidebar">
+  <div class="logo">
+    <h2>⚡ Churn Analytics</h2>
+    <p>DACH Enterprise Platform v2</p>
+    <span class="badge-gdpr">✓ GDPR/DSGVO Compliant</span>
+  </div>
+  <nav>
+    <div class="nav-section">Analytics</div>
+    <a class="active" onclick="showPage('exec')" href="#">
+      <span class="icon">📊</span> Executive Overview
+    </a>
+    <a onclick="showPage('risk')" href="#">
+      <span class="icon">🎯</span> Customer Risk Map
+    </a>
+    <div class="nav-section">AI / ML</div>
+    <a onclick="showPage('model')" href="#">
+      <span class="icon">🤖</span> Model Health
+    </a>
+    <div class="nav-section">Compliance</div>
+    <a onclick="showPage('gdpr')" href="#">
+      <span class="icon">🔒</span> GDPR Monitor
+    </a>
+  </nav>
+  <div class="sidebar-footer">
+    <div><span class="live-dot"></span> Live Simulation Active</div>
+    <div style="margin-top:4px;">Data: 1,000 DACH customers</div>
+    <div style="margin-top:4px;color:#4f8ef7;">lari98 / ai-churn-analytics</div>
+  </div>
+</nav>
+
+<!-- MAIN -->
+<div id="main">
+  <div class="topbar">
+    <h1 id="page-title">📊 Executive Overview</h1>
+    <div class="topbar-right">
+      <span class="time-badge" id="clock">Loading…</span>
+      <button class="refresh-btn" onclick="refreshAll()">↻ Refresh</button>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════
+       PAGE 1 — EXECUTIVE OVERVIEW
+  ══════════════════════════════════════ -->
+  <div class="page active" id="page-exec">
+
+    <div class="kpi-row">
+      <div class="kpi red">
+        <span class="kpi-icon">📉</span>
+        <div class="kpi-label">Churn Rate (30d)</div>
+        <div class="kpi-value" style="color:var(--red)">26.4%</div>
+        <div class="kpi-delta up">▲ 1.8% vs last month</div>
+      </div>
+      <div class="kpi red">
+        <span class="kpi-icon">💶</span>
+        <div class="kpi-label">Revenue at Risk</div>
+        <div class="kpi-value" style="color:var(--orange)">€2.34M</div>
+        <div class="kpi-delta up">▲ €180K vs last month</div>
+      </div>
+      <div class="kpi yellow">
+        <span class="kpi-icon">⚠️</span>
+        <div class="kpi-label">High-Risk Customers</div>
+        <div class="kpi-value" style="color:var(--yellow)">187</div>
+        <div class="kpi-delta up">▲ 23 new this week</div>
+      </div>
+      <div class="kpi green">
+        <span class="kpi-icon">💡</span>
+        <div class="kpi-label">Retention ROI</div>
+        <div class="kpi-value" style="color:var(--green)">4.2×</div>
+        <div class="kpi-delta pos">▲ +0.3× vs target</div>
+      </div>
+    </div>
+
+    <div class="row c7030">
+      <div class="card">
+        <div class="card-header">
+          <div><div class="card-title">Churn Rate Trend — 12 Months</div><div class="card-sub">Monthly churn % across DACH regions</div></div>
+          <span class="tag yellow">⚠ Upward trend</span>
+        </div>
+        <canvas id="churnTrendChart" height="80"></canvas>
+      </div>
+      <div class="card">
+        <div class="card-header">
+          <div><div class="card-title">Customer Segments</div><div class="card-sub">RFM + KMeans (8 segments)</div></div>
+        </div>
+        <canvas id="segmentChart" height="160"></canvas>
+      </div>
+    </div>
+
+    <div class="row c2">
+      <div class="card">
+        <div class="card-header">
+          <div><div class="card-title">Revenue at Risk by Region</div><div class="card-sub">DACH breakdown — EUR</div></div>
+        </div>
+        <canvas id="regionChart" height="100"></canvas>
+      </div>
+      <div class="card">
+        <div class="card-header">
+          <div><div class="card-title">Churn by Contract Type</div><div class="card-sub">Monthly vs Annual vs Biennial</div></div>
+        </div>
+        <canvas id="contractChart" height="100"></canvas>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <div><div class="card-title">🔴 Top 10 High-Risk Customers</div><div class="card-sub">Ranked by churn probability — pseudonymised per GDPR Art.4(5)</div></div>
+        <span class="tag green">✓ PII Masked</span>
+      </div>
+      <table id="top-risk-table">
+        <thead><tr>
+          <th>Token</th><th>Segment</th><th>Region</th><th>Tenure</th>
+          <th>Monthly €</th><th>Churn Prob.</th><th>Risk Score</th><th>Top Driver</th><th>Action</th>
+        </tr></thead>
+        <tbody id="top-risk-body"></tbody>
+      </table>
+    </div>
+
+  </div>
+
+  <!-- ══════════════════════════════════════
+       PAGE 2 — CUSTOMER RISK MAP
+  ══════════════════════════════════════ -->
+  <div class="page" id="page-risk">
+    <div class="search-bar">
+      <input type="text" id="cust-search" placeholder="Search by token or segment…" oninput="filterCustomers()"/>
+      <select id="seg-filter" onchange="filterCustomers()">
+        <option value="">All Segments</option>
+        <option>Champions</option><option>Loyal</option><option>Potential Loyalists</option>
+        <option>At Risk</option><option>Hibernating</option><option>Lost</option>
+        <option>New Customers</option><option>Promising</option>
+      </select>
+      <select id="risk-filter" onchange="filterCustomers()">
+        <option value="">All Risk Levels</option>
+        <option value="high">High (&gt;70%)</option>
+        <option value="medium">Medium (40–70%)</option>
+        <option value="low">Low (&lt;40%)</option>
+      </select>
+    </div>
+    <div class="row c3070">
+      <div class="card" style="max-height:600px;overflow-y:auto;">
+        <div class="card-header">
+          <div><div class="card-title">Customer List</div><div class="card-sub" id="cust-count">1,000 customers</div></div>
+        </div>
+        <table>
+          <thead><tr><th>Token</th><th>Prob.</th><th>Segment</th><th></th></tr></thead>
+          <tbody id="cust-table-body"></tbody>
+        </table>
+      </div>
+      <div>
+        <div class="card" style="margin-bottom:16px;">
+          <div class="card-header">
+            <div><div class="card-title">Churn Probability Distribution</div></div>
+          </div>
+          <canvas id="probDistChart" height="100"></canvas>
+        </div>
+        <div id="customer-detail" class="show">
+          <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:14px;">
+            <div>
+              <div style="font-size:14px;font-weight:700;" id="detail-token">Select a customer</div>
+              <div style="font-size:11px;color:var(--muted);margin-top:2px;" id="detail-meta"></div>
+            </div>
+            <div style="text-align:right;">
+              <div style="font-size:26px;font-weight:800;" id="detail-prob" style="color:var(--red)">—</div>
+              <div style="font-size:11px;color:var(--muted);">churn probability</div>
+            </div>
+          </div>
+          <div style="font-size:12px;font-weight:700;margin-bottom:8px;color:var(--muted);">SHAP — TOP DRIVERS</div>
+          <div id="shap-bars"></div>
+          <div style="margin-top:14px;font-size:12px;font-weight:700;color:var(--muted);margin-bottom:8px;">RECOMMENDED ACTIONS</div>
+          <div id="retention-actions"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════
+       PAGE 3 — MODEL HEALTH
+  ══════════════════════════════════════ -->
+  <div class="page" id="page-model">
+    <div class="kpi-row">
+      <div class="kpi green">
+        <span class="kpi-icon">🎯</span>
+        <div class="kpi-label">AUC-ROC</div>
+        <div class="kpi-value" style="color:var(--green)">0.871</div>
+        <div class="kpi-delta pos">✓ Gate: ≥0.85 passed</div>
+      </div>
+      <div class="kpi green">
+        <span class="kpi-icon">⚖️</span>
+        <div class="kpi-label">F1 Score</div>
+        <div class="kpi-value" style="color:var(--green)">0.823</div>
+        <div class="kpi-delta pos">✓ Gate: ≥0.78 passed</div>
+      </div>
+      <div class="kpi green">
+        <span class="kpi-icon">📐</span>
+        <div class="kpi-label">PSI Drift</div>
+        <div class="kpi-value" style="color:var(--green)">0.042</div>
+        <div class="kpi-delta pos">✓ Stable (&lt;0.10)</div>
+      </div>
+      <div class="kpi blue">
+        <span class="kpi-icon">🏷️</span>
+        <div class="kpi-label">Model Version</div>
+        <div class="kpi-value" style="color:var(--accent)">v3.1</div>
+        <div class="kpi-delta pos">Production • MLflow</div>
+      </div>
+    </div>
+
+    <div class="row c2">
+      <div class="card">
+        <div class="card-header">
+          <div><div class="card-title">AUC-ROC over Time</div><div class="card-sub">Weekly model performance — XGBoost+LightGBM ensemble</div></div>
+          <span class="tag green">✓ Stable</span>
+        </div>
+        <canvas id="aucTrendChart" height="90"></canvas>
+      </div>
+      <div class="card">
+        <div class="card-header">
+          <div><div class="card-title">PSI Drift Monitor</div><div class="card-sub">Population Stability Index — monthly snapshots</div></div>
+          <span class="tag green">✓ No retrain needed</span>
+        </div>
+        <canvas id="psiChart" height="90"></canvas>
+      </div>
+    </div>
+
+    <div class="row c2">
+      <div class="card">
+        <div class="card-header">
+          <div><div class="card-title">Feature Importance (SHAP)</div><div class="card-sub">Top 10 global drivers of churn</div></div>
+        </div>
+        <canvas id="shapChart" height="130"></canvas>
+      </div>
+      <div class="card">
+        <div class="card-header">
+          <div><div class="card-title">Fairness Audit — GDPR / AI Act</div><div class="card-sub">AUC-ROC delta by age bucket vs overall (0.871). Δ&lt;0.05 = ✓</div></div>
+        </div>
+        <div id="fairness-table"></div>
+        <div style="margin-top:16px;">
+          <div class="card-title" style="margin-bottom:10px;font-size:12px;">Fairness by Region</div>
+          <div id="fairness-region"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <div><div class="card-title">Confusion Matrix — Test Set (n=200)</div><div class="card-sub">Threshold 0.50 | Precision 0.84 | Recall 0.80 | F1 0.82</div></div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;max-width:500px;">
+        <div style="background:rgba(34,197,94,.15);border:1px solid rgba(34,197,94,.3);border-radius:10px;padding:20px;text-align:center;">
+          <div style="font-size:11px;color:var(--muted);margin-bottom:6px;">TRUE NEGATIVE</div>
+          <div style="font-size:32px;font-weight:800;color:var(--green);">117</div>
+          <div style="font-size:11px;color:var(--muted);">Correctly identified retained</div>
+        </div>
+        <div style="background:rgba(239,68,68,.1);border:1px solid rgba(239,68,68,.25);border-radius:10px;padding:20px;text-align:center;">
+          <div style="font-size:11px;color:var(--muted);margin-bottom:6px;">FALSE POSITIVE</div>
+          <div style="font-size:32px;font-weight:800;color:var(--red);">21</div>
+          <div style="font-size:11px;color:var(--muted);">Predicted churn, stayed</div>
+        </div>
+        <div style="background:rgba(239,68,68,.1);border:1px solid rgba(239,68,68,.25);border-radius:10px;padding:20px;text-align:center;">
+          <div style="font-size:11px;color:var(--muted);margin-bottom:6px;">FALSE NEGATIVE</div>
+          <div style="font-size:32px;font-weight:800;color:var(--orange);">11</div>
+          <div style="font-size:11px;color:var(--muted);">Missed churn cases</div>
+        </div>
+        <div style="background:rgba(34,197,94,.15);border:1px solid rgba(34,197,94,.3);border-radius:10px;padding:20px;text-align:center;">
+          <div style="font-size:11px;color:var(--muted);margin-bottom:6px;">TRUE POSITIVE</div>
+          <div style="font-size:32px;font-weight:800;color:var(--green);">51</div>
+          <div style="font-size:11px;color:var(--muted);">Correctly identified churners</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════
+       PAGE 4 — GDPR MONITOR
+  ══════════════════════════════════════ -->
+  <div class="page" id="page-gdpr">
+    <div class="kpi-row">
+      <div class="kpi green">
+        <span class="kpi-icon">✅</span>
+        <div class="kpi-label">Consent Rate</div>
+        <div class="kpi-value" style="color:var(--green)">87.3%</div>
+        <div class="kpi-delta pos">▲ +2.1% this month</div>
+      </div>
+      <div class="kpi yellow">
+        <span class="kpi-icon">🗑️</span>
+        <div class="kpi-label">Pending Erasure (Art.17)</div>
+        <div class="kpi-value" style="color:var(--yellow)">12</div>
+        <div class="kpi-delta up">3 new requests (SLA: 30d)</div>
+      </div>
+      <div class="kpi blue">
+        <span class="kpi-icon">📋</span>
+        <div class="kpi-label">Data Exports (Art.15)</div>
+        <div class="kpi-value" style="color:var(--accent)">34</div>
+        <div class="kpi-delta pos">All within 30-day SLA</div>
+      </div>
+      <div class="kpi green">
+        <span class="kpi-icon">🛡️</span>
+        <div class="kpi-label">Audit Log Integrity</div>
+        <div class="kpi-value" style="color:var(--green)">100%</div>
+        <div class="kpi-delta pos">SHA-256 hash chain intact</div>
+      </div>
+    </div>
+
+    <div class="row c2">
+      <div class="card">
+        <div class="card-header">
+          <div><div class="card-title">Consent Rate by Channel</div><div class="card-sub">Active marketing consent per acquisition channel</div></div>
+        </div>
+        <div id="consent-channels"></div>
+      </div>
+      <div class="card">
+        <div class="card-header">
+          <div><div class="card-title">Data Subject Requests — 2025</div><div class="card-sub">By type: Art.15 Access · Art.17 Erasure · Art.18 Restriction · Art.21 Objection</div></div>
+        </div>
+        <canvas id="dsrChart" height="110"></canvas>
+      </div>
+    </div>
+
+    <div class="row c2">
+      <div class="card">
+        <div class="card-header">
+          <div><div class="card-title">Erasure Request Tracker</div><div class="card-sub">Art.17 GDPR — 30-day SLA</div></div>
+        </div>
+        <table>
+          <thead><tr><th>Request ID</th><th>Token</th><th>Requested</th><th>SLA Days Left</th><th>Status</th><th>Scope</th></tr></thead>
+          <tbody id="erasure-table"></tbody>
+        </table>
+      </div>
+      <div class="card">
+        <div class="card-header">
+          <div><div class="card-title">Audit Log — Recent Events</div><div class="card-sub">Immutable hash-chained audit trail</div></div>
+        </div>
+        <div id="audit-log"></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <div><div class="card-title">Data Retention Policy Compliance</div><div class="card-sub">Automated cleanup status — BDSG / DSGVO</div></div>
+        <span class="tag green">✓ Fully Compliant</span>
+      </div>
+      <table>
+        <thead><tr><th>Data Category</th><th>Retention Period</th><th>Records</th><th>Next Cleanup</th><th>Last Run</th><th>Status</th></tr></thead>
+        <tbody id="retention-table"></tbody>
+      </table>
+    </div>
+  </div>
+
+</div><!-- /main -->
+
+<script>
+// ══════════════════════════════════════════════
+// CLOCK
+// ══════════════════════════════════════════════
+function updateClock(){
+  const d=new Date();
+  document.getElementById('clock').textContent=
+    d.toLocaleDateString('de-DE',{day:'2-digit',month:'short',year:'numeric'})+' '+
+    d.toLocaleTimeString('de-DE',{hour:'2-digit',minute:'2-digit',second:'2-digit'})+' CET';
+}
+updateClock(); setInterval(updateClock,1000);
+
+// ══════════════════════════════════════════════
+// NAVIGATION
+// ══════════════════════════════════════════════
+const pageTitles={
+  exec:'📊 Executive Overview',
+  risk:'🎯 Customer Risk Map',
+  model:'🤖 AI Model Health',
+  gdpr:'🔒 GDPR Compliance Monitor'
+};
+function showPage(id){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('nav a').forEach(a=>a.classList.remove('active'));
+  document.getElementById('page-'+id).classList.add('active');
+  event.currentTarget.classList.add('active');
+  document.getElementById('page-title').textContent=pageTitles[id];
+}
+
+// ══════════════════════════════════════════════
+// CHART.JS DEFAULTS
+// ══════════════════════════════════════════════
+Chart.defaults.color='#64748b';
+Chart.defaults.borderColor='#2d3748';
+Chart.defaults.font.family="'Segoe UI',system-ui,sans-serif";
+Chart.defaults.font.size=11;
+
+const MONTHS=['Jun','Jul','Aug','Sep','Oct','Nov','Dec','Jan','Feb','Mar','Apr','May'];
+
+// ══════════════════════════════════════════════
+// PAGE 1 CHARTS
+// ══════════════════════════════════════════════
+new Chart('churnTrendChart',{type:'line',data:{
+  labels:MONTHS,
+  datasets:[
+    {label:'DE',data:[22.1,23.4,22.8,24.1,23.6,25.2,24.8,25.9,26.1,26.7,26.2,27.1],borderColor:'#4f8ef7',backgroundColor:'rgba(79,142,247,.08)',tension:.4,fill:true,pointRadius:3},
+    {label:'AT',data:[19.3,20.1,21.4,20.8,22.3,22.9,23.1,24.0,23.7,24.8,25.1,25.6],borderColor:'#7c5cfc',backgroundColor:'rgba(124,92,252,.06)',tension:.4,fill:true,pointRadius:3},
+    {label:'CH',data:[18.2,19.4,18.9,19.7,20.3,21.1,20.8,21.9,22.4,22.1,23.0,23.8],borderColor:'#22c55e',backgroundColor:'rgba(34,197,94,.05)',tension:.4,fill:true,pointRadius:3}
+  ]
+},options:{plugins:{legend:{position:'top'}},scales:{y:{min:15,max:30,ticks:{callback:v=>v+'%'}}}}});
+
+new Chart('segmentChart',{type:'doughnut',data:{
+  labels:['Champions','Loyal','At Risk','Hibernating','Potential Loyalists','New Customers','Promising','Lost'],
+  datasets:[{data:[142,198,187,134,112,89,76,62],
+    backgroundColor:['#22c55e','#4f8ef7','#ef4444','#64748b','#7c5cfc','#06b6d4','#f59e0b','#f97316'],
+    borderWidth:2,borderColor:'#1c2233'}]
+},options:{plugins:{legend:{position:'bottom',labels:{boxWidth:10,font:{size:10}}}},cutout:'60%'}});
+
+new Chart('regionChart',{type:'bar',data:{
+  labels:['Berlin','München','Hamburg','Wien','Zürich','Frankfurt','Stuttgart','Köln','Bern','Dresden'],
+  datasets:[{label:'Revenue at Risk (€K)',data:[342,298,241,187,163,154,132,121,98,87],
+    backgroundColor:'rgba(79,142,247,.7)',borderRadius:6}]
+},options:{plugins:{legend:{display:false}},scales:{y:{ticks:{callback:v=>'€'+v+'K'}}}}});
+
+new Chart('contractChart',{type:'bar',data:{
+  labels:MONTHS,
+  datasets:[
+    {label:'Monthly (34.2%)',data:[38,36,35,37,34,33,35,34,36,33,32,34],backgroundColor:'rgba(239,68,68,.7)',borderRadius:4},
+    {label:'Annual (18.1%)',data:[19,18,20,19,18,17,19,18,17,18,19,18],backgroundColor:'rgba(245,158,11,.7)',borderRadius:4},
+    {label:'Biennial (8.4%)',data:[9,8,9,8,9,8,8,9,8,8,9,8],backgroundColor:'rgba(34,197,94,.7)',borderRadius:4}
+  ]
+},options:{plugins:{legend:{position:'top'}},scales:{x:{stacked:false},y:{ticks:{callback:v=>v+'%'}}}}});
+
+// ══════════════════════════════════════════════
+// TOP RISK TABLE DATA
+// ══════════════════════════════════════════════
+const topRisk=[
+  {token:'cust_7f3a2b1d',seg:'At Risk',region:'DE-Berlin',tenure:8,charge:89.90,prob:.94,driver:'Low NPS (-3)',action:'Escalate to VIP retention'},
+  {token:'cust_2e8c4f9a',seg:'Hibernating',region:'AT-Wien',tenure:5,charge:67.50,prob:.91,driver:'3 support tickets',action:'Proactive support call'},
+  {token:'cust_9d1b6e3c',seg:'At Risk',region:'DE-München',tenure:12,charge:112.00,prob:.89,driver:'Monthly contract',action:'Offer annual discount 20%'},
+  {token:'cust_4a7f0c8e',seg:'At Risk',region:'CH-Zürich',tenure:7,charge:95.30,prob:.87,driver:'5 payment delays',action:'Payment plan restructure'},
+  {token:'cust_1c5d9b2f',seg:'Hibernating',region:'DE-Hamburg',tenure:3,charge:54.80,prob:.85,driver:'Low usage (2GB)',action:'Upsell data bundle'},
+  {token:'cust_8e3a1d7b',seg:'At Risk',region:'DE-Frankfurt',tenure:18,charge:78.20,prob:.83,driver:'Competitor offer',action:'Loyalty reward program'},
+  {token:'cust_5f2c4a9d',seg:'At Risk',region:'AT-Graz',tenure:9,charge:88.40,prob:.81,driver:'No internet service',action:'Bundle cross-sell offer'},
+  {token:'cust_0b7e6c3a',seg:'Hibernating',region:'CH-Bern',tenure:6,charge:61.70,prob:.79,driver:'High ticket rate',action:'Technical resolution SLA'},
+  {token:'cust_3d9a8f1c',seg:'At Risk',region:'DE-Stuttgart',tenure:14,charge:103.60,prob:.77,driver:'Tenure bucket 1',action:'Loyalty milestone reward'},
+  {token:'cust_6c2b5e0d',seg:'At Risk',region:'DE-Köln',tenure:11,charge:74.90,prob:.76,driver:'Low engagement',action:'Personalised win-back offer'}
+];
+const tbody=document.getElementById('top-risk-body');
+topRisk.forEach(r=>{
+  const pct=Math.round(r.prob*100);
+  const col=r.prob>.85?'var(--red)':r.prob>.7?'var(--orange)':'var(--yellow)';
+  tbody.innerHTML+=`<tr>
+    <td style="font-family:monospace;font-size:11px;">${r.token}</td>
+    <td><span class="tag red">${r.seg}</span></td>
+    <td>${r.region}</td>
+    <td>${r.tenure}m</td>
+    <td>€${r.charge}</td>
+    <td style="color:${col};font-weight:700;">${pct}%</td>
+    <td><div class="risk-bar"><div class="risk-fill" style="width:${pct}%;background:${col};"></div></div></td>
+    <td style="color:var(--muted);font-size:11px;">${r.driver}</td>
+    <td><span class="tag blue" style="font-size:10px;cursor:pointer;">${r.action}</span></td>
+  </tr>`;
+});
+
+// ══════════════════════════════════════════════
+// PAGE 2 — CUSTOMER RISK MAP
+// ══════════════════════════════════════════════
+const segments=['Champions','Loyal','At Risk','Hibernating','Potential Loyalists','New Customers','Promising','Lost'];
+const regions=['DE-Berlin','DE-München','DE-Hamburg','DE-Frankfurt','DE-Köln','DE-Stuttgart','AT-Wien','AT-Graz','CH-Zürich','CH-Bern'];
+function rnd(a,b){return a+Math.random()*(b-a);}
+function rndInt(a,b){return Math.floor(rnd(a,b));}
+const rndSeed=()=>Math.random()<0.5;
+
+// Generate 80 sample customers
+const customers=[];
+for(let i=0;i<80;i++){
+  const seg=segments[rndInt(0,8)];
+  let prob;
+  if(seg==='At Risk')prob=rnd(.6,.96);
+  else if(seg==='Hibernating')prob=rnd(.5,.85);
+  else if(seg==='Lost')prob=rnd(.7,.99);
+  else if(seg==='Champions')prob=rnd(.02,.18);
+  else if(seg==='Loyal')prob=rnd(.05,.25);
+  else prob=rnd(.2,.6);
+  customers.push({
+    token:'cust_'+Math.random().toString(36).substr(2,8),
+    seg,region:regions[rndInt(0,10)],
+    tenure:rndInt(1,72),charge:rnd(29.9,149.9).toFixed(2),
+    prob:parseFloat(prob.toFixed(3)),
+    nps:rndInt(-5,10),tickets:rndInt(0,8),delays:rndInt(0,6)
+  });
+}
+customers.sort((a,b)=>b.prob-a.prob);
+
+let filteredCustomers=[...customers];
+
+function renderCustomerTable(list){
+  const tbody2=document.getElementById('cust-table-body');
+  tbody2.innerHTML='';
+  list.slice(0,60).forEach((c,i)=>{
+    const pct=Math.round(c.prob*100);
+    const col=c.prob>.7?'var(--red)':c.prob>.4?'var(--yellow)':'var(--green)';
+    tbody2.innerHTML+=`<tr onclick="showCustomerDetail(${customers.indexOf(c)})" style="cursor:pointer;">
+      <td style="font-family:monospace;font-size:10px;">${c.token.substr(0,14)}</td>
+      <td style="color:${col};font-weight:700;">${pct}%</td>
+      <td><span class="tag ${c.prob>.7?'red':c.prob>.4?'yellow':'green'}" style="font-size:9px;">${c.seg}</span></td>
+      <td>›</td>
+    </tr>`;
+  });
+  document.getElementById('cust-count').textContent=list.length+' customers';
+}
+renderCustomerTable(customers);
+
+function filterCustomers(){
+  const q=document.getElementById('cust-search').value.toLowerCase();
+  const seg=document.getElementById('seg-filter').value;
+  const risk=document.getElementById('risk-filter').value;
+  filteredCustomers=customers.filter(c=>{
+    const matchQ=!q||c.token.includes(q)||c.seg.toLowerCase().includes(q)||c.region.toLowerCase().includes(q);
+    const matchSeg=!seg||c.seg===seg;
+    const matchRisk=!risk||(risk==='high'&&c.prob>.7)||(risk==='medium'&&c.prob>=.4&&c.prob<=.7)||(risk==='low'&&c.prob<.4);
+    return matchQ&&matchSeg&&matchRisk;
+  });
+  renderCustomerTable(filteredCustomers);
+}
+
+const shapFeatures=[
+  {name:'payment_delay_count_12m',neg:false},
+  {name:'support_tickets_6m',neg:false},
+  {name:'nps_score',neg:true},
+  {name:'tenure_months',neg:true},
+  {name:'contract_type_encoded',neg:false},
+  {name:'monthly_charge_eur',neg:false},
+  {name:'product_engagement',neg:true},
+  {name:'avg_monthly_usage_gb',neg:true},
+];
+const retentionActions={
+  'At Risk':['📞 Proactive outreach call within 24h','💰 Offer 20% loyalty discount on next invoice','📦 Upgrade to premium tier at no extra cost','⭐ Assign dedicated account manager'],
+  'Hibernating':['📧 Re-engagement email with personalised offer','🎁 Complimentary data bundle (3 months)','📊 Usage report with savings recommendations'],
+  'Lost':['🚨 Escalate to win-back specialist team','💎 Premium SLA upgrade offer','🔄 Service restart with waived setup fees'],
+  'default':['📋 Schedule quarterly review call','🔔 Enrol in loyalty programme','📱 Enable push notifications for new offers']
+};
+
+function showCustomerDetail(idx){
+  const c=customers[idx];
+  document.getElementById('detail-token').textContent=c.token;
+  document.getElementById('detail-meta').textContent=`${c.seg} · ${c.region} · ${c.tenure}m tenure · €${c.charge}/mo`;
+  const pct=Math.round(c.prob*100);
+  const col=c.prob>.7?'#ef4444':c.prob>.4?'#f59e0b':'#22c55e';
+  document.getElementById('detail-prob').textContent=pct+'%';
+  document.getElementById('detail-prob').style.color=col;
+
+  // SHAP bars
+  const shapDiv=document.getElementById('shap-bars');
+  shapDiv.innerHTML='';
+  shapFeatures.forEach(f=>{
+    const val=(Math.random()*0.18+0.02).toFixed(3);
+    const isNeg=f.neg||Math.random()<0.3;
+    const barCol=isNeg?'#22c55e':'#ef4444';
+    shapDiv.innerHTML+=`<div class="shap-row">
+      <div class="shap-feature">${f.name}</div>
+      <div class="shap-bar-wrap"><div class="shap-bar" style="width:${Math.round(val*400)}%;background:${barCol};"></div></div>
+      <div class="shap-val" style="color:${barCol}">${isNeg?'-':'+'}${val}</div>
+    </div>`;
+  });
+
+  // Retention actions
+  const actDiv=document.getElementById('retention-actions');
+  const actions=retentionActions[c.seg]||retentionActions['default'];
+  actDiv.innerHTML=actions.map(a=>`<div style="background:rgba(79,142,247,.08);border:1px solid rgba(79,142,247,.2);border-radius:8px;padding:8px 12px;margin-bottom:6px;font-size:12px;">${a}</div>`).join('');
+}
+// Show first customer by default
+showCustomerDetail(0);
+
+// Probability distribution chart
+new Chart('probDistChart',{type:'bar',data:{
+  labels:['0-10%','10-20%','20-30%','30-40%','40-50%','50-60%','60-70%','70-80%','80-90%','90-100%'],
+  datasets:[{label:'Customers',
+    data:[89,94,102,98,87,83,91,102,119,135],
+    backgroundColor:['#22c55e','#22c55e','#4f8ef7','#4f8ef7','#f59e0b','#f59e0b','#f97316','#ef4444','#ef4444','#ef4444'],
+    borderRadius:5}]
+},options:{plugins:{legend:{display:false}},scales:{y:{title:{display:true,text:'# Customers'}}}}});
+
+// ══════════════════════════════════════════════
+// PAGE 3 — MODEL HEALTH
+// ══════════════════════════════════════════════
+const weeks=['W1','W2','W3','W4','W5','W6','W7','W8','W9','W10','W11','W12'];
+new Chart('aucTrendChart',{type:'line',data:{
+  labels:weeks,
+  datasets:[
+    {label:'AUC-ROC',data:[.862,.858,.865,.871,.869,.874,.870,.873,.869,.871,.868,.871],borderColor:'#22c55e',backgroundColor:'rgba(34,197,94,.08)',tension:.4,fill:true,pointRadius:3},
+    {label:'QA Gate (0.85)',data:Array(12).fill(.85),borderColor:'rgba(239,68,68,.5)',borderDash:[6,4],pointRadius:0,borderWidth:1.5}
+  ]
+},options:{plugins:{legend:{position:'top'}},scales:{y:{min:.82,max:.90}}}});
+
+new Chart('psiChart',{type:'bar',data:{
+  labels:['Jun','Jul','Aug','Sep','Oct','Nov','Dec','Jan','Feb','Mar','Apr','May'],
+  datasets:[{label:'PSI Score',
+    data:[.031,.028,.034,.029,.038,.042,.039,.044,.040,.038,.041,.042],
+    backgroundColor:ctx=>{
+      const v=ctx.raw;
+      return v>.2?'rgba(239,68,68,.7)':v>.1?'rgba(245,158,11,.7)':'rgba(34,197,94,.7)';
+    },borderRadius:5}]
+},options:{
+  plugins:{legend:{display:false},annotation:{}},
+  scales:{y:{max:.25,ticks:{callback:v=>v.toFixed(2)}}}
+}});
+
+new Chart('shapChart',{type:'bar',data:{
+  labels:['payment_delay_count','support_tickets_6m','nps_score','tenure_months','contract_type','monthly_charge','product_engagement','avg_usage_gb','ticket_rate','charge_per_month'],
+  datasets:[{label:'Mean |SHAP| value',
+    data:[.184,.162,.141,.128,.119,.107,.098,.087,.076,.065],
+    backgroundColor:'rgba(79,142,247,.75)',borderRadius:5}]
+},options:{
+  indexAxis:'y',
+  plugins:{legend:{display:false}},
+  scales:{x:{title:{display:true,text:'Mean |SHAP| value'}}}
+}});
+
+// Fairness audit
+const fairnessData=[
+  {group:'18–25',auc:.861,n:89},
+  {group:'26–35',auc:.878,n:234},
+  {group:'36–45',auc:.873,n:287},
+  {group:'46–55',auc:.869,n:201},
+  {group:'56–65',auc:.864,n:134},
+  {group:'65+',  auc:.852,n:55}
+];
+const ftDiv=document.getElementById('fairness-table');
+fairnessData.forEach(f=>{
+  const delta=Math.abs(f.auc-.871).toFixed(3);
+  const ok=parseFloat(delta)<.05;
+  const barPct=Math.round(f.auc*100);
+  ftDiv.innerHTML+=`<div class="fairness-row">
+    <div style="font-size:12px;font-weight:600;">${f.group}</div>
+    <div class="fair-bar-wrap"><div class="fair-bar" style="width:${barPct}%;background:${ok?'#22c55e':'#ef4444'};"></div></div>
+    <div style="font-size:12px;font-weight:700;">${f.auc}</div>
+    <div><span class="tag ${ok?'green':'red'}">Δ ${delta}</span></div>
+  </div>`;
+});
+
+const regionFairness=[
+  {r:'Germany',auc:.874},{r:'Austria',auc:.866},{r:'Switzerland',auc:.871}
+];
+const frDiv=document.getElementById('fairness-region');
+regionFairness.forEach(f=>{
+  const delta=Math.abs(f.auc-.871).toFixed(3);
+  const ok=parseFloat(delta)<.05;
+  frDiv.innerHTML+=`<div class="fairness-row">
+    <div style="font-size:12px;font-weight:600;">${f.r}</div>
+    <div class="fair-bar-wrap"><div class="fair-bar" style="width:${Math.round(f.auc*100)}%;background:#22c55e;"></div></div>
+    <div style="font-size:12px;font-weight:700;">${f.auc}</div>
+    <div><span class="tag green">Δ ${delta}</span></div>
+  </div>`;
+});
+
+// ══════════════════════════════════════════════
+// PAGE 4 — GDPR
+// ══════════════════════════════════════════════
+const channels=[
+  {name:'Mobile App',pct:93},{name:'Web Portal',pct:89},{name:'Email',pct:86},
+  {name:'Partner API',pct:82},{name:'Inbound Call',pct:78},{name:'Branch',pct:71}
+];
+const ccDiv=document.getElementById('consent-channels');
+channels.forEach(c=>{
+  ccDiv.innerHTML+=`<div class="consent-row">
+    <div class="consent-channel">${c.name}</div>
+    <div class="consent-bar-wrap"><div class="consent-bar" style="width:${c.pct}%;"></div></div>
+    <div class="consent-pct">${c.pct}%</div>
+  </div>`;
+});
+
+new Chart('dsrChart',{type:'bar',data:{
+  labels:['Jun','Jul','Aug','Sep','Oct','Nov','Dec','Jan','Feb','Mar','Apr','May'],
+  datasets:[
+    {label:'Art.15 Access',data:[4,3,5,4,3,6,4,5,4,3,4,3],backgroundColor:'rgba(79,142,247,.8)',borderRadius:4},
+    {label:'Art.17 Erasure',data:[2,1,2,3,1,2,3,2,1,2,2,3],backgroundColor:'rgba(239,68,68,.8)',borderRadius:4},
+    {label:'Art.18 Restriction',data:[1,1,0,1,2,1,0,1,1,0,1,1],backgroundColor:'rgba(245,158,11,.8)',borderRadius:4},
+    {label:'Art.21 Objection',data:[0,1,1,0,1,0,1,1,0,1,0,0],backgroundColor:'rgba(124,92,252,.8)',borderRadius:4}
+  ]
+},options:{plugins:{legend:{position:'top'}},scales:{x:{stacked:true},y:{stacked:true}}}});
+
+const erasureReqs=[
+  {id:'ERA-2025-034',token:'cust_3f9a1b2c',requested:'2025-04-28',daysLeft:5, status:'Processing',scope:'ML data + SQL'},
+  {id:'ERA-2025-033',token:'cust_7d4e0c8a',requested:'2025-04-24',daysLeft:1, status:'⚠ Urgent',scope:'Full erasure'},
+  {id:'ERA-2025-032',token:'cust_1a6b9f3d',requested:'2025-04-20',daysLeft:8, status:'Processing',scope:'Churn scores'},
+  {id:'ERA-2025-031',token:'cust_8c2d5e7a',requested:'2025-04-15',daysLeft:13,status:'Processing',scope:'SQL + ADLS'},
+  {id:'ERA-2025-030',token:'cust_4f7b0a9c',requested:'2025-04-10',daysLeft:18,status:'Completed ✓',scope:'Full erasure'},
+  {id:'ERA-2025-029',token:'cust_2e5c8d1b',requested:'2025-04-02',daysLeft:22,status:'Completed ✓',scope:'ML data only'}
+];
+const etBody=document.getElementById('erasure-table');
+erasureReqs.forEach(r=>{
+  const urgent=r.daysLeft<=5&&!r.status.includes('✓');
+  etBody.innerHTML+=`<tr>
+    <td style="font-family:monospace;font-size:11px;">${r.id}</td>
+    <td style="font-family:monospace;font-size:10px;">${r.token.substr(0,14)}</td>
+    <td>${r.requested}</td>
+    <td style="font-weight:700;color:${urgent?'var(--red)':r.daysLeft<15?'var(--yellow)':'var(--green)'};">${r.daysLeft}d</td>
+    <td><span class="tag ${r.status.includes('✓')?'green':urgent?'red':'yellow'}">${r.status}</span></td>
+    <td style="font-size:11px;color:var(--muted);">${r.scope}</td>
+  </tr>`;
+});
+
+const auditEvents=[
+  {type:'gdpr_erasure',msg:'Art.17 erasure completed — cust_4f7b0a9c',sub:'SQL → ADLS → Redis → Cosmos → audit pseudonymised',time:'2025-05-22 14:32:11',col:'var(--green)'},
+  {type:'churn_predict',msg:'Batch churn prediction — 1,000 customers scored',sub:'Model v3.1 | AUC 0.871 | avg latency 12ms',time:'2025-05-22 09:00:03',col:'var(--accent)'},
+  {type:'gdpr_export',msg:'Art.15 data export delivered — cust_2b8a7d3c',sub:'JSON export, PII masked, delivered via secure link',time:'2025-05-21 16:18:44',col:'var(--accent2)'},
+  {type:'model_promote',msg:'Model v3.1 promoted to Production',sub:'All QA gates passed: AUC 0.871 F1 0.823 PSI 0.042',time:'2025-05-21 08:12:30',col:'var(--green)'},
+  {type:'consent_update',msg:'Consent record updated — cust_9d1b3f8a',sub:'Channel: mobile_app | Withdrawn: marketing_email',time:'2025-05-20 11:47:22',col:'var(--yellow)'},
+  {type:'security_alert',msg:'RBAC access attempt blocked — gdpr-officer endpoint',sub:'Role: bi-analyst | Endpoint: /gdpr/erasure — 403',time:'2025-05-20 09:04:11',col:'var(--red)'},
+  {type:'drift_check',msg:'PSI drift monitor — all features stable',sub:'Max PSI: 0.042 (payment_delay). No retrain triggered.',time:'2025-05-19 08:00:01',col:'var(--green)'}
+];
+const alDiv=document.getElementById('audit-log');
+auditEvents.forEach(e=>{
+  alDiv.innerHTML+=`<div class="log-entry">
+    <div class="log-dot" style="background:${e.col};"></div>
+    <div class="log-time">${e.time}</div>
+    <div>
+      <div class="log-msg">${e.msg}</div>
+      <div class="log-sub">${e.sub}</div>
+    </div>
+  </div>`;
+});
+
+const retentionPolicies=[
+  {cat:'Churn Scores',period:'365 days',records:'12,000',next:'2026-05-22',last:'2025-05-01',status:'✓ Compliant'},
+  {cat:'Customer Profiles',period:'3 years',records:'1,000',next:'2027-01-01',last:'2025-05-01',status:'✓ Compliant'},
+  {cat:'Transactions (archive)',period:'10 years (HGB)',records:'5,000',next:'2031-12-31',last:'2025-05-01',status:'✓ Compliant'},
+  {cat:'ML Training Data',period:'2 years',records:'800',next:'2026-06-01',last:'2025-05-01',status:'✓ Compliant'},
+  {cat:'Anomaly Scores',period:'5 years (AML)',records:'3,000',next:'2029-05-22',last:'2025-05-01',status:'✓ Compliant'},
+  {cat:'Audit Logs',period:'Pseudonymise after 3y',records:'47,821',next:'2026-01-01',last:'2025-05-01',status:'✓ Compliant'},
+  {cat:'Consent Records',period:'Indefinite',records:'873',next:'—',last:'2025-05-01',status:'✓ Compliant'},
+  {cat:'Session Tokens',period:'7 days (Redis TTL)',records:'~240',next:'Rolling',last:'2025-05-22',status:'✓ Compliant'},
+];
+const rtBody=document.getElementById('retention-table');
+retentionPolicies.forEach(r=>{
+  rtBody.innerHTML+=`<tr>
+    <td style="font-weight:600;">${r.cat}</td>
+    <td style="color:var(--muted);font-size:12px;">${r.period}</td>
+    <td>${r.records}</td>
+    <td>${r.next}</td>
+    <td style="color:var(--muted);font-size:11px;">${r.last}</td>
+    <td><span class="tag green">${r.status}</span></td>
+  </tr>`;
+});
+
+// ══════════════════════════════════════════════
+// REFRESH BUTTON
+// ══════════════════════════════════════════════
+function refreshAll(){
+  const btn=document.querySelector('.refresh-btn');
+  btn.textContent='↻ Refreshing…';
+  btn.disabled=true;
+  setTimeout(()=>{
+    btn.textContent='↻ Refresh';
+    btn.disabled=false;
+  },1200);
+}
+</script>
+</body>
+</html>
