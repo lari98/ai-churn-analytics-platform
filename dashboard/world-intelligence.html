@@ -61,9 +61,12 @@ nav a.active{color:var(--acc);background:rgba(79,142,247,.1);border-left-color:v
 .tag.b{background:rgba(79,142,247,.15);color:var(--acc);}
 .tag.p{background:rgba(124,92,252,.15);color:var(--acc2);}
 .tag.o{background:rgba(249,115,22,.15);color:var(--org);}
-/* MAP PAGE */
-#map-layout{display:grid;grid-template-columns:1fr 340px;gap:14px;height:100%;overflow:hidden;}
-#map-wrap{background:var(--card);border:1px solid var(--brd);border-radius:var(--r);overflow:hidden;position:relative;}
+/* MAP PAGE — explicit calc heights so absolutely-positioned SVG has a definite containing-block */
+#map-layout{display:grid;grid-template-columns:1fr 340px;gap:14px;
+  height:calc(100vh - 50px - 130px);min-height:320px;overflow:hidden;}
+#map-wrap{background:var(--card);border:1px solid var(--brd);border-radius:var(--r);
+  overflow:hidden;position:relative;min-height:320px;}
+/* SVG uses a fixed 900×480 viewBox coordinate system; CSS stretches it to fill the wrap */
 #world-svg{position:absolute;top:0;left:0;width:100%;height:100%;display:block;}
 #map-loading{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:var(--card);flex-direction:column;gap:10px;}
 .spinner{width:32px;height:32px;border:3px solid var(--brd);border-top-color:var(--acc);border-radius:50%;animation:spin 1s linear infinite;}
@@ -319,31 +322,16 @@ function riskColor(r){
 let globalNewsItems = [];
 
 async function initMap(){
-  // RAF × 2 — let the browser do at least two layout passes
-  await new Promise(r=>requestAnimationFrame(r));
+  // One RAF — just yield control so DOMContentLoaded handlers settle
   await new Promise(r=>requestAnimationFrame(r));
   try{
     const world = await _worldData;
     document.getElementById('map-loading').style.display='none';
 
-    // Robust dimension detection — try 4 strategies, take first non-zero result
-    const svgEl = document.getElementById('world-svg');
-    const wrap  = document.getElementById('map-wrap');
-    const r1 = svgEl.getBoundingClientRect();
-    const r2 = wrap.getBoundingClientRect();
-    const W = (r1.width  > 50 ? r1.width  : 0) ||
-              (r2.width  > 50 ? r2.width  : 0) ||
-              svgEl.clientWidth || wrap.clientWidth ||
-              (window.innerWidth - 220 - 340 - 52);   // sidebar + panel + gaps
-    const H = (r1.height > 50 ? r1.height : 0) ||
-              (r2.height > 50 ? r2.height : 0) ||
-              svgEl.clientHeight || wrap.clientHeight ||
-              (window.innerHeight - 50 - 120);         // topbar + krow + padding
-
-    // Set explicit pixel size on the SVG (position:absolute;inset:0 makes it fill wrap)
+    // Fixed 900×480 internal coordinate system — no dimension detection needed.
+    // CSS (width:100%;height:100% on #world-svg) scales the map to fill the container.
+    const W = 900, H = 480;
     const svg = d3.select('#world-svg')
-      .attr('width', W)
-      .attr('height', H)
       .attr('viewBox', `0 0 ${W} ${H}`)
       .attr('preserveAspectRatio', 'xMidYMid meet');
     const proj = d3.geoNaturalEarth1().scale(W/6.3).translate([W/2,H/2]);
@@ -376,15 +364,17 @@ async function initMap(){
         const iso=N2I[parseInt(d.id)];
         const c=iso&&GEO[iso];
         d3.select(ev.currentTarget).attr('stroke','#ffffff').attr('stroke-width',1.5);
+        const sr=ev.currentTarget.ownerSVGElement.getBoundingClientRect();
         tooltip.style.display='block';
-        tooltip.style.left=(ev.offsetX+12)+'px';
-        tooltip.style.top=(ev.offsetY-10)+'px';
+        tooltip.style.left=(ev.clientX-sr.left+12)+'px';
+        tooltip.style.top=(ev.clientY-sr.top-10)+'px';
         tooltip.innerHTML=c?`<strong>${c.flag} ${c.name}</strong><br>Risk: <span style="color:${riskColor(c.risk)};font-weight:700;">${c.risk}/10</span> · GDP Growth: ${c.gdpGrowth}%<br>Inflation: ${c.inflation}% · Market: ${c.market}`
           :`<strong>${d.id}</strong><br><span style="color:var(--mut);">No data</span>`;
       })
       .on('mousemove',(ev)=>{
-        tooltip.style.left=(ev.offsetX+12)+'px';
-        tooltip.style.top=(ev.offsetY-10)+'px';
+        const sr=ev.currentTarget.ownerSVGElement.getBoundingClientRect();
+        tooltip.style.left=(ev.clientX-sr.left+12)+'px';
+        tooltip.style.top=(ev.clientY-sr.top-10)+'px';
       })
       .on('mouseout',(ev)=>{
         d3.select(ev.currentTarget).attr('stroke','#0f1117').attr('stroke-width',.5);
