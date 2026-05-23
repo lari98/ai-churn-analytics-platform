@@ -64,7 +64,7 @@ nav a.active{color:var(--acc);background:rgba(79,142,247,.1);border-left-color:v
 /* MAP PAGE */
 #map-layout{display:grid;grid-template-columns:1fr 340px;gap:14px;height:100%;overflow:hidden;}
 #map-wrap{background:var(--card);border:1px solid var(--brd);border-radius:var(--r);overflow:hidden;position:relative;}
-#world-svg{width:100%;height:100%;}
+#world-svg{display:block;width:100%;height:100%;}
 #map-loading{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:var(--card);flex-direction:column;gap:10px;}
 .spinner{width:32px;height:32px;border:3px solid var(--brd);border-top-color:var(--acc);border-radius:50%;animation:spin 1s linear infinite;}
 @keyframes spin{to{transform:rotate(360deg);}}
@@ -319,12 +319,23 @@ function riskColor(r){
 let globalNewsItems = [];
 
 async function initMap(){
+  // Double RAF ensures the browser has performed layout before we read dimensions
+  await new Promise(r=>requestAnimationFrame(r));
+  await new Promise(r=>requestAnimationFrame(r));
   try{
-    const world = await d3.json('https://cdn.jsdelivr.net/npm/world-atlas@2/countries-110m.json');
+    // Primary CDN → fallback CDN
+    let world;
+    try{ world = await d3.json('https://cdn.jsdelivr.net/npm/world-atlas@2/countries-110m.json'); }
+    catch(){ world = await d3.json('https://unpkg.com/world-atlas@2/countries-110m.json'); }
     document.getElementById('map-loading').style.display='none';
     const wrap = document.getElementById('map-wrap');
-    const W=wrap.clientWidth||900, H=wrap.clientHeight||480;
-    const svg = d3.select('#world-svg').attr('width',W).attr('height',H);
+    const W = wrap.offsetWidth  || (window.innerWidth  - 580) || 800;
+    const H = wrap.offsetHeight || (window.innerHeight - 200) || 460;
+    // Use viewBox so the SVG is responsive — paths are computed in W×H space,
+    // CSS width:100%;height:100% handles display scaling
+    const svg = d3.select('#world-svg')
+      .attr('viewBox',`0 0 ${W} ${H}`)
+      .attr('preserveAspectRatio','xMidYMid meet');
     const proj = d3.geoNaturalEarth1().scale(W/6.3).translate([W/2,H/2]);
     const path = d3.geoPath().projection(proj);
     const countries = topojson.feature(world, world.objects.countries);
@@ -703,10 +714,13 @@ Chart.defaults.borderColor='#2d3748';
 Chart.defaults.font.family="'Segoe UI',system-ui,sans-serif";
 Chart.defaults.font.size=10;
 
-initMap();
-loadNews();
-loadHN();
-renderRadar();
+// Defer map + data loading until browser has finished all layout passes
+window.addEventListener('load', ()=>{
+  initMap();
+  loadNews();
+  loadHN();
+  renderRadar();
+});
 
 // Connect to DACH risk: update GRI based on Russia/Ukraine/Iran data
 const hotspots=Object.values(GEO).filter(c=>c.risk>=7).length;
