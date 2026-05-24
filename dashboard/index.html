@@ -1240,34 +1240,4 @@ new Chart('dsrChart',{type:'bar',data:{labels:MONTHS,datasets:[
  {cat:'Anomaly Scores',per:'5 years (AML)',rec:'3,000',next:'2029-05-22',last:'2025-05-01'},
  {cat:'Audit Logs',per:'Pseudonymise after 3y',rec:'47,821',next:'2026-01-01',last:'2025-05-01'},
  {cat:'Consent Records',per:'Indefinite',rec:'873',next:'—',last:'2025-05-22'},
- {cat:'Session Tokens',per:'7 days (Redis TTL)',rec:'~240',next:'Rolling',last:'2025-05-22'}
-].forEach(r=>{
-  document.getElementById('retention-table').innerHTML+=`<tr>
-    <td style="font-weight:600;">${r.cat}</td>
-    <td style="color:var(--muted);font-size:10px;">${r.per}</td>
-    <td>${r.rec}</td><td>${r.next}</td>
-    <td style="color:var(--muted);font-size:10px;">${r.last}</td>
-    <td><span class="tag green">✓ Compliant</span></td>
-  </tr>`;
-});
-
-function refreshAll(){
-  const btn=document.querySelector('.refresh-btn');
-  btn.textContent='↻ Refreshing…';btn.disabled=true;
-  setTimeout(()=>{btn.textContent='↻ Refresh';btn.disabled=false;},1200);
-}
-
-// On load: resize ALL registered charts so none have 0×0 dimensions from
-// having been initialised inside display:none pages
-window.addEventListener('load',()=>{
-  requestAnimationFrame(()=>{
-    ['churnTrendChart','segDonut','regionBar','contractBar',
-     'aucTrendChart','psiChart','shapChart','dsrChart','simChart'].forEach(cid=>{
-      const c=Chart.getChart(cid);
-      if(c) c.resize();
-    });
-  });
-});
-</script>
-</body>
-</html>
+ {cat:'Session Tokens',per:'7 days 

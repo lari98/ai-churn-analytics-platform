@@ -705,42 +705,4 @@ new Chart('timelineChart',{
     plugins:{legend:{position:'top',labels:{font:{size:9},boxWidth:8}},
       tooltip:{callbacks:{label:(ctx)=>{
         const map={
-          '2025,4':'LLMs production-ready','2026,4':'Agentic AI mainstream','2027,4':'Quantum advantage','2028,4':'AGI-like systems','2030,4':'Full AI autonomy',
-          '2025,3':'SEPA Instant mandatory','2026,3':'Digital Euro pilot','2027,3':'CBDC mainstream','2029,3':'DeFi regulated',
-          '2026,2':'Green H2 scale-up','2028,2':'SMR first-of-kind','2030,2':'Fusion demo plant','2035,2':'Commercial fusion',
-          '2025,1':'CRISPR therapies live','2027,1':'Longevity treatments','2029,1':'BCI authentication','2033,1':'Synthetic organ market'
-        };
-        return map[`${ctx.parsed.x},${ctx.parsed.y}`]||'';
-      }}}},
-    scales:{
-      x:{min:2024,max:2036,ticks:{stepSize:1,font:{size:9}},title:{display:true,text:'Year'}},
-      y:{min:0,max:5,ticks:{callback:v=>['','Biotech','Energy','Fintech','AI & ML',''][v]||'',font:{size:9}},grid:{color:'rgba(45,55,72,.5)'}}
-    }
-  }
-});
-
-// ═══════════════════════════════════════════
-// INIT
-// ═══════════════════════════════════════════
-Chart.defaults.color='#64748b';
-Chart.defaults.borderColor='#2d3748';
-Chart.defaults.font.family="'Segoe UI',system-ui,sans-serif";
-Chart.defaults.font.size=10;
-
-// DOMContentLoaded fires as soon as HTML is parsed — far earlier than window.load.
-// Network fetches (_worldData, _newsPromises, _hnTopIds) were already kicked off
-// at script-parse time, so they're well underway by the time we reach here.
-document.addEventListener('DOMContentLoaded', ()=>{
-  renderRadar(); // pure CPU — no network needed
-  initMap();     // awaits _worldData (pre-fetched)
-  loadNews();    // awaits _newsPromises (pre-fetched)
-  loadHN();      // awaits _hnTopIds (pre-fetched)
-});
-
-// Connect to DACH risk: update GRI based on Russia/Ukraine/Iran data
-const hotspots=Object.values(GEO).filter(c=>c.risk>=7).length;
-document.getElementById('gri').textContent=(Object.values(GEO).reduce((s,c)=>s+c.risk,0)/Object.keys(GEO).length).toFixed(1);
-document.getElementById('gal').textContent=hotspots;
-</script>
-</body>
-</html>
+          '2025,4':'LLMs production-ready','2026,4':'Agentic AI mainstream','2027,4':'Quantum advantage','2028,4':'AGI-like systems','2030,4':'F
