@@ -48,6 +48,8 @@ nav a .icon{font-size:15px;width:18px;text-align:center;}
 
 .page{display:none;padding:22px 26px;}
 .page.active{display:block;}
+/* Chat page needs flex layout when active */
+#page-chat.active{display:flex;}
 
 /* KPI */
 .kpi-row{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:20px;}
@@ -400,7 +402,7 @@ input[type=range]{width:100%;accent-color:var(--accent);cursor:pointer;}
   </div>
 
   <!-- ══ PAGE: AI ANALYST CHAT ══ -->
-  <div class="page" id="page-chat" style="padding:0;display:flex;flex-direction:column;height:calc(100vh - 53px);">
+  <div class="page" id="page-chat" style="padding:0;flex-direction:column;height:calc(100vh - 53px);">
     <div style="padding:16px 26px 0;">
       <div style="font-size:12px;color:var(--muted);margin-bottom:8px;">Ask anything about your churn data in plain English or German</div>
       <div class="quick-chips" style="padding:0 0 10px;">
