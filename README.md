@@ -8,7 +8,7 @@
 [![FastAPI](https://img.shields.io/badge/FastAPI-0.111-009688)](https://fastapi.tiangolo.com)
 [![MLflow](https://img.shields.io/badge/MLflow-2.9-orange)](https://mlflow.org)
 [![Azure AI](https://img.shields.io/badge/Azure-AI--102-0078D4)](https://azure.microsoft.com)
-[![Dashboard](https://img.shields.io/badge/Dashboard-v2.6-f59e0b)](./dashboard/world-intelligence.html)
+[![Dashboard](https://img.shields.io/badge/Dashboard-v2.7-f59e0b)](./dashboard/world-intelligence.html)
 [![Leaflet](https://img.shields.io/badge/Leaflet.js-1.9.4-199900)](https://leafletjs.com)
 
 ---
@@ -67,13 +67,14 @@ An **AI-powered customer intelligence and global market analytics platform** bui
 
 ---
 
-## 🆕 What's New — v2.6 World Intelligence Platform
+## 🆕 What's New — v2.7 World Intelligence Platform
 
 > Latest release
 
 | Version | Release | Highlights |
 |---------|---------|------------|
-| **v2.6** | **Current** | 🌡 **Climate Intelligence tab** — Leaflet world map with 40+ countries, 4-era timeline (1900–2000 / Present 2024 / Near 2050 / Far 2100), risk circles (CRITICAL/HIGH/MEDIUM), future water body predictions (Aral Sea gone, Lake Chad drying, Himalayan glaciers, emerging Arctic islands), Satellite/Terrain/Standard layer switching · 👶 **Birth Rate tab** — world population crisis map, 35+ countries as rate-proportional bubbles (Niger 6.9 → South Korea 0.72), status categories from CRISIS to EXTREME, layer switching · 2 new screenshots in README |
+| **v2.7** | **Current** | 🌡 **Climate Intelligence ADVANCED** — 7 climate tipping points (AMOC collapse, Amazon dieback, Siberian permafrost carbon bomb, Greenland melt, boreal die-off, coral extinction, West Antarctic sheet), 5 lethal heat zones (wet-bulb 35°C survival limit), 16 water body predictions (Aral Sea gone, Colorado R. 20% left, Tigris–Euphrates 73% groundwater lost, Lake Mead 27% full, Yellow River runs dry, Persian Gulf hypersaline), emerging new land (Arctic islands, Hunga Tonga volcanic, Lomonosov Ridge 2100, Sahara greening), Terrain layer removed, expanded Crisis Index with AMOC + permafrost CO₂ stats |
+| **v2.6** | Previous | 🌡 Climate Intelligence + 👶 Birth Rate tabs — Leaflet world maps, 4-era timeline, Satellite/Standard layers, 40+ countries, water body predictions, birth rate crisis map 35+ countries |
 | **v2.5** | Previous | **Real Data Engine** — yfinance 100% real OHLCV for 60+ symbols · Prophet AI forecasting (Facebook) · Holt-Winters fallback · 3 new API endpoints (`/api/realhistory`, `/api/prophet`, `/api/realprices`) · AI forecast drilldown · Live backend status indicator · REAL DATA + AI FORECAST badges |
 | v2.4 | Previous | 🇵🇰 Pakistan added · 37 countries · 35 world exchanges · Rising Powers tab · Next China analysis · GDP forecast tooltips |
 | v2.3.1 | Previous | Performance fix — 5x faster backend: cache-before-fetch, shared HTTP client, parallel news feeds, in-memory cache, startup pre-warm |

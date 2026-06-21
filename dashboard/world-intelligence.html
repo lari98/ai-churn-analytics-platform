@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>World Intelligence Platform v2.6</title>
+<title>World Intelligence Platform v2.7</title>
 <!-- Leaflet -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css"/>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
@@ -224,7 +224,7 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:'Segoe 
 <div id="topbar">
   <a href="index.html">← Dashboard</a>
   <span class="title">🌍 World Intelligence Platform</span>
-  <span class="badge">v2.6</span>
+  <span class="badge">v2.7</span>
   <div style="display:flex;align-items:center;gap:6px;margin-left:auto;margin-right:16px;">
     <div class="live-dot"></div><span style="font-size:11px;color:var(--muted);">Live</span>
   </div>
@@ -368,7 +368,6 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:'Segoe 
       <div class="layer-sw" id="clm-layers">
         <button class="lsw-btn active" onclick="setClimateLayer('dark',this)">🗺 Standard</button>
         <button class="lsw-btn" onclick="setClimateLayer('satellite',this)">🛰 Satellite</button>
-        <button class="lsw-btn" onclick="setClimateLayer('terrain',this)">⛰ Terrain</button>
       </div>
       <div class="clm-timeline">
         <span style="font-size:11px;color:var(--muted);white-space:nowrap;">Timeline:</span>
@@ -385,27 +384,44 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:'Segoe 
         <div class="leg-item"><div class="leg-dot" style="background:#00aaff;border:2px solid #0077cc;"></div>🧊 Glacier / Ice loss</div>
         <div class="leg-item"><div class="leg-dot" style="background:#3b82f6;"></div>💧 Water body at risk</div>
         <div class="leg-item"><div class="leg-dot" style="background:#00ff88;border:2px dashed #00cc66;"></div>🏝 Emerging new land</div>
+        <div class="leg-item"><div class="leg-dot" style="background:#f97316;border:2px solid #ea580c;"></div>🔥 Heat dome / Lethal zone</div>
+        <div class="leg-item"><div class="leg-dot" style="background:#a78bfa;border:2px solid #7c3aed;"></div>⚡ Climate tipping point</div>
+        <div class="leg-item"><div class="leg-dot" style="background:#4ade80;border:2px dashed #16a34a;"></div>🟢 Biome shift / Greening</div>
       </div>
       <div class="eco-panel">
         <div style="font-size:11px;font-weight:700;color:var(--orange);margin-bottom:8px;">🌡 Climate Crisis Index</div>
         <div class="stat-row"><span>Critical Risk Nations</span><span style="color:#ff0000;">12</span></div>
         <div class="stat-row"><span>High Risk Nations</span><span style="color:#ff6600;">31</span></div>
-        <div class="stat-row"><span>Water Bodies at Risk</span><span style="color:#3b82f6;">6</span></div>
+        <div class="stat-row"><span>Water Bodies at Risk</span><span style="color:#3b82f6;">16</span></div>
+        <div class="stat-row"><span>Tipping Points Active</span><span style="color:#a78bfa;">5 of 9</span></div>
         <div class="stat-row"><span>2024 Temp Anomaly</span><span style="color:#ff8800;">+1.45°C</span></div>
         <div class="stat-row"><span>Sea Level Rise/yr</span><span style="color:#3b82f6;">3.7mm</span></div>
+        <div class="stat-row"><span>AMOC Strength</span><span style="color:#f97316;">−15% weakened</span></div>
+        <div class="stat-row"><span>Arctic Ice Loss/yr</span><span style="color:#00aaff;">13% per decade</span></div>
+        <div class="stat-row"><span>Permafrost Thaw CO₂</span><span style="color:#ff6600;">1.7T tons/yr</span></div>
         <div style="margin-top:8px;font-size:10px;color:var(--muted);">Click any marker for full detail</div>
       </div>
       <div class="seas-panel">
-        <div style="font-size:11px;font-weight:700;color:var(--red);margin-bottom:8px;">💀 Future Water &amp; Land Changes</div>
-        <div style="font-size:10px;color:var(--muted);line-height:1.85;">
+        <div style="font-size:11px;font-weight:700;color:var(--red);margin-bottom:6px;">💀 Future Water &amp; Land Changes</div>
+        <div style="font-size:9.5px;color:var(--muted);line-height:1.9;">
           💀 <b style="color:#ff4444;">Aral Sea</b> — Already GONE (95%)<br>
           💀 <b style="color:#ff6600;">Lake Chad</b> — Lost 90% since 1963<br>
           ⚠️ <b style="color:#ffaa00;">Dead Sea</b> — Dropping 1.2m/year<br>
           📉 <b style="color:#ffbb00;">Caspian Sea</b> — −30% by 2100<br>
           🧊 <b style="color:#00aaff;">Himalayan Glaciers</b> — 75% loss<br>
-          🏝 <b style="color:#00ff88;">Arctic Islands</b> — Emerging now<br>
-          🌊 <b style="color:#44aaff;">Lomonosov Ridge</b> — New 2100
+          💧 <b style="color:#60a5fa;">Colorado River</b> — 20% flow left<br>
+          💧 <b style="color:#60a5fa;">Lake Mead</b> — Record low: 27% full<br>
+          💧 <b style="color:#60a5fa;">Tigris–Euphrates</b> — 73% groundwater gone<br>
+          💧 <b style="color:#60a5fa;">Yellow River</b> — Runs dry seasonally<br>
+          💧 <b style="color:#60a5fa;">Murray–Darling</b> — 40% flow loss<br>
+          🔥 <b style="color:#f97316;">Persian Gulf</b> — Hypersaline by 2100<br>
+          🏝 <b style="color:#00ff88;">Arctic Islands</b> — 10+ emerging now<br>
+          🌋 <b style="color:#a78bfa;">Hunga Tonga Is.</b> — New 2022 volcanic<br>
+          🌊 <b style="color:#44aaff;">Lomonosov Ridge</b> — Emerging 2100<br>
+          🟢 <b style="color:#4ade80;">Sahara Greening</b> — +15% vegetation<br>
+          🧊 <b style="color:#bfdbfe;">W. Antarctic Sheet</b> — 3.3m sea rise if gone
         </div>
+        <div style="margin-top:6px;border-top:1px solid #3f1515;padding-top:5px;font-size:9px;color:#ef4444;font-weight:600;">⚡ AMOC Collapse = Europe freezes + tropics flood</div>
       </div>
     </div>
   </div>
@@ -417,7 +433,6 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:'Segoe 
       <div class="layer-sw" id="birth-layers">
         <button class="lsw-btn active" onclick="setBirthLayer('dark',this)">🗺 Standard</button>
         <button class="lsw-btn" onclick="setBirthLayer('satellite',this)">🛰 Satellite</button>
-        <button class="lsw-btn" onclick="setBirthLayer('terrain',this)">⛰ Terrain</button>
       </div>
       <div class="eco-legend">
         <div style="font-size:11px;font-weight:700;color:var(--text);margin-bottom:8px;">👶 Birth Rate (births per woman)</div>
@@ -1160,4 +1175,709 @@ function initRisingPowers(){
     <div class="why-item">
       <div class="wi-icon">🏗</div>
       <div class="wi-title">CPEC — $62B Infrastructure</div>
-      <div class="wi-txt">China-Pakistan Economic Corridor is the world's largest infrastruc
+      <div class="wi-txt">China-Pakistan Economic Corridor is the world's largest infrastructure project per capita — roads, power plants, Gwadar deep-sea port. Mirrors China's own 1990s infrastructure boom.</div>
+    </div>
+    <div class="why-item">
+      <div class="wi-icon">💻</div>
+      <div class="wi-title">IT Exports Surging 25%/yr</div>
+      <div class="wi-txt">Pakistan is the #4 global freelancing workforce. IT exports doubled in 3 years to $3.2B. Karachi & Lahore tech scenes rivaling Bangalore of 2005.</div>
+    </div>
+    <div class="why-item">
+      <div class="wi-icon">🌊</div>
+      <div class="wi-title">Gwadar — Strategic Port</div>
+      <div class="wi-txt">Gwadar gives landlocked Central Asia its only warm-water port route. This makes Pakistan the transit hub between $3T+ in regional trade — exactly like China's coastal advantage.</div>
+    </div>
+    <div class="why-item">
+      <div class="wi-icon">⚛️</div>
+      <div class="wi-title">Nuclear State + Military</div>
+      <div class="wi-txt">Only Muslim-majority nuclear power. Strategic depth means no existential threat risk. Geopolitical importance drives investment from Gulf, China, and increasingly USA.</div>
+    </div>
+    <div class="why-item">
+      <div class="wi-icon">🌾</div>
+      <div class="wi-title">Agricultural Superpower</div>
+      <div class="wi-txt">4th largest cotton producer, top 5 rice & wheat. Pakistan's Indus River basin is among Earth's most fertile zones. Food security = growth foundation.</div>
+    </div>
+    <div class="why-item">
+      <div class="wi-icon">📈</div>
+      <div class="wi-title">KSE-100: World's Best Index</div>
+      <div class="wi-txt">KSE-100 was the world's best performing stock index in 2002, 2012, and 2021. Currently at 63K+ and projected to reach 600K+ by 2040 — a 10x return trajectory.</div>
+    </div>
+    <div class="why-item">
+      <div class="wi-icon">🤝</div>
+      <div class="wi-title">IMF Stabilization = Reset</div>
+      <div class="wi-txt">2023–24 IMF program cleaned fiscal imbalances. Inflation falling from 38% → 12%. Interest rates dropping. This is the bottom of the cycle — same as India in 1991 reforms.</div>
+    </div>
+  </div>
+</div>
+
+<!-- Global GDP Growth Forecast Chart -->
+<div style="font-size:14px;font-weight:700;margin-bottom:12px;">📊 GDP Growth Trajectory 2025–2034: Country Comparison</div>
+<div style="background:var(--card);border:1px solid var(--border);border-radius:10px;padding:16px;margin-bottom:20px;">
+  <div style="height:280px;position:relative;"><canvas id="rp-gdp-chart"></canvas></div>
+</div>
+
+<!-- Emerging powers comparison table -->
+<div style="font-size:14px;font-weight:700;margin-bottom:12px;">🏆 Emerging Market Ranking — 2025 vs 2035 Projection</div>
+<div style="overflow-x:auto;margin-bottom:20px;">
+<table class="rp-cmp-tbl">
+<thead><tr><th>Country</th><th>GDP Growth Now</th><th>Inflation</th><th>Population</th><th>Stock Index</th><th>2030 GDP Rank</th><th>Key Catalyst</th><th>Verdict</th></tr></thead>
+<tbody>
+${[
+  {f:'🇮🇳',n:'India',g:'+7.2%',inf:'5.1%',pop:'1.4B',stk:'Nifty 22.5K',rank:'#5→#3',cat:'IT + Demographics',v:'🟢 BUY',pk:false},
+  {f:'🇵🇰',n:'Pakistan',g:'+2.5%→6%',inf:'28%↓',pop:'240M',stk:'KSE-100 63K',rank:'#44→#25',cat:'CPEC + IT + Youth',v:'🌟 NEXT GIANT',pk:true},
+  {f:'🇻🇳',n:'Vietnam',g:'+6.0%',inf:'3.8%',pop:'98M',stk:'VNI 1,280',rank:'#35→#28',cat:'Apple supply chain',v:'🟢 RISING',pk:false},
+  {f:'🇮🇩',n:'Indonesia',g:'+5.0%',inf:'3.5%',pop:'278M',stk:'IDX 7,400',rank:'#16→#10',cat:'Nickel + ASEAN',v:'🟢 BUY',pk:false},
+  {f:'🇧🇩',n:'Bangladesh',g:'+5.8%',inf:'9.2%',pop:'170M',stk:'DSEX 6,300',rank:'#35→#30',cat:'Garments + BPO',v:'🟡 WATCH',pk:false},
+  {f:'🇵🇭',n:'Philippines',g:'+5.6%',inf:'3.2%',pop:'115M',stk:'PSEi 6,600',rank:'#34→#28',cat:'BPO + Remittances',v:'🟢 RISING',pk:false},
+  {f:'🇪🇬',n:'Egypt',g:'+3.5%',inf:'32%↓',pop:'106M',stk:'EGX30 24K',rank:'#37→#29',cat:'Suez + Demographics',v:'🟡 WATCH',pk:false},
+  {f:'🇳🇬',n:'Nigeria',g:'+2.9%',inf:'28%',pop:'220M',stk:'NGX 97K',rank:'#27→#20',cat:'Oil + Fintech',v:'🟡 SPECULATIVE',pk:false}
+].map(r=>`<tr${r.pk?' class="pk-row"':''}>
+  <td>${r.f} <strong>${r.n}</strong>${r.pk?' 🌟':''}</td>
+  <td class="trend-up">${r.g}</td><td>${r.inf}</td><td>${r.pop}</td>
+  <td>${r.stk}</td><td>${r.rank}</td><td>${r.cat}</td><td>${r.v}</td>
+</tr>`).join('')}
+</tbody>
+</table>
+</div>
+
+<!-- Rising powers cards -->
+<div style="font-size:14px;font-weight:700;margin-bottom:12px;">🃏 Detailed Country Cards</div>
+<div class="rp-grid" id="rp-cards"></div>
+`;
+  // draw the multi-country GDP chart
+  requestAnimationFrame(()=>drawRpGdpChart());
+  // render rising power cards
+  renderRpCards(rpCountries);
+}
+
+function drawRpGdpChart(){
+  const cv=document.getElementById('rp-gdp-chart');if(!cv)return;
+  const yrs=['2025','2026','2027','2028','2029','2030','2031','2032','2033','2034'];
+  const countries=[
+    {iso:'PK',col:'#10b981',label:'🇵🇰 Pakistan'},
+    {iso:'IN',col:'#f97316',label:'🇮🇳 India'},
+    {iso:'VN',col:'#3b82f6',label:'🇻🇳 Vietnam'},
+    {iso:'ID',col:'#8b5cf6',label:'🇮🇩 Indonesia'},
+    {iso:'CN',col:'#ef4444',label:'🇨🇳 China'},
+    {iso:'US',col:'#94a3b8',label:'🇺🇸 USA'},
+    {iso:'BD',col:'#f59e0b',label:'🇧🇩 Bangladesh'}
+  ];
+  const datasets=countries.map(c=>{
+    const cd=CTRY[c.iso];const g=cd?cd.pred.g:[3,3,3,3,3,3,3,3,3,3];
+    return{label:c.label,data:g,borderColor:c.col,backgroundColor:'transparent',borderWidth:c.iso==='PK'?3:1.5,pointRadius:c.iso==='PK'?4:2,tension:.4,borderDash:c.iso==='US'?[5,3]:(c.iso==='CN'?[3,3]:[])};
+  });
+  if(sparks['rp-gdp'])sparks['rp-gdp'].destroy();
+  sparks['rp-gdp']=new Chart(cv,{type:'line',data:{labels:yrs,datasets},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{labels:{color:'#94a3b8',font:{size:10},boxWidth:12}},tooltip:{mode:'index',intersect:false,backgroundColor:'rgba(15,23,42,.95)',borderColor:'#334155',borderWidth:1}},scales:{x:{ticks:{color:'#64748b'},grid:{color:'rgba(51,65,85,.4)'}},y:{ticks:{color:'#64748b',callback:v=>v+'% GDP'},grid:{color:'rgba(51,65,85,.4)'},title:{display:true,text:'GDP Growth %',color:'#64748b',font:{size:11}}}}}});
+}
+
+function renderRpCards(isos){
+  const grid=document.getElementById('rp-cards');if(!grid)return;
+  grid.innerHTML='';
+  isos.forEach(iso=>{
+    const c=CTRY[iso];if(!c)return;
+    const card=document.createElement('div');
+    card.className='rp-card'+(c.nextChina?' featured':'');
+    const g=c.pred?c.pred.g:[];
+    const canId='rpc-'+iso;
+    card.innerHTML=`
+<div class="rp-card-hdr">
+  <h3>${c.f} ${c.n}</h3>
+  <span class="rp-badge ${c.nextChina?'badge-next':(c.rising?'badge-rising':'badge-est')}">${c.nextChina?'NEXT CHINA':c.rising?'Rising Star':'Emerging'}</span>
+</div>
+<div class="rp-metrics">
+  <div class="rp-m"><div class="rv" style="color:var(--green)">${c.g}%</div><div class="rl">GDP Growth</div></div>
+  <div class="rp-m"><div class="rv" style="color:var(--cyan)">${c.gdppc>=1000?(c.gdppc/1000).toFixed(0)+'K':c.gdppc}</div><div class="rl">GDP/Cap</div></div>
+  <div class="rp-m"><div class="rv">${c.pop}</div><div class="rl">Population</div></div>
+</div>
+<div style="font-size:10px;color:var(--muted);margin-bottom:4px;">GDP Growth Forecast (10Y)</div>
+<div class="rp-gdp-chart"><canvas id="${canId}"></canvas></div>
+<div class="rp-factors">
+  <strong>⚠ Risks:</strong> ${c.ri.join(', ')}<br>
+  <strong>✓ Opportunities:</strong> ${c.op.join(', ')}<br>
+  <strong>📈 2034 GDP Growth Est:</strong> <span style="color:var(--green);">${g.length?g[g.length-1]:c.g}%</span>
+  ${c.nextChina?`<br><br><strong style="color:#10b981;">🌟 Pakistan is to 2025 what China was to 1990</strong> — massive young population, infrastructure investment, strategic location, and IT-driven export growth creating the conditions for 20–30 years of above-trend expansion.`:''}
+</div>`;
+    grid.appendChild(card);
+    requestAnimationFrame(()=>{
+      const cv=document.getElementById(canId);if(!cv)return;
+      if(sparks[canId])sparks[canId].destroy();
+      const yrs=['25','26','27','28','29','30','31','32','33','34'];
+      const trend=g.length?g[g.length-1]>=g[0]:true;
+      sparks[canId]=new Chart(cv,{type:'line',data:{labels:yrs,datasets:[{data:g,borderColor:trend?'#10b981':'#ef4444',borderWidth:2,fill:true,backgroundColor:trend?'rgba(16,185,129,.12)':'rgba(239,68,68,.12)',pointRadius:2,tension:.4}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{callbacks:{label:ctx=>`${ctx.raw}% GDP growth`}}},scales:{x:{ticks:{color:'#64748b',font:{size:9}},grid:{color:'#1e293b'}},y:{ticks:{color:'#64748b',font:{size:9},callback:v=>v+'%'},grid:{color:'#1e293b'}}},animation:{duration:300}}});
+    });
+  });
+}
+
+// ════════════════════════════════════════
+// v2.5 — REAL DATA ENGINE
+// Enriches the dashboard with 100% real
+// prices + AI forecasts from the backend.
+// Falls back gracefully if backend is off.
+// ════════════════════════════════════════
+let backendAlive = false;
+const realDataCache = {};    // sym → real history result
+const prophetCache  = {};    // `${sym}:${horizon}` → forecast result
+
+// Check if backend is running
+async function checkBackend(){
+  const el = document.getElementById('backend-status');
+  try {
+    const r = await fetch(`${BACKEND}/health`,{signal:AbortSignal.timeout(3000)});
+    const d = await r.json();
+    backendAlive = d.status === 'ok';
+    const engines = d.engines || {};
+    const dataTag  = engines.yfinance     ? '📡 REAL DATA' : '📊 Cache';
+    const fcTag    = engines.prophet      ? '🤖 Prophet AI'
+                   : engines.holt_winters ? '📈 Holt-Winters'
+                   : '📐 Linear Reg';
+    el.textContent  = `${dataTag} · ${fcTag} · v${d.version}`;
+    el.className    = 'bs-live';
+    console.log('Backend v'+d.version, engines);
+  } catch(e) {
+    backendAlive = false;
+    el.textContent = '⚡ Offline mode — simulated data';
+    el.className   = 'bs-off';
+  }
+  // fade after 8 seconds
+  setTimeout(()=>{el.style.opacity='0.4';}, 8000);
+}
+
+// Fetch real price history from /api/realhistory/{sym}
+async function fetchRealHistory(sym, period='2y'){
+  if(realDataCache[sym]) return realDataCache[sym];
+  if(!backendAlive) return null;
+  try{
+    const r = await fetch(`${BACKEND}/realhistory/${sym}?period=${period}`,{signal:AbortSignal.timeout(10000)});
+    if(!r.ok) return null;
+    const d = await r.json();
+    realDataCache[sym] = d;
+    return d;
+  }catch(e){ return null; }
+}
+
+// Fetch AI forecast from /api/prophet/{sym}?horizon=1M
+async function fetchProphetForecast(sym, horizon='1M'){
+  const key = `${sym}:${horizon}`;
+  if(prophetCache[key]) return prophetCache[key];
+  if(!backendAlive) return null;
+  try{
+    const r = await fetch(`${BACKEND}/prophet/${sym}?horizon=${horizon}`,{signal:AbortSignal.timeout(30000)});
+    if(!r.ok) return null;
+    const d = await r.json();
+    prophetCache[key] = d;
+    return d;
+  }catch(e){ return null; }
+}
+
+// Enrich all market cards with real data (called after initMarkets)
+async function enrichMarketsWithRealData(){
+  if(!backendAlive) return;
+  const allAssets = [...ADEFS.metals,...ADEFS.crypto,...ADEFS.fx,...ADEFS.oil,...ADEFS.indices];
+  // Batch: fetch real prices for all symbols concurrently
+  const syms = allAssets.map(a=>a.sym);
+  try{
+    const url = `${BACKEND}/realprices?symbols=${syms.join(',')}`;
+    const r = await fetch(url, {signal:AbortSignal.timeout(15000)});
+    if(!r.ok) return;
+    const data = await r.json();
+    // Update mktData and refresh cards
+    Object.entries(data).forEach(([sym, d])=>{
+      if(!d || !d.price) return;
+      if(!mktData[sym]) mktData[sym]={};
+      mktData[sym].price       = d.price;
+      mktData[sym].change      = d.change ?? 0;
+      mktData[sym].realData    = true;
+      mktData[sym].dataSource  = d.data_source || 'real';
+      const pos = d.change >= 0;
+      // Update price display in existing card
+      const valEl = document.querySelector(`#card-${sym} .val`);
+      const chgEl = document.querySelector(`#card-${sym} .chg`);
+      if(valEl) valEl.textContent = fmt(d.price, sym);
+      if(chgEl){
+        chgEl.textContent = `${pos?'▲':'▼'} ${Math.abs(d.change).toFixed(2)}%`;
+        chgEl.className = `chg ${pos?'pos':'neg'}`;
+      }
+      // Add real data badge if not already there
+      const badge = document.querySelector(`#card-${sym} .rd-badge`);
+      if(!badge){
+        const dataBar = document.querySelector(`#card-${sym} .data-bar`);
+        if(dataBar){
+          const b = document.createElement('span');
+          b.className='rd-badge rd-real';b.textContent='✓ REAL DATA';
+          dataBar.appendChild(b);
+        }
+      }
+    });
+    console.log(`Real prices loaded for ${Object.keys(data).length} symbols`);
+  }catch(e){console.warn('Real price enrichment failed:',e);}
+}
+
+// data-bar is now built directly into makeCard above — no override needed
+
+// Override drawDrill to try Prophet first, then fall back to linear
+const _origDrawDrill = drawDrill;
+async function drawDrillReal(sym, tf){
+  // Try to get AI forecast from backend
+  const fc_data = await fetchProphetForecast(sym, tf);
+  if(fc_data && fc_data.yhat && fc_data.yhat.length > 0){
+    // Use Prophet/AI forecast
+    const d = mktData[sym];
+    const hist = d ? (d.history || []).slice(-60) : [];
+    const fc   = fc_data.yhat;
+    const upper= fc_data.yhat_upper;
+    const lower= fc_data.yhat_lower;
+    const labels = [...hist.map((_,i)=>i-hist.length), ...fc.map((_,i)=>i+1)];
+    const cid = 'fc-dd-'+sym;
+    if(sparks[cid]) sparks[cid].destroy();
+    const el = document.getElementById(cid); if(!el) return;
+    sparks[cid] = new Chart(el,{type:'line',
+      data:{labels,datasets:[
+        {label:'History',      data:[...hist,...Array(fc.length).fill(null)],borderColor:'#3b82f6',borderWidth:2,pointRadius:0,tension:.3,fill:false},
+        {label:`${fc_data.algorithm}`,data:[...Array(hist.length-1).fill(null),hist[hist.length-1],...fc],borderColor:'#10b981',borderWidth:2.5,pointRadius:0,tension:.3,fill:false,borderDash:[5,3]},
+        {label:'Upper 80%',   data:[...Array(hist.length-1).fill(null),hist[hist.length-1],...upper],borderColor:'rgba(16,185,129,.35)',borderWidth:1,pointRadius:0,tension:.3,fill:false,borderDash:[2,4]},
+        {label:'Lower 80%',   data:[...Array(hist.length-1).fill(null),hist[hist.length-1],...lower],borderColor:'rgba(239,68,68,.35)',borderWidth:1,pointRadius:0,tension:.3,fill:false,borderDash:[2,4]}
+      ]},
+      options:{responsive:true,maintainAspectRatio:false,
+        plugins:{legend:{labels:{color:'#94a3b8',font:{size:9}}},
+          tooltip:{mode:'index',intersect:false,backgroundColor:'rgba(15,23,42,.95)',
+            callbacks:{title:ctx=>`Step ${ctx[0].label}`,
+              footer:()=>`Algorithm: ${fc_data.algorithm} | Data: ${fc_data.data_source||'backend'}`}}},
+        scales:{x:{ticks:{color:'#64748b',maxTicksLimit:8,font:{size:9}},grid:{color:'#1e293b'}},
+                y:{ticks:{color:'#64748b',font:{size:9},callback:v=>fmt(v,sym)},grid:{color:'#1e293b'}}},animation:{duration:200}}
+    });
+    // Update forecast table with real targets
+    const tb = document.getElementById('tb-'+sym); if(!tb) return;
+    const price = d ? d.price : fc[0];
+    const pts = [
+      {l:'1D', i:Math.min(0, fc.length-1)},
+      {l:'1W', i:Math.min(4, fc.length-1)},
+      {l:'1M', i:Math.min(20, fc.length-1)},
+      {l:'3M', i:Math.min(63, fc.length-1)}
+    ];
+    tb.innerHTML = pts.map(p=>{
+      const fp = fc[p.i]; const pct = (((fp-price)/price)*100).toFixed(2); const up=pct>=0;
+      return`<tr><td>${p.l}</td><td>${fmt(fp,sym)}</td><td class="${up?'pos':'neg'}">${up?'+':''}${pct}%</td><td style="color:${up?'var(--green)':'var(--red)'}">${up?'▲ Bullish':'▼ Bearish'}</td></tr>`;
+    }).join('');
+    // Update data badge on the card
+    const dataBar = document.querySelector(`#card-${sym} .data-bar`);
+    if(dataBar){
+      dataBar.innerHTML = '';
+      const rb=document.createElement('span');rb.className='rd-badge rd-real';rb.textContent='✓ REAL DATA';dataBar.appendChild(rb);
+      const fb=document.createElement('span');fb.className='rd-badge rd-ai';fb.textContent=`🤖 ${fc_data.algorithm.split(' ')[0]}`;dataBar.appendChild(fb);
+    }
+  } else {
+    // Fall back to original linear regression
+    _origDrawDrill(sym, tf);
+  }
+}
+
+// Patch toggleDrill to use real forecast
+function toggleDrill(sym, tf, ev){
+  ev.stopPropagation();
+  const card = document.getElementById('card-'+sym);
+  const dd   = document.getElementById('dd-'+sym);
+  card.querySelectorAll('.tfbtn').forEach(b=>b.classList.toggle('active', b.textContent===tf));
+  if(!dd.classList.contains('open') || card._tf !== tf){
+    dd.classList.add('open'); card._tf = tf;
+    drawDrillReal(sym, tf); // use AI version
+  } else {
+    dd.classList.remove('open');
+  }
+}
+
+// ════════════════════════════════════════
+// CLIMATE INTELLIGENCE  v2.7
+// ════════════════════════════════════════
+let climateMap=null, climateTL=null, climateMarkers=[];
+let birthMap=null, birthTL=null;
+
+const TILE_URLS={
+  dark:   {url:'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',   attr:'&copy; CartoDB', sub:'abcd'},
+  satellite:{url:'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', attr:'&copy; Esri World Imagery', sub:''},
+  terrain:{url:'https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png', attr:'&copy; OpenTopoMap', sub:'abc'}
+};
+
+const CLIM={
+  BD:{n:'Bangladesh',ll:[23.7,90.4],risk:'CRITICAL',r:17,col:'#ff0000',temp:'+2.1°C by 2050',
+      threats:['🌊 60% of land flooded by 2100','🌀 Cyclone intensity +40%','💧 Saltwater intrusion into farms','🔥 Summer 50°C+'],
+      future:'20M climate refugees by 2050 — uninhabitable coastal zones'},
+  MV:{n:'Maldives',ll:[4.2,73.5],risk:'CRITICAL',r:13,col:'#ff0000',temp:'+1.5°C already critical',
+      threats:['🌊 Sinking 8mm/year — 100% below 1.5m','All reefs 100% bleached','Storm surges submerging islands'],
+      future:'Entirely uninhabitable by 2100 — govt already buying land in India'},
+  PK:{n:'Pakistan',ll:[30,70],risk:'CRITICAL',r:16,col:'#ff1100',temp:'+2.3°C projected',
+      threats:['🔥 52.2°C recorded in Jacobabad 2022','🧊 7,000+ glaciers at collapse risk','🌊 2022 flood: 33M displaced, 1/3 nation submerged'],
+      future:'Himalayan glaciers feed 200M people — catastrophic if lost by 2100'},
+  IN:{n:'India',ll:[20.6,78.96],risk:'HIGH',r:18,col:'#ff6600',temp:'+1.9°C',
+      threats:['🔥 49°C+ heatwaves yearly in Delhi','💧 Groundwater depleted 61%','🌀 Cyclone Bay of Bengal +30% stronger'],
+      future:'Heat stress makes outdoor work impossible 45+ days/year by 2050'},
+  CN:{n:'China',ll:[35.86,104.2],risk:'HIGH',r:18,col:'#ff6600',temp:'+1.8°C',
+      threats:['🌊 Yellow River running dry seasonally','🔥 Extreme inland heat — 44°C Shanghai 2023','🧊 Tibetan Plateau glaciers 80% loss by 2100'],
+      future:'Yangtze River basin: 400M people at flood risk within century'},
+  US:{n:'USA',ll:[37.09,-95.71],risk:'HIGH',r:18,col:'#ff8800',temp:'+1.5°C',
+      threats:['🔥 West Coast wildfires: 10M+ acres/year','🌀 Category 5 hurricanes now regular','💧 Colorado River 30% below average'],
+      future:'Miami, New Orleans under water by 2100 without major seawalls'},
+  AU:{n:'Australia',ll:[-25.27,133.78],risk:'HIGH',r:16,col:'#ff6600',temp:'+2.0°C',
+      threats:['🔥 2019-20: 18M ha burned, 3B animals killed','🌊 Great Barrier Reef 50% bleached','💧 Murray-Darling Basin crisis'],
+      future:'Interior uninhabitable due to lethal heat by 2070'},
+  NG:{n:'Nigeria',ll:[9.08,8.68],risk:'HIGH',r:14,col:'#ff6600',temp:'+2.5°C',
+      threats:['🌵 Sahara advancing 600m/year into farmland','💧 Lake Chad lost 90% area','🌀 Lagos coastal flooding'],
+      future:'40M farmers displaced by desertification by 2050'},
+  NL:{n:'Netherlands',ll:[52.13,5.29],risk:'HIGH',r:12,col:'#ff8800',temp:'+1.7°C',
+      threats:['🌊 27% of land below sea level — dikes essential','💧 Rhine flooding +60% intensity','🌊 North Sea storm surges +40%'],
+      future:'$600B+ spent on dikes — model for adaptation (others cannot afford this)'},
+  ID:{n:'Indonesia',ll:[-0.79,113.92],risk:'HIGH',r:16,col:'#ff7700',temp:'+1.8°C',
+      threats:['🌊 Jakarta sinking 25cm/year — capital already moved','🌀 Tropical storms intensifying','🌳 Rainforest 50% lost — CO2 release'],
+      future:'Jakarta abandoned — Nusantara new capital. 17,000 islands at sea-level risk'},
+  EG:{n:'Egypt',ll:[26.82,30.8],risk:'HIGH',r:14,col:'#ff5500',temp:'+2.4°C',
+      threats:['💧 Nile flow -25% by 2100 (Ethiopia dam)','🔥 Alexandria: 10M at risk from sea-level','🌵 40% farmland salinization'],
+      future:'Nile Delta: world\'s most populated delta — 20M at risk from flooding'},
+  VN:{n:'Vietnam',ll:[14.06,108.28],risk:'HIGH',r:13,col:'#ff6600',temp:'+2.0°C',
+      threats:['🌊 Mekong Delta: 40% may flood by 2100','🌀 Typhoon intensity +30%','💧 Saltwater in rice paddies'],
+      future:'$15B/year climate losses by 2030 — rice bowl of Asia at risk'},
+  PH:{n:'Philippines',ll:[12.88,121.77],risk:'HIGH',r:13,col:'#ff6600',temp:'+1.9°C',
+      threats:['🌀 Super Typhoons: Haiyan killed 8,000','🌊 7,000 islands — 60% coastal population','💧 Manila sea-level +50cm by 2050'],
+      future:'Entire island chains may be seasonally uninhabitable'},
+  SA:{n:'Saudi Arabia',ll:[23.89,45.08],risk:'HIGH',r:13,col:'#ff5500',temp:'+3.2°C by 2100',
+      threats:['🔥 Wet-bulb 35°C = lethal (cannot sweat away)','💧 No rivers — 70% water from desalination','🌵 Riyadh 50°C+ days increasing'],
+      future:'Parts of Gulf region may be uninhabitable in summer by 2070'},
+  BR:{n:'Brazil',ll:[-14.24,-51.93],risk:'MEDIUM',r:16,col:'#ffaa00',temp:'+1.8°C',
+      threats:['🌳 Amazon 20% deforested — near tipping point','💧 Drought cycle disruption in south','🌊 Coastal flooding Rio/Recife'],
+      future:'Amazon collapse = global climate tipping point — affects all Earth weather'},
+  DE:{n:'Germany',ll:[51.17,10.45],risk:'MEDIUM',r:12,col:'#ffaa00',temp:'+1.6°C',
+      threats:['🌊 2021 Ahr Valley flood: 180+ dead','🔥 Forest fires new norm in Bavaria','💧 Rhine record low 2022 — ships grounded'],
+      future:'Agriculture shifts northward; Rhineland wine regions change completely'},
+  RU:{n:'Russia',ll:[61.52,105.3],risk:'MEDIUM',r:16,col:'#88cc44',temp:'+2.4°C (mixed)',
+      threats:['🧊 Permafrost thaw releasing ancient methane','🔥 Siberian wildfires record 2021','🏗 Infrastructure on permafrost collapsing'],
+      future:'Paradox: gains Arctic shipping routes but loses permafrost stability. Methane release catastrophic.'},
+  JP:{n:'Japan',ll:[36.2,138.25],risk:'MEDIUM',r:13,col:'#ffaa00',temp:'+1.7°C',
+      threats:['🌀 Typhoons: record rainfall Hagibis 2019','🔥 Urban heat island Tokyo 42°C','🌊 Pacific island territories sinking'],
+      future:'Agricultural disruption; Okinawa major storm surge risk'},
+  UK:{n:'UK',ll:[55.38,-3.44],risk:'MEDIUM',r:12,col:'#ffcc00',temp:'+1.4°C',
+      threats:['🌊 Thames Barrier: 50 closures/year by 2100','🔥 40°C reached 2022 for first time ever','💧 Flash flooding £5B/year'],
+      future:'Gulf Stream disruption could paradoxically COOL UK even as globe warms'},
+  KE:{n:'Kenya',ll:[-0.02,37.91],risk:'HIGH',r:12,col:'#ff8800',temp:'+2.0°C',
+      threats:['💧 Drought frequency +50% — 2022 famine','🌵 Pastoralist grazing land declining','🌊 Mombasa coastal erosion'],
+      future:'Food security crisis for 15M by 2050 without adaptation'},
+  ET:{n:'Ethiopia',ll:[9.15,40.49],risk:'HIGH',r:12,col:'#ff8800',temp:'+2.2°C',
+      threats:['💧 Recurring severe drought','🌵 Land degradation accelerating','🌊 Awash River flooding'],
+      future:'25M at risk from drought-induced food insecurity'},
+};
+
+const FUTURE_WATER=[
+  // ── DYING WATER BODIES ──────────────────────────────────────────────
+  {n:'Aral Sea',ll:[45.5,59.5],status:'💀 ALREADY GONE (95%)',
+   note:'95% evaporated by 2020. Soviet cotton irrigation disaster. 60,000 fishermen lost jobs. Salt+pesticide dust now causes lung cancer across region. Ship graveyards in desert.',col:'#ff0000',icon:'💀',era:['past','present','2050','2100']},
+  {n:'Lake Chad',ll:[13.5,14.5],status:'💀 90% LOST SINCE 1963',
+   note:'Was 25,000km² — now 1,350km². 40M people across Chad, Niger, Nigeria, Cameroon depend on it. Boko Haram rises in vacuum left by environmental collapse. Desertification unstoppable.',col:'#ff4400',icon:'💀',era:['past','present','2050','2100']},
+  {n:'Dead Sea',ll:[31.5,35.4],status:'⚠️ SHRINKING -1.2m/year',
+   note:'Lowest place on Earth (430m below sea level). Losing 1 metre every year. Jordan River diverted 90% upstream. Sinkholes appearing along shores. Could vanish by 2100.',col:'#ff6600',icon:'⚠️',era:['present','2050','2100']},
+  {n:'Caspian Sea',ll:[42,51],status:'📉 -2.7m SINCE 1994',
+   note:'World\'s largest lake losing volume fast. Projected -30% by 2100 from warming + reduced Volga/Ural inflows. Iran, Kazakhstan, Russia, Turkmenistan, Azerbaijan all affected. Fishing industry collapsing.',col:'#ffaa00',icon:'📉',era:['present','2050','2100']},
+  {n:'Himalayan Glaciers (Hindu Kush)',ll:[29,84],status:'🧊 75% LOSS BY 2100',
+   note:'3rd largest ice body on Earth — called "Asia\'s Water Tower". Feeds Indus, Ganges, Brahmaputra, Yangtze, Mekong. 200M+ people depend on meltwater. Once gone: seasonal rivers become dry riverbeds.',col:'#00aaff',icon:'🧊',era:['present','2050','2100']},
+  {n:'Colorado River (USA)',ll:[36.1,-112],status:'💧 ONLY 20% FLOW LEFT',
+   note:'Overallocated since 1922 Colorado Compact — river no longer reaches the sea since 1998. Lake Mead at 27% capacity. 40M Americans + 7 states depend on it. Agriculture crisis brewing.',col:'#60a5fa',icon:'💧',era:['present','2050','2100']},
+  {n:'Lake Mead (USA)',ll:[36.0,-114.7],status:'💧 RECORD LOW: 27% FULL',
+   note:'Largest US reservoir by volume. Hit dead pool level risk in 2022. Powers Hoover Dam electricity for 8M people. If it hits "dead pool" (895ft) — no more water or power can be extracted.',col:'#60a5fa',icon:'💧',era:['present','2050','2100']},
+  {n:'Tigris–Euphrates (Iraq)',ll:[33,44],status:'💧 73% GROUNDWATER GONE',
+   note:'Mesopotamia — "Cradle of Civilization" — is drying up. Iran + Turkey dams upstream cut flow 60%. NASA GRACE satellites confirmed 73% groundwater loss 2003-2010. Iraq losing 250 sq km of farmland yearly.',col:'#60a5fa',icon:'💧',era:['present','2050','2100']},
+  {n:'Yellow River (China)',ll:[35.5,107],status:'💧 RUNS DRY SEASONALLY',
+   note:'China\'s "Mother River" ran dry 226 days in 1997. Feeds 150M people. Glaciers feeding it losing 30% mass. By 2050: chronic water wars between northern Chinese provinces.',col:'#60a5fa',icon:'💧',era:['present','2050','2100']},
+  {n:'Murray–Darling Basin (AU)',ll:[-33,143],status:'💧 40% FLOW REDUCTION',
+   note:'Australia\'s agricultural heartland — produces 40% of national food. 2019 fish kills: 1M+ fish died from algae blooms and low oxygen. Warming + drought cutting flows dramatically.',col:'#ffcc00',icon:'💧',era:['present','2050']},
+  {n:'Persian Gulf',ll:[26,52],status:'🔥 HYPERSALINE BY 2100',
+   note:'Desalination plants extract so much freshwater that Gulf is becoming hypersaline. Combined with wet-bulb temperatures already reaching 35°C (lethal) in summer. By 2070: seasonally uninhabitable shores.',col:'#f97316',icon:'🔥',era:['2050','2100']},
+  {n:'Mediterranean Sea',ll:[36,18],status:'📉 EVAPORATION ACCELERATING',
+   note:'Mediterranean is warming 20% faster than global average. Increasing salinity. North African coast becoming desert. Southern Europe coastlines retreating. Algae blooms killing tourism.',col:'#ffaa00',icon:'📉',era:['2050','2100']},
+  // ── EMERGING NEW LAND ────────────────────────────────────────────────
+  {n:'NEW LAND: Arctic Islands (Svalbard)',ll:[76,25],status:'🏝 10+ ISLANDS EMERGING',
+   note:'Over 10 new islands uncovered since 2012 as Svalbard glaciers retreat. Russia and Canada racing to plant flags. Resource extraction (oil, minerals) rights worth trillions. New geopolitical flashpoint.',col:'#00ff88',icon:'🏝',era:['present','2050','2100']},
+  {n:'NEW LAND: Hunga Tonga Island',ll:[-20.5,-175.4],status:'🌋 NEW VOLCANIC ISLAND 2022',
+   note:'Born from the January 2022 eruption — one of the most powerful ever recorded (500x Hiroshima). New land mass forming in Pacific. Scientists watching if it stabilizes or erodes. First new island of 21st century.',col:'#a78bfa',icon:'🌋',era:['present','2050','2100']},
+  {n:'NEW LAND: Lomonosov Ridge',ll:[85,135],status:'🌊 EMERGING CONTINENT 2100',
+   note:'Underwater Arctic ridge between Russia and Greenland. As Arctic ice melts, this 1,800km ridge could become partially above water. Russia filed UN claim 2007. Worth $trillions in oil+gas+minerals.',col:'#44ccff',icon:'🌊',era:['2100']},
+  {n:'GREENING: Sahara Desert',ll:[20,10],status:'🟢 +15% VEGETATION SINCE 1982',
+   note:'Satellite data shows Sahara has GREENED 15% in 40 years — CO2 fertilization effect + shifting rainfall. Historical Green Sahara existed 5000-9000 BC with hippos, crocodiles, human settlements. Could partially return by 2100.',col:'#4ade80',icon:'🟢',era:['present','2050','2100']},
+  {n:'RISK: West Antarctic Ice Sheet',ll:[-78,-90],status:'🧊 3.3m SEA RISE IF GONE',
+   note:'Scientists say it may have already passed its tipping point. If fully collapses: 3.3 metres of sea level rise globally — unstoppable over centuries. London, New York, Mumbai, Shanghai — all partially flooded permanently.',col:'#bfdbfe',icon:'🧊',era:['2050','2100']},
+];
+
+// Climate tipping points — the cascade triggers scientists fear most
+const TIPPING_POINTS=[
+  {n:'AMOC Atlantic Circulation Collapse',ll:[45,-30],
+   col:'#a78bfa',r:14,
+   note:'Atlantic Meridional Overturning Circulation slowed 15% since 1950. If it collapses: Europe freezes (−5 to −10°C), monsoons shift, Amazon dries out, sea level rises 1m extra on US East Coast. Current strength at 1,000-year low.',
+   active:['present','2050','2100']},
+  {n:'Amazon Rainforest Dieback Tipping Point',ll:[-5,-55],
+   col:'#a78bfa',r:15,
+   note:'Amazon is 17% deforested. Scientists say 20-25% triggers irreversible "savannification". Releases 140B tons CO2. Global rainfall patterns collapse. Already seeing eastern Amazon emit more CO2 than it absorbs. We are at the edge.',
+   active:['present','2050','2100']},
+  {n:'Siberian Permafrost Carbon Bomb',ll:[65,100],
+   col:'#f97316',r:16,
+   note:'1.5 TRILLION tons of carbon frozen in Siberian permafrost — 2x all carbon ever emitted by humans. As it thaws it releases methane (80x more potent than CO2). "Zombie fires" burn underground all winter and re-emerge. Self-reinforcing feedback loop — once started, cannot be stopped.',
+   active:['present','2050','2100']},
+  {n:'Greenland Ice Sheet Melt',ll:[72,-42],
+   col:'#00aaff',r:13,
+   note:'Contains enough water to raise global sea levels 7.2 metres. Currently losing 280B tonnes/year — accelerating. Southern Greenland already past tipping point. Full melt takes centuries but is now locked in above 1.5°C.',
+   active:['present','2050','2100']},
+  {n:'Boreal Forest Die-off (Canada/Russia)',ll:[58,-95],
+   col:'#f97316',r:14,
+   note:'World\'s largest forest biome (boreal/taiga) experiencing unprecedented wildfires. 2023: Canada burned 18M hectares — record by 3x. Drought stress kills trees. Dead trees fuel fires. Fires release carbon. More warming. Accelerating cycle.',
+   active:['present','2050','2100']},
+  {n:'East Antarctic Ice Sheet Instability',ll:[-72,35],
+   col:'#bfdbfe',r:14,
+   note:'Previously considered stable — new research 2023 shows marine ice sheet instability beginning. Contains 52 metres of potential sea level rise. Even partial collapse of Wilkes Basin = 3-4 metres. Not yet a tipping point — but monitoring critical.',
+   active:['2050','2100']},
+  {n:'Coral Reef Global Extinction',ll:[-18,147],
+   col:'#ff6b6b',r:13,
+   note:'Great Barrier Reef had mass bleaching in 2016, 2017, 2020, 2022 — 4 times in 7 years. At 1.5°C: 70-90% of coral reefs gone. At 2°C: 99% gone. 500M people depend on reefs for food+income+coastal protection. Reef-dependent fisheries = $375B/year.',
+   active:['present','2050','2100']},
+];
+
+// Lethal heat zones — where humans cannot survive outdoors
+const HEAT_ZONES=[
+  {n:'Jacobabad, Pakistan — 52.2°C Recorded',ll:[28.3,68.4],
+   col:'#dc2626',
+   note:'Recorded 52.2°C — one of highest ever. Wet-bulb temperature reached 35°C (the lethal limit for humans). When wet-bulb exceeds 35°C, the human body cannot cool itself by sweating — death within hours. Pakistan has exceeded this threshold twice since 2020.'},
+  {n:'Persian Gulf Heat Corridor',ll:[24,56],
+   col:'#dc2626',
+   note:'Gulf region hits wet-bulb 33-35°C regularly. Outdoor work already banned in summer in Qatar/UAE. By 2050: 3-4 months per year will be physiologically unsurvivable without air conditioning. 25M people at risk.'},
+  {n:'South Asia Heat Dome (India/Bangladesh)',ll:[23,87],
+   col:'#dc2626',
+   note:'2022 March/April heatwave: 49°C in Delhi before monsoon. Wheat harvest destroyed. 1.5B people live in zone projected to face annual lethal heat days by 2100. Agricultural collapse precedes humanitarian crisis.'},
+  {n:'North Africa / Sahel Lethal Zone',ll:[18,8],
+   col:'#f97316',
+   note:'Sahel temperatures rising 1.5x faster than global average. 2022 Nigeria: 40+ consecutive days above 45°C. Combined with drought — food production collapse. 250M climate migrants projected by 2050 from this region alone.'},
+  {n:'Amazon Heat Amplifier',ll:[-3,-60],
+   col:'#f97316',
+   note:'Amazon deforestation + climate change creating regional heat amplification. Manaus reached 40.6°C in 2016. As forest shrinks: less evapotranspiration = more heat = more fires = less forest. Spiral tightening.'},
+];
+
+function initClimate(){
+  if(climateMap) return;
+  climateMap = L.map('climate-map',{center:[20,10],zoom:2,zoomControl:true,preferCanvas:true});
+  const t = TILE_URLS.dark;
+  climateTL = L.tileLayer(t.url,{attribution:t.attr,subdomains:t.sub||'abc',maxZoom:18});
+  climateTL.addTo(climateMap);
+  renderClimateMarkers('present');
+  renderHeatZones();
+}
+
+function setClimateLayer(type, btn){
+  document.querySelectorAll('#clm-layers .lsw-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  climateMap.removeLayer(climateTL);
+  const t = TILE_URLS[type];
+  climateTL = L.tileLayer(t.url,{attribution:t.attr,subdomains:t.sub||'abc',maxZoom:18});
+  climateTL.addTo(climateMap);
+  climateTL.bringToBack();
+}
+
+let _climEra='present';
+function setClimateEra(era, btn){
+  document.querySelectorAll('.tml-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  _climEra=era;
+  renderClimateMarkers(era);
+}
+
+function renderClimateMarkers(era){
+  climateMarkers.forEach(m=>climateMap.removeLayer(m));
+  climateMarkers=[];
+  const eraLabel={past:'Historical 1900–2000',present:'Present Crisis 2024',
+                  '2050':'Near Future 2050','2100':'Far Future 2100'};
+
+  // Country risk circles
+  Object.entries(CLIM).forEach(([,d])=>{
+    let col=d.col;
+    if(era==='past'){col=d.risk==='CRITICAL'?'#ff8800':d.risk==='HIGH'?'#ffcc00':'#88dd44';}
+    else if(era==='2050'){col=d.risk==='CRITICAL'?'#cc0000':d.risk==='HIGH'?'#ff3300':'#ff8800';}
+    else if(era==='2100'){col=d.risk==='CRITICAL'?'#880000':d.risk==='HIGH'?'#cc1100':'#ff5500';}
+    const m=L.circleMarker(d.ll,{radius:d.r||12,color:col,fillColor:col,fillOpacity:0.55,weight:1.5}).addTo(climateMap);
+    m.bindPopup(`<div style="min-width:250px;font-family:sans-serif;color:#e2e8f0;">
+      <div style="font-size:14px;font-weight:700;margin-bottom:4px;">${d.n} <span style="color:${col};">— ${d.risk} RISK</span></div>
+      <div style="font-size:10px;color:#64748b;margin-bottom:8px;">${eraLabel[era]}</div>
+      ${d.temp?`<div style="font-size:12px;color:#f97316;margin-bottom:6px;">🌡 ${d.temp}</div>`:''}
+      <div style="font-size:11px;font-weight:700;margin-bottom:4px;">Key Threats:</div>
+      <div style="font-size:11px;color:#94a3b8;line-height:1.7;">${d.threats.join('<br>')}</div>
+      ${d.future?`<div style="font-size:11px;margin-top:8px;padding-top:6px;border-top:1px solid #334155;color:#fca5a5;">🔮 ${d.future}</div>`:''}
+    </div>`,{maxWidth:290,className:'leaflet-popup-dark'});
+    climateMarkers.push(m);
+  });
+
+  // Water body / land change markers
+  FUTURE_WATER.filter(w=>w.era.includes(era)).forEach(w=>{
+    const isEmerging=w.n.includes('NEW LAND')||w.n.includes('GREENING')||w.n.includes('Hunga');
+    const pm=L.circleMarker(w.ll,{
+      radius:10,color:w.col,fillColor:w.col,fillOpacity:0.45,weight:2,
+      dashArray:isEmerging?'6,4':undefined
+    }).addTo(climateMap);
+    pm.bindPopup(`<div style="min-width:240px;font-family:sans-serif;color:#e2e8f0;">
+      <div style="font-size:13px;font-weight:700;margin-bottom:4px;">${w.icon||'🌊'} ${w.n}</div>
+      <div style="font-size:11px;font-weight:700;color:${w.col};margin-bottom:6px;">${w.status}</div>
+      <div style="font-size:11px;color:#94a3b8;line-height:1.6;">${w.note}</div>
+    </div>`,{maxWidth:300});
+    climateMarkers.push(pm);
+  });
+
+  // Climate tipping point markers (shown from present onwards)
+  if(era!=='past'){
+    TIPPING_POINTS.filter(t=>t.active.includes(era)).forEach(t=>{
+      const pulse=L.circleMarker(t.ll,{
+        radius:t.r||13,color:t.col,fillColor:t.col,fillOpacity:0.3,weight:2.5,
+        dashArray:'4,3'
+      }).addTo(climateMap);
+      pulse.bindPopup(`<div style="min-width:260px;font-family:sans-serif;color:#e2e8f0;">
+        <div style="font-size:13px;font-weight:700;color:${t.col};margin-bottom:6px;">⚡ TIPPING POINT: ${t.n}</div>
+        <div style="font-size:11px;color:#94a3b8;line-height:1.6;">${t.note}</div>
+        <div style="margin-top:8px;font-size:10px;color:#a78bfa;font-weight:700;">⚠️ Once triggered — IRREVERSIBLE</div>
+      </div>`,{maxWidth:310});
+      climateMarkers.push(pulse);
+    });
+  }
+}
+
+// Permanent heat zone markers (always visible, non-era-dependent)
+let heatMarkers=[];
+function renderHeatZones(){
+  HEAT_ZONES.forEach(h=>{
+    const hm=L.circleMarker(h.ll,{
+      radius:16,color:h.col,fillColor:h.col,fillOpacity:0.18,weight:1.5,
+      dashArray:'3,3'
+    }).addTo(climateMap);
+    hm.bindPopup(`<div style="min-width:250px;font-family:sans-serif;color:#e2e8f0;">
+      <div style="font-size:13px;font-weight:700;color:${h.col};margin-bottom:6px;">🔥 LETHAL HEAT ZONE</div>
+      <div style="font-size:12px;font-weight:700;margin-bottom:6px;">${h.n}</div>
+      <div style="font-size:11px;color:#94a3b8;line-height:1.6;">${h.note}</div>
+      <div style="margin-top:8px;font-size:10px;color:#fca5a5;font-weight:700;">Wet-bulb 35°C = Human body cannot survive</div>
+    </div>`,{maxWidth:300});
+    heatMarkers.push(hm);
+  });
+}
+
+// ════════════════════════════════════════
+// BIRTH RATE INTELLIGENCE  v2.7
+// ════════════════════════════════════════
+const BIRTH={
+  KR:{n:'South Korea',ll:[35.91,127.77],rate:0.72,col:'#7f00ff',status:'CRISIS',trend:'↓ Falling',
+      note:'World\'s lowest ever recorded. Gov spent $200B+ — still declining. Marriage rate -70% since 2010. Youth see no future in parenthood.'},
+  HK:{n:'Hong Kong',ll:[22.32,114.18],rate:0.75,col:'#7f00ff',status:'CRISIS',trend:'↓ Falling',
+      note:'2nd lowest globally. Housing costs = impossible to raise children. 750 sq ft apartments for families.'},
+  SG:{n:'Singapore',ll:[1.35,103.82],rate:0.97,col:'#9900cc',status:'CRISIS',trend:'↓',
+      note:'Gov pays $30,000 per child — still declining. Career focus + cost of living dominate decisions.'},
+  UA:{n:'Ukraine',ll:[48.38,31.17],rate:1.05,col:'#cc0000',status:'CRITICAL',trend:'↓ War impact',
+      note:'War + 8M emigrants = demographic collapse. Population was 52M in 1991, now ~30M.'},
+  CN:{n:'China',ll:[35.86,104.2],rate:1.09,col:'#cc0000',status:'CRITICAL',trend:'↓ Post one-child',
+      note:'One-child policy legacy. Now reversed but young Chinese not having children anyway. Biggest demographic time-bomb.'},
+  ES:{n:'Spain',ll:[40.46,-3.75],rate:1.16,col:'#dc2626',status:'CRITICAL',trend:'↓',
+      note:'Youth unemployment 28% + housing crisis = no births. Southern Spain near zero. Economic insecurity driver.'},
+  IT:{n:'Italy',ll:[41.87,12.57],rate:1.20,col:'#dc2626',status:'CRITICAL',trend:'↓',
+      note:'30% fewer births than 1970s. Southern Italy near zero. "Demographic winter" — school closures nationwide.'},
+  JP:{n:'Japan',ll:[36.2,138.25],rate:1.20,col:'#dc2626',status:'CRITICAL',trend:'↓',
+      note:'Population will halve by 2100. 30%+ over 65 by 2030. Robot workers + immigration resistance = crisis.'},
+  TH:{n:'Thailand',ll:[15.87,100.99],rate:1.30,col:'#dc2626',status:'CRITICAL',trend:'↓',
+      note:'Southeast Asia\'s Japan. Aging rapidly. Insufficient young workers for booming economy.'},
+  GR:{n:'Greece',ll:[39.07,21.82],rate:1.30,col:'#dc2626',status:'CRITICAL',trend:'↓',
+      note:'Economic crisis + youth emigration. Islands losing population. Athens birth rate = 0.9.'},
+  PL:{n:'Poland',ll:[51.92,19.15],rate:1.32,col:'#dc2626',status:'CRITICAL',trend:'↓',
+      note:'Conservative policies + emigration to Western EU = demographic paradox.'},
+  CA:{n:'Canada',ll:[56.13,-106.35],rate:1.47,col:'#ef4444',status:'LOW',trend:'↓',
+      note:'Most immigration-dependent demographics in the world. Native-born declining rapidly.'},
+  DE:{n:'Germany',ll:[51.17,10.45],rate:1.46,col:'#ef4444',status:'LOW',trend:'→ Stabilizing',
+      note:'Immigration from Middle East/Africa compensating. Native German rate still low at ~1.3.'},
+  RU:{n:'Russia',ll:[61.52,105.3],rate:1.50,col:'#f59e0b',status:'LOW',trend:'↓ War losses',
+      note:'Sanctions, war deaths, and emigration suppressing births. Male life expectancy = 66 years.'},
+  UK:{n:'UK',ll:[55.38,-3.44],rate:1.56,col:'#f59e0b',status:'LOW',trend:'↓',
+      note:'Immigration keeps total population growing. Scottish rate is 1.3 — among EU lowest.'},
+  AU:{n:'Australia',ll:[-25.27,133.78],rate:1.63,col:'#f59e0b',status:'LOW',trend:'↓',
+      note:'Housing affordability crisis hitting fertility. Government offers baby bonuses — limited effect.'},
+  US:{n:'USA',ll:[37.09,-95.71],rate:1.66,col:'#f59e0b',status:'LOW',trend:'↓',
+      note:'Below replacement for 1st time in history. Hispanic communities keep rate higher than Europe would suggest.'},
+  FR:{n:'France',ll:[46.23,2.21],rate:1.68,col:'#f59e0b',status:'LOW',trend:'↓',
+      note:'Best rate in EU due to generous family policies (crèche, 16 weeks paid leave). Still below replacement.'},
+  SE:{n:'Sweden',ll:[60.13,18.64],rate:1.67,col:'#f59e0b',status:'LOW',trend:'↓',
+      note:'480 days paid parental leave — still declining. Nordic model maxed out.'},
+  BR:{n:'Brazil',ll:[-14.24,-51.93],rate:1.75,col:'#f59e0b',status:'LOW',trend:'↓ Rapid fall',
+      note:'Fell from 6.3 (1960) to 1.75 now — one of history\'s fastest transitions. Urban migration driver.'},
+  MX:{n:'Mexico',ll:[23.63,-102.55],rate:1.82,col:'#f59e0b',status:'LOW',trend:'↓',
+      note:'Rapid urbanization. Borderline below replacement now. Full transition within 10 years.'},
+  AR:{n:'Argentina',ll:[-38.42,-63.62],rate:2.2,col:'#10b981',status:'HEALTHY',trend:'→',
+      note:'Near replacement rate. Economic instability preventing further decline surprisingly.'},
+  BD:{n:'Bangladesh',ll:[23.7,90.4],rate:2.0,col:'#10b981',status:'NEAR_REPLACE',trend:'↓ Success',
+      note:'Fell from 6.9 (1975) to 2.0 — one of world\'s fastest demographic transitions. Education of girls key driver.'},
+  IN:{n:'India',ll:[20.6,78.96],rate:2.0,col:'#10b981',status:'NEAR_REPLACE',trend:'↓ Converging',
+      note:'Urban India already 1.6. Rural ~3.0. Will cross below replacement ~2027. Massive regional variation.'},
+  VN:{n:'Vietnam',ll:[14.06,108.28],rate:2.0,col:'#10b981',status:'NEAR_REPLACE',trend:'↓',
+      note:'Urban Vietnam ~1.5. Rapid economic growth suppressing births faster than expected.'},
+  ID:{n:'Indonesia',ll:[-0.79,113.92],rate:2.1,col:'#10b981',status:'HEALTHY',trend:'↓ Declining',
+      note:'Exactly at replacement. Urbanization will push below in ~5 years.'},
+  SA:{n:'Saudi Arabia',ll:[23.89,45.08],rate:2.4,col:'#10b981',status:'HEALTHY',trend:'↓ Falling fast',
+      note:'Fell from 7.2 (1980) to 2.4. Women\'s education (now 60% university) fastest fertility reducer.'},
+  PK:{n:'Pakistan',ll:[30,70],rate:3.3,col:'#f97316',status:'HIGH',trend:'↓ Declining slowly',
+      note:'High but falling from 6.6 in 1980. Education + contraception access key. Urban vs rural gap huge.'},
+  KE:{n:'Kenya',ll:[-0.02,37.91],rate:3.3,col:'#f97316',status:'HIGH',trend:'↓ Declining',
+      note:'Education programs working. Urban Nairobi rate already ~2.2. Rural still ~5.0.'},
+  AF:{n:'Afghanistan',ll:[33.94,67.71],rate:4.6,col:'#dc2626',status:'HIGH',trend:'→ Stagnant',
+      note:'Taliban banned girls from school — education collapse will keep birth rate high for decades.'},
+  ET:{n:'Ethiopia',ll:[9.15,40.49],rate:4.0,col:'#f97316',status:'HIGH',trend:'↓ Falling',
+      note:'Urban Ethiopia ~1.8 already. Rural ~5.5. Dramatic transition underway with female education.'},
+  EG:{n:'Egypt',ll:[26.82,30.8],rate:3.0,col:'#f97316',status:'HIGH',trend:'↓',
+      note:'Govt limits benefits to 2 children. Cairo middle-class ~2.0, rural upper Egypt 5+. Policy working.'},
+  NG:{n:'Nigeria',ll:[9.08,8.68],rate:5.1,col:'#dc2626',status:'VERY_HIGH',trend:'→ High',
+      note:'Population will double by 2050: 400M+. Strain on resources + climate stress = critical. Largest African nation.'},
+  TD:{n:'Chad',ll:[15.45,18.73],rate:5.6,col:'#dc2626',status:'VERY_HIGH',trend:'→',
+      note:'Combined with climate crisis + conflict = extreme humanitarian emergency. Food insecurity affecting millions.'},
+  ML:{n:'Mali',ll:[17.57,-3.99],rate:5.8,col:'#dc2626',status:'VERY_HIGH',trend:'→',
+      note:'High rate + Sahel drought + political instability = compounding crises. Girls\' school enrollment <50%.'},
+  NE:{n:'Niger',ll:[17.61,8.08],rate:6.9,col:'#991b1b',status:'EXTREME',trend:'→ World\'s highest',
+      note:'World\'s highest birth rate. Average woman has 7+ children. Lowest HDI. Desertification + food crisis critical.'},
+};
+
+function birthStatusColor(s){return{CRISIS:'#7f00ff',CRITICAL:'#dc2626',LOW:'#f59e0b',
+  NEAR_REPLACE:'#10b981',HEALTHY:'#10b981',HIGH:'#f97316',VERY_HIGH:'#dc2626',EXTREME:'#991b1b'}[s]||'#94a3b8';}
+function birthStatusLabel(s){return{CRISIS:'💀 POPULATION CRISIS',CRITICAL:'🚨 Critical Low',LOW:'⚠️ Below Replacement',
+  NEAR_REPLACE:'⚡ Near Replacement',HEALTHY:'✅ Healthy',HIGH:'📈 High Growth',
+  VERY_HIGH:'🔴 Very High',EXTREME:'🆘 EXTREME — Resource Alarm'}[s]||s;}
+
+function initBirthRate(){
+  if(birthMap) return;
+  birthMap = L.map('birth-map',{center:[20,15],zoom:2,zoomControl:true,preferCanvas:true});
+  const t = TILE_URLS.dark;
+  birthTL = L.tileLayer(t.url,{attribution:t.attr,subdomains:t.sub||'abc',maxZoom:18});
+  birthTL.addTo(birthMap);
+  Object.entries(BIRTH).forEach(([,d])=>{
+    const radius = Math.max(7, Math.min(22, d.rate*3.2));
+    const m = L.circleMarker(d.ll,{radius,color:d.col,fillColor:d.col,fillOpacity:0.65,weight:1.5}).addTo(birthMap);
+    m.bindPopup(`<div style="min-width:250px;font-family:sans-serif;color:#e2e8f0;">
+      <div style="font-size:14px;font-weight:700;margin-bottom:4px;">${d.n}</div>
+      <div style="font-size:12px;font-weight:700;color:${d.col};margin-bottom:6px;">${birthStatusLabel(d.status)}</div>
+      <div style="font-size:28px;font-weight:700;color:${d.col};margin-bottom:4px;">${d.rate}</div>
+      <div style="font-size:11px;color:#94a3b8;margin-bottom:4px;">births per woman&nbsp;&nbsp;|&nbsp;&nbsp;${d.trend}</div>
+      ${d.note?`<div style="font-size:11px;color:#94a3b8;border-top:1px solid #334155;padding-top:6px;margin-top:6px;">${d.note}</div>`:''}
+    </div>`,{maxWidth:290,className:'leaflet-popup-dark'});
+  });
+}
+
+function setBirthLayer(type, btn){
+  document.querySelectorAll('#birth-layers .lsw-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  birthMap.removeLayer(birthTL);
+  const t = TILE_URLS[type];
+  birthTL = L.tileLayer(t.url,{attribution:t.attr,subdomains:t.sub||'abc',maxZoom:18});
+  birthTL.addTo(birthMap);
+  birthTL.bringToBack();
+}
+
+// ════════════════════════════════════════
+// BOOT
+// ════════════════════════════════════════
+document.addEventListener('DOMContentLoaded',async()=>{
+  initMap();
+  loadNewsTab('world');
+  document.getElementById('clock').textContent=new Date().toUTCString().slice(5,25)+' UTC';
+  // Check backend and load real data
+  await checkBackend();
+});
+</script>
+</body>
+</html>
