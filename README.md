@@ -8,7 +8,7 @@
 [![FastAPI](https://img.shields.io/badge/FastAPI-0.111-009688)](https://fastapi.tiangolo.com)
 [![MLflow](https://img.shields.io/badge/MLflow-2.9-orange)](https://mlflow.org)
 [![Azure AI](https://img.shields.io/badge/Azure-AI--102-0078D4)](https://azure.microsoft.com)
-[![Dashboard](https://img.shields.io/badge/Dashboard-v2.4-f59e0b)](./dashboard/world-intelligence.html)
+[![Dashboard](https://img.shields.io/badge/Dashboard-v2.5-f59e0b)](./dashboard/world-intelligence.html)
 [![Leaflet](https://img.shields.io/badge/Leaflet.js-1.9.4-199900)](https://leafletjs.com)
 
 ---
@@ -53,7 +53,8 @@ An **AI-powered customer intelligence and global market analytics platform** bui
 
 | Version | Release | Highlights |
 |---------|---------|------------|
-| **v2.4** | **Current** | **🇵🇰 Pakistan added** · 37 countries total · 🌐 World Stocks tab (35 global exchanges, drilldown, 2030/2035/2040 forecasts) · 🌏 Rising Powers tab (Pakistan "Next China" analysis, 10Y GDP charts, succession timeline) · GDP sparkline in every country tooltip · Rising/Next China badges on map |
+| **v2.5** | **Current** | **Real Data Engine** — yfinance 100% real OHLCV for 60+ symbols · Prophet AI forecasting (Facebook) · Holt-Winters fallback · 3 new API endpoints (`/api/realhistory`, `/api/prophet`, `/api/realprices`) · AI forecast drilldown replaces linear regression · Live backend status indicator · REAL DATA + AI FORECAST badges on cards |
+| v2.4 | Previous | 🇵🇰 Pakistan added · 37 countries · 35 world exchanges · Rising Powers tab · Next China analysis · GDP forecast tooltips |
 | v2.3.1 | Previous | Performance fix — 5x faster backend: cache-before-fetch, shared HTTP client, parallel news feeds, in-memory cache, startup pre-warm |
 | v2.3 | — | World Intelligence Platform — Leaflet map, live markets, forecasts, signals, regional news, FastAPI backend |
 | v2.2 | — | World Risk Intelligence — D3 country risk map, Tech Radar, Innovation Timeline |

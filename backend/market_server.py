@@ -1,14 +1,18 @@
 """
-World Intelligence Platform — Local Backend Server v2.3.1
-FastAPI on port 8111 | SQLite + in-memory cache | Yahoo Finance + CoinGecko + Open ER API
+World Intelligence Platform — Local Backend Server v2.5
+FastAPI on port 8111 | SQLite + in-memory cache | REAL DATA ENGINE
 
-PERFORMANCE FIXES applied:
-  1. Check cache BEFORE making any HTTP requests (was checking after — always slow)
-  2. Single shared httpx.AsyncClient (was creating new client per symbol = 17 TCP handshakes)
-  3. News feeds fetched concurrently with asyncio.gather (was serial loop)
-  4. In-memory dict cache layer on top of SQLite (sub-ms reads after first fetch)
-  5. Startup pre-warm: fetches all prices in background on server boot
-  6. SQLite WAL mode + shared connection for the write path
+DATA ENGINE (v2.5):
+  ► yfinance     — 100% real OHLCV price history for 60+ symbols (2Y daily bars)
+  ► Prophet      — Facebook's time-series AI model (trend + seasonality + changepoints)
+  ► Holt-Winters — Exponential Smoothing fallback if Prophet unavailable
+  ► Linear Reg   — Final fallback (always available, no dependencies)
+
+Cache layers (fastest → slowest):
+  MEM (sub-ms) → SQLite (1ms) → yfinance API (1–3s) → forecast run (2–15s)
+
+Forecast TTL: 6 hours (Prophet is expensive; results cached aggressively)
+History TTL:  1 hour  (yfinance rate-limited; in-memory after first fetch)
 
 Run: python market_server.py  OR  double-click start_server.bat
 """
@@ -17,6 +21,39 @@ from fastapi.middleware.cors import CORSMiddleware
 from contextlib import asynccontextmanager
 import sqlite3, json, time, httpx, asyncio, os
 from datetime import datetime
+from functools import partial
+
+# ── Optional real-data dependencies ─────────────────────────────────────────
+try:
+    import yfinance as yf
+    YF_AVAILABLE = True
+except ImportError:
+    YF_AVAILABLE = False
+
+try:
+    from prophet import Prophet
+    import pandas as pd
+    import numpy as np
+    PROPHET_AVAILABLE = True
+    PANDAS_AVAILABLE  = True
+except ImportError:
+    PROPHET_AVAILABLE = False
+    try:
+        import pandas as pd
+        import numpy as np
+        PANDAS_AVAILABLE = True
+    except ImportError:
+        PANDAS_AVAILABLE = False
+
+try:
+    from statsmodels.tsa.holtwinters import ExponentialSmoothing
+    import numpy as np
+    STATSMODELS_AVAILABLE = True
+    if not PANDAS_AVAILABLE:
+        import pandas as pd
+        PANDAS_AVAILABLE = True
+except ImportError:
+    STATSMODELS_AVAILABLE = False
 
 # ═══════════════════════════════════════════════════
 # IN-MEMORY CACHE  (fastest layer — sub-millisecond)
@@ -62,6 +99,9 @@ def init_db():
         title TEXT, link TEXT, pub_date TEXT, source TEXT, thumbnail TEXT,
         created INTEGER)""")
     con.execute("CREATE INDEX IF NOT EXISTS idx_news_region ON news_cache(region, created)")
+    # v2.5: AI forecast cache
+    con.execute("""CREATE TABLE IF NOT EXISTS forecast_cache (
+        key TEXT PRIMARY KEY, result TEXT, updated INTEGER)""")
     con.commit(); con.close()
 
 def db_get_price(sym: str, max_age: int = 300):
@@ -138,6 +178,213 @@ YAHOO_SYMBOLS = {
     "SPX":"^GSPC",  "NDX":"^NDX",     "DAX":"^GDAXI",  "FTSE":"^FTSE",
     "N225":"^N225", "HSI":"^HSI"
 }
+
+# ════════════════════════════════════════════════════════
+# YFINANCE MAP  — 60+ symbols mapped to Yahoo tickers
+# ════════════════════════════════════════════════════════
+YFINANCE_MAP = {
+    # Metals
+    "GOLD":"GC=F","SILVER":"SI=F","PLAT":"PL=F","PALL":"PA=F","COPPER":"HG=F","NICKEL":"NI=F",
+    # Oil & Gas
+    "WTI":"CL=F","BRENT":"BZ=F","NGAS":"NG=F","HEAT":"HO=F","GASO":"RB=F",
+    # US Indices
+    "SPX":"^GSPC","NDX":"^NDX","DJI":"^DJI",
+    # European Indices
+    "DAX":"^GDAXI","FTSE":"^FTSE","CAC":"^FCHI","SMI":"^SSMI",
+    "AEX":"^AEX","IBEX":"^IBEX","FMIB":"FTSEMIB.MI",
+    "ATX":"^ATX","WIG20":"^WIG20","OMXS30":"^OMX","MOEX":"IMOEX.ME",
+    # Asia-Pacific Indices
+    "N225":"^N225","HSI":"^HSI","CSI300":"000300.SS",
+    "SENSEX":"^BSESN","KOSPI":"^KS11","ASX200":"^AXJO",
+    "TSX":"^GSPTSE","BOVESPA":"^BVSP","MXX":"^MXX","MERVAL":"^MERV",
+    "JKSE":"^JKSE","STI":"^STI","KLCI":"^KLSE","SET":"^SET.BK",
+    "VNI":"^VNINDEX","KSE100":"KSE100.KAR",
+    # Middle East & Africa
+    "TASI":"^TASI.SR","DFM":"^DFMGI","EGX30":"^CASE30",
+    "JSE":"^J203.JO","BIST":"^XU100",
+    # Crypto
+    "BTC":"BTC-USD","ETH":"ETH-USD","BNB":"BNB-USD","SOL":"SOL-USD",
+    "XRP":"XRP-USD","ADA":"ADA-USD","AVAX":"AVAX-USD","DOGE":"DOGE-USD",
+    # FX (vs USD)
+    "EUR":"EURUSD=X","GBP":"GBPUSD=X","JPY":"JPY=X","CHF":"CHF=X",
+    "CNY":"CNY=X","AUD":"AUDUSD=X","CAD":"CAD=X","INR":"INR=X",
+}
+
+# In-memory real history cache (1 hour TTL)
+_hist_cache: dict = {}
+HIST_MEM_TTL  = 3600     # 1h
+FORECAST_TTL  = 6 * 3600  # 6h
+
+def _hist_mem_get(sym: str) -> list | None:
+    d = _hist_cache.get(sym)
+    if d and (time.time() - d["ts"]) < HIST_MEM_TTL:
+        return d["data"]
+    return None
+
+def _hist_mem_set(sym: str, data: dict):
+    _hist_cache[sym] = {**data, "ts": time.time()}
+
+# ────────────────────────────────────────────────────────
+# Fetch real history via yfinance (runs in thread pool)
+# ────────────────────────────────────────────────────────
+def _yf_fetch_sync(sym: str, period: str = "2y") -> dict | None:
+    """
+    Sync function — MUST be called via run_in_executor, never directly.
+    Returns real OHLCV data from Yahoo Finance.
+    """
+    if not YF_AVAILABLE:
+        return None
+    ticker = YFINANCE_MAP.get(sym.upper())
+    if not ticker:
+        return None
+    try:
+        t  = yf.Ticker(ticker)
+        df = t.history(period=period, interval="1d", auto_adjust=True)
+        if df is None or df.empty:
+            return None
+        closes = [round(float(v), 6) for v in df["Close"].dropna().tolist()]
+        dates  = df.index.strftime("%Y-%m-%d").tolist()
+        if len(closes) < 5:
+            return None
+        price  = closes[-1]
+        prev   = closes[-2] if len(closes) >= 2 else price
+        change = round(((price - prev) / prev) * 100, 2) if prev else 0
+        return {
+            "symbol": sym.upper(), "ticker": ticker,
+            "price": price, "change": change,
+            "closes": closes, "dates": dates,
+            "period": period, "bars": len(closes)
+        }
+    except Exception as e:
+        print(f"  yfinance [{sym}/{ticker}] {e}")
+        return None
+
+async def fetch_real_history(sym: str, period: str = "2y") -> dict | None:
+    """Async wrapper around yfinance — runs in thread pool."""
+    sym = sym.upper()
+    # memory cache hit
+    cached = _hist_mem_get(sym)
+    if cached:
+        return cached
+    loop   = asyncio.get_running_loop()
+    result = await loop.run_in_executor(None, _yf_fetch_sync, sym, period)
+    if result:
+        _hist_mem_set(sym, result)
+        # also backfill price cache with real data
+        set_price(sym, result["price"], result["change"], result["closes"][-90:])
+    return result
+
+# ────────────────────────────────────────────────────────
+# AI Forecasting: Prophet → Holt-Winters → Linear Reg
+# ────────────────────────────────────────────────────────
+def _prophet_sync(closes: list, steps: int) -> dict | None:
+    """Prophet forecast — slow (2–15s), cache result for 6h."""
+    if not PROPHET_AVAILABLE or len(closes) < 30:
+        return None
+    try:
+        import warnings; warnings.filterwarnings("ignore")
+        df = pd.DataFrame({
+            "ds": pd.bdate_range(end=pd.Timestamp.now(), periods=len(closes)),
+            "y":  closes
+        })
+        m = Prophet(
+            changepoint_prior_scale   = 0.05,
+            seasonality_prior_scale   = 10,
+            daily_seasonality         = False,
+            weekly_seasonality        = True,
+            yearly_seasonality        = True if len(closes) > 252 else False,
+            interval_width            = 0.80
+        )
+        if len(closes) > 252:
+            m.add_seasonality("monthly", period=30.5, fourier_order=5)
+        m.fit(df, iter=300)
+        future = m.make_future_dataframe(periods=steps, freq="B")
+        fc     = m.predict(future).tail(steps)
+        return {
+            "algorithm"  : "Prophet (Facebook AI)",
+            "dates"      : fc["ds"].dt.strftime("%Y-%m-%d").tolist(),
+            "yhat"       : [round(v, 6) for v in fc["yhat"].tolist()],
+            "yhat_upper" : [round(v, 6) for v in fc["yhat_upper"].tolist()],
+            "yhat_lower" : [round(v, 6) for v in fc["yhat_lower"].tolist()],
+        }
+    except Exception as e:
+        print(f"  Prophet error: {e}")
+        return None
+
+def _holt_sync(closes: list, steps: int) -> dict | None:
+    """Holt-Winters Exponential Smoothing fallback."""
+    if not STATSMODELS_AVAILABLE or len(closes) < 20:
+        return None
+    try:
+        period = min(52, max(4, len(closes) // 5))
+        model  = ExponentialSmoothing(
+            closes, trend="add", seasonal="add",
+            seasonal_periods=period, damped_trend=True
+        )
+        fit   = model.fit(optimized=True, remove_bias=True)
+        fc    = fit.forecast(steps)
+        std   = float(np.std(fit.resid))
+        dates = (pd.bdate_range(start=pd.Timestamp.now(), periods=steps)
+                   .strftime("%Y-%m-%d").tolist())
+        return {
+            "algorithm"  : "Holt-Winters Exponential Smoothing",
+            "dates"      : dates,
+            "yhat"       : [round(float(v), 6) for v in fc],
+            "yhat_upper" : [round(float(v) + 1.28*std, 6) for v in fc],
+            "yhat_lower" : [round(float(v) - 1.28*std, 6) for v in fc],
+        }
+    except Exception as e:
+        print(f"  Holt-Winters error: {e}")
+        return None
+
+async def ai_forecast(closes: list, steps: int) -> dict:
+    """
+    Best-effort forecast:  Prophet → Holt-Winters → Linear Regression.
+    Returns a unified dict regardless of which engine ran.
+    """
+    loop = asyncio.get_running_loop()
+    # 1. Prophet
+    if PROPHET_AVAILABLE and len(closes) >= 30:
+        res = await loop.run_in_executor(None, _prophet_sync, closes, steps)
+        if res:
+            return res
+    # 2. Holt-Winters
+    if STATSMODELS_AVAILABLE and len(closes) >= 20:
+        res = await loop.run_in_executor(None, _holt_sync, closes, steps)
+        if res:
+            return res
+    # 3. Linear regression (always works, no deps)
+    fc   = lin_forecast(closes, steps)
+    return {
+        "algorithm"  : "Linear Regression (OLS)",
+        "dates"      : [],
+        "yhat"       : fc,
+        "yhat_upper" : [round(v * 1.12, 6) for v in fc],
+        "yhat_lower" : [round(v * 0.88, 6) for v in fc],
+    }
+
+# Forecast SQLite cache
+def db_get_fc(key: str) -> dict | None:
+    try:
+        con = sqlite3.connect(DB_PATH)
+        row = con.execute(
+            "SELECT result, updated FROM forecast_cache WHERE key=?", (key,)
+        ).fetchone()
+        con.close()
+        if row and (time.time() - row[1]) < FORECAST_TTL:
+            return json.loads(row[0])
+    except Exception:
+        pass
+    return None
+
+def db_set_fc(key: str, result: dict):
+    try:
+        con = sqlite3.connect(DB_PATH)
+        con.execute("INSERT OR REPLACE INTO forecast_cache VALUES (?,?,?)",
+                    (key, json.dumps(result), int(time.time())))
+        con.commit(); con.close()
+    except Exception as e:
+        print(f"  forecast DB write error: {e}")
 
 async def fetch_yahoo_one(sym: str):
     """Fetch a single symbol from Yahoo Finance using the shared client."""
@@ -359,7 +606,7 @@ async def lifespan(app):
 # ═══════════════════════════════════════════════════
 # APP
 # ═══════════════════════════════════════════════════
-app = FastAPI(title="World Intelligence API", version="2.3.1", lifespan=lifespan)
+app = FastAPI(title="World Intelligence API", version="2.5.0", lifespan=lifespan)
 app.add_middleware(CORSMiddleware, allow_origins=["*"], allow_methods=["*"], allow_headers=["*"])
 
 init_db()
@@ -368,14 +615,134 @@ init_db()
 
 @app.get("/api/health")
 def health():
-    cached_count = len(_mem_prices)
     return {
-        "status": "ok",
-        "version": "2.3.1",
-        "time": datetime.utcnow().isoformat(),
-        "cached_symbols": cached_count,
-        "cached_regions": len(_mem_news)
+        "status"          : "ok",
+        "version"         : "2.5.0",
+        "time"            : datetime.utcnow().isoformat(),
+        "cached_symbols"  : len(_mem_prices),
+        "cached_regions"  : len(_mem_news),
+        "cached_history"  : len(_hist_cache),
+        "engines": {
+            "yfinance"    : YF_AVAILABLE,
+            "prophet"     : PROPHET_AVAILABLE,
+            "holt_winters": STATSMODELS_AVAILABLE,
+            "linear_reg"  : True
+        }
     }
+
+# ─── v2.5: REAL HISTORY ─────────────────────────────────────────────────────
+
+@app.get("/api/realhistory/{symbol}")
+async def get_real_history(symbol: str, period: str = "2y"):
+    """
+    Returns 100% real OHLCV data via yfinance.
+    period: 1mo | 3mo | 6mo | 1y | 2y | 5y | max
+    Cached in memory for 1 hour.
+    """
+    sym = symbol.upper()
+    if sym not in YFINANCE_MAP:
+        raise HTTPException(status_code=404,
+            detail=f"Symbol '{sym}' not in YFINANCE_MAP. Available: {list(YFINANCE_MAP.keys())}")
+    if not YF_AVAILABLE:
+        raise HTTPException(status_code=503,
+            detail="yfinance not installed. Run: pip install yfinance")
+    result = await fetch_real_history(sym, period)
+    if not result:
+        raise HTTPException(status_code=502,
+            detail=f"Could not fetch real data for {sym}. Yahoo Finance may be rate-limiting.")
+    return result
+
+# ─── v2.5: AI FORECAST ──────────────────────────────────────────────────────
+
+@app.get("/api/prophet/{symbol}")
+async def get_prophet_forecast(symbol: str, horizon: str = "1M"):
+    """
+    AI forecast using Prophet → Holt-Winters → Linear Regression (best available).
+    Uses real yfinance history as input when available; falls back to cached price history.
+    Results cached in SQLite for 6 hours (Prophet is expensive to run).
+
+    horizon: 1D | 1W | 1M | 3M | 6M | 1Y | 2Y | 5Y | 10Y
+    """
+    sym = symbol.upper()
+    # Step map (business days)
+    steps_map = {"1D":1,"1W":5,"1M":21,"3M":63,"6M":126,"1Y":252,"2Y":504,"5Y":1260,"10Y":2520}
+    steps = steps_map.get(horizon.upper(), 21)
+
+    cache_key = f"{sym}:{horizon.upper()}"
+    cached = db_get_fc(cache_key)
+    if cached:
+        return {**cached, "from_cache": True}
+
+    # Get real history first, fall back to price cache
+    closes = None
+    real = await fetch_real_history(sym, period="2y")
+    if real:
+        closes = real["closes"]
+        current_price = real["price"]
+        change        = real["change"]
+        data_source   = "yfinance (real)"
+        bars          = real["bars"]
+    else:
+        d = get_price(sym)
+        if d and d.get("history"):
+            closes        = d["history"]
+            current_price = d["price"]
+            change        = d.get("change", 0)
+            data_source   = "cached (estimated)"
+            bars          = len(closes)
+        else:
+            raise HTTPException(status_code=404,
+                detail=f"No history available for {sym}. Call /api/realhistory/{sym} first.")
+
+    forecast = await ai_forecast(closes, steps)
+
+    result = {
+        "symbol"       : sym,
+        "horizon"      : horizon.upper(),
+        "steps"        : steps,
+        "current_price": current_price,
+        "change_pct"   : change,
+        "data_source"  : data_source,
+        "bars_used"    : bars,
+        "algorithm"    : forecast["algorithm"],
+        "dates"        : forecast["dates"],
+        "yhat"         : forecast["yhat"],
+        "yhat_upper"   : forecast["yhat_upper"],
+        "yhat_lower"   : forecast["yhat_lower"],
+        "target"       : forecast["yhat"][-1]  if forecast["yhat"]  else current_price,
+        "target_upper" : forecast["yhat_upper"][-1] if forecast["yhat_upper"] else None,
+        "target_lower" : forecast["yhat_lower"][-1] if forecast["yhat_lower"] else None,
+        "target_pct"   : round(((forecast["yhat"][-1] - current_price)/current_price)*100, 2)
+                         if forecast["yhat"] and current_price else 0,
+        "from_cache"   : False
+    }
+    db_set_fc(cache_key, result)
+    return result
+
+# ─── v2.5: BULK REAL PRICES ─────────────────────────────────────────────────
+
+@app.get("/api/realprices")
+async def get_real_prices(symbols: str = "BTC,ETH,GOLD,SPX,NDX"):
+    """
+    Fetch real current prices for multiple symbols via yfinance.
+    symbols: comma-separated list, e.g. BTC,ETH,GOLD,SPX
+    """
+    syms   = [s.strip().upper() for s in symbols.split(",") if s.strip()]
+    tasks  = [fetch_real_history(s, "5d") for s in syms if s in YFINANCE_MAP]
+    results = await asyncio.gather(*tasks, return_exceptions=True)
+    out = {}
+    for sym, res in zip([s for s in syms if s in YFINANCE_MAP], results):
+        if isinstance(res, dict) and res:
+            out[sym] = {
+                "symbol": sym, "price": res["price"], "change": res["change"],
+                "ticker": res.get("ticker",""), "data_source": "yfinance (real)",
+                "last_close_date": res["dates"][-1] if res.get("dates") else ""
+            }
+        else:
+            d = get_price(sym)
+            if d:
+                out[sym] = {**d, "data_source": "cache"}
+    return out
 
 @app.get("/api/metals")
 async def get_metals():
@@ -462,10 +829,17 @@ async def get_invest_signals():
 
 if __name__ == "__main__":
     import uvicorn
-    print("=" * 55)
-    print("  World Intelligence Backend v2.3.1  (Performance Fix)")
-    print("  URL:      http://localhost:8111")
-    print("  API docs: http://localhost:8111/docs")
-    print("  Health:   http://localhost:8111/api/health")
-    print("=" * 55)
+    print("=" * 62)
+    print("  World Intelligence Backend v2.5.0  — Real Data + AI Forecast")
+    print("  URL:          http://localhost:8111")
+    print("  API docs:     http://localhost:8111/docs")
+    print("  Health:       http://localhost:8111/api/health")
+    print("  Real history: http://localhost:8111/api/realhistory/BTC")
+    print("  AI forecast:  http://localhost:8111/api/prophet/BTC?horizon=1Y")
+    print("─" * 62)
+    print(f"  yfinance:      {'✓ REAL DATA' if YF_AVAILABLE else '✗ install: pip install yfinance'}")
+    print(f"  Prophet:       {'✓ AI FORECAST' if PROPHET_AVAILABLE else '✗ install: pip install prophet'}")
+    print(f"  Holt-Winters:  {'✓ available' if STATSMODELS_AVAILABLE else '✗ install: pip install statsmodels'}")
+    print(f"  Linear Reg:    ✓ always available (fallback)")
+    print("=" * 62)
     uvicorn.run(app, host="0.0.0.0", port=8111, reload=False)

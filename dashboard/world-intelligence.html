@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>World Intelligence Platform v2.4</title>
+<title>World Intelligence Platform v2.5</title>
 <!-- Leaflet -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css"/>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
@@ -191,6 +191,15 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:'Segoe 
 .trend-up{color:var(--green);}.trend-dn{color:var(--red);}
 /* TOOLTIP GDP SPARKLINE */
 .tt-fc-wrap{height:60px;margin:8px 0;}
+/* REAL DATA BADGES */
+.rd-badge{display:inline-flex;align-items:center;gap:4px;padding:2px 7px;border-radius:4px;font-size:10px;font-weight:700;}
+.rd-real{background:#064e3b;color:#6ee7b7;border:1px solid #065f46;}
+.rd-ai{background:#1e1b4b;color:#a5b4fc;border:1px solid #312e81;}
+.rd-est{background:#1c1917;color:#78716c;border:1px solid #292524;}
+.data-bar{display:flex;align-items:center;gap:6px;margin:4px 0 6px;}
+#backend-status{position:fixed;bottom:32px;right:12px;z-index:2000;font-size:10px;font-weight:700;padding:3px 10px;border-radius:6px;pointer-events:none;transition:opacity .5s;}
+.bs-live{background:#064e3b;color:#6ee7b7;border:1px solid #065f46;}
+.bs-off{background:#1c1917;color:#78716c;border:1px solid #292524;}
 </style>
 </head>
 <body>
@@ -198,7 +207,7 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:'Segoe 
 <div id="topbar">
   <a href="index.html">← Dashboard</a>
   <span class="title">🌍 World Intelligence Platform</span>
-  <span class="badge">v2.4</span>
+  <span class="badge">v2.5</span>
   <div style="display:flex;align-items:center;gap:6px;margin-left:auto;margin-right:16px;">
     <div class="live-dot"></div><span style="font-size:11px;color:var(--muted);">Live</span>
   </div>
@@ -334,6 +343,8 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:'Segoe 
   </div>
 
 </div>
+
+<div id="backend-status" class="bs-off">⏳ Checking backend…</div>
 
 <!-- TICKER -->
 <div id="ticker">
@@ -686,6 +697,8 @@ async function initMarkets(){
     ADEFS[cat].forEach(a=>seedAsset(a));
     renderMktSection(cat);
   });
+  // v2.5: enrich with 100% real data from backend (non-blocking)
+  enrichMarketsWithRealData().catch(()=>{});
 }
 
 function renderMktSection(cat){
@@ -1175,12 +1188,207 @@ function renderRpCards(isos){
 }
 
 // ════════════════════════════════════════
+// v2.5 — REAL DATA ENGINE
+// Enriches the dashboard with 100% real
+// prices + AI forecasts from the backend.
+// Falls back gracefully if backend is off.
+// ════════════════════════════════════════
+let backendAlive = false;
+const realDataCache = {};    // sym → real history result
+const prophetCache  = {};    // `${sym}:${horizon}` → forecast result
+
+// Check if backend is running
+async function checkBackend(){
+  const el = document.getElementById('backend-status');
+  try {
+    const r = await fetch(`${BACKEND}/health`,{signal:AbortSignal.timeout(3000)});
+    const d = await r.json();
+    backendAlive = d.status === 'ok';
+    const engines = d.engines || {};
+    const dataTag  = engines.yfinance     ? '📡 REAL DATA' : '📊 Cache';
+    const fcTag    = engines.prophet      ? '🤖 Prophet AI'
+                   : engines.holt_winters ? '📈 Holt-Winters'
+                   : '📐 Linear Reg';
+    el.textContent  = `${dataTag} · ${fcTag} · v${d.version}`;
+    el.className    = 'bs-live';
+    console.log('Backend v'+d.version, engines);
+  } catch(e) {
+    backendAlive = false;
+    el.textContent = '⚡ Offline mode — simulated data';
+    el.className   = 'bs-off';
+  }
+  // fade after 8 seconds
+  setTimeout(()=>{el.style.opacity='0.4';}, 8000);
+}
+
+// Fetch real price history from /api/realhistory/{sym}
+async function fetchRealHistory(sym, period='2y'){
+  if(realDataCache[sym]) return realDataCache[sym];
+  if(!backendAlive) return null;
+  try{
+    const r = await fetch(`${BACKEND}/realhistory/${sym}?period=${period}`,{signal:AbortSignal.timeout(10000)});
+    if(!r.ok) return null;
+    const d = await r.json();
+    realDataCache[sym] = d;
+    return d;
+  }catch(e){ return null; }
+}
+
+// Fetch AI forecast from /api/prophet/{sym}?horizon=1M
+async function fetchProphetForecast(sym, horizon='1M'){
+  const key = `${sym}:${horizon}`;
+  if(prophetCache[key]) return prophetCache[key];
+  if(!backendAlive) return null;
+  try{
+    const r = await fetch(`${BACKEND}/prophet/${sym}?horizon=${horizon}`,{signal:AbortSignal.timeout(30000)});
+    if(!r.ok) return null;
+    const d = await r.json();
+    prophetCache[key] = d;
+    return d;
+  }catch(e){ return null; }
+}
+
+// Enrich all market cards with real data (called after initMarkets)
+async function enrichMarketsWithRealData(){
+  if(!backendAlive) return;
+  const allAssets = [...ADEFS.metals,...ADEFS.crypto,...ADEFS.fx,...ADEFS.oil,...ADEFS.indices];
+  // Batch: fetch real prices for all symbols concurrently
+  const syms = allAssets.map(a=>a.sym);
+  try{
+    const url = `${BACKEND}/realprices?symbols=${syms.join(',')}`;
+    const r = await fetch(url, {signal:AbortSignal.timeout(15000)});
+    if(!r.ok) return;
+    const data = await r.json();
+    // Update mktData and refresh cards
+    Object.entries(data).forEach(([sym, d])=>{
+      if(!d || !d.price) return;
+      if(!mktData[sym]) mktData[sym]={};
+      mktData[sym].price       = d.price;
+      mktData[sym].change      = d.change ?? 0;
+      mktData[sym].realData    = true;
+      mktData[sym].dataSource  = d.data_source || 'real';
+      const pos = d.change >= 0;
+      // Update price display in existing card
+      const valEl = document.querySelector(`#card-${sym} .val`);
+      const chgEl = document.querySelector(`#card-${sym} .chg`);
+      if(valEl) valEl.textContent = fmt(d.price, sym);
+      if(chgEl){
+        chgEl.textContent = `${pos?'▲':'▼'} ${Math.abs(d.change).toFixed(2)}%`;
+        chgEl.className = `chg ${pos?'pos':'neg'}`;
+      }
+      // Add real data badge if not already there
+      const badge = document.querySelector(`#card-${sym} .rd-badge`);
+      if(!badge){
+        const dataBar = document.querySelector(`#card-${sym} .data-bar`);
+        if(dataBar){
+          const b = document.createElement('span');
+          b.className='rd-badge rd-real';b.textContent='✓ REAL DATA';
+          dataBar.appendChild(b);
+        }
+      }
+    });
+    console.log(`Real prices loaded for ${Object.keys(data).length} symbols`);
+  }catch(e){console.warn('Real price enrichment failed:',e);}
+}
+
+// Override makeCard to include data-bar and enrich with real data
+const _origMakeCard = makeCard;
+function makeCard(a){
+  const card = _origMakeCard(a);
+  // Inject data-bar div after the badge
+  const badge = card.querySelector('.sbadge');
+  if(badge){
+    const bar = document.createElement('div');
+    bar.className = 'data-bar';
+    const estBadge = document.createElement('span');
+    estBadge.className = 'rd-badge rd-est';
+    estBadge.textContent = '⏳ Estimated';
+    bar.appendChild(estBadge);
+    badge.parentNode.insertBefore(bar, badge.nextSibling);
+  }
+  return card;
+}
+
+// Override drawDrill to try Prophet first, then fall back to linear
+const _origDrawDrill = drawDrill;
+async function drawDrillReal(sym, tf){
+  // Try to get AI forecast from backend
+  const fc_data = await fetchProphetForecast(sym, tf);
+  if(fc_data && fc_data.yhat && fc_data.yhat.length > 0){
+    // Use Prophet/AI forecast
+    const d = mktData[sym];
+    const hist = d ? (d.history || []).slice(-60) : [];
+    const fc   = fc_data.yhat;
+    const upper= fc_data.yhat_upper;
+    const lower= fc_data.yhat_lower;
+    const labels = [...hist.map((_,i)=>i-hist.length), ...fc.map((_,i)=>i+1)];
+    const cid = 'fc-dd-'+sym;
+    if(sparks[cid]) sparks[cid].destroy();
+    const el = document.getElementById(cid); if(!el) return;
+    sparks[cid] = new Chart(el,{type:'line',
+      data:{labels,datasets:[
+        {label:'History',      data:[...hist,...Array(fc.length).fill(null)],borderColor:'#3b82f6',borderWidth:2,pointRadius:0,tension:.3,fill:false},
+        {label:`${fc_data.algorithm}`,data:[...Array(hist.length-1).fill(null),hist[hist.length-1],...fc],borderColor:'#10b981',borderWidth:2.5,pointRadius:0,tension:.3,fill:false,borderDash:[5,3]},
+        {label:'Upper 80%',   data:[...Array(hist.length-1).fill(null),hist[hist.length-1],...upper],borderColor:'rgba(16,185,129,.35)',borderWidth:1,pointRadius:0,tension:.3,fill:false,borderDash:[2,4]},
+        {label:'Lower 80%',   data:[...Array(hist.length-1).fill(null),hist[hist.length-1],...lower],borderColor:'rgba(239,68,68,.35)',borderWidth:1,pointRadius:0,tension:.3,fill:false,borderDash:[2,4]}
+      ]},
+      options:{responsive:true,maintainAspectRatio:false,
+        plugins:{legend:{labels:{color:'#94a3b8',font:{size:9}}},
+          tooltip:{mode:'index',intersect:false,backgroundColor:'rgba(15,23,42,.95)',
+            callbacks:{title:ctx=>`Step ${ctx[0].label}`,
+              footer:()=>`Algorithm: ${fc_data.algorithm} | Data: ${fc_data.data_source||'backend'}`}}},
+        scales:{x:{ticks:{color:'#64748b',maxTicksLimit:8,font:{size:9}},grid:{color:'#1e293b'}},
+                y:{ticks:{color:'#64748b',font:{size:9},callback:v=>fmt(v,sym)},grid:{color:'#1e293b'}}},animation:{duration:200}}
+    });
+    // Update forecast table with real targets
+    const tb = document.getElementById('tb-'+sym); if(!tb) return;
+    const price = d ? d.price : fc[0];
+    const pts = [
+      {l:'1D', i:Math.min(0, fc.length-1)},
+      {l:'1W', i:Math.min(4, fc.length-1)},
+      {l:'1M', i:Math.min(20, fc.length-1)},
+      {l:'3M', i:Math.min(63, fc.length-1)}
+    ];
+    tb.innerHTML = pts.map(p=>{
+      const fp = fc[p.i]; const pct = (((fp-price)/price)*100).toFixed(2); const up=pct>=0;
+      return`<tr><td>${p.l}</td><td>${fmt(fp,sym)}</td><td class="${up?'pos':'neg'}">${up?'+':''}${pct}%</td><td style="color:${up?'var(--green)':'var(--red)'}">${up?'▲ Bullish':'▼ Bearish'}</td></tr>`;
+    }).join('');
+    // Update data badge on the card
+    const dataBar = document.querySelector(`#card-${sym} .data-bar`);
+    if(dataBar){
+      dataBar.innerHTML = '';
+      const rb=document.createElement('span');rb.className='rd-badge rd-real';rb.textContent='✓ REAL DATA';dataBar.appendChild(rb);
+      const fb=document.createElement('span');fb.className='rd-badge rd-ai';fb.textContent=`🤖 ${fc_data.algorithm.split(' ')[0]}`;dataBar.appendChild(fb);
+    }
+  } else {
+    // Fall back to original linear regression
+    _origDrawDrill(sym, tf);
+  }
+}
+
+// Patch toggleDrill to use real forecast
+function toggleDrill(sym, tf, ev){
+  ev.stopPropagation();
+  const card = document.getElementById('card-'+sym);
+  const dd   = document.getElementById('dd-'+sym);
+  card.querySelectorAll('.tfbtn').forEach(b=>b.classList.toggle('active', b.textContent===tf));
+  if(!dd.classList.contains('open') || card._tf !== tf){
+    dd.classList.add('open'); card._tf = tf;
+    drawDrillReal(sym, tf); // use AI version
+  } else {
+    dd.classList.remove('open');
+  }
+}
+
+// ════════════════════════════════════════
 // BOOT
 // ════════════════════════════════════════
-document.addEventListener('DOMContentLoaded',()=>{
+document.addEventListener('DOMContentLoaded',async()=>{
   initMap();
   loadNewsTab('world');
   document.getElementById('clock').textContent=new Date().toUTCString().slice(5,25)+' UTC';
+  // Check backend and load real data
+  await checkBackend();
 });
 </script>
 </body>
