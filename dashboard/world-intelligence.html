@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>World Intelligence Platform v2.5</title>
+<title>World Intelligence Platform v2.6</title>
 <!-- Leaflet -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css"/>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
@@ -200,6 +200,23 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:'Segoe 
 #backend-status{position:fixed;bottom:32px;right:12px;z-index:2000;font-size:10px;font-weight:700;padding:3px 10px;border-radius:6px;pointer-events:none;transition:opacity .5s;}
 .bs-live{background:#064e3b;color:#6ee7b7;border:1px solid #065f46;}
 .bs-off{background:#1c1917;color:#78716c;border:1px solid #292524;}
+/* CLIMATE INTELLIGENCE & BIRTH RATE */
+#page-climate,#page-birth{padding:0;}
+#climate-container,#birth-container{width:100%;height:calc(100vh - 118px);position:relative;}
+#climate-map,#birth-map{width:100%;height:100%;}
+.layer-sw{position:absolute;top:12px;right:50px;z-index:1000;display:flex;gap:4px;background:rgba(15,23,42,.92);border:1px solid var(--border);border-radius:8px;padding:6px;}
+.lsw-btn{padding:5px 12px;border-radius:5px;font-size:11px;font-weight:700;cursor:pointer;background:var(--surface);border:1px solid var(--border);color:var(--muted);transition:all .2s;}
+.lsw-btn.active{background:var(--accent);border-color:var(--accent);color:#fff;}
+.lsw-btn:hover:not(.active){border-color:var(--accent);color:var(--text);}
+.clm-timeline{position:absolute;bottom:40px;left:50%;transform:translateX(-50%);z-index:1000;background:rgba(15,23,42,.92);border:1px solid var(--border);border-radius:8px;padding:8px 14px;display:flex;gap:6px;align-items:center;}
+.tml-btn{padding:5px 12px;border-radius:5px;font-size:11px;font-weight:700;cursor:pointer;background:var(--surface);border:1px solid var(--border);color:var(--muted);transition:all .2s;}
+.tml-btn.active{background:var(--orange);border-color:var(--orange);color:#fff;}
+.tml-btn:hover:not(.active){border-color:var(--orange);color:var(--text);}
+.eco-panel{position:absolute;top:12px;left:12px;z-index:1000;background:rgba(15,23,42,.92);border:1px solid var(--border);border-radius:8px;padding:12px;min-width:210px;}
+.eco-legend{position:absolute;bottom:40px;left:12px;z-index:1000;background:rgba(15,23,42,.92);border:1px solid var(--border);border-radius:8px;padding:12px;min-width:220px;}
+.leg-item{display:flex;align-items:center;gap:8px;font-size:10.5px;margin-bottom:5px;color:var(--muted);}
+.leg-dot{width:12px;height:12px;border-radius:50%;flex-shrink:0;}
+.seas-panel{position:absolute;top:12px;right:12px;z-index:1000;background:rgba(15,23,42,.92);border:1px solid var(--red);border-radius:8px;padding:12px;max-width:230px;}
 </style>
 </head>
 <body>
@@ -207,7 +224,7 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:'Segoe 
 <div id="topbar">
   <a href="index.html">← Dashboard</a>
   <span class="title">🌍 World Intelligence Platform</span>
-  <span class="badge">v2.5</span>
+  <span class="badge">v2.6</span>
   <div style="display:flex;align-items:center;gap:6px;margin-left:auto;margin-right:16px;">
     <div class="live-dot"></div><span style="font-size:11px;color:var(--muted);">Live</span>
   </div>
@@ -222,6 +239,8 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:'Segoe 
   <div class="mtab" onclick="showPage('news',this)">📰 Global News</div>
   <div class="mtab" onclick="showPage('forecast',this)">🔮 Forecasts</div>
   <div class="mtab" onclick="showPage('signals',this)">⚡ Invest Signals</div>
+  <div class="mtab" onclick="showPage('climate',this)">🌡 Climate</div>
+  <div class="mtab" onclick="showPage('birth',this)">👶 Birth Rate</div>
 </div>
 
 <div id="pages">
@@ -342,6 +361,85 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:'Segoe 
     <div id="rp-content"><div class="spinner-wrap"><div class="spinner"></div>Loading Rising Powers analysis…</div></div>
   </div>
 
+  <!-- CLIMATE INTELLIGENCE -->
+  <div class="page" id="page-climate">
+    <div id="climate-container">
+      <div id="climate-map"></div>
+      <div class="layer-sw" id="clm-layers">
+        <button class="lsw-btn active" onclick="setClimateLayer('dark',this)">🗺 Standard</button>
+        <button class="lsw-btn" onclick="setClimateLayer('satellite',this)">🛰 Satellite</button>
+        <button class="lsw-btn" onclick="setClimateLayer('terrain',this)">⛰ Terrain</button>
+      </div>
+      <div class="clm-timeline">
+        <span style="font-size:11px;color:var(--muted);white-space:nowrap;">Timeline:</span>
+        <button class="tml-btn" onclick="setClimateEra('past',this)">📜 1900–2000</button>
+        <button class="tml-btn active" onclick="setClimateEra('present',this)">📍 Present 2024</button>
+        <button class="tml-btn" onclick="setClimateEra('2050',this)">🔮 Near 2050</button>
+        <button class="tml-btn" onclick="setClimateEra('2100',this)">⚠️ Far 2100</button>
+      </div>
+      <div class="eco-legend">
+        <div style="font-size:11px;font-weight:700;color:var(--text);margin-bottom:8px;">🌡 Climate Risk Level</div>
+        <div class="leg-item"><div class="leg-dot" style="background:#ff0000;"></div>CRITICAL — Existential threat</div>
+        <div class="leg-item"><div class="leg-dot" style="background:#ff6600;"></div>HIGH — Severe crisis</div>
+        <div class="leg-item"><div class="leg-dot" style="background:#ffaa00;"></div>MEDIUM — Significant risk</div>
+        <div class="leg-item"><div class="leg-dot" style="background:#00aaff;border:2px solid #0077cc;"></div>🧊 Glacier / Ice loss</div>
+        <div class="leg-item"><div class="leg-dot" style="background:#3b82f6;"></div>💧 Water body at risk</div>
+        <div class="leg-item"><div class="leg-dot" style="background:#00ff88;border:2px dashed #00cc66;"></div>🏝 Emerging new land</div>
+      </div>
+      <div class="eco-panel">
+        <div style="font-size:11px;font-weight:700;color:var(--orange);margin-bottom:8px;">🌡 Climate Crisis Index</div>
+        <div class="stat-row"><span>Critical Risk Nations</span><span style="color:#ff0000;">12</span></div>
+        <div class="stat-row"><span>High Risk Nations</span><span style="color:#ff6600;">31</span></div>
+        <div class="stat-row"><span>Water Bodies at Risk</span><span style="color:#3b82f6;">6</span></div>
+        <div class="stat-row"><span>2024 Temp Anomaly</span><span style="color:#ff8800;">+1.45°C</span></div>
+        <div class="stat-row"><span>Sea Level Rise/yr</span><span style="color:#3b82f6;">3.7mm</span></div>
+        <div style="margin-top:8px;font-size:10px;color:var(--muted);">Click any marker for full detail</div>
+      </div>
+      <div class="seas-panel">
+        <div style="font-size:11px;font-weight:700;color:var(--red);margin-bottom:8px;">💀 Future Water &amp; Land Changes</div>
+        <div style="font-size:10px;color:var(--muted);line-height:1.85;">
+          💀 <b style="color:#ff4444;">Aral Sea</b> — Already GONE (95%)<br>
+          💀 <b style="color:#ff6600;">Lake Chad</b> — Lost 90% since 1963<br>
+          ⚠️ <b style="color:#ffaa00;">Dead Sea</b> — Dropping 1.2m/year<br>
+          📉 <b style="color:#ffbb00;">Caspian Sea</b> — −30% by 2100<br>
+          🧊 <b style="color:#00aaff;">Himalayan Glaciers</b> — 75% loss<br>
+          🏝 <b style="color:#00ff88;">Arctic Islands</b> — Emerging now<br>
+          🌊 <b style="color:#44aaff;">Lomonosov Ridge</b> — New 2100
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- BIRTH RATE INTELLIGENCE -->
+  <div class="page" id="page-birth">
+    <div id="birth-container">
+      <div id="birth-map"></div>
+      <div class="layer-sw" id="birth-layers">
+        <button class="lsw-btn active" onclick="setBirthLayer('dark',this)">🗺 Standard</button>
+        <button class="lsw-btn" onclick="setBirthLayer('satellite',this)">🛰 Satellite</button>
+        <button class="lsw-btn" onclick="setBirthLayer('terrain',this)">⛰ Terrain</button>
+      </div>
+      <div class="eco-legend">
+        <div style="font-size:11px;font-weight:700;color:var(--text);margin-bottom:8px;">👶 Birth Rate (births per woman)</div>
+        <div class="leg-item"><div class="leg-dot" style="background:#7f00ff;"></div>💀 Crisis &lt;1.0 — Population collapse</div>
+        <div class="leg-item"><div class="leg-dot" style="background:#dc2626;"></div>🚨 Critical 1.0–1.5 — Severe aging</div>
+        <div class="leg-item"><div class="leg-dot" style="background:#f59e0b;"></div>⚠️ Low 1.5–2.1 — Below replacement</div>
+        <div class="leg-item"><div class="leg-dot" style="background:#10b981;"></div>✅ Healthy ~2.1 — Stable</div>
+        <div class="leg-item"><div class="leg-dot" style="background:#f97316;"></div>📈 High 3–5 — Rapid growth</div>
+        <div class="leg-item"><div class="leg-dot" style="background:#991b1b;"></div>🆘 Extreme &gt;5 — Resource stress</div>
+      </div>
+      <div class="eco-panel">
+        <div style="font-size:11px;font-weight:700;color:var(--purple);margin-bottom:8px;">👶 Global Birth Rate Alarm</div>
+        <div class="stat-row"><span>World Average</span><span style="color:var(--green);">2.3</span></div>
+        <div class="stat-row"><span>Lowest Ever</span><span style="color:#7f00ff;">🇰🇷 Korea 0.72</span></div>
+        <div class="stat-row"><span>Crisis (&lt;1.0)</span><span style="color:#dc2626;">3 countries</span></div>
+        <div class="stat-row"><span>Below Replace.</span><span style="color:var(--yellow);">89 countries</span></div>
+        <div class="stat-row"><span>Highest</span><span style="color:#991b1b;">🇳🇪 Niger 6.9</span></div>
+        <div style="margin-top:8px;font-size:10px;color:var(--muted);">Bubble size = rate. Click for details.</div>
+      </div>
+    </div>
+  </div>
+
 </div>
 
 <div id="backend-status" class="bs-off">⏳ Checking backend…</div>
@@ -382,8 +480,15 @@ function showPage(id,el){
     if(id==='signals') initSignals();
     if(id==='stocks') initWorldStocks();
     if(id==='rising') initRisingPowers();
+    if(id==='climate') initClimate();
+    if(id==='birth') initBirthRate();
   }
-  requestAnimationFrame(()=>{ Object.values(sparks).forEach(c=>{if(c&&c.resize)c.resize();}); if(fcChart)fcChart.resize(); });
+  requestAnimationFrame(()=>{
+    Object.values(sparks).forEach(c=>{if(c&&c.resize)c.resize();});
+    if(fcChart)fcChart.resize();
+    if(id==='climate'&&climateMap) climateMap.invalidateSize();
+    if(id==='birth'&&birthMap) birthMap.invalidateSize();
+  });
 }
 function showMkt(id,el){
   document.querySelectorAll('.mkt-section').forEach(s=>s.classList.remove('active'));
@@ -1055,326 +1160,4 @@ function initRisingPowers(){
     <div class="why-item">
       <div class="wi-icon">🏗</div>
       <div class="wi-title">CPEC — $62B Infrastructure</div>
-      <div class="wi-txt">China-Pakistan Economic Corridor is the world's largest infrastructure project per capita — roads, power plants, Gwadar deep-sea port. Mirrors China's own 1990s infrastructure boom.</div>
-    </div>
-    <div class="why-item">
-      <div class="wi-icon">💻</div>
-      <div class="wi-title">IT Exports Surging 25%/yr</div>
-      <div class="wi-txt">Pakistan is the #4 global freelancing workforce. IT exports doubled in 3 years to $3.2B. Karachi & Lahore tech scenes rivaling Bangalore of 2005.</div>
-    </div>
-    <div class="why-item">
-      <div class="wi-icon">🌊</div>
-      <div class="wi-title">Gwadar — Strategic Port</div>
-      <div class="wi-txt">Gwadar gives landlocked Central Asia its only warm-water port route. This makes Pakistan the transit hub between $3T+ in regional trade — exactly like China's coastal advantage.</div>
-    </div>
-    <div class="why-item">
-      <div class="wi-icon">⚛️</div>
-      <div class="wi-title">Nuclear State + Military</div>
-      <div class="wi-txt">Only Muslim-majority nuclear power. Strategic depth means no existential threat risk. Geopolitical importance drives investment from Gulf, China, and increasingly USA.</div>
-    </div>
-    <div class="why-item">
-      <div class="wi-icon">🌾</div>
-      <div class="wi-title">Agricultural Superpower</div>
-      <div class="wi-txt">4th largest cotton producer, top 5 rice & wheat. Pakistan's Indus River basin is among Earth's most fertile zones. Food security = growth foundation.</div>
-    </div>
-    <div class="why-item">
-      <div class="wi-icon">📈</div>
-      <div class="wi-title">KSE-100: World's Best Index</div>
-      <div class="wi-txt">KSE-100 was the world's best performing stock index in 2002, 2012, and 2021. Currently at 63K+ and projected to reach 600K+ by 2040 — a 10x return trajectory.</div>
-    </div>
-    <div class="why-item">
-      <div class="wi-icon">🤝</div>
-      <div class="wi-title">IMF Stabilization = Reset</div>
-      <div class="wi-txt">2023–24 IMF program cleaned fiscal imbalances. Inflation falling from 38% → 12%. Interest rates dropping. This is the bottom of the cycle — same as India in 1991 reforms.</div>
-    </div>
-  </div>
-</div>
-
-<!-- Global GDP Growth Forecast Chart -->
-<div style="font-size:14px;font-weight:700;margin-bottom:12px;">📊 GDP Growth Trajectory 2025–2034: Country Comparison</div>
-<div style="background:var(--card);border:1px solid var(--border);border-radius:10px;padding:16px;margin-bottom:20px;">
-  <div style="height:280px;position:relative;"><canvas id="rp-gdp-chart"></canvas></div>
-</div>
-
-<!-- Emerging powers comparison table -->
-<div style="font-size:14px;font-weight:700;margin-bottom:12px;">🏆 Emerging Market Ranking — 2025 vs 2035 Projection</div>
-<div style="overflow-x:auto;margin-bottom:20px;">
-<table class="rp-cmp-tbl">
-<thead><tr><th>Country</th><th>GDP Growth Now</th><th>Inflation</th><th>Population</th><th>Stock Index</th><th>2030 GDP Rank</th><th>Key Catalyst</th><th>Verdict</th></tr></thead>
-<tbody>
-${[
-  {f:'🇮🇳',n:'India',g:'+7.2%',inf:'5.1%',pop:'1.4B',stk:'Nifty 22.5K',rank:'#5→#3',cat:'IT + Demographics',v:'🟢 BUY',pk:false},
-  {f:'🇵🇰',n:'Pakistan',g:'+2.5%→6%',inf:'28%↓',pop:'240M',stk:'KSE-100 63K',rank:'#44→#25',cat:'CPEC + IT + Youth',v:'🌟 NEXT GIANT',pk:true},
-  {f:'🇻🇳',n:'Vietnam',g:'+6.0%',inf:'3.8%',pop:'98M',stk:'VNI 1,280',rank:'#35→#28',cat:'Apple supply chain',v:'🟢 RISING',pk:false},
-  {f:'🇮🇩',n:'Indonesia',g:'+5.0%',inf:'3.5%',pop:'278M',stk:'IDX 7,400',rank:'#16→#10',cat:'Nickel + ASEAN',v:'🟢 BUY',pk:false},
-  {f:'🇧🇩',n:'Bangladesh',g:'+5.8%',inf:'9.2%',pop:'170M',stk:'DSEX 6,300',rank:'#35→#30',cat:'Garments + BPO',v:'🟡 WATCH',pk:false},
-  {f:'🇵🇭',n:'Philippines',g:'+5.6%',inf:'3.2%',pop:'115M',stk:'PSEi 6,600',rank:'#34→#28',cat:'BPO + Remittances',v:'🟢 RISING',pk:false},
-  {f:'🇪🇬',n:'Egypt',g:'+3.5%',inf:'32%↓',pop:'106M',stk:'EGX30 24K',rank:'#37→#29',cat:'Suez + Demographics',v:'🟡 WATCH',pk:false},
-  {f:'🇳🇬',n:'Nigeria',g:'+2.9%',inf:'28%',pop:'220M',stk:'NGX 97K',rank:'#27→#20',cat:'Oil + Fintech',v:'🟡 SPECULATIVE',pk:false}
-].map(r=>`<tr${r.pk?' class="pk-row"':''}>
-  <td>${r.f} <strong>${r.n}</strong>${r.pk?' 🌟':''}</td>
-  <td class="trend-up">${r.g}</td><td>${r.inf}</td><td>${r.pop}</td>
-  <td>${r.stk}</td><td>${r.rank}</td><td>${r.cat}</td><td>${r.v}</td>
-</tr>`).join('')}
-</tbody>
-</table>
-</div>
-
-<!-- Rising powers cards -->
-<div style="font-size:14px;font-weight:700;margin-bottom:12px;">🃏 Detailed Country Cards</div>
-<div class="rp-grid" id="rp-cards"></div>
-`;
-  // draw the multi-country GDP chart
-  requestAnimationFrame(()=>drawRpGdpChart());
-  // render rising power cards
-  renderRpCards(rpCountries);
-}
-
-function drawRpGdpChart(){
-  const cv=document.getElementById('rp-gdp-chart');if(!cv)return;
-  const yrs=['2025','2026','2027','2028','2029','2030','2031','2032','2033','2034'];
-  const countries=[
-    {iso:'PK',col:'#10b981',label:'🇵🇰 Pakistan'},
-    {iso:'IN',col:'#f97316',label:'🇮🇳 India'},
-    {iso:'VN',col:'#3b82f6',label:'🇻🇳 Vietnam'},
-    {iso:'ID',col:'#8b5cf6',label:'🇮🇩 Indonesia'},
-    {iso:'CN',col:'#ef4444',label:'🇨🇳 China'},
-    {iso:'US',col:'#94a3b8',label:'🇺🇸 USA'},
-    {iso:'BD',col:'#f59e0b',label:'🇧🇩 Bangladesh'}
-  ];
-  const datasets=countries.map(c=>{
-    const cd=CTRY[c.iso];const g=cd?cd.pred.g:[3,3,3,3,3,3,3,3,3,3];
-    return{label:c.label,data:g,borderColor:c.col,backgroundColor:'transparent',borderWidth:c.iso==='PK'?3:1.5,pointRadius:c.iso==='PK'?4:2,tension:.4,borderDash:c.iso==='US'?[5,3]:(c.iso==='CN'?[3,3]:[])};
-  });
-  if(sparks['rp-gdp'])sparks['rp-gdp'].destroy();
-  sparks['rp-gdp']=new Chart(cv,{type:'line',data:{labels:yrs,datasets},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{labels:{color:'#94a3b8',font:{size:10},boxWidth:12}},tooltip:{mode:'index',intersect:false,backgroundColor:'rgba(15,23,42,.95)',borderColor:'#334155',borderWidth:1}},scales:{x:{ticks:{color:'#64748b'},grid:{color:'rgba(51,65,85,.4)'}},y:{ticks:{color:'#64748b',callback:v=>v+'% GDP'},grid:{color:'rgba(51,65,85,.4)'},title:{display:true,text:'GDP Growth %',color:'#64748b',font:{size:11}}}}}});
-}
-
-function renderRpCards(isos){
-  const grid=document.getElementById('rp-cards');if(!grid)return;
-  grid.innerHTML='';
-  isos.forEach(iso=>{
-    const c=CTRY[iso];if(!c)return;
-    const card=document.createElement('div');
-    card.className='rp-card'+(c.nextChina?' featured':'');
-    const g=c.pred?c.pred.g:[];
-    const canId='rpc-'+iso;
-    card.innerHTML=`
-<div class="rp-card-hdr">
-  <h3>${c.f} ${c.n}</h3>
-  <span class="rp-badge ${c.nextChina?'badge-next':(c.rising?'badge-rising':'badge-est')}">${c.nextChina?'NEXT CHINA':c.rising?'Rising Star':'Emerging'}</span>
-</div>
-<div class="rp-metrics">
-  <div class="rp-m"><div class="rv" style="color:var(--green)">${c.g}%</div><div class="rl">GDP Growth</div></div>
-  <div class="rp-m"><div class="rv" style="color:var(--cyan)">${c.gdppc>=1000?(c.gdppc/1000).toFixed(0)+'K':c.gdppc}</div><div class="rl">GDP/Cap</div></div>
-  <div class="rp-m"><div class="rv">${c.pop}</div><div class="rl">Population</div></div>
-</div>
-<div style="font-size:10px;color:var(--muted);margin-bottom:4px;">GDP Growth Forecast (10Y)</div>
-<div class="rp-gdp-chart"><canvas id="${canId}"></canvas></div>
-<div class="rp-factors">
-  <strong>⚠ Risks:</strong> ${c.ri.join(', ')}<br>
-  <strong>✓ Opportunities:</strong> ${c.op.join(', ')}<br>
-  <strong>📈 2034 GDP Growth Est:</strong> <span style="color:var(--green);">${g.length?g[g.length-1]:c.g}%</span>
-  ${c.nextChina?`<br><br><strong style="color:#10b981;">🌟 Pakistan is to 2025 what China was to 1990</strong> — massive young population, infrastructure investment, strategic location, and IT-driven export growth creating the conditions for 20–30 years of above-trend expansion.`:''}
-</div>`;
-    grid.appendChild(card);
-    requestAnimationFrame(()=>{
-      const cv=document.getElementById(canId);if(!cv)return;
-      if(sparks[canId])sparks[canId].destroy();
-      const yrs=['25','26','27','28','29','30','31','32','33','34'];
-      const trend=g.length?g[g.length-1]>=g[0]:true;
-      sparks[canId]=new Chart(cv,{type:'line',data:{labels:yrs,datasets:[{data:g,borderColor:trend?'#10b981':'#ef4444',borderWidth:2,fill:true,backgroundColor:trend?'rgba(16,185,129,.12)':'rgba(239,68,68,.12)',pointRadius:2,tension:.4}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{callbacks:{label:ctx=>`${ctx.raw}% GDP growth`}}},scales:{x:{ticks:{color:'#64748b',font:{size:9}},grid:{color:'#1e293b'}},y:{ticks:{color:'#64748b',font:{size:9},callback:v=>v+'%'},grid:{color:'#1e293b'}}},animation:{duration:300}}});
-    });
-  });
-}
-
-// ════════════════════════════════════════
-// v2.5 — REAL DATA ENGINE
-// Enriches the dashboard with 100% real
-// prices + AI forecasts from the backend.
-// Falls back gracefully if backend is off.
-// ════════════════════════════════════════
-let backendAlive = false;
-const realDataCache = {};    // sym → real history result
-const prophetCache  = {};    // `${sym}:${horizon}` → forecast result
-
-// Check if backend is running
-async function checkBackend(){
-  const el = document.getElementById('backend-status');
-  try {
-    const r = await fetch(`${BACKEND}/health`,{signal:AbortSignal.timeout(3000)});
-    const d = await r.json();
-    backendAlive = d.status === 'ok';
-    const engines = d.engines || {};
-    const dataTag  = engines.yfinance     ? '📡 REAL DATA' : '📊 Cache';
-    const fcTag    = engines.prophet      ? '🤖 Prophet AI'
-                   : engines.holt_winters ? '📈 Holt-Winters'
-                   : '📐 Linear Reg';
-    el.textContent  = `${dataTag} · ${fcTag} · v${d.version}`;
-    el.className    = 'bs-live';
-    console.log('Backend v'+d.version, engines);
-  } catch(e) {
-    backendAlive = false;
-    el.textContent = '⚡ Offline mode — simulated data';
-    el.className   = 'bs-off';
-  }
-  // fade after 8 seconds
-  setTimeout(()=>{el.style.opacity='0.4';}, 8000);
-}
-
-// Fetch real price history from /api/realhistory/{sym}
-async function fetchRealHistory(sym, period='2y'){
-  if(realDataCache[sym]) return realDataCache[sym];
-  if(!backendAlive) return null;
-  try{
-    const r = await fetch(`${BACKEND}/realhistory/${sym}?period=${period}`,{signal:AbortSignal.timeout(10000)});
-    if(!r.ok) return null;
-    const d = await r.json();
-    realDataCache[sym] = d;
-    return d;
-  }catch(e){ return null; }
-}
-
-// Fetch AI forecast from /api/prophet/{sym}?horizon=1M
-async function fetchProphetForecast(sym, horizon='1M'){
-  const key = `${sym}:${horizon}`;
-  if(prophetCache[key]) return prophetCache[key];
-  if(!backendAlive) return null;
-  try{
-    const r = await fetch(`${BACKEND}/prophet/${sym}?horizon=${horizon}`,{signal:AbortSignal.timeout(30000)});
-    if(!r.ok) return null;
-    const d = await r.json();
-    prophetCache[key] = d;
-    return d;
-  }catch(e){ return null; }
-}
-
-// Enrich all market cards with real data (called after initMarkets)
-async function enrichMarketsWithRealData(){
-  if(!backendAlive) return;
-  const allAssets = [...ADEFS.metals,...ADEFS.crypto,...ADEFS.fx,...ADEFS.oil,...ADEFS.indices];
-  // Batch: fetch real prices for all symbols concurrently
-  const syms = allAssets.map(a=>a.sym);
-  try{
-    const url = `${BACKEND}/realprices?symbols=${syms.join(',')}`;
-    const r = await fetch(url, {signal:AbortSignal.timeout(15000)});
-    if(!r.ok) return;
-    const data = await r.json();
-    // Update mktData and refresh cards
-    Object.entries(data).forEach(([sym, d])=>{
-      if(!d || !d.price) return;
-      if(!mktData[sym]) mktData[sym]={};
-      mktData[sym].price       = d.price;
-      mktData[sym].change      = d.change ?? 0;
-      mktData[sym].realData    = true;
-      mktData[sym].dataSource  = d.data_source || 'real';
-      const pos = d.change >= 0;
-      // Update price display in existing card
-      const valEl = document.querySelector(`#card-${sym} .val`);
-      const chgEl = document.querySelector(`#card-${sym} .chg`);
-      if(valEl) valEl.textContent = fmt(d.price, sym);
-      if(chgEl){
-        chgEl.textContent = `${pos?'▲':'▼'} ${Math.abs(d.change).toFixed(2)}%`;
-        chgEl.className = `chg ${pos?'pos':'neg'}`;
-      }
-      // Add real data badge if not already there
-      const badge = document.querySelector(`#card-${sym} .rd-badge`);
-      if(!badge){
-        const dataBar = document.querySelector(`#card-${sym} .data-bar`);
-        if(dataBar){
-          const b = document.createElement('span');
-          b.className='rd-badge rd-real';b.textContent='✓ REAL DATA';
-          dataBar.appendChild(b);
-        }
-      }
-    });
-    console.log(`Real prices loaded for ${Object.keys(data).length} symbols`);
-  }catch(e){console.warn('Real price enrichment failed:',e);}
-}
-
-// data-bar is now built directly into makeCard above — no override needed
-
-// Override drawDrill to try Prophet first, then fall back to linear
-const _origDrawDrill = drawDrill;
-async function drawDrillReal(sym, tf){
-  // Try to get AI forecast from backend
-  const fc_data = await fetchProphetForecast(sym, tf);
-  if(fc_data && fc_data.yhat && fc_data.yhat.length > 0){
-    // Use Prophet/AI forecast
-    const d = mktData[sym];
-    const hist = d ? (d.history || []).slice(-60) : [];
-    const fc   = fc_data.yhat;
-    const upper= fc_data.yhat_upper;
-    const lower= fc_data.yhat_lower;
-    const labels = [...hist.map((_,i)=>i-hist.length), ...fc.map((_,i)=>i+1)];
-    const cid = 'fc-dd-'+sym;
-    if(sparks[cid]) sparks[cid].destroy();
-    const el = document.getElementById(cid); if(!el) return;
-    sparks[cid] = new Chart(el,{type:'line',
-      data:{labels,datasets:[
-        {label:'History',      data:[...hist,...Array(fc.length).fill(null)],borderColor:'#3b82f6',borderWidth:2,pointRadius:0,tension:.3,fill:false},
-        {label:`${fc_data.algorithm}`,data:[...Array(hist.length-1).fill(null),hist[hist.length-1],...fc],borderColor:'#10b981',borderWidth:2.5,pointRadius:0,tension:.3,fill:false,borderDash:[5,3]},
-        {label:'Upper 80%',   data:[...Array(hist.length-1).fill(null),hist[hist.length-1],...upper],borderColor:'rgba(16,185,129,.35)',borderWidth:1,pointRadius:0,tension:.3,fill:false,borderDash:[2,4]},
-        {label:'Lower 80%',   data:[...Array(hist.length-1).fill(null),hist[hist.length-1],...lower],borderColor:'rgba(239,68,68,.35)',borderWidth:1,pointRadius:0,tension:.3,fill:false,borderDash:[2,4]}
-      ]},
-      options:{responsive:true,maintainAspectRatio:false,
-        plugins:{legend:{labels:{color:'#94a3b8',font:{size:9}}},
-          tooltip:{mode:'index',intersect:false,backgroundColor:'rgba(15,23,42,.95)',
-            callbacks:{title:ctx=>`Step ${ctx[0].label}`,
-              footer:()=>`Algorithm: ${fc_data.algorithm} | Data: ${fc_data.data_source||'backend'}`}}},
-        scales:{x:{ticks:{color:'#64748b',maxTicksLimit:8,font:{size:9}},grid:{color:'#1e293b'}},
-                y:{ticks:{color:'#64748b',font:{size:9},callback:v=>fmt(v,sym)},grid:{color:'#1e293b'}}},animation:{duration:200}}
-    });
-    // Update forecast table with real targets
-    const tb = document.getElementById('tb-'+sym); if(!tb) return;
-    const price = d ? d.price : fc[0];
-    const pts = [
-      {l:'1D', i:Math.min(0, fc.length-1)},
-      {l:'1W', i:Math.min(4, fc.length-1)},
-      {l:'1M', i:Math.min(20, fc.length-1)},
-      {l:'3M', i:Math.min(63, fc.length-1)}
-    ];
-    tb.innerHTML = pts.map(p=>{
-      const fp = fc[p.i]; const pct = (((fp-price)/price)*100).toFixed(2); const up=pct>=0;
-      return`<tr><td>${p.l}</td><td>${fmt(fp,sym)}</td><td class="${up?'pos':'neg'}">${up?'+':''}${pct}%</td><td style="color:${up?'var(--green)':'var(--red)'}">${up?'▲ Bullish':'▼ Bearish'}</td></tr>`;
-    }).join('');
-    // Update data badge on the card
-    const dataBar = document.querySelector(`#card-${sym} .data-bar`);
-    if(dataBar){
-      dataBar.innerHTML = '';
-      const rb=document.createElement('span');rb.className='rd-badge rd-real';rb.textContent='✓ REAL DATA';dataBar.appendChild(rb);
-      const fb=document.createElement('span');fb.className='rd-badge rd-ai';fb.textContent=`🤖 ${fc_data.algorithm.split(' ')[0]}`;dataBar.appendChild(fb);
-    }
-  } else {
-    // Fall back to original linear regression
-    _origDrawDrill(sym, tf);
-  }
-}
-
-// Patch toggleDrill to use real forecast
-function toggleDrill(sym, tf, ev){
-  ev.stopPropagation();
-  const card = document.getElementById('card-'+sym);
-  const dd   = document.getElementById('dd-'+sym);
-  card.querySelectorAll('.tfbtn').forEach(b=>b.classList.toggle('active', b.textContent===tf));
-  if(!dd.classList.contains('open') || card._tf !== tf){
-    dd.classList.add('open'); card._tf = tf;
-    drawDrillReal(sym, tf); // use AI version
-  } else {
-    dd.classList.remove('open');
-  }
-}
-
-// ════════════════════════════════════════
-// BOOT
-// ════════════════════════════════════════
-document.addEventListener('DOMContentLoaded',async()=>{
-  initMap();
-  loadNewsTab('world');
-  document.getElementById('clock').textContent=new Date().toUTCString().slice(5,25)+' UTC';
-  // Check backend and load real data
-  await checkBackend();
-});
-</script>
-</body>
-</html>
+      <div class="wi-txt">China-Pakistan Economic Corridor is the world's largest infrastruc

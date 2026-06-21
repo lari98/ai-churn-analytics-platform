@@ -8,7 +8,7 @@
 [![FastAPI](https://img.shields.io/badge/FastAPI-0.111-009688)](https://fastapi.tiangolo.com)
 [![MLflow](https://img.shields.io/badge/MLflow-2.9-orange)](https://mlflow.org)
 [![Azure AI](https://img.shields.io/badge/Azure-AI--102-0078D4)](https://azure.microsoft.com)
-[![Dashboard](https://img.shields.io/badge/Dashboard-v2.5-f59e0b)](./dashboard/world-intelligence.html)
+[![Dashboard](https://img.shields.io/badge/Dashboard-v2.6-f59e0b)](./dashboard/world-intelligence.html)
 [![Leaflet](https://img.shields.io/badge/Leaflet.js-1.9.4-199900)](https://leafletjs.com)
 
 ---
@@ -26,6 +26,10 @@
 | Rising Powers — Pakistan Next China Analysis |
 |:---:|
 | ![Rising Powers](./screenshots/rising-powers.png) |
+
+| 🌡 Climate Intelligence — Past/Present/Future | 👶 Birth Rate — World Population Crisis |
+|:---:|:---:|
+| ![Climate Intelligence](./screenshots/climate-intelligence.png) | ![Birth Rate](./screenshots/birth-rate.png) |
 
 ---
 
