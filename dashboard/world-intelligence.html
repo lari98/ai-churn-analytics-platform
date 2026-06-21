@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>World Intelligence Platform v2.3</title>
+<title>World Intelligence Platform v2.4</title>
 <!-- Leaflet -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css"/>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
@@ -130,6 +130,67 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:'Segoe 
 ::-webkit-scrollbar{width:5px;height:5px;}
 ::-webkit-scrollbar-track{background:var(--bg);}
 ::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px;}
+/* WORLD STOCKS */
+#page-stocks{padding:16px;}
+.ws-region-tabs{display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap;}
+.ws-rtab{padding:5px 14px;border-radius:20px;font-size:12px;font-weight:600;cursor:pointer;background:var(--surface);border:1px solid var(--border);color:var(--muted);transition:all .2s;}
+.ws-rtab.active{background:var(--cyan);border-color:var(--cyan);color:#000;}
+.ws-rtab:hover:not(.active){border-color:var(--cyan);color:var(--text);}
+.ws-section{display:none;}.ws-section.active{display:block;}
+.ws-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:12px;}
+.exch-card{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:14px;cursor:pointer;transition:all .2s;}
+.exch-card:hover{border-color:var(--cyan);transform:translateY(-1px);}
+.exch-card.pk-featured{border-color:#10b981;box-shadow:0 0 0 1px #10b981;}
+.exch-hdr{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px;}
+.exch-name{font-size:14px;font-weight:700;}.exch-sub{font-size:11px;color:var(--muted);margin-top:2px;}
+.exch-val{text-align:right;}.exch-val .ev{font-size:17px;font-weight:700;}
+.exch-val .ec{font-size:12px;margin-top:2px;}
+.exch-spark{height:44px;margin:8px 0;}
+.exch-fcrow{display:flex;gap:4px;font-size:10px;color:var(--muted);margin-top:6px;}
+.exch-fcval{background:var(--surface);border-radius:4px;padding:3px 7px;font-weight:600;}
+/* RISING POWERS */
+#page-rising{padding:16px;overflow-y:auto;}
+.rp-hero{background:linear-gradient(135deg,#0f2d1a,#0a1628);border:1px solid #10b981;border-radius:12px;padding:20px 24px;margin-bottom:20px;}
+.rp-hero h2{font-size:20px;font-weight:800;color:#10b981;margin-bottom:6px;}
+.rp-hero p{font-size:13px;color:var(--muted);line-height:1.6;max-width:700px;}
+.rp-timeline{display:flex;gap:0;margin-bottom:20px;overflow-x:auto;padding-bottom:4px;}
+.rp-era{background:var(--card);border:1px solid var(--border);padding:12px 16px;min-width:140px;text-align:center;position:relative;}
+.rp-era:not(:last-child)::after{content:'→';position:absolute;right:-14px;top:50%;transform:translateY(-50%);color:var(--muted);font-size:18px;z-index:1;}
+.rp-era .era-flag{font-size:22px;margin-bottom:4px;}
+.rp-era .era-name{font-size:12px;font-weight:700;margin-bottom:2px;}
+.rp-era .era-yr{font-size:10px;color:var(--muted);}
+.rp-era.current{border-color:var(--accent);}
+.rp-era.next{border-color:#10b981;background:linear-gradient(135deg,#0f2d1a,#1e293b);}
+.rp-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:14px;margin-bottom:20px;}
+.rp-card{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:16px;}
+.rp-card.featured{border-color:#10b981;box-shadow:0 0 20px rgba(16,185,129,.15);}
+.rp-card-hdr{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;}
+.rp-card-hdr h3{font-size:15px;font-weight:700;}
+.rp-badge{font-size:9px;font-weight:800;padding:3px 8px;border-radius:4px;text-transform:uppercase;}
+.badge-next{background:#065f46;color:#6ee7b7;}
+.badge-rising{background:#1e3a5f;color:#7dd3fc;}
+.badge-est{background:#3b1f00;color:#fcd34d;}
+.rp-metrics{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-bottom:12px;}
+.rp-m{background:var(--surface);border-radius:5px;padding:8px;text-align:center;}
+.rp-m .rv{font-size:15px;font-weight:700;}.rp-m .rl{font-size:10px;color:var(--muted);margin-top:2px;}
+.rp-gdp-chart{height:90px;margin-bottom:10px;}
+.rp-factors{font-size:11px;color:var(--muted);line-height:1.6;border-top:1px solid var(--border);padding-top:10px;}
+.rp-factors strong{color:var(--text);}
+.rp-why-pk{background:linear-gradient(135deg,#0a2010,#0f172a);border:1px solid #10b981;border-radius:12px;padding:20px;margin-bottom:20px;}
+.rp-why-pk h3{font-size:16px;font-weight:700;color:#10b981;margin-bottom:12px;}
+.why-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:10px;}
+.why-item{background:rgba(16,185,129,.08);border:1px solid rgba(16,185,129,.2);border-radius:8px;padding:12px;}
+.why-item .wi-icon{font-size:20px;margin-bottom:6px;}
+.why-item .wi-title{font-size:12px;font-weight:700;color:#10b981;margin-bottom:4px;}
+.why-item .wi-txt{font-size:11px;color:var(--muted);line-height:1.5;}
+.rp-cmp-tbl{width:100%;border-collapse:collapse;font-size:12px;background:var(--card);border-radius:10px;overflow:hidden;}
+.rp-cmp-tbl th{background:var(--surface);color:var(--muted);padding:10px 12px;text-align:left;font-size:11px;text-transform:uppercase;letter-spacing:.04em;}
+.rp-cmp-tbl td{padding:10px 12px;border-bottom:1px solid rgba(51,65,85,.5);}
+.rp-cmp-tbl tr:last-child td{border-bottom:none;}
+.rp-cmp-tbl tr.pk-row td{background:rgba(16,185,129,.06);font-weight:600;}
+.trend-up{color:var(--green);}.trend-dn{color:var(--red);}
+/* TOOLTIP GDP SPARKLINE */
+.tt-fc-wrap{height:60px;margin:8px 0;}
 </style>
 </head>
 <body>
@@ -137,7 +198,7 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:'Segoe 
 <div id="topbar">
   <a href="index.html">← Dashboard</a>
   <span class="title">🌍 World Intelligence Platform</span>
-  <span class="badge">v2.3</span>
+  <span class="badge">v2.4</span>
   <div style="display:flex;align-items:center;gap:6px;margin-left:auto;margin-right:16px;">
     <div class="live-dot"></div><span style="font-size:11px;color:var(--muted);">Live</span>
   </div>
@@ -147,6 +208,8 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:'Segoe 
 <div id="main-tabs">
   <div class="mtab active" onclick="showPage('map',this)">🗺 World Map</div>
   <div class="mtab" onclick="showPage('markets',this)">📈 Markets</div>
+  <div class="mtab" onclick="showPage('stocks',this)">🌐 World Stocks</div>
+  <div class="mtab" onclick="showPage('rising',this)">🌏 Rising Powers</div>
   <div class="mtab" onclick="showPage('news',this)">📰 Global News</div>
   <div class="mtab" onclick="showPage('forecast',this)">🔮 Forecasts</div>
   <div class="mtab" onclick="showPage('signals',this)">⚡ Invest Signals</div>
@@ -248,6 +311,28 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:'Segoe 
     <div id="sig-grid" class="sig-grid"><div class="spinner-wrap"><div class="spinner"></div>Computing signals…</div></div>
   </div>
 
+  <!-- WORLD STOCKS -->
+  <div class="page" id="page-stocks">
+    <div style="font-size:15px;font-weight:700;margin-bottom:12px;padding-bottom:8px;border-bottom:1px solid var(--border);">🌐 World Stock Exchanges — 28+ Markets with Drilldown & Forecasts</div>
+    <div class="ws-region-tabs">
+      <div class="ws-rtab active" onclick="showWsRegion('all',this)">🌍 All Markets</div>
+      <div class="ws-rtab" onclick="showWsRegion('americas',this)">🌎 Americas</div>
+      <div class="ws-rtab" onclick="showWsRegion('europe',this)">🇪🇺 Europe</div>
+      <div class="ws-rtab" onclick="showWsRegion('asia',this)">🌏 Asia-Pacific</div>
+      <div class="ws-rtab" onclick="showWsRegion('mea',this)">🌍 Mid East & Africa</div>
+    </div>
+    <div id="ws-all"      class="ws-section active"><div class="ws-grid" id="wsg-all"></div></div>
+    <div id="ws-americas" class="ws-section"><div class="ws-grid" id="wsg-americas"></div></div>
+    <div id="ws-europe"   class="ws-section"><div class="ws-grid" id="wsg-europe"></div></div>
+    <div id="ws-asia"     class="ws-section"><div class="ws-grid" id="wsg-asia"></div></div>
+    <div id="ws-mea"      class="ws-section"><div class="ws-grid" id="wsg-mea"></div></div>
+  </div>
+
+  <!-- RISING POWERS -->
+  <div class="page" id="page-rising">
+    <div id="rp-content"><div class="spinner-wrap"><div class="spinner"></div>Loading Rising Powers analysis…</div></div>
+  </div>
+
 </div>
 
 <!-- TICKER -->
@@ -284,6 +369,8 @@ function showPage(id,el){
     if(id==='news') loadNewsTab('world');
     if(id==='forecast') renderFcPage();
     if(id==='signals') initSignals();
+    if(id==='stocks') initWorldStocks();
+    if(id==='rising') initRisingPowers();
   }
   requestAnimationFrame(()=>{ Object.values(sparks).forEach(c=>{if(c&&c.resize)c.resize();}); if(fcChart)fcChart.resize(); });
 }
@@ -349,11 +436,61 @@ const CTRY={
   IR:{n:'Iran',f:'🇮🇷',r:9,g:3.8,inf:45,gdppc:5000,pop:'87M',stk:'TEDPIX 2.1M',mkt:'$400B',
     ri:['Sanctions isolation','Nuclear tensions','Economic isolation'],op:['Energy reserves','Young tech pop'],pred:{g:[3.8,2.0,1.0,0,0,-1,-1,0,1,2],r:[9,9,9,9,9,9,8,8,8,8]}},
   KP:{n:'North Korea',f:'🇰🇵',r:10,g:-4,inf:55,gdppc:1200,pop:'26M',stk:'N/A',mkt:'N/A',
-    ri:['Nuclear escalation','Extreme isolation','Regime risk'],op:['Minerals (if opened)','Reunification'],pred:{g:[-4,-4,-3,-2,-1,0,1,2,3,4],r:[10,10,10,10,9,9,9,8,8,7]}}
+    ri:['Nuclear escalation','Extreme isolation','Regime risk'],op:['Minerals (if opened)','Reunification'],pred:{g:[-4,-4,-3,-2,-1,0,1,2,3,4],r:[10,10,10,10,9,9,9,8,8,7]}},
+  /* ── NEW COUNTRIES v2.4 ── */
+  PK:{n:'Pakistan',f:'🇵🇰',r:7,g:2.5,inf:28,gdppc:1600,pop:'240M',stk:'KSE-100 63K',mkt:'$70B',
+    ri:['Political instability','IMF dependency','Energy crisis','High debt burden'],
+    op:['5th largest population','CPEC $62B investment','IT exports +25% YoY','Strategic Gwadar port','Median age 22 — youngest workforce'],
+    rising:true,nextChina:true,
+    pred:{g:[2.5,3.0,3.5,4.0,4.5,5.0,5.5,5.5,6.0,6.5],r:[7,7,6,6,5,5,5,4,4,3]}},
+  VN:{n:'Vietnam',f:'🇻🇳',r:4,g:6.0,inf:3.8,gdppc:4200,pop:'98M',stk:'VNI 1,280',mkt:'$240B',
+    ri:['Export dependency','US-China caught middle','Land rights'],op:['Manufacturing boom','Apple/Samsung hub','Young workforce'],rising:true,
+    pred:{g:[6.0,6.2,6.5,6.3,6.1,6.4,6.2,6.0,6.3,6.5],r:[4,4,4,4,3,3,3,3,3,3]}},
+  ID:{n:'Indonesia',f:'🇮🇩',r:5,g:5.0,inf:3.5,gdppc:5000,pop:'278M',stk:'IDX 7,400',mkt:'$650B',
+    ri:['Commodity cycle','Infrastructure gaps','Corruption'],op:['Nickel EV supply','4th largest pop','ASEAN powerhouse'],rising:true,
+    pred:{g:[5.0,5.2,5.4,5.3,5.5,5.6,5.4,5.5,5.7,6.0],r:[5,5,5,4,4,4,4,4,3,3]}},
+  MY:{n:'Malaysia',f:'🇲🇾',r:3,g:4.2,inf:2.9,gdppc:13000,pop:'33M',stk:'KLCI 1,540',mkt:'$390B',
+    ri:['Political fragility','Ringgit pressure','Semiconductor cycle'],op:['Chip packaging hub','Digital economy','Halal industry'],
+    pred:{g:[4.2,4.4,4.5,4.6,4.8,4.7,4.9,5.0,5.1,5.2],r:[3,3,3,3,3,2,2,2,2,2]}},
+  TH:{n:'Thailand',f:'🇹🇭',r:4,g:2.8,inf:1.8,gdppc:7800,pop:'72M',stk:'SET 1,420',mkt:'$540B',
+    ri:['Tourism dependency','Political cycles','Aging pop'],op:['Auto EV hub','Medical tourism','ASEAN gateway'],
+    pred:{g:[2.8,3.0,3.2,3.1,3.3,3.5,3.4,3.6,3.7,3.8],r:[4,4,4,4,4,3,3,3,3,3]}},
+  PH:{n:'Philippines',f:'🇵🇭',r:5,g:5.6,inf:3.2,gdppc:3700,pop:'115M',stk:'PSEi 6,600',mkt:'$260B',
+    ri:['Natural disasters','Regional tensions','OFW dependency'],op:['BPO leader','Young demographics','US alliance'],
+    pred:{g:[5.6,5.8,6.0,5.9,6.1,6.3,6.2,6.4,6.5,6.6],r:[5,5,5,5,4,4,4,4,4,3]}},
+  AE:{n:'UAE',f:'🇦🇪',r:3,g:4.0,inf:3.8,gdppc:50000,pop:'10M',stk:'DFM 8,200',mkt:'$820B',
+    ri:['Oil price exposure','Regional tensions','Labour rights'],op:['Dubai fintech hub','Expo city','AI investment'],
+    pred:{g:[4.0,4.2,4.5,4.3,4.6,4.8,4.7,4.9,5.0,5.2],r:[3,3,3,3,3,2,2,2,2,2]}},
+  EG:{n:'Egypt',f:'🇪🇬',r:7,g:3.5,inf:32,gdppc:4100,pop:'106M',stk:'EGX30 24K',mkt:'$58B',
+    ri:['FX crisis','Suez dependency','Debt burden'],op:['Suez Canal revenues','Young population','Africa gateway'],
+    pred:{g:[3.5,4.0,4.5,4.8,5.0,5.2,5.0,5.3,5.5,5.8],r:[7,7,7,6,6,6,5,5,5,5]}},
+  CA:{n:'Canada',f:'🇨🇦',r:2,g:1.5,inf:2.9,gdppc:54000,pop:'40M',stk:'TSX 21,800',mkt:'C$3.3T',
+    ri:['Housing bubble','US trade dependency','Oil price'],op:['Critical minerals','AI research','Immigration talent'],
+    pred:{g:[1.5,1.8,2.0,2.2,2.1,2.3,2.4,2.3,2.5,2.6],r:[2,2,2,2,2,2,2,2,2,2]}},
+  IT:{n:'Italy',f:'🇮🇹',r:5,g:0.7,inf:1.9,gdppc:36000,pop:'60M',stk:'FTSE MIB 33K',mkt:'€650B',
+    ri:['High public debt','Low productivity','Political fragility'],op:['Luxury & fashion','Tourism','Green energy'],
+    pred:{g:[0.7,0.9,1.1,1.2,1.4,1.6,1.5,1.7,1.8,2.0],r:[5,5,5,5,4,4,4,4,4,4]}},
+  ES:{n:'Spain',f:'🇪🇸',r:4,g:2.5,inf:3.2,gdppc:32000,pop:'48M',stk:'IBEX 11,200',mkt:'€730B',
+    ri:['Unemployment','Catalan tensions','Debt'],op:['Renewable energy leader','Tourism recovery','Green hydrogen'],
+    pred:{g:[2.5,2.7,2.9,2.8,3.0,3.2,3.1,3.3,3.4,3.5],r:[4,4,4,4,3,3,3,3,3,3]}},
+  NL:{n:'Netherlands',f:'🇳🇱',r:2,g:0.6,inf:2.8,gdppc:62000,pop:'18M',stk:'AEX 880',mkt:'€1.1T',
+    ri:['Housing crisis','ASML chip restrictions','Energy costs'],op:['ASML chip monopoly','Rotterdam hub','Agri-tech'],
+    pred:{g:[0.6,0.9,1.2,1.4,1.6,1.8,1.7,1.9,2.0,2.1],r:[2,2,2,2,2,2,2,2,2,2]}},
+  SE:{n:'Sweden',f:'🇸🇪',r:2,g:0.5,inf:2.3,gdppc:58000,pop:'11M',stk:'OMX 2,400',mkt:'SEK5.8T',
+    ri:['Gang crime','Energy dependency','Krona weakness'],op:['Green steel','Gaming/tech','NATO security'],
+    pred:{g:[0.5,0.8,1.2,1.5,1.7,1.9,1.8,2.0,2.1,2.3],r:[2,2,2,2,2,2,2,2,2,2]}},
+  AR:{n:'Argentina',f:'🇦🇷',r:8,g:-2.5,inf:143,gdppc:13000,pop:'46M',stk:'MERVAL 1.8M',mkt:'$60B',
+    ri:['Hyperinflation','Debt restructuring','Political volatility'],op:['Lithium triangle','Agri powerhouse','Milei reforms'],
+    pred:{g:[-2.5,-1,1,2.5,3.0,3.5,3.2,3.6,3.8,4.0],r:[8,8,7,7,6,6,6,5,5,5]}},
+  BD:{n:'Bangladesh',f:'🇧🇩',r:5,g:5.8,inf:9.2,gdppc:2800,pop:'170M',stk:'DSEX 6,300',mkt:'$50B',
+    ri:['Garment dependency','Climate vulnerability','Infrastructure'],op:['Garment export #2 world','Demographic dividend','Digital Bangladesh'],rising:true,
+    pred:{g:[5.8,6.0,6.2,6.1,6.3,6.5,6.4,6.6,6.8,7.0],r:[5,5,5,5,4,4,4,4,4,4]}}
 };
 const LL={DE:[51.2,10.5],AT:[47.8,13.3],CH:[46.8,8.2],US:[38,-97],CN:[35,105],RU:[61,90],GB:[54,-2],
           FR:[46,2],JP:[36,138],IN:[22,79],BR:[-10,-51],AU:[-25,134],UA:[49,32],SA:[24,45],
-          TR:[39,35],NG:[9,8],ZA:[-29,25],SG:[1.4,104],KR:[36,128],PL:[52,19],IR:[33,53],KP:[40,127]};
+          TR:[39,35],NG:[9,8],ZA:[-29,25],SG:[1.4,104],KR:[36,128],PL:[52,19],IR:[33,53],KP:[40,127],
+          PK:[30,70],VN:[16,108],ID:[-3,118],MY:[4,109],TH:[15,101],PH:[13,122],AE:[24,54],
+          EG:[27,30],CA:[56,-106],IT:[42,12],ES:[40,-4],NL:[52.3,5.3],SE:[60,17],AR:[-34,-64],BD:[23,90]};
 
 function riskCol(r){
   if(r<=2)return'#10b981';if(r<=4)return'#22c55e';if(r<=5)return'#f59e0b';if(r<=7)return'#f97316';return'#ef4444';
@@ -390,7 +527,8 @@ function initMap(){
 function showCtt(iso,c){
   const el=document.getElementById('ctt');
   const col=riskCol(c.r);
-  el.innerHTML=`<h3>${c.f} ${c.n} <span style="background:${col};color:#000;font-size:10px;font-weight:700;padding:2px 6px;border-radius:3px;margin-left:6px;">${riskLbl(c.r)}</span></h3>
+  const risingBadge=c.rising?`<span style="background:#065f46;color:#6ee7b7;font-size:9px;font-weight:800;padding:2px 6px;border-radius:3px;margin-left:6px;">${c.nextChina?'NEXT CHINA':'RISING'}</span>`:'';
+  el.innerHTML=`<h3>${c.f} ${c.n} <span style="background:${col};color:#000;font-size:10px;font-weight:700;padding:2px 6px;border-radius:3px;margin-left:6px;">${riskLbl(c.r)}</span>${risingBadge}</h3>
 <div class="tt-grid">
   <div class="tt-kpi"><div class="val" style="color:var(--cyan)">${c.gdppc>=1000?(c.gdppc/1000).toFixed(0)+'K':c.gdppc}</div><div class="lbl">GDP/Cap</div></div>
   <div class="tt-kpi"><div class="val" style="color:${c.g>=0?'var(--green)':'var(--red)'}">${c.g>=0?'+':''}${c.g}%</div><div class="lbl">GDP Growth</div></div>
@@ -399,11 +537,22 @@ function showCtt(iso,c){
   <div class="tt-kpi"><div class="val">${c.stk.split(' ')[0]}</div><div class="lbl">Index</div></div>
   <div class="tt-kpi"><div class="val">${c.mkt}</div><div class="lbl">Mkt Cap</div></div>
 </div>
+<div style="font-size:10px;color:var(--muted);margin-bottom:3px;">10-Year GDP Growth Forecast</div>
+<div class="tt-fc-wrap"><canvas id="tt-fc-canvas"></canvas></div>
 <div style="font-size:11px;margin-bottom:5px;"><span style="color:var(--red);font-weight:600;">⚠ Risks: </span>${c.ri.join(' · ')}</div>
 <div style="font-size:11px;margin-bottom:8px;"><span style="color:var(--green);font-weight:600;">✓ Opps: </span>${c.op.join(' · ')}</div>
 <div style="font-size:11px;color:var(--muted);margin-bottom:4px;">Risk Score ${c.r}/10</div>
 <div class="risk-bar"><div class="risk-fill" style="width:${c.r*10}%;background:${col};"></div></div>`;
   el.style.display='block';
+  // draw GDP forecast sparkline
+  requestAnimationFrame(()=>{
+    const cv=document.getElementById('tt-fc-canvas');if(!cv)return;
+    if(sparks['tt-fc'])sparks['tt-fc'].destroy();
+    const yrs=['2025','2026','2027','2028','2029','2030','2031','2032','2033','2034'];
+    const gd=c.pred?c.pred.g:[c.g,c.g,c.g,c.g,c.g,c.g,c.g,c.g,c.g,c.g];
+    const pos=gd[gd.length-1]>=gd[0];
+    sparks['tt-fc']=new Chart(cv,{type:'line',data:{labels:yrs,datasets:[{data:gd,borderColor:pos?'#10b981':'#ef4444',borderWidth:2,fill:true,backgroundColor:pos?'rgba(16,185,129,.1)':'rgba(239,68,68,.1)',pointRadius:2,pointBackgroundColor:pos?'#10b981':'#ef4444',tension:.3}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{callbacks:{label:ctx=>`GDP Growth: ${ctx.raw}%`}}},scales:{x:{ticks:{color:'#64748b',font:{size:8}},grid:{color:'#1e293b'}},y:{ticks:{color:'#64748b',font:{size:8},callback:v=>v+'%'},grid:{color:'#1e293b'}}},animation:{duration:300}}});
+  });
   leafMap.once('click',()=>{el.style.display='none';});
 }
 
@@ -448,9 +597,56 @@ const ADEFS={
        {sym:'NGAS',n:'Nat Gas',u:'USD/MMBtu',b:2.35,v:.03},{sym:'HEAT',n:'Heating Oil',u:'USD/gal',b:2.68,v:.016},
        {sym:'GASO',n:'Gasoline',u:'USD/gal',b:2.55,v:.018}],
   indices:[{sym:'SPX',n:'S&P 500',u:'USD',b:5300,v:.009},{sym:'NDX',n:'NASDAQ 100',u:'USD',b:18600,v:.013},
-           {sym:'DAX',n:'DAX',u:'EUR',b:18200,v:.009},{sym:'FTSE',n:'FTSE 100',u:'GBP',b:8400,v:.007},
-           {sym:'N225',n:'Nikkei 225',u:'JPY',b:38000,v:.011},{sym:'HSI',n:'Hang Seng',u:'HKD',b:17500,v:.014}]
+           {sym:'DJI',n:'Dow Jones',u:'USD',b:39500,v:.007},{sym:'DAX',n:'DAX',u:'EUR',b:18200,v:.009},
+           {sym:'FTSE',n:'FTSE 100',u:'GBP',b:8400,v:.007},{sym:'CAC',n:'CAC 40',u:'EUR',b:7900,v:.009},
+           {sym:'N225',n:'Nikkei 225',u:'JPY',b:38000,v:.011},{sym:'HSI',n:'Hang Seng',u:'HKD',b:17500,v:.014},
+           {sym:'SENSEX',n:'BSE Sensex',u:'INR',b:72000,v:.012},{sym:'KOSPI',n:'KOSPI',u:'KRW',b:2700,v:.013}]
 };
+
+// ════════════════════════════════════════
+// WORLD EXCHANGES (28 markets)
+// ════════════════════════════════════════
+const EXCHANGES=[
+  // Americas
+  {sym:'SPX',n:'S&P 500',ctry:'🇺🇸 USA',reg:'americas',b:5300,v:.009,mc:'$44T',yr2030:7200,yr2035:9800,yr2040:13000},
+  {sym:'NDX',n:'NASDAQ 100',ctry:'🇺🇸 USA',reg:'americas',b:18600,v:.013,mc:'$22T',yr2030:26000,yr2035:36000,yr2040:50000},
+  {sym:'DJI',n:'Dow Jones',ctry:'🇺🇸 USA',reg:'americas',b:39500,v:.007,mc:'$13T',yr2030:52000,yr2035:68000,yr2040:90000},
+  {sym:'TSX',n:'TSX Composite',ctry:'🇨🇦 Canada',reg:'americas',b:21800,v:.009,mc:'C$3.3T',yr2030:28000,yr2035:35000,yr2040:44000},
+  {sym:'BOVESPA',n:'Bovespa',ctry:'🇧🇷 Brazil',reg:'americas',b:128000,v:.014,mc:'R$5.2T',yr2030:175000,yr2035:240000,yr2040:330000},
+  {sym:'MXX',n:'IPC Mexico',ctry:'🇲🇽 Mexico',reg:'americas',b:55000,v:.013,mc:'MXN$14T',yr2030:75000,yr2035:100000,yr2040:140000},
+  {sym:'MERVAL',n:'MERVAL',ctry:'🇦🇷 Argentina',reg:'americas',b:1800000,v:.04,mc:'$60B',yr2030:3000000,yr2035:5000000,yr2040:9000000},
+  // Europe
+  {sym:'DAX',n:'DAX 40',ctry:'🇩🇪 Germany',reg:'europe',b:18200,v:.009,mc:'€1.8T',yr2030:24000,yr2035:30000,yr2040:38000},
+  {sym:'FTSE',n:'FTSE 100',ctry:'🇬🇧 UK',reg:'europe',b:8400,v:.007,mc:'£2.1T',yr2030:10500,yr2035:13000,yr2040:16000},
+  {sym:'CAC',n:'CAC 40',ctry:'🇫🇷 France',reg:'europe',b:7900,v:.009,mc:'€2.8T',yr2030:10500,yr2035:13500,yr2040:17000},
+  {sym:'SMI',n:'SMI',ctry:'🇨🇭 Switzerland',reg:'europe',b:11800,v:.007,mc:'CHF1.5T',yr2030:15000,yr2035:18500,yr2040:23000},
+  {sym:'AEX',n:'AEX',ctry:'🇳🇱 Netherlands',reg:'europe',b:880,v:.009,mc:'€1.1T',yr2030:1150,yr2035:1450,yr2040:1850},
+  {sym:'IBEX',n:'IBEX 35',ctry:'🇪🇸 Spain',reg:'europe',b:11200,v:.01,mc:'€730B',yr2030:14500,yr2035:18000,yr2040:22000},
+  {sym:'FMIB',n:'FTSE MIB',ctry:'🇮🇹 Italy',reg:'europe',b:33000,v:.011,mc:'€650B',yr2030:42000,yr2035:52000,yr2040:65000},
+  {sym:'ATX',n:'ATX',ctry:'🇦🇹 Austria',reg:'europe',b:3640,v:.01,mc:'€145B',yr2030:4700,yr2035:5900,yr2040:7400},
+  {sym:'WIG20',n:'WIG 20',ctry:'🇵🇱 Poland',reg:'europe',b:2300,v:.013,mc:'PLN1.4T',yr2030:3200,yr2035:4200,yr2040:5500},
+  {sym:'OMXS30',n:'OMX Stockholm',ctry:'🇸🇪 Sweden',reg:'europe',b:2400,v:.01,mc:'SEK5.8T',yr2030:3100,yr2035:3900,yr2040:4900},
+  {sym:'MOEX',n:'MOEX Russia',ctry:'🇷🇺 Russia',reg:'europe',b:3200,v:.022,mc:'$700B',yr2030:3800,yr2035:4500,yr2040:5200},
+  // Asia-Pacific
+  {sym:'N225',n:'Nikkei 225',ctry:'🇯🇵 Japan',reg:'asia',b:38000,v:.011,mc:'¥920T',yr2030:48000,yr2035:58000,yr2040:70000},
+  {sym:'HSI',n:'Hang Seng',ctry:'🇭🇰 Hong Kong',reg:'asia',b:17500,v:.014,mc:'HK$32T',yr2030:24000,yr2035:32000,yr2040:42000},
+  {sym:'CSI300',n:'CSI 300',ctry:'🇨🇳 China',reg:'asia',b:3500,v:.013,mc:'$9.5T',yr2030:4800,yr2035:6200,yr2040:8000},
+  {sym:'SENSEX',n:'BSE Sensex',ctry:'🇮🇳 India',reg:'asia',b:72000,v:.012,mc:'$4.2T',yr2030:110000,yr2035:160000,yr2040:240000},
+  {sym:'KOSPI',n:'KOSPI',ctry:'🇰🇷 S.Korea',reg:'asia',b:2700,v:.013,mc:'₩2100T',yr2030:3500,yr2035:4400,yr2040:5500},
+  {sym:'ASX200',n:'ASX 200',ctry:'🇦🇺 Australia',reg:'asia',b:7800,v:.009,mc:'A$2.8T',yr2030:10000,yr2035:12500,yr2040:15500},
+  {sym:'VNI',n:'VN-Index',ctry:'🇻🇳 Vietnam',reg:'asia',b:1280,v:.016,mc:'$240B',yr2030:2100,yr2035:3400,yr2040:5500},
+  {sym:'JKSE',n:'IDX Composite',ctry:'🇮🇩 Indonesia',reg:'asia',b:7400,v:.014,mc:'$650B',yr2030:11000,yr2035:16000,yr2040:23000},
+  {sym:'KSE100',n:'KSE-100 🌟',ctry:'🇵🇰 Pakistan',reg:'asia',b:63000,v:.018,mc:'$70B',yr2030:130000,yr2035:280000,yr2040:600000,featured:true},
+  {sym:'STI',n:'Straits Times',ctry:'🇸🇬 Singapore',reg:'asia',b:3200,v:.008,mc:'S$950B',yr2030:4100,yr2035:5200,yr2040:6500},
+  {sym:'KLCI',n:'KLCI',ctry:'🇲🇾 Malaysia',reg:'asia',b:1540,v:.009,mc:'MYR3.9T',yr2030:2000,yr2035:2600,yr2040:3300},
+  {sym:'SET',n:'SET Index',ctry:'🇹🇭 Thailand',reg:'asia',b:1420,v:.011,mc:'$540B',yr2030:1900,yr2035:2500,yr2040:3200},
+  // Middle East & Africa
+  {sym:'TASI',n:'Tadawul (TASI)',ctry:'🇸🇦 Saudi Arabia',reg:'mea',b:12000,v:.011,mc:'$2.7T',yr2030:16000,yr2035:20000,yr2040:25000},
+  {sym:'DFM',n:'DFM (UAE)',ctry:'🇦🇪 UAE',reg:'mea',b:8200,v:.012,mc:'$820B',yr2030:11000,yr2035:14500,yr2040:19000},
+  {sym:'EGX30',n:'EGX 30',ctry:'🇪🇬 Egypt',reg:'mea',b:24000,v:.018,mc:'$58B',yr2030:42000,yr2035:72000,yr2040:120000},
+  {sym:'JSE',n:'JSE All Share',ctry:'🇿🇦 S.Africa',reg:'mea',b:73000,v:.012,mc:'R17T',yr2030:95000,yr2035:120000,yr2040:155000},
+  {sym:'BIST',n:'BIST 100',ctry:'🇹🇷 Turkey',reg:'mea',b:9800,v:.025,mc:'TL8T',yr2030:18000,yr2035:35000,yr2040:70000}
+];
 
 function seedAsset(a){
   if(!mktData[a.sym])mktData[a.sym]={};
@@ -677,6 +873,305 @@ function initSignals(){
   <div class="sc-rationale">${SIG_TXT[s.l]||''}</div>
 </div>`;
   }).join('');
+}
+
+// ════════════════════════════════════════
+// WORLD STOCKS
+// ════════════════════════════════════════
+function showWsRegion(id,el){
+  document.querySelectorAll('.ws-section').forEach(s=>s.classList.remove('active'));
+  document.querySelectorAll('.ws-rtab').forEach(t=>t.classList.remove('active'));
+  document.getElementById('ws-'+id).classList.add('active');
+  if(el)el.classList.add('active');
+}
+
+function initWorldStocks(){
+  // seed data for all exchanges
+  EXCHANGES.forEach(e=>{
+    if(!mktData[e.sym])mktData[e.sym]={};
+    const d=mktData[e.sym];
+    if(!d.price)d.price=e.b;
+    if(!d.change)d.change=+((Math.random()-.48)*3).toFixed(2);
+    if(!d.history)d.history=genHistory(d.price,90,e.v);
+    d.rsi=calcRsi(d.history);d.sig=sigFromRsi(d.rsi,d.change);
+  });
+  // render all grids
+  const grids={all:EXCHANGES,americas:EXCHANGES.filter(e=>e.reg==='americas'),europe:EXCHANGES.filter(e=>e.reg==='europe'),asia:EXCHANGES.filter(e=>e.reg==='asia'),mea:EXCHANGES.filter(e=>e.reg==='mea')};
+  Object.entries(grids).forEach(([key,list])=>{
+    const g=document.getElementById('wsg-'+key);if(!g)return;
+    g.innerHTML='';list.forEach(e=>g.appendChild(makeExchCard(e)));
+  });
+}
+
+function makeExchCard(e){
+  const d=mktData[e.sym]||{price:e.b,change:0,sig:{l:'HOLD',c:'s-h'},rsi:50};
+  const pos=d.change>=0;
+  const cid='wsp-'+e.sym;
+  const card=document.createElement('div');
+  card.className='exch-card'+(e.featured?' pk-featured':'');
+  card.innerHTML=`
+<div class="exch-hdr">
+  <div>
+    <div class="exch-name">${e.n}</div>
+    <div class="exch-sub">${e.ctry} · ${e.mc}</div>
+  </div>
+  <div class="exch-val">
+    <div class="ev">${fmt(d.price,e.sym)}</div>
+    <div class="ec ${pos?'pos':'neg'}">${pos?'▲':'▼'} ${Math.abs(d.change)}%</div>
+  </div>
+</div>
+<span class="sbadge ${d.sig.c}">${d.sig.l}</span>
+<span style="font-size:10px;color:var(--muted);margin-left:8px;">RSI ${d.rsi}</span>
+<div class="exch-spark"><canvas id="${cid}"></canvas></div>
+<div style="font-size:10px;color:var(--muted);font-weight:600;margin-bottom:4px;">Price Forecasts</div>
+<div class="exch-fcrow">
+  <span style="color:var(--muted)">2030:</span><span class="exch-fcval pos">~${e.yr2030>=1000?Math.round(e.yr2030/1000)+'K':e.yr2030}</span>
+  <span style="color:var(--muted)">2035:</span><span class="exch-fcval pos">~${e.yr2035>=1000?Math.round(e.yr2035/1000)+'K':e.yr2035}</span>
+  <span style="color:var(--muted)">2040:</span><span class="exch-fcval pos">~${e.yr2040>=1000?Math.round(e.yr2040/1000)+'K':e.yr2040}</span>
+</div>
+<div class="drilldown" id="wsdd-${e.sym}">
+  <div class="fcwrap" style="margin-top:10px;"><canvas id="wsfc-${e.sym}"></canvas></div>
+  <table class="fctbl"><thead><tr><th>Horizon</th><th>Est. Value</th><th>Δ%</th></tr></thead><tbody id="wstb-${e.sym}"></tbody></table>
+</div>
+<div style="margin-top:8px;"><button class="tfbtn" style="width:100%;padding:5px;text-align:center;" onclick="toggleWsDrill('${e.sym}',event)">📊 Drilldown & Full Forecast</button></div>`;
+  requestAnimationFrame(()=>drawSpark(cid,d.history||[d.price],pos));
+  return card;
+}
+
+function toggleWsDrill(sym,ev){
+  ev.stopPropagation();
+  const dd=document.getElementById('wsdd-'+sym);
+  const open=dd.classList.toggle('open');
+  if(open) drawWsDrill(sym);
+}
+
+function drawWsDrill(sym){
+  const e=EXCHANGES.find(x=>x.sym===sym);const d=mktData[sym];if(!e||!d)return;
+  const hist=d.history.slice(-60);
+  const fc=forecast(hist,120);// 120 months = 10Y
+  const years=['2024','2025','2026','2027','2028','2029','2030','2031','2032','2033','2034'];
+  const labels=[...hist.map((_,i)=>i-hist.length),...fc.map((_,i)=>i+1)];
+  const cid='wsfc-'+sym;
+  if(sparks[cid])sparks[cid].destroy();
+  const el=document.getElementById(cid);if(!el)return;
+  sparks[cid]=new Chart(el,{type:'line',data:{labels,datasets:[
+    {label:'History',data:[...hist,...Array(120).fill(null)],borderColor:'#3b82f6',borderWidth:1.5,pointRadius:0,tension:.3},
+    {label:'Forecast',data:[...Array(hist.length-1).fill(null),hist[hist.length-1],...fc],borderColor:'#f59e0b',borderWidth:2,pointRadius:0,borderDash:[5,3],tension:.3},
+    {label:'Bull (+20%)',data:[...Array(hist.length-1).fill(null),hist[hist.length-1],...fc.map(v=>v*1.2)],borderColor:'#10b981',borderWidth:1,pointRadius:0,borderDash:[3,3]},
+    {label:'Bear (-15%)',data:[...Array(hist.length-1).fill(null),hist[hist.length-1],...fc.map(v=>v*.85)],borderColor:'#ef4444',borderWidth:1,pointRadius:0,borderDash:[3,3]}
+  ]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{labels:{color:'#94a3b8',font:{size:9}}}},scales:{x:{ticks:{color:'#64748b',maxTicksLimit:8,font:{size:9}},grid:{color:'#1e293b'}},y:{ticks:{color:'#64748b',font:{size:9},callback:v=>fmt(v,sym)},grid:{color:'#1e293b'}}},animation:{duration:200}}});
+  // forecast table
+  const tb=document.getElementById('wstb-'+sym);if(!tb)return;
+  const pts=[{l:'6M',i:5},{l:'1Y',i:11},{l:'3Y',i:35},{l:'5Y',i:59},{l:'10Y',i:119}];
+  tb.innerHTML=pts.map(p=>{
+    const fp=fc[Math.min(p.i,fc.length-1)];const pct=(((fp-d.price)/d.price)*100).toFixed(1);const up=pct>=0;
+    return`<tr><td>${p.l}</td><td>${fmt(fp,sym)}</td><td class="${up?'pos':'neg'}">${up?'+':''}${pct}%</td></tr>`;
+  }).join('');
+}
+
+// ════════════════════════════════════════
+// RISING POWERS
+// ════════════════════════════════════════
+const RISING_POWERS=[
+  {iso:'US',era:'2000–now',label:'Dominant',badge:'badge-est',rank:1},
+  {iso:'CN',era:'2001–now',label:'Challenger',badge:'badge-est',rank:2},
+  {iso:'IN',era:'2014–now',label:'Surging',badge:'badge-rising',rank:3},
+  {iso:'PK',era:'2025→',label:'NEXT',badge:'badge-next',rank:4,next:true}
+];
+
+function initRisingPowers(){
+  const el=document.getElementById('rp-content');
+  const rpCountries=['PK','VN','ID','IN','BD','PH','EG','NG'];
+  el.innerHTML=`
+<!-- Hero -->
+<div class="rp-hero">
+  <h2>🌏 The Next Global Economic Powers — Pakistan & Beyond</h2>
+  <p>After the USA dominated the 20th century, China became the factory of the world in the 2000s, and India is now the fastest-growing major economy — <strong style="color:#10b981;">Pakistan is positioned as the next emerging giant</strong>. With 240M people (5th largest), a median age of 22, CPEC ($62B Chinese investment), IT sector growing 25%/yr, and a strategic location bridging China, India, Middle East & Central Asia — Pakistan's trajectory mirrors China in the 1980s–90s.</p>
+</div>
+
+<!-- Economic succession timeline -->
+<div style="font-size:12px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:10px;">Economic Power Succession Timeline</div>
+<div class="rp-timeline">
+  <div class="rp-era">
+    <div class="era-flag">🇬🇧</div>
+    <div class="era-name">Britain</div>
+    <div class="era-yr">1800–1940</div>
+  </div>
+  <div class="rp-era">
+    <div class="era-flag">🇺🇸</div>
+    <div class="era-name">USA</div>
+    <div class="era-yr">1945–2000</div>
+  </div>
+  <div class="rp-era current">
+    <div class="era-flag">🇨🇳</div>
+    <div class="era-name">China</div>
+    <div class="era-yr">2000–2025</div>
+  </div>
+  <div class="rp-era current">
+    <div class="era-flag">🇮🇳</div>
+    <div class="era-name">India</div>
+    <div class="era-yr">2015–2035</div>
+  </div>
+  <div class="rp-era next">
+    <div class="era-flag">🇵🇰</div>
+    <div class="era-name">Pakistan</div>
+    <div class="era-yr">2025→2040</div>
+  </div>
+  <div class="rp-era">
+    <div class="era-flag">🇻🇳</div>
+    <div class="era-name">Vietnam</div>
+    <div class="era-yr">2025–2040</div>
+  </div>
+  <div class="rp-era">
+    <div class="era-flag">🇮🇩</div>
+    <div class="era-name">Indonesia</div>
+    <div class="era-yr">2030–2045</div>
+  </div>
+</div>
+
+<!-- Why Pakistan = Next China -->
+<div class="rp-why-pk">
+  <h3>🇵🇰 Why Pakistan is the Next China — 7 Defining Factors</h3>
+  <div class="why-grid">
+    <div class="why-item">
+      <div class="wi-icon">👥</div>
+      <div class="wi-title">Population Power</div>
+      <div class="wi-txt">240M people — 5th largest globally. Median age 22, creating the world's youngest and most productive workforce. Same demographic advantage China had in 1985.</div>
+    </div>
+    <div class="why-item">
+      <div class="wi-icon">🏗</div>
+      <div class="wi-title">CPEC — $62B Infrastructure</div>
+      <div class="wi-txt">China-Pakistan Economic Corridor is the world's largest infrastructure project per capita — roads, power plants, Gwadar deep-sea port. Mirrors China's own 1990s infrastructure boom.</div>
+    </div>
+    <div class="why-item">
+      <div class="wi-icon">💻</div>
+      <div class="wi-title">IT Exports Surging 25%/yr</div>
+      <div class="wi-txt">Pakistan is the #4 global freelancing workforce. IT exports doubled in 3 years to $3.2B. Karachi & Lahore tech scenes rivaling Bangalore of 2005.</div>
+    </div>
+    <div class="why-item">
+      <div class="wi-icon">🌊</div>
+      <div class="wi-title">Gwadar — Strategic Port</div>
+      <div class="wi-txt">Gwadar gives landlocked Central Asia its only warm-water port route. This makes Pakistan the transit hub between $3T+ in regional trade — exactly like China's coastal advantage.</div>
+    </div>
+    <div class="why-item">
+      <div class="wi-icon">⚛️</div>
+      <div class="wi-title">Nuclear State + Military</div>
+      <div class="wi-txt">Only Muslim-majority nuclear power. Strategic depth means no existential threat risk. Geopolitical importance drives investment from Gulf, China, and increasingly USA.</div>
+    </div>
+    <div class="why-item">
+      <div class="wi-icon">🌾</div>
+      <div class="wi-title">Agricultural Superpower</div>
+      <div class="wi-txt">4th largest cotton producer, top 5 rice & wheat. Pakistan's Indus River basin is among Earth's most fertile zones. Food security = growth foundation.</div>
+    </div>
+    <div class="why-item">
+      <div class="wi-icon">📈</div>
+      <div class="wi-title">KSE-100: World's Best Index</div>
+      <div class="wi-txt">KSE-100 was the world's best performing stock index in 2002, 2012, and 2021. Currently at 63K+ and projected to reach 600K+ by 2040 — a 10x return trajectory.</div>
+    </div>
+    <div class="why-item">
+      <div class="wi-icon">🤝</div>
+      <div class="wi-title">IMF Stabilization = Reset</div>
+      <div class="wi-txt">2023–24 IMF program cleaned fiscal imbalances. Inflation falling from 38% → 12%. Interest rates dropping. This is the bottom of the cycle — same as India in 1991 reforms.</div>
+    </div>
+  </div>
+</div>
+
+<!-- Global GDP Growth Forecast Chart -->
+<div style="font-size:14px;font-weight:700;margin-bottom:12px;">📊 GDP Growth Trajectory 2025–2034: Country Comparison</div>
+<div style="background:var(--card);border:1px solid var(--border);border-radius:10px;padding:16px;margin-bottom:20px;">
+  <div style="height:280px;position:relative;"><canvas id="rp-gdp-chart"></canvas></div>
+</div>
+
+<!-- Emerging powers comparison table -->
+<div style="font-size:14px;font-weight:700;margin-bottom:12px;">🏆 Emerging Market Ranking — 2025 vs 2035 Projection</div>
+<div style="overflow-x:auto;margin-bottom:20px;">
+<table class="rp-cmp-tbl">
+<thead><tr><th>Country</th><th>GDP Growth Now</th><th>Inflation</th><th>Population</th><th>Stock Index</th><th>2030 GDP Rank</th><th>Key Catalyst</th><th>Verdict</th></tr></thead>
+<tbody>
+${[
+  {f:'🇮🇳',n:'India',g:'+7.2%',inf:'5.1%',pop:'1.4B',stk:'Nifty 22.5K',rank:'#5→#3',cat:'IT + Demographics',v:'🟢 BUY',pk:false},
+  {f:'🇵🇰',n:'Pakistan',g:'+2.5%→6%',inf:'28%↓',pop:'240M',stk:'KSE-100 63K',rank:'#44→#25',cat:'CPEC + IT + Youth',v:'🌟 NEXT GIANT',pk:true},
+  {f:'🇻🇳',n:'Vietnam',g:'+6.0%',inf:'3.8%',pop:'98M',stk:'VNI 1,280',rank:'#35→#28',cat:'Apple supply chain',v:'🟢 RISING',pk:false},
+  {f:'🇮🇩',n:'Indonesia',g:'+5.0%',inf:'3.5%',pop:'278M',stk:'IDX 7,400',rank:'#16→#10',cat:'Nickel + ASEAN',v:'🟢 BUY',pk:false},
+  {f:'🇧🇩',n:'Bangladesh',g:'+5.8%',inf:'9.2%',pop:'170M',stk:'DSEX 6,300',rank:'#35→#30',cat:'Garments + BPO',v:'🟡 WATCH',pk:false},
+  {f:'🇵🇭',n:'Philippines',g:'+5.6%',inf:'3.2%',pop:'115M',stk:'PSEi 6,600',rank:'#34→#28',cat:'BPO + Remittances',v:'🟢 RISING',pk:false},
+  {f:'🇪🇬',n:'Egypt',g:'+3.5%',inf:'32%↓',pop:'106M',stk:'EGX30 24K',rank:'#37→#29',cat:'Suez + Demographics',v:'🟡 WATCH',pk:false},
+  {f:'🇳🇬',n:'Nigeria',g:'+2.9%',inf:'28%',pop:'220M',stk:'NGX 97K',rank:'#27→#20',cat:'Oil + Fintech',v:'🟡 SPECULATIVE',pk:false}
+].map(r=>`<tr${r.pk?' class="pk-row"':''}>
+  <td>${r.f} <strong>${r.n}</strong>${r.pk?' 🌟':''}</td>
+  <td class="trend-up">${r.g}</td><td>${r.inf}</td><td>${r.pop}</td>
+  <td>${r.stk}</td><td>${r.rank}</td><td>${r.cat}</td><td>${r.v}</td>
+</tr>`).join('')}
+</tbody>
+</table>
+</div>
+
+<!-- Rising powers cards -->
+<div style="font-size:14px;font-weight:700;margin-bottom:12px;">🃏 Detailed Country Cards</div>
+<div class="rp-grid" id="rp-cards"></div>
+`;
+  // draw the multi-country GDP chart
+  requestAnimationFrame(()=>drawRpGdpChart());
+  // render rising power cards
+  renderRpCards(rpCountries);
+}
+
+function drawRpGdpChart(){
+  const cv=document.getElementById('rp-gdp-chart');if(!cv)return;
+  const yrs=['2025','2026','2027','2028','2029','2030','2031','2032','2033','2034'];
+  const countries=[
+    {iso:'PK',col:'#10b981',label:'🇵🇰 Pakistan'},
+    {iso:'IN',col:'#f97316',label:'🇮🇳 India'},
+    {iso:'VN',col:'#3b82f6',label:'🇻🇳 Vietnam'},
+    {iso:'ID',col:'#8b5cf6',label:'🇮🇩 Indonesia'},
+    {iso:'CN',col:'#ef4444',label:'🇨🇳 China'},
+    {iso:'US',col:'#94a3b8',label:'🇺🇸 USA'},
+    {iso:'BD',col:'#f59e0b',label:'🇧🇩 Bangladesh'}
+  ];
+  const datasets=countries.map(c=>{
+    const cd=CTRY[c.iso];const g=cd?cd.pred.g:[3,3,3,3,3,3,3,3,3,3];
+    return{label:c.label,data:g,borderColor:c.col,backgroundColor:'transparent',borderWidth:c.iso==='PK'?3:1.5,pointRadius:c.iso==='PK'?4:2,tension:.4,borderDash:c.iso==='US'?[5,3]:(c.iso==='CN'?[3,3]:[])};
+  });
+  if(sparks['rp-gdp'])sparks['rp-gdp'].destroy();
+  sparks['rp-gdp']=new Chart(cv,{type:'line',data:{labels:yrs,datasets},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{labels:{color:'#94a3b8',font:{size:10},boxWidth:12}},tooltip:{mode:'index',intersect:false,backgroundColor:'rgba(15,23,42,.95)',borderColor:'#334155',borderWidth:1}},scales:{x:{ticks:{color:'#64748b'},grid:{color:'rgba(51,65,85,.4)'}},y:{ticks:{color:'#64748b',callback:v=>v+'% GDP'},grid:{color:'rgba(51,65,85,.4)'},title:{display:true,text:'GDP Growth %',color:'#64748b',font:{size:11}}}}}});
+}
+
+function renderRpCards(isos){
+  const grid=document.getElementById('rp-cards');if(!grid)return;
+  grid.innerHTML='';
+  isos.forEach(iso=>{
+    const c=CTRY[iso];if(!c)return;
+    const card=document.createElement('div');
+    card.className='rp-card'+(c.nextChina?' featured':'');
+    const g=c.pred?c.pred.g:[];
+    const canId='rpc-'+iso;
+    card.innerHTML=`
+<div class="rp-card-hdr">
+  <h3>${c.f} ${c.n}</h3>
+  <span class="rp-badge ${c.nextChina?'badge-next':(c.rising?'badge-rising':'badge-est')}">${c.nextChina?'NEXT CHINA':c.rising?'Rising Star':'Emerging'}</span>
+</div>
+<div class="rp-metrics">
+  <div class="rp-m"><div class="rv" style="color:var(--green)">${c.g}%</div><div class="rl">GDP Growth</div></div>
+  <div class="rp-m"><div class="rv" style="color:var(--cyan)">${c.gdppc>=1000?(c.gdppc/1000).toFixed(0)+'K':c.gdppc}</div><div class="rl">GDP/Cap</div></div>
+  <div class="rp-m"><div class="rv">${c.pop}</div><div class="rl">Population</div></div>
+</div>
+<div style="font-size:10px;color:var(--muted);margin-bottom:4px;">GDP Growth Forecast (10Y)</div>
+<div class="rp-gdp-chart"><canvas id="${canId}"></canvas></div>
+<div class="rp-factors">
+  <strong>⚠ Risks:</strong> ${c.ri.join(', ')}<br>
+  <strong>✓ Opportunities:</strong> ${c.op.join(', ')}<br>
+  <strong>📈 2034 GDP Growth Est:</strong> <span style="color:var(--green);">${g.length?g[g.length-1]:c.g}%</span>
+  ${c.nextChina?`<br><br><strong style="color:#10b981;">🌟 Pakistan is to 2025 what China was to 1990</strong> — massive young population, infrastructure investment, strategic location, and IT-driven export growth creating the conditions for 20–30 years of above-trend expansion.`:''}
+</div>`;
+    grid.appendChild(card);
+    requestAnimationFrame(()=>{
+      const cv=document.getElementById(canId);if(!cv)return;
+      if(sparks[canId])sparks[canId].destroy();
+      const yrs=['25','26','27','28','29','30','31','32','33','34'];
+      const trend=g.length?g[g.length-1]>=g[0]:true;
+      sparks[canId]=new Chart(cv,{type:'line',data:{labels:yrs,datasets:[{data:g,borderColor:trend?'#10b981':'#ef4444',borderWidth:2,fill:true,backgroundColor:trend?'rgba(16,185,129,.12)':'rgba(239,68,68,.12)',pointRadius:2,tension:.4}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{callbacks:{label:ctx=>`${ctx.raw}% GDP growth`}}},scales:{x:{ticks:{color:'#64748b',font:{size:9}},grid:{color:'#1e293b'}},y:{ticks:{color:'#64748b',font:{size:9},callback:v=>v+'%'},grid:{color:'#1e293b'}}},animation:{duration:300}}});
+    });
+  });
 }
 
 // ════════════════════════════════════════

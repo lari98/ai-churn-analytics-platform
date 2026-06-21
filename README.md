@@ -8,7 +8,7 @@
 [![FastAPI](https://img.shields.io/badge/FastAPI-0.111-009688)](https://fastapi.tiangolo.com)
 [![MLflow](https://img.shields.io/badge/MLflow-2.9-orange)](https://mlflow.org)
 [![Azure AI](https://img.shields.io/badge/Azure-AI--102-0078D4)](https://azure.microsoft.com)
-[![Dashboard](https://img.shields.io/badge/Dashboard-v2.3-f59e0b)](./dashboard/world-intelligence.html)
+[![Dashboard](https://img.shields.io/badge/Dashboard-v2.4-f59e0b)](./dashboard/world-intelligence.html)
 [![Leaflet](https://img.shields.io/badge/Leaflet.js-1.9.4-199900)](https://leafletjs.com)
 
 ---
@@ -47,14 +47,15 @@ An **AI-powered customer intelligence and global market analytics platform** bui
 
 ---
 
-## 🆕 What's New — v2.3 World Intelligence Platform
+## 🆕 What's New — v2.4 World Intelligence Platform
 
-> Latest release — commit `d682a33`
+> Latest release
 
 | Version | Release | Highlights |
 |---------|---------|------------|
-| v2.3.1 | Current | **Performance fix** — 5x faster backend: cache-before-fetch, shared HTTP client, parallel news feeds, in-memory cache, startup pre-warm |
-| v2.3 | Previous | World Intelligence Platform — Leaflet map, live markets, forecasts, signals, regional news, FastAPI backend |
+| **v2.4** | **Current** | **🇵🇰 Pakistan added** · 37 countries total · 🌐 World Stocks tab (35 global exchanges, drilldown, 2030/2035/2040 forecasts) · 🌏 Rising Powers tab (Pakistan "Next China" analysis, 10Y GDP charts, succession timeline) · GDP sparkline in every country tooltip · Rising/Next China badges on map |
+| v2.3.1 | Previous | Performance fix — 5x faster backend: cache-before-fetch, shared HTTP client, parallel news feeds, in-memory cache, startup pre-warm |
+| v2.3 | — | World Intelligence Platform — Leaflet map, live markets, forecasts, signals, regional news, FastAPI backend |
 | v2.2 | — | World Risk Intelligence — D3 country risk map, Tech Radar, Innovation Timeline |
 | v2.1 | — | Full HTML dashboard — AI Chat, Scenario Simulator, Journey Timeline, Anomaly Feed, Model Health, GDPR Monitor |
 | v2.0 | — | Advanced HTML dashboard — Executive Overview, Segmentation, Anomaly, Risk |
@@ -82,15 +83,27 @@ A dark-themed, single-page analytics application with 7 sections:
 
 ### World Intelligence Platform — `dashboard/world-intelligence.html`
 
-A live global intelligence platform with 5 tabs:
+A live global intelligence platform with **7 tabs** (v2.4):
 
 | Tab | Description |
 |-----|-------------|
-| 🗺 World Map | Leaflet.js interactive map — CartoDB dark tiles, 22 country risk overlays, zoom in/out, click for full country card (GDP, inflation, risks, opportunities, 10Y forecast) |
+| 🗺 World Map | Leaflet.js interactive map — CartoDB dark tiles, **37 country** risk overlays (inc. 🇵🇰 Pakistan), zoom in/out, click for full country card with **10Y GDP forecast sparkline**, RISING/NEXT CHINA badges |
 | 📈 Markets | 5 asset classes — Metals, Crypto, Currencies, Oil & Gas, Indices. Live prices, RSI signal badges, sparklines, clickable 1D/1W/1M/1Y/5Y/10Y forecast drilldown per asset |
+| 🌐 World Stocks | **35 global stock exchanges** across Americas/Europe/Asia-Pacific/MEA. Each exchange card shows live index value, RSI signal, sparkline, 2030/2035/2040 price forecasts, full 10Y drilldown chart with bull/base/bear scenarios |
+| 🌏 Rising Powers | **Pakistan "Next China" deep analysis** — 8 why-Pakistan factors (CPEC, demographics, IT growth, Gwadar port), economic succession timeline (Britain→USA→China→India→Pakistan), multi-country 10Y GDP growth chart, emerging market comparison table, individual country cards with 10Y forecast charts |
 | 📰 Global News | 7 regional tabs — World, Europe, Americas, Asia, Africa, Oceania, Tech. Live RSS from BBC, DW, Al Jazeera, NPR, ABC Australia, TechCrunch. SQLite-backed news history |
 | 🔮 Forecasts | Full-page chart with asset + horizon selector. Base, bull (+12%), and bear (-12%) scenarios using linear regression extrapolation |
 | ⚡ Invest Signals | RSI-based signals (STRONG BUY / BUY / HOLD / SELL / AVOID) for all tracked assets with rationale and 7-day forecast |
+
+#### v2.4 New Countries (37 total)
+🇩🇪 🇦🇹 🇨🇭 🇺🇸 🇨🇳 🇷🇺 🇬🇧 🇫🇷 🇯🇵 🇮🇳 🇧🇷 🇦🇺 🇺🇦 🇸🇦 🇹🇷 🇳🇬 🇿🇦 🇸🇬 🇰🇷 🇵🇱 🇮🇷 🇰🇵 **🇵🇰 🇻🇳 🇮🇩 🇲🇾 🇹🇭 🇵🇭 🇦🇪 🇪🇬 🇨🇦 🇮🇹 🇪🇸 🇳🇱 🇸🇪 🇦🇷 🇧🇩**
+
+#### Pakistan Highlight — The Next China
+Pakistan (PK) is now fully featured across the platform:
+- **Map**: Visible at [30°N, 70°E] with KSE-100, $70B market cap, GDP forecast, NEXT CHINA badge
+- **Rising Powers**: 8-factor deep-dive analysis comparing Pakistan to China in the 1990s
+- **World Stocks**: KSE-100 featured with 2030: ~130K · 2035: ~280K · 2040: ~600K projection
+- **Key thesis**: 240M population (median age 22) + CPEC $62B + IT exports +25%/yr + Gwadar port + IMF stabilization = 20–30 year above-trend growth window
 
 ---
 
