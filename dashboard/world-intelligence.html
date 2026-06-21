@@ -720,6 +720,7 @@ function makeCard(a){
 </div>
 <span class="sbadge ${d.sig.c}">${d.sig.l}</span>
 <span style="font-size:10px;color:var(--muted);margin-left:8px;">RSI ${d.rsi}</span>
+<div class="data-bar"><span class="rd-badge rd-est">⏳ Estimated</span></div>
 <div class="sparkwrap"><canvas id="${cid}"></canvas></div>
 <div class="tf-sel">${['1D','1W','1M','1Y','5Y','10Y'].map(tf=>`<button class="tfbtn${tf==='1M'?' active':''}" onclick="toggleDrill('${a.sym}','${tf}',event)">${tf}</button>`).join('')}</div>
 <div class="drilldown" id="dd-${a.sym}">
@@ -1291,23 +1292,7 @@ async function enrichMarketsWithRealData(){
   }catch(e){console.warn('Real price enrichment failed:',e);}
 }
 
-// Override makeCard to include data-bar and enrich with real data
-const _origMakeCard = makeCard;
-function makeCard(a){
-  const card = _origMakeCard(a);
-  // Inject data-bar div after the badge
-  const badge = card.querySelector('.sbadge');
-  if(badge){
-    const bar = document.createElement('div');
-    bar.className = 'data-bar';
-    const estBadge = document.createElement('span');
-    estBadge.className = 'rd-badge rd-est';
-    estBadge.textContent = '⏳ Estimated';
-    bar.appendChild(estBadge);
-    badge.parentNode.insertBefore(bar, badge.nextSibling);
-  }
-  return card;
-}
+// data-bar is now built directly into makeCard above — no override needed
 
 // Override drawDrill to try Prophet first, then fall back to linear
 const _origDrawDrill = drawDrill;
