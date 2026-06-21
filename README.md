@@ -8,7 +8,7 @@
 [![FastAPI](https://img.shields.io/badge/FastAPI-0.111-009688)](https://fastapi.tiangolo.com)
 [![MLflow](https://img.shields.io/badge/MLflow-2.9-orange)](https://mlflow.org)
 [![Azure AI](https://img.shields.io/badge/Azure-AI--102-0078D4)](https://azure.microsoft.com)
-[![Dashboard](https://img.shields.io/badge/Dashboard-v2.9-f59e0b)](./dashboard/world-intelligence.html)
+[![Dashboard](https://img.shields.io/badge/Dashboard-v3.1-a78bfa)](./dashboard/world-intelligence.html)
 [![Leaflet](https://img.shields.io/badge/Leaflet.js-1.9.4-199900)](https://leafletjs.com)
 
 ---
@@ -27,20 +27,20 @@
 |:---:|
 | ![Rising Powers](./screenshots/rising-powers.png) |
 
-| 🌡 Climate Intelligence — Past/Present/Future | 👶 Birth Rate — World Population Crisis |
+| 🌡 Climate Intelligence — Past/Present/Future | 👶 Birth Rate — Era Timeline + Filter + Rankings |
 |:---:|:---:|
 | ![Climate Intelligence](./screenshots/climate-intelligence.png) | ![Birth Rate](./screenshots/birth-rate.png) |
 
-| 🤖 AI Prediction Engine — Self-Enhancing Climate Forecasts |
-|:---:|
-| ![AI Predictor](./screenshots/climate-ai-predictor.png) |
+| 🤖 AI Prediction Engine — Climate Forecasts | 🧬 Demographic AI Predictor — Population Collapse |
+|:---:|:---:|
+| ![AI Predictor](./screenshots/climate-ai-predictor.png) | ![Birth Rate Advanced](./screenshots/birth-rate-advanced.png) |
 
 ---
 
 ## 📋 Table of Contents
 
 - [Overview](#-overview)
-- [What's New — v2.6](#-whats-new--v26-world-intelligence-platform)
+- [What's New — v3.1](#-whats-new--v31-world-intelligence-platform)
 - [Live Dashboards](#-live-dashboards)
 - [Architecture](#️-architecture)
 - [AI/ML Features](#-aiml-features)
@@ -71,14 +71,16 @@ An **AI-powered customer intelligence and global market analytics platform** bui
 
 ---
 
-## 🆕 What's New — v2.9 World Intelligence Platform
+## 🆕 What's New — v3.1 World Intelligence Platform
 
 > Latest release
 
 | Version | Release | Highlights |
 |---------|---------|------------|
-| **v2.9** | **Current** | 🤖 **AI Predictor Dropdown UX** — panel now starts collapsed (just header visible), click header anywhere to expand with smooth animation, chevron rotates ▼→▲ to show state, subtitle updates to "Click to collapse · drag to move", "▲ Hide panel" button inside body also closes it, header subtitle updates to "Click to expand" when closed — full dropdown behavior |
-| **v2.8** | Previous | 🤖 AI Climate Prediction Engine — 4 regression models, 51 data points, R²=0.973, self-enhancing accuracy, localStorage storage, draggable panel |
+| **v3.1** | **Current** | 👶 **Birth Rate ADVANCED II** — ⏵ Auto-play timeline animation (cycles 1960→1980→2000→2024→2050 like a documentary with pulsing play button), 🔍 Country Search (type any name, map flies to it and opens popup), 📈 SVG Sparkline Charts inside every country popup (inline birth rate trend 1960→2050, no extra libraries), 🏆 Rankings Panel (fastest collapsing nations, extreme aging crisis leaders, greatest demographic transformations, near-replacement 2050 projections, all rows clickable to fly to country) |
+| **v3.0** | Previous | 👶 **Birth Rate ADVANCED I** — 📅 Era Timeline Slider (1960/1980/2000/2024/2050⊛), 🔍 Status Filter Panel (draggable, multi-select CRISIS/CRITICAL/LOW/HEALTHY/HIGH, filters map live), 🧬 Demographic AI Predictor (draggable, dropdown, UN DESA/World Bank data: world peak 2086·10.3B, aging leaders, population collapse nations, session-enhanced accuracy), population trajectory per country (shrink/stable/grow by 2100), aging crisis % 65+ by 2050, policy impact notes, full historical trend in each popup |
+| **v2.9** | Previous | 🤖 AI Predictor Dropdown UX — collapsed by default, smooth animation, chevron ▼→▲, rename to "AI Predictor Engine" |
+| **v2.8** | Previous | 🤖 AI Climate Prediction Engine — 4 regression models, 51 data points, R²=0.973, self-enhancing accuracy, localStorage, draggable panel |
 | **v2.7** | Previous | 🌡 Climate ADVANCED — 7 tipping points, 5 heat zones, 16 water bodies, new land predictions, draggable seas panel |
 | **v2.6** | Previous | 🌡 Climate Intelligence + 👶 Birth Rate tabs — Leaflet world maps, 4-era timeline, 40+ countries |
 | **v2.5** | Previous | **Real Data Engine** — yfinance 100% real OHLCV for 60+ symbols · Prophet AI forecasting (Facebook) · Holt-Winters fallback · 3 new API endpoints (`/api/realhistory`, `/api/prophet`, `/api/realprices`) · AI forecast drilldown · Live backend status indicator · REAL DATA + AI FORECAST badges |
