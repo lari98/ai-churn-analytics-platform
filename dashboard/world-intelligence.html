@@ -196,6 +196,7 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:'Segoe 
 .rd-real{background:#064e3b;color:#6ee7b7;border:1px solid #065f46;}
 .rd-ai{background:#1e1b4b;color:#a5b4fc;border:1px solid #312e81;}
 .rd-est{background:#1c1917;color:#78716c;border:1px solid #292524;}
+.rd-live{background:#064e3b;color:#6ee7b7;border:1px solid #065f46;}
 .data-bar{display:flex;align-items:center;gap:6px;margin:4px 0 6px;}
 #backend-status{position:fixed;bottom:32px;right:12px;z-index:2000;font-size:10px;font-weight:700;padding:3px 10px;border-radius:6px;pointer-events:none;transition:opacity .5s;}
 .bs-live{background:#064e3b;color:#6ee7b7;border:1px solid #065f46;}
@@ -309,7 +310,7 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:'Segoe 
 <div id="topbar">
   <a href="index.html">← Dashboard</a>
   <span class="title">🌍 World Intelligence Platform</span>
-  <span class="badge">v3.1</span>
+  <span class="badge">v3.2</span>
   <div style="display:flex;align-items:center;gap:6px;margin-left:auto;margin-right:16px;">
     <div class="live-dot"></div><span style="font-size:11px;color:var(--muted);">Live</span>
   </div>
@@ -1017,13 +1018,79 @@ async function fetchFX(){
   }catch(e){console.warn('FX API fallback');}
 }
 
+// ── v3.2: implement enrichMarketsWithRealData (was called but never defined) ──
+async function enrichMarketsWithRealData(){
+  // Phase 1: fetch backend data for metals, oil, indices
+  const endpoints=[
+    [BACKEND+'/metals',  'metals'],
+    [BACKEND+'/oil',     'oil'],
+    [BACKEND+'/indices', 'indices'],
+  ];
+  for(const [url] of endpoints){
+    try{
+      const r=await fetch(url,{signal:AbortSignal.timeout(10000)});
+      if(!r.ok) continue;
+      const data=await r.json();
+      // data shape: {SYM:{price,change,history}, ...}
+      Object.entries(data).forEach(([sym,d])=>{
+        if(!d||d.price==null) return;
+        const hist=d.history&&d.history.length?d.history:(mktData[sym]?.history||[]);
+        const rsi=calcRsi(hist);
+        const ch=+(d.change||0).toFixed(2);
+        const sig=sigFromRsi(rsi,ch);
+        mktData[sym]=Object.assign(mktData[sym]||{},{price:d.price,change:ch,history:hist,rsi,sig});
+        refreshMarketCard(sym);
+      });
+    }catch(e){/* network/timeout — keep estimated */}
+  }
+  // Phase 2: flip crypto/fx badges — data already real from fetchCrypto/fetchFX
+  ['crypto','fx'].forEach(cat=>{
+    (ADEFS[cat]||[]).forEach(a=>{
+      const d=mktData[a.sym];
+      if(d&&d.price!=null&&d.price!==a.b){
+        // recompute rsi/sig from seeded history
+        if(!d.rsi&&d.history) d.rsi=calcRsi(d.history);
+        if(!d.sig) d.sig=sigFromRsi(d.rsi||50,d.change||0);
+        refreshMarketCard(a.sym);
+      }
+    });
+  });
+}
+
+function refreshMarketCard(sym){
+  const card=document.getElementById('card-'+sym);
+  if(!card) return;
+  const d=mktData[sym];
+  if(!d||d.price==null) return;
+  const pos=(d.change||0)>=0;
+  // price
+  const pEl=card.querySelector('.ac-price .val');
+  if(pEl) pEl.textContent=fmt(d.price,sym);
+  // change %
+  const cEl=card.querySelector('.ac-price .chg');
+  if(cEl){cEl.textContent=(pos?'▲':'▼')+' '+Math.abs(d.change||0)+'%';cEl.className='chg '+(pos?'pos':'neg');}
+  // signal badge
+  const sig=d.sig||sigFromRsi(d.rsi||50,d.change||0);
+  const sbEl=card.querySelector('.sbadge');
+  if(sbEl){sbEl.textContent=sig.l;sbEl.className='sbadge '+sig.c;}
+  // RSI
+  const rsiEl=card.querySelector('.rsi-val');
+  if(rsiEl) rsiEl.textContent='RSI '+(d.rsi||calcRsi(d.history||[]));
+  // flip Estimated → Live
+  const bEl=card.querySelector('.rd-badge');
+  if(bEl){bEl.className='rd-badge rd-live';bEl.textContent='🟢 Live';}
+  // redraw sparkline
+  if(d.history&&d.history.length>1) drawSpark('sp-'+sym,d.history,pos);
+}
+// ── end v3.2 ────────────────────────────────────────────────────────────────
+
 async function initMarkets(){
   await Promise.allSettled([fetchCrypto(),fetchFX()]);
   ['metals','crypto','fx','oil','indices'].forEach(cat=>{
     ADEFS[cat].forEach(a=>seedAsset(a));
     renderMktSection(cat);
   });
-  // v2.5: enrich with 100% real data from backend (non-blocking)
+  // v3.2: enrichMarketsWithRealData now properly defined above
   enrichMarketsWithRealData().catch(()=>{});
 }
 
@@ -1045,7 +1112,7 @@ function makeCard(a){
   <div class="ac-price"><div class="val">${fmt(d.price,a.sym)}</div><div class="chg ${pos?'pos':'neg'}">${pos?'▲':'▼'} ${Math.abs(d.change)}%</div></div>
 </div>
 <span class="sbadge ${d.sig.c}">${d.sig.l}</span>
-<span style="font-size:10px;color:var(--muted);margin-left:8px;">RSI ${d.rsi}</span>
+<span class="rsi-val" style="font-size:10px;color:var(--muted);margin-left:8px;">RSI ${d.rsi}</span>
 <div class="data-bar"><span class="rd-badge rd-est">⏳ Estimated</span></div>
 <div class="sparkwrap"><canvas id="${cid}"></canvas></div>
 <div class="tf-sel">${['1D','1W','1M','1Y','5Y','10Y'].map(tf=>`<button class="tfbtn${tf==='1M'?' active':''}" onclick="toggleDrill('${a.sym}','${tf}',event)">${tf}</button>`).join('')}</div>
