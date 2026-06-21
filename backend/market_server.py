@@ -16,6 +16,14 @@ History TTL:  1 hour  (yfinance rate-limited; in-memory after first fetch)
 
 Run: python market_server.py  OR  double-click start_server.bat
 """
+import sys
+# Force UTF-8 output so Unicode box-drawing chars / emoji don't crash
+# on Windows terminals that default to CP1252
+if hasattr(sys.stdout, "reconfigure"):
+    sys.stdout.reconfigure(encoding="utf-8", errors="replace")
+if hasattr(sys.stderr, "reconfigure"):
+    sys.stderr.reconfigure(encoding="utf-8", errors="replace")
+
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from contextlib import asynccontextmanager

@@ -21,6 +21,12 @@ import subprocess, time, os, sys, logging, json
 from pathlib import Path
 from datetime import datetime
 
+# Force UTF-8 on Windows CP1252 consoles so emoji/box-chars don't crash
+if hasattr(sys.stdout, "reconfigure"):
+    sys.stdout.reconfigure(encoding="utf-8", errors="replace")
+if hasattr(sys.stderr, "reconfigure"):
+    sys.stderr.reconfigure(encoding="utf-8", errors="replace")
+
 # ─── CONFIG ─────────────────────────────────────────────────────────────────
 BACKEND_URL      = "http://localhost:8111/api/health"
 SERVER_SCRIPT    = Path(__file__).parent / "market_server.py"
@@ -185,9 +191,12 @@ class WatchdogAgent:
         # Clear the port first — prevents Errno 10048 if old server is still up
         self._kill_port(8111)
         log.info(f"▶ Starting server (total starts: {self.restart_count + 1})…")
+        env = os.environ.copy()
+        env["PYTHONIOENCODING"] = "utf-8"   # prevent CP1252 crash in child
         self.server_proc = subprocess.Popen(
             [sys.executable, str(SERVER_SCRIPT)],
             cwd=str(SERVER_SCRIPT.parent),
+            env=env,
             creationflags=subprocess.CREATE_NEW_PROCESS_GROUP
             if sys.platform == "win32" else 0
         )
