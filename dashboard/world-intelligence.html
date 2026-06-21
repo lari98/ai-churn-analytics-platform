@@ -202,7 +202,7 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:'Segoe 
 .bs-live{background:#064e3b;color:#6ee7b7;border:1px solid #065f46;}
 .bs-off{background:#1c1917;color:#78716c;border:1px solid #292524;}
 /* ══════════════ ENVIRONMENT INTELLIGENCE v3.3 ══════════════ */
-#page-environment{padding:16px;overflow-y:auto;height:calc(100vh - 100px);}
+#page-environment{padding:16px;}
 .env-kpi-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(155px,1fr));gap:10px;margin-bottom:16px;}
 .env-kpi{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:13px 15px;position:relative;overflow:hidden;transition:transform .2s;}
 .env-kpi:hover{transform:translateY(-2px);}
@@ -355,7 +355,7 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:'Segoe 
 <div id="topbar">
   <a href="index.html">← Dashboard</a>
   <span class="title">🌍 World Intelligence Platform</span>
-  <span class="badge">v3.3</span>
+  <span class="badge">v3.3.1</span>
   <div style="display:flex;align-items:center;gap:6px;margin-left:auto;margin-right:16px;">
     <div class="live-dot"></div><span style="font-size:11px;color:var(--muted);">Live</span>
   </div>
@@ -708,7 +708,6 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:'Segoe 
     </div>
   </div>
 
-</div>
 
   <!-- ══════════════ ENVIRONMENT INTELLIGENCE v3.3 ══════════════ -->
   <div class="page" id="page-environment">
@@ -835,6 +834,8 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:'Segoe 
 
   </div>
   <!-- ══════════════ END ENVIRONMENT ══════════════ -->
+
+</div><!-- /#pages -->
 
 <div id="backend-status" class="bs-off">⏳ Checking backend…</div>
 
