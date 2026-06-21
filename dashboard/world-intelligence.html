@@ -2186,31 +2186,57 @@ function togglePredPanel(){
 }
 
 // ════════════════════════════════════════
-// DRAGGABLE PANELS
+// DRAGGABLE PANELS  (boundary-constrained)
 // ════════════════════════════════════════
 function makeDraggable(el){
   if(!el) return;
-  let ox=0,oy=0,mx=0,my=0;
+  let startMouseX=0, startMouseY=0, startElLeft=0, startElTop=0;
+
   el.addEventListener('mousedown',e=>{
+    // Don't drag when clicking buttons or links inside the panel
     if(e.target.tagName==='BUTTON'||e.target.tagName==='A') return;
     e.preventDefault();
-    mx=e.clientX; my=e.clientY;
-    const r=el.getBoundingClientRect();
-    // Switch from right-based to left-based positioning for free movement
+
+    const parent=el.offsetParent||el.parentElement;
+    const pr=parent.getBoundingClientRect();
+    const er=el.getBoundingClientRect();
+
+    // Convert current position to left/top inside parent (same coordinate space)
     el.style.right='auto';
-    el.style.left=r.left+'px';
-    el.style.top=r.top+'px';
-    document.addEventListener('mousemove',drag);
-    document.addEventListener('mouseup',stopDrag,{once:true});
+    el.style.bottom='auto';
+    el.style.left=(er.left-pr.left)+'px';
+    el.style.top=(er.top-pr.top)+'px';
+
+    startMouseX=e.clientX;
+    startMouseY=e.clientY;
+    startElLeft=parseFloat(el.style.left);
+    startElTop=parseFloat(el.style.top);
+
+    document.addEventListener('mousemove',onDrag);
+    document.addEventListener('mouseup',onStop,{once:true});
   });
-  function drag(e){
-    ox=mx-e.clientX; oy=my-e.clientY;
-    mx=e.clientX; my=e.clientY;
-    el.style.top=(el.offsetTop-oy)+'px';
-    el.style.left=(el.offsetLeft-ox)+'px';
+
+  function onDrag(e){
+    const parent=el.offsetParent||el.parentElement;
+    const pw=parent.clientWidth;
+    const ph=parent.clientHeight;
+    const ew=el.offsetWidth;
+    const eh=el.offsetHeight;
+
+    let newLeft=startElLeft+(e.clientX-startMouseX);
+    let newTop =startElTop +(e.clientY-startMouseY);
+
+    // Clamp so panel stays fully inside parent box
+    newLeft=Math.max(0, Math.min(newLeft, pw-ew));
+    newTop =Math.max(0, Math.min(newTop,  ph-eh));
+
+    el.style.left=newLeft+'px';
+    el.style.top =newTop+'px';
   }
-  function stopDrag(){ document.removeEventListener('mousemove',drag); }
+
+  function onStop(){ document.removeEventListener('mousemove',onDrag); }
 }
+
 document.addEventListener('DOMContentLoaded',()=>{
   makeDraggable(document.getElementById('seasPanel'));
   makeDraggable(document.getElementById('predPanel'));
