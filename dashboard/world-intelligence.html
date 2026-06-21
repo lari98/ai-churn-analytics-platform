@@ -676,7 +676,10 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:'Segoe 
 // ════════════════════════════════════════
 // STATE
 // ════════════════════════════════════════
-const BACKEND='http://localhost:8111/api';
+// Auto-detect: localhost → local backend, any other host → Render deployment
+const BACKEND = (window.location.hostname==='localhost'||window.location.hostname==='127.0.0.1')
+  ? 'http://localhost:8111/api'
+  : 'https://world-intelligence-backend.onrender.com/api';
 const RSS2JSON='https://api.rss2json.com/v1/api.json?rss_url=';
 const mktData={};
 const newsCache={};

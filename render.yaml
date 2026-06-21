@@ -1,0 +1,11 @@
+services:
+  - type: web
+    name: world-intelligence-backend
+    runtime: python
+    rootDir: backend
+    buildCommand: pip install -r requirements.txt
+    startCommand: python market_server.py
+    plan: free
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.11.0

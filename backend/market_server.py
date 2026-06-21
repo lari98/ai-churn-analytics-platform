@@ -1013,4 +1013,5 @@ if __name__ == "__main__":
     print(f"  Holt-Winters:  {hw_s}")
     print(f"  Linear Reg:    OK: always available (fallback)")
     print("=" * 62)
-    uvicorn.run(app, host="0.0.0.0", port=8111, reload=False)
+    port = int(os.environ.get("PORT", 8111))   # Render injects PORT; local falls back to 8111
+    uvicorn.run(app, host="0.0.0.0", port=port, reload=False)
