@@ -13,6 +13,22 @@
 
 ---
 
+![World Intelligence Platform Banner](./screenshots/banner.png)
+
+---
+
+## 🖼 Platform Screenshots
+
+| World Map — 37 Countries | Markets — Real-Time Crypto |
+|:---:|:---:|
+| ![World Map](./screenshots/world-map.png) | ![Markets](./screenshots/markets.png) |
+
+| Rising Powers — Pakistan Next China Analysis |
+|:---:|
+| ![Rising Powers](./screenshots/rising-powers.png) |
+
+---
+
 ## 📋 Table of Contents
 
 - [Overview](#-overview)
