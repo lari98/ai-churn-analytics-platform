@@ -128,34 +128,54 @@ class WatchdogAgent:
         """
         try:
             if sys.platform == "win32":
-                # netstat shows PID for each listening port on Windows
+                # Use shell=True + findstr — most reliable on Windows
                 r = subprocess.run(
-                    ["netstat", "-ano", "-p", "TCP"],
-                    capture_output=True, text=True
+                    f"netstat -ano | findstr :{port}",
+                    shell=True, capture_output=True, text=True
                 )
+                killed = set()
                 for line in r.stdout.splitlines():
-                    if f":{port}" in line and ("LISTENING" in line or "ESTABLISHED" in line):
-                        parts = line.strip().split()
+                    parts = line.strip().split()
+                    # Line format: Proto  Local  Foreign  State  PID
+                    # We want lines where local address ends in :port
+                    if len(parts) < 5:
+                        continue
+                    local = parts[1]
+                    if not local.endswith(f":{port}"):
+                        continue
+                    try:
                         pid = int(parts[-1])
-                        if pid and pid != os.getpid():
-                            log.warning(f"  Port {port} occupied by PID {pid} — killing it.")
-                            subprocess.run(
-                                ["taskkill", "/F", "/PID", str(pid)],
-                                capture_output=True
-                            )
-                            time.sleep(1)
+                    except ValueError:
+                        continue
+                    if pid <= 0 or pid == os.getpid() or pid in killed:
+                        continue
+                    log.warning(f"  Port {port} held by PID {pid} — terminating.")
+                    subprocess.run(
+                        ["taskkill", "/F", "/PID", str(pid)],
+                        capture_output=True
+                    )
+                    killed.add(pid)
+                if killed:
+                    time.sleep(2)  # let the OS release the port
+                    log.info(f"  Port {port} cleared (killed PIDs: {killed})")
             else:
-                # Linux/Mac: use lsof
+                # Linux/Mac: lsof
                 r = subprocess.run(
                     ["lsof", "-ti", f":{port}"],
                     capture_output=True, text=True
                 )
+                killed = set()
                 for pid_str in r.stdout.strip().splitlines():
-                    pid = int(pid_str.strip())
-                    if pid != os.getpid():
-                        log.warning(f"  Port {port} occupied by PID {pid} — killing it.")
+                    try:
+                        pid = int(pid_str.strip())
+                    except ValueError:
+                        continue
+                    if pid != os.getpid() and pid not in killed:
+                        log.warning(f"  Port {port} held by PID {pid} — terminating.")
                         subprocess.run(["kill", "-9", str(pid)], capture_output=True)
-                        time.sleep(1)
+                        killed.add(pid)
+                if killed:
+                    time.sleep(1)
         except Exception as e:
             log.warning(f"  _kill_port({port}) error (non-fatal): {e}")
 
