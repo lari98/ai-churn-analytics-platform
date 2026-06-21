@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>World Intelligence Platform v2.8</title>
+<title>World Intelligence Platform v2.9</title>
 <!-- Leaflet -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css"/>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
@@ -221,10 +221,16 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:'Segoe 
 .seas-drag-hint{font-size:9px;color:#4b5563;margin-left:6px;}
 .seas-panel:active{box-shadow:0 0 0 2px var(--red);}
 /* PREDICTOR ENGINE PANEL */
-.pred-panel{position:absolute;bottom:100px;right:12px;z-index:1002;background:rgba(10,15,30,.97);border:1px solid #22d3ee;border-radius:10px;padding:12px;width:252px;cursor:move;user-select:none;box-shadow:0 0 18px rgba(34,211,238,.18);}
-.pred-panel-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;border-bottom:1px solid #164e63;padding-bottom:6px;}
+.pred-panel{position:absolute;bottom:100px;right:12px;z-index:1002;background:rgba(10,15,30,.97);border:1px solid #22d3ee;border-radius:10px;padding:0;width:258px;cursor:move;user-select:none;box-shadow:0 0 18px rgba(34,211,238,.22);overflow:hidden;}
+.pred-panel-hdr{display:flex;align-items:center;justify-content:space-between;padding:10px 12px;cursor:pointer;border-bottom:1px solid transparent;transition:border-color .25s;}
+.pred-panel-hdr:hover{background:rgba(34,211,238,.06);}
+.pred-panel-hdr.open{border-bottom-color:#164e63;}
 .pred-title{font-size:11px;font-weight:700;color:#22d3ee;letter-spacing:.5px;}
 .pred-badge{font-size:9px;background:#164e63;color:#67e8f9;border-radius:4px;padding:2px 6px;font-weight:700;}
+.pred-chevron{font-size:11px;color:#22d3ee;margin-left:6px;transition:transform .3s;display:inline-block;}
+.pred-chevron.open{transform:rotate(180deg);}
+.pred-body{padding:0 12px;max-height:0;overflow:hidden;transition:max-height .4s ease, padding .3s ease;}
+.pred-body.open{max-height:800px;padding:10px 12px 12px;}
 .pred-row{display:flex;justify-content:space-between;align-items:center;font-size:10px;margin-bottom:4px;padding:3px 0;border-bottom:1px solid #0f172a;}
 .pred-label{color:#94a3b8;}
 .pred-val{font-weight:700;color:#22d3ee;}
@@ -235,8 +241,8 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:'Segoe 
 .acc-bar-wrap{height:6px;background:#1e293b;border-radius:3px;margin-top:4px;overflow:hidden;}
 .acc-bar{height:100%;border-radius:3px;background:linear-gradient(90deg,#22d3ee,#4ade80);transition:width 1.2s ease;}
 .pred-model-info{margin-top:6px;font-size:9px;color:#4b5563;line-height:1.5;}
-.pred-toggle{font-size:9px;color:#22d3ee;cursor:pointer;background:none;border:none;padding:0;}
-.pred-body{transition:all .3s;}
+.pred-hide-btn{font-size:9px;color:#64748b;background:none;border:none;padding:2px 6px;cursor:pointer;border-radius:3px;transition:color .2s;}
+.pred-hide-btn:hover{color:#22d3ee;}
 </style>
 </head>
 <body>
@@ -244,7 +250,7 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:'Segoe 
 <div id="topbar">
   <a href="index.html">← Dashboard</a>
   <span class="title">🌍 World Intelligence Platform</span>
-  <span class="badge">v2.8</span>
+  <span class="badge">v2.9</span>
   <div style="display:flex;align-items:center;gap:6px;margin-left:auto;margin-right:16px;">
     <div class="live-dot"></div><span style="font-size:11px;color:var(--muted);">Live</span>
   </div>
@@ -450,14 +456,16 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:'Segoe 
 
       <!-- AI PREDICTOR ENGINE PANEL -->
       <div class="pred-panel" id="predPanel">
-        <div class="pred-panel-hdr">
-          <div>
-            <div class="pred-title">🤖 AI Prediction Engine</div>
-            <div style="font-size:9px;color:#4b5563;margin-top:1px;">IPCC AR6 · NASA · NOAA data</div>
+        <div class="pred-panel-hdr" id="predHdr" onclick="togglePredPanel()">
+          <div style="display:flex;align-items:center;gap:7px;">
+            <span class="pred-chevron" id="predChevron">▼</span>
+            <div>
+              <div class="pred-title">🤖 AI Prediction Engine</div>
+              <div style="font-size:9px;color:#4b5563;margin-top:1px;">Click to expand · IPCC AR6 · NASA · NOAA</div>
+            </div>
           </div>
           <div style="display:flex;gap:5px;align-items:center;">
             <span class="pred-badge" id="predSessionBadge">Session #1</span>
-            <button class="pred-toggle" onclick="togglePredPanel(this)">▲ hide</button>
           </div>
         </div>
         <div class="pred-body" id="predBody">
@@ -489,6 +497,9 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:'Segoe 
           </div>
           <div class="pred-model-info" id="predModelInfo">
             Initialising prediction engine…
+          </div>
+          <div style="margin-top:8px;text-align:right;">
+            <button class="pred-hide-btn" onclick="event.stopPropagation();togglePredPanel()">▲ Hide panel</button>
           </div>
         </div>
       </div>
@@ -1556,7 +1567,7 @@ function toggleDrill(sym, tf, ev){
 }
 
 // ════════════════════════════════════════
-// CLIMATE INTELLIGENCE  v2.8
+// CLIMATE INTELLIGENCE  v2.9
 // ════════════════════════════════════════
 let climateMap=null, climateTL=null, climateMarkers=[];
 let birthMap=null, birthTL=null;
@@ -1828,7 +1839,7 @@ function renderHeatZones(){
 }
 
 // ════════════════════════════════════════
-// BIRTH RATE INTELLIGENCE  v2.8
+// BIRTH RATE INTELLIGENCE  v2.9
 // ════════════════════════════════════════
 const BIRTH={
   KR:{n:'South Korea',ll:[35.91,127.77],rate:0.72,col:'#7f00ff',status:'CRISIS',trend:'↓ Falling',
@@ -1941,7 +1952,7 @@ function setBirthLayer(type, btn){
 }
 
 // ════════════════════════════════════════
-// AI CLIMATE PREDICTION ENGINE  v2.8
+// AI CLIMATE PREDICTION ENGINE  v2.9
 // ════════════════════════════════════════
 class ClimatePredictor {
   constructor(){
@@ -2154,11 +2165,24 @@ function updatePredPanel(){
     `<span style="color:#4ade80;">+${Math.min(5.5,(R.sessions*0.15)).toFixed(2)}% session boost</span>`;
 }
 
-function togglePredPanel(btn){
+function togglePredPanel(){
   const body=document.getElementById('predBody');
-  const hidden=body.style.display==='none';
-  body.style.display=hidden?'':'none';
-  btn.textContent=hidden?'▲ hide':'▼ show';
+  const hdr=document.getElementById('predHdr');
+  const chev=document.getElementById('predChevron');
+  const isOpen=body.classList.contains('open');
+  if(isOpen){
+    body.classList.remove('open');
+    hdr.classList.remove('open');
+    chev.classList.remove('open');
+    chev.textContent='▼';
+    hdr.querySelector('div div:last-child').textContent='Click to expand · IPCC AR6 · NASA · NOAA';
+  } else {
+    body.classList.add('open');
+    hdr.classList.add('open');
+    chev.classList.add('open');
+    chev.textContent='▲';
+    hdr.querySelector('div div:last-child').textContent='Click to collapse · drag to move';
+  }
 }
 
 // ════════════════════════════════════════

@@ -8,7 +8,7 @@
 [![FastAPI](https://img.shields.io/badge/FastAPI-0.111-009688)](https://fastapi.tiangolo.com)
 [![MLflow](https://img.shields.io/badge/MLflow-2.9-orange)](https://mlflow.org)
 [![Azure AI](https://img.shields.io/badge/Azure-AI--102-0078D4)](https://azure.microsoft.com)
-[![Dashboard](https://img.shields.io/badge/Dashboard-v2.8-f59e0b)](./dashboard/world-intelligence.html)
+[![Dashboard](https://img.shields.io/badge/Dashboard-v2.9-f59e0b)](./dashboard/world-intelligence.html)
 [![Leaflet](https://img.shields.io/badge/Leaflet.js-1.9.4-199900)](https://leafletjs.com)
 
 ---
@@ -71,13 +71,14 @@ An **AI-powered customer intelligence and global market analytics platform** bui
 
 ---
 
-## 🆕 What's New — v2.8 World Intelligence Platform
+## 🆕 What's New — v2.9 World Intelligence Platform
 
 > Latest release
 
 | Version | Release | Highlights |
 |---------|---------|------------|
-| **v2.8** | **Current** | 🤖 **AI Climate Prediction Engine** — self-enhancing predictor built on 4 real regression models (TempTrend/SeaLevel/CO₂/ArcticIce) using 51 verified IPCC AR6 · NASA GISS · NOAA · NSIDC data points · Linear regression with R²=0.973 · Accuracy grows every session (session bonus +0.15%/visit) · Projects: Temp 2030/2050/2100, sea level rise, CO₂ ppm, Arctic ice-free year, AMOC collapse risk, 1.5°C/2.0°C breach years, Amazon tipping point, Dead Sea timeline, Himalayan glacier 50% loss · Stored in localStorage (zero performance impact) · Draggable panel · Standard+Satellite+Gelände all restored |
+| **v2.9** | **Current** | 🤖 **AI Predictor Dropdown UX** — panel now starts collapsed (just header visible), click header anywhere to expand with smooth animation, chevron rotates ▼→▲ to show state, subtitle updates to "Click to collapse · drag to move", "▲ Hide panel" button inside body also closes it, header subtitle updates to "Click to expand" when closed — full dropdown behavior |
+| **v2.8** | Previous | 🤖 AI Climate Prediction Engine — 4 regression models, 51 data points, R²=0.973, self-enhancing accuracy, localStorage storage, draggable panel |
 | **v2.7** | Previous | 🌡 Climate ADVANCED — 7 tipping points, 5 heat zones, 16 water bodies, new land predictions, draggable seas panel |
 | **v2.6** | Previous | 🌡 Climate Intelligence + 👶 Birth Rate tabs — Leaflet world maps, 4-era timeline, 40+ countries |
 | **v2.5** | Previous | **Real Data Engine** — yfinance 100% real OHLCV for 60+ symbols · Prophet AI forecasting (Facebook) · Holt-Winters fallback · 3 new API endpoints (`/api/realhistory`, `/api/prophet`, `/api/realprices`) · AI forecast drilldown · Live backend status indicator · REAL DATA + AI FORECAST badges |
