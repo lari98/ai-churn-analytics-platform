@@ -1642,50 +1642,7 @@ async function fetchProphetForecast(sym, horizon='1M'){
   }catch(e){ return null; }
 }
 
-// Enrich all market cards with real data (called after initMarkets)
-async function enrichMarketsWithRealData(){
-  if(!backendAlive) return;
-  const allAssets = [...ADEFS.metals,...ADEFS.crypto,...ADEFS.fx,...ADEFS.oil,...ADEFS.indices];
-  // Batch: fetch real prices for all symbols concurrently
-  const syms = allAssets.map(a=>a.sym);
-  try{
-    const url = `${BACKEND}/realprices?symbols=${syms.join(',')}`;
-    const r = await fetch(url, {signal:AbortSignal.timeout(15000)});
-    if(!r.ok) return;
-    const data = await r.json();
-    // Update mktData and refresh cards
-    Object.entries(data).forEach(([sym, d])=>{
-      if(!d || !d.price) return;
-      if(!mktData[sym]) mktData[sym]={};
-      mktData[sym].price       = d.price;
-      mktData[sym].change      = d.change ?? 0;
-      mktData[sym].realData    = true;
-      mktData[sym].dataSource  = d.data_source || 'real';
-      const pos = d.change >= 0;
-      // Update price display in existing card
-      const valEl = document.querySelector(`#card-${sym} .val`);
-      const chgEl = document.querySelector(`#card-${sym} .chg`);
-      if(valEl) valEl.textContent = fmt(d.price, sym);
-      if(chgEl){
-        chgEl.textContent = `${pos?'▲':'▼'} ${Math.abs(d.change).toFixed(2)}%`;
-        chgEl.className = `chg ${pos?'pos':'neg'}`;
-      }
-      // Add real data badge if not already there
-      const badge = document.querySelector(`#card-${sym} .rd-badge`);
-      if(!badge){
-        const dataBar = document.querySelector(`#card-${sym} .data-bar`);
-        if(dataBar){
-          const b = document.createElement('span');
-          b.className='rd-badge rd-real';b.textContent='✓ REAL DATA';
-          dataBar.appendChild(b);
-        }
-      }
-    });
-    console.log(`Real prices loaded for ${Object.keys(data).length} symbols`);
-  }catch(e){console.warn('Real price enrichment failed:',e);}
-}
-
-// data-bar is now built directly into makeCard above — no override needed
+// enrichMarketsWithRealData defined earlier (v3.2) — old /realprices stub removed
 
 // Override drawDrill to try Prophet first, then fall back to linear
 const _origDrawDrill = drawDrill;
