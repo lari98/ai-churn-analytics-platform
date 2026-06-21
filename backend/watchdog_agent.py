@@ -120,9 +120,50 @@ class WatchdogAgent:
         except Exception:
             return False
 
+    def _kill_port(self, port: int = 8111):
+        """
+        Kill any existing process already bound to our port.
+        Handles the case where the server was started manually before
+        the watchdog launched — prevents Errno 10048 (port in use).
+        """
+        try:
+            if sys.platform == "win32":
+                # netstat shows PID for each listening port on Windows
+                r = subprocess.run(
+                    ["netstat", "-ano", "-p", "TCP"],
+                    capture_output=True, text=True
+                )
+                for line in r.stdout.splitlines():
+                    if f":{port}" in line and ("LISTENING" in line or "ESTABLISHED" in line):
+                        parts = line.strip().split()
+                        pid = int(parts[-1])
+                        if pid and pid != os.getpid():
+                            log.warning(f"  Port {port} occupied by PID {pid} — killing it.")
+                            subprocess.run(
+                                ["taskkill", "/F", "/PID", str(pid)],
+                                capture_output=True
+                            )
+                            time.sleep(1)
+            else:
+                # Linux/Mac: use lsof
+                r = subprocess.run(
+                    ["lsof", "-ti", f":{port}"],
+                    capture_output=True, text=True
+                )
+                for pid_str in r.stdout.strip().splitlines():
+                    pid = int(pid_str.strip())
+                    if pid != os.getpid():
+                        log.warning(f"  Port {port} occupied by PID {pid} — killing it.")
+                        subprocess.run(["kill", "-9", str(pid)], capture_output=True)
+                        time.sleep(1)
+        except Exception as e:
+            log.warning(f"  _kill_port({port}) error (non-fatal): {e}")
+
     def start_server(self):
         if self._is_running():
             return
+        # Clear the port first — prevents Errno 10048 if old server is still up
+        self._kill_port(8111)
         log.info(f"▶ Starting server (total starts: {self.restart_count + 1})…")
         self.server_proc = subprocess.Popen(
             [sys.executable, str(SERVER_SCRIPT)],
