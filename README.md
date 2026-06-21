@@ -36,7 +36,7 @@
 ## 📋 Table of Contents
 
 - [Overview](#-overview)
-- [What's New — v2.3](#-whats-new--v23-world-intelligence-platform)
+- [What's New — v2.6](#-whats-new--v26-world-intelligence-platform)
 - [Live Dashboards](#-live-dashboards)
 - [Architecture](#️-architecture)
 - [AI/ML Features](#-aiml-features)
@@ -67,13 +67,14 @@ An **AI-powered customer intelligence and global market analytics platform** bui
 
 ---
 
-## 🆕 What's New — v2.4 World Intelligence Platform
+## 🆕 What's New — v2.6 World Intelligence Platform
 
 > Latest release
 
 | Version | Release | Highlights |
 |---------|---------|------------|
-| **v2.5** | **Current** | **Real Data Engine** — yfinance 100% real OHLCV for 60+ symbols · Prophet AI forecasting (Facebook) · Holt-Winters fallback · 3 new API endpoints (`/api/realhistory`, `/api/prophet`, `/api/realprices`) · AI forecast drilldown replaces linear regression · Live backend status indicator · REAL DATA + AI FORECAST badges on cards |
+| **v2.6** | **Current** | 🌡 **Climate Intelligence tab** — Leaflet world map with 40+ countries, 4-era timeline (1900–2000 / Present 2024 / Near 2050 / Far 2100), risk circles (CRITICAL/HIGH/MEDIUM), future water body predictions (Aral Sea gone, Lake Chad drying, Himalayan glaciers, emerging Arctic islands), Satellite/Terrain/Standard layer switching · 👶 **Birth Rate tab** — world population crisis map, 35+ countries as rate-proportional bubbles (Niger 6.9 → South Korea 0.72), status categories from CRISIS to EXTREME, layer switching · 2 new screenshots in README |
+| **v2.5** | Previous | **Real Data Engine** — yfinance 100% real OHLCV for 60+ symbols · Prophet AI forecasting (Facebook) · Holt-Winters fallback · 3 new API endpoints (`/api/realhistory`, `/api/prophet`, `/api/realprices`) · AI forecast drilldown · Live backend status indicator · REAL DATA + AI FORECAST badges |
 | v2.4 | Previous | 🇵🇰 Pakistan added · 37 countries · 35 world exchanges · Rising Powers tab · Next China analysis · GDP forecast tooltips |
 | v2.3.1 | Previous | Performance fix — 5x faster backend: cache-before-fetch, shared HTTP client, parallel news feeds, in-memory cache, startup pre-warm |
 | v2.3 | — | World Intelligence Platform — Leaflet map, live markets, forecasts, signals, regional news, FastAPI backend |
