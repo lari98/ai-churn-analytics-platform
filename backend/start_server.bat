@@ -1,10 +1,13 @@
 @echo off
-title World Intelligence Backend v2.3
+title World Intelligence Backend v2.7
 echo ============================================
 echo   World Intelligence Platform - Backend
 echo   Starting on http://localhost:8111
 echo ============================================
 echo.
+
+REM Move to the backend folder so market_server.py is found
+cd /d "%~dp0"
 
 REM Check Python
 python --version >nul 2>&1

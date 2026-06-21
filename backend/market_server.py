@@ -740,7 +740,7 @@ async def lifespan(app):
 # ═══════════════════════════════════════════════════
 # APP
 # ═══════════════════════════════════════════════════
-app = FastAPI(title="World Intelligence API", version="2.7.0", lifespan=lifespan)
+app = FastAPI(title="World Intelligence API", version="2.7.1", lifespan=lifespan)
 app.add_middleware(CORSMiddleware, allow_origins=["*"], allow_methods=["*"], allow_headers=["*"])
 
 init_db()
@@ -751,7 +751,7 @@ init_db()
 def health():
     return {
         "status"          : "ok",
-        "version"         : "2.7.0",
+        "version"         : "2.7.1",
         "time"            : datetime.utcnow().isoformat(),
         "cached_symbols"  : len(_mem_prices),
         "cached_regions"  : len(_mem_news),
@@ -902,7 +902,7 @@ async def get_oil():
 
 @app.get("/api/indices")
 async def get_indices():
-    return await fetch_yahoo_batch(["SPX","NDX","DAX","FTSE","N225","HSI"])
+    return await fetch_yahoo_batch(["SPX","NDX","DJI","DAX","FTSE","CAC","N225","HSI","SENSEX","KOSPI"])
 
 @app.get("/api/forecast/{symbol}")
 async def get_forecast(symbol: str, horizon: str = "1M"):
@@ -997,7 +997,7 @@ def get_metrics(symbol: str):
 if __name__ == "__main__":
     import uvicorn
     print("=" * 62)
-    print("  World Intelligence Backend v2.7.0 -- Real Data + AI Forecast + Crash-Safe + Financial Metrics")
+    print("  World Intelligence Backend v2.7.1 -- Real Data + AI Forecast + Crash-Safe + Financial Metrics")
     print("  URL:          http://localhost:8111")
     print("  API docs:     http://localhost:8111/docs")
     print("  Health:       http://localhost:8111/api/health")
