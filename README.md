@@ -8,10 +8,12 @@
 [![FastAPI](https://img.shields.io/badge/FastAPI-0.111-009688)](https://fastapi.tiangolo.com)
 [![MLflow](https://img.shields.io/badge/MLflow-2.9-orange)](https://mlflow.org)
 [![Azure AI](https://img.shields.io/badge/Azure-AI--102-0078D4)](https://azure.microsoft.com)
-[![Dashboard](https://img.shields.io/badge/Dashboard-v3.1-a78bfa)](./dashboard/world-intelligence.html)
+[![Dashboard](https://img.shields.io/badge/Dashboard-v3.4-a78bfa)](./dashboard/world-intelligence.html)
 [![Backend](https://img.shields.io/badge/Backend-v2.7-22c55e)](./backend/market_server.py)
-[![Tests](https://img.shields.io/badge/Tests-136%20passed-22c55e)](./backend/tests/TEST_REPORT.md)
+[![Tests](https://img.shields.io/badge/Tests-261%20passed-22c55e)](./dashboard/tests/)
 [![Leaflet](https://img.shields.io/badge/Leaflet.js-1.9.4-199900)](https://leafletjs.com)
+[![Environment](https://img.shields.io/badge/Environment_Tab-v3.4-10b981)](./dashboard/world-intelligence.html)
+[![AQI Cities](https://img.shields.io/badge/AQI_Cities-50-38bdf8)](./dashboard/tests/TEST_AQI_MODAL_v3.4.md)
 
 ---
 
@@ -73,13 +75,16 @@ An **AI-powered customer intelligence and global market analytics platform** bui
 
 ---
 
-## 🆕 What's New — v3.1 World Intelligence Platform
+## 🆕 What's New — v3.4 World Intelligence Platform
 
 > Latest release
 
 | Version | Release | Highlights |
 |---------|---------|------------|
-| **v2.7** | **Current** | 🧪 **Comprehensive Test Suite** — 136 tests across 20 categories (Unit, Integration, State Machine, Time-Travel Mocking, Consistent Ticks, Memory Leaks, Thread Safety, Sharpe Ratio, Sortino Ratio, Transaction Costs, Survivorship Bias, Look-Ahead Bias, Zero Liquidity, Order Rejections, Partial Fills, Connection Drops, Rate Limiting 429, Max Drawdown, Stale Data Timeout, Rapid Concurrent Requests). New financial metrics engine: `compute_sharpe`, `compute_sortino`, `compute_max_drawdown`, `compute_volatility`. New `GET /api/metrics/{symbol}` endpoint. Auto-healing DB (`init_db` switches to `/tmp` on corrupt/WAL-incompatible mounts). All 136 tests green in 6.4s. |
+| **v3.4** | **Latest** | 🗺 **AQI City Detail Modal** — Click any of 50 city markers on the Environment map to open a full modal with 4 tabs: Overview (AQI category, dominant pollutant, population, 5-year trend delta, 3-day forecast), Pollutants (PM2.5, PM10, NO₂, O₃, CO, SO₂ bar chart vs WHO limits — red if exceeded), Trends (2020–2024 annual AQI bar chart + % change note + forecast), Health & Risk (risk level badge, guidance per group: General/Sensitive/Children/Elderly, health effects, protective actions from "enjoy outdoors" to ☣️ emergency). Close with ✕ button, backdrop click, or Escape key. 56 new tests, all passing. |
+| **v3.3.1** | Previous | 🐛 **Critical DOM fix** — `#page-environment` was placed outside `#pages` fixed container, causing KPIs to be invisible behind the overlay. Removed stray `</div>` and re-closed `#pages` after environment section. Also removed conflicting `overflow-y:auto; height:calc(100vh-100px)` from `#page-environment` that caused nested scroll lag. 16 tests. |
+| **v3.3** | Previous | 🌱 **Environment Intelligence Tab** — Complete with 6 animated KPI cards (CO₂ 426.9ppm · +1.29°C · +107mm sea level · Arctic ice · Renewables 30.3% · Forest loss), CO₂ Mauna Loa 1960–2024 time series (NOAA), NASA GISS temperature anomaly 1880–2024, renewables by country stacked bar (18 nations), deforestation 2001–2023 (Amazon/Congo/SE Asia), AQI Leaflet map, sea level rise 1993–2024, emissions sector donut (8 sectors · 57.4 GtCO₂e), Net Zero pledges tracker (12 countries), Country Climate Score composite index (18 nations). 69 tests. |
+| **v2.7** | Previous | 🧪 **Comprehensive Test Suite** — 136 tests across 20 categories (Unit, Integration, State Machine, Time-Travel Mocking, Consistent Ticks, Memory Leaks, Thread Safety, Sharpe Ratio, Sortino Ratio, Transaction Costs, Survivorship Bias, Look-Ahead Bias, Zero Liquidity, Order Rejections, Partial Fills, Connection Drops, Rate Limiting 429, Max Drawdown, Stale Data Timeout, Rapid Concurrent Requests). New financial metrics engine: `compute_sharpe`, `compute_sortino`, `compute_max_drawdown`, `compute_volatility`. New `GET /api/metrics/{symbol}` endpoint. Auto-healing DB (`init_db` switches to `/tmp` on corrupt/WAL-incompatible mounts). All 136 tests green in 6.4s. |
 | **v2.6** | Previous | 🔧 **Backend Crash-Safe Fix** — 3 root causes of restart loop eliminated: (1) `fetch_yahoo_one`: explicit `result=null` guard + `BaseException` handler so `asyncio.CancelledError` can no longer escape and kill the event loop; (2) `fetch_yahoo_batch`: changed inner `asyncio.gather` to `return_exceptions=True` — one bad ticker (NICKEL NI=F returning null) can never abort the entire batch; (3) global `asyncio.set_exception_handler` in lifespan — any uncaught background-task exception is logged as a warning instead of crashing uvicorn. Server restarts went from every 30s to zero. |
 | **v3.1** | **Current** | 👶 **Birth Rate ADVANCED II** — ⏵ Auto-play timeline animation (cycles 1960→1980→2000→2024→2050 like a documentary with pulsing play button), 🔍 Country Search (type any name, map flies to it and opens popup), 📈 SVG Sparkline Charts inside every country popup (inline birth rate trend 1960→2050, no extra libraries), 🏆 Rankings Panel (fastest collapsing nations, extreme aging crisis leaders, greatest demographic transformations, near-replacement 2050 projections, all rows clickable to fly to country) |
 | **v3.0** | Previous | 👶 **Birth Rate ADVANCED I** — 📅 Era Timeline Slider (1960/1980/2000/2024/2050⊛), 🔍 Status Filter Panel (draggable, multi-select CRISIS/CRITICAL/LOW/HEALTHY/HIGH, filters map live), 🧬 Demographic AI Predictor (draggable, dropdown, UN DESA/World Bank data: world peak 2086·10.3B, aging leaders, population collapse nations, session-enhanced accuracy), population trajectory per country (shrink/stable/grow by 2100), aging crisis % 65+ by 2050, policy impact notes, full historical trend in each popup |
@@ -118,7 +123,7 @@ A dark-themed, single-page analytics application with 7 sections:
 
 ### World Intelligence Platform — `dashboard/world-intelligence.html`
 
-A live global intelligence platform with **7 tabs** (v2.4):
+A live global intelligence platform with **8 tabs** (v3.4):
 
 | Tab | Description |
 |-----|-------------|
@@ -129,6 +134,7 @@ A live global intelligence platform with **7 tabs** (v2.4):
 | 📰 Global News | 7 regional tabs — World, Europe, Americas, Asia, Africa, Oceania, Tech. Live RSS from BBC, DW, Al Jazeera, NPR, ABC Australia, TechCrunch. SQLite-backed news history |
 | 🔮 Forecasts | Full-page chart with asset + horizon selector. Base, bull (+12%), and bear (-12%) scenarios using linear regression extrapolation |
 | ⚡ Invest Signals | RSI-based signals (STRONG BUY / BUY / HOLD / SELL / AVOID) for all tracked assets with rationale and 7-day forecast |
+| 🌱 Environment | **Advanced Environment Intelligence** — 6 animated KPI cards (CO₂/Temp/Sea Level/Arctic Ice/Renewables/Forest Loss), 9 interactive charts sourced from NOAA/NASA/IEA/IRENA/GFW, **AQI Leaflet map — 50 cities** with click-to-open detail modal (4 tabs: pollutants vs WHO limits, 5-year trends, 3-day forecast, health risk by population group), Net Zero pledge tracker (12 countries), Country Climate Score composite index (18 nations), emissions sector donut (57.4 GtCO₂e) |
 
 #### v2.4 New Countries (37 total)
 🇩🇪 🇦🇹 🇨🇭 🇺🇸 🇨🇳 🇷🇺 🇬🇧 🇫🇷 🇯🇵 🇮🇳 🇧🇷 🇦🇺 🇺🇦 🇸🇦 🇹🇷 🇳🇬 🇿🇦 🇸🇬 🇰🇷 🇵🇱 🇮🇷 🇰🇵 **🇵🇰 🇻🇳 🇮🇩 🇲🇾 🇹🇭 🇵🇭 🇦🇪 🇪🇬 🇨🇦 🇮🇹 🇪🇸 🇳🇱 🇸🇪 🇦🇷 🇧🇩**
@@ -332,6 +338,41 @@ Key optimisations applied in v2.3.1:
 
 ---
 
+## 🌱 Environment Intelligence — Data Sources (v3.3+)
+
+All environmental data is sourced from authoritative scientific institutions and embedded directly in the dashboard (no API key required, works offline).
+
+| Dataset | Source | Period | Metric |
+|---------|--------|--------|--------|
+| CO₂ Atmospheric Concentration | NOAA / Keeling Curve (Mauna Loa) | 1960–2024 | ppm |
+| Global Temperature Anomaly | NASA GISS GISTEMP v4 | 1880–2024 | °C vs 1951-1980 |
+| Sea Level Rise | NASA/CNES TOPEX · Jason-1/2/3 · Sentinel-6 | 1993–2024 | mm |
+| Arctic Sea Ice Extent | NSIDC Monthly | Current | M km² |
+| Renewable Energy Share | IEA World Energy Outlook 2024 / IRENA | 2023 | % of total |
+| Primary Forest Loss | Global Forest Watch / Hansen UMD | 2001–2023 | Mha/yr |
+| Air Quality Index (50 cities) | IQAir / WHO Air Quality Report 2024 / OpenAQ | 2024 | AQI + 6 pollutants |
+| Emissions by Sector | Our World in Data / Global Carbon Project | 2023 | GtCO₂e % |
+| Net Zero Pledges | Climate Action Tracker | 2024 | Progress % |
+| Country Climate Score | IRENA + IEA + ND-GAIN + CAT composite | 2024 | 0–100 index |
+
+### AQI Modal — Per-City Data Fields
+
+Each of the 50 cities in the AQI map carries:
+
+| Field | Description | WHO Limit |
+|-------|-------------|-----------|
+| `pm25` | Fine particulate matter (µg/m³) | 15 µg/m³ |
+| `pm10` | Coarse particulate matter (µg/m³) | 45 µg/m³ |
+| `no2` | Nitrogen dioxide (µg/m³) | 25 µg/m³ |
+| `o3` | Ground-level ozone (µg/m³) | 100 µg/m³ |
+| `co` | Carbon monoxide (ppm) | 4 ppm |
+| `so2` | Sulfur dioxide (µg/m³) | 40 µg/m³ |
+| `trend` | Annual AQI 2020–2024 (5 values) | — |
+| `fc` | 3-day forecast AQI | — |
+| `rg` | Health guidance: General / Sensitive / Children / Elderly | — |
+
+---
+
 ## 🛡️ GDPR/DSGVO Compliance
 
 See [GDPR.md](./GDPR.md) for the full compliance guide.
@@ -360,7 +401,12 @@ ai-churn-analytics-platform/
 │
 ├── 🌐 dashboard/
 │   ├── index.html                        # Main analytics dashboard (v2.1)
-│   └── world-intelligence.html           # World Intelligence Platform (v2.3)
+│   ├── world-intelligence.html           # World Intelligence Platform (v3.4)
+│   └── tests/
+│       ├── TEST_MARKET_ENRICHMENT_v3.2.md           # Market badge fix — 3 bugs (16 tests)
+│       ├── TEST_ENVIRONMENT_v3.3.md                 # Environment Tab — all features (69 tests)
+│       ├── TEST_ENVIRONMENT_v3.3.1_SCROLL_KPI_FIX.md  # DOM + scroll fix (16 tests)
+│       └── TEST_AQI_MODAL_v3.4.md                  # AQI 50-city modal (56 tests)
 │
 ├── ⚙️ backend/
 │   ├── market_server.py                  # FastAPI market data server (v2.3.1)
