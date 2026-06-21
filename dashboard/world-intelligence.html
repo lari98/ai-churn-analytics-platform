@@ -460,8 +460,8 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:'Segoe 
           <div style="display:flex;align-items:center;gap:7px;">
             <span class="pred-chevron" id="predChevron">▼</span>
             <div>
-              <div class="pred-title">🤖 AI Prediction Engine</div>
-              <div style="font-size:9px;color:#4b5563;margin-top:1px;">Click to expand · IPCC AR6 · NASA · NOAA</div>
+              <div class="pred-title">🤖 AI Predictor Engine</div>
+              <div id="predSubtitle" style="font-size:9px;color:#4b5563;margin-top:1px;">Click to expand · IPCC AR6 · NASA · NOAA</div>
             </div>
           </div>
           <div style="display:flex;gap:5px;align-items:center;">
@@ -2175,13 +2175,13 @@ function togglePredPanel(){
     hdr.classList.remove('open');
     chev.classList.remove('open');
     chev.textContent='▼';
-    hdr.querySelector('div div:last-child').textContent='Click to expand · IPCC AR6 · NASA · NOAA';
+    document.getElementById('predSubtitle').textContent='Click to expand · IPCC AR6 · NASA · NOAA';
   } else {
     body.classList.add('open');
     hdr.classList.add('open');
     chev.classList.add('open');
     chev.textContent='▲';
-    hdr.querySelector('div div:last-child').textContent='Click to collapse · drag to move';
+    document.getElementById('predSubtitle').textContent='Click to collapse · drag to move';
   }
 }
 
