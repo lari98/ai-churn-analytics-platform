@@ -1,5 +1,5 @@
 """
-World Intelligence Platform — Local Backend Server v2.5
+World Intelligence Platform — Local Backend Server v2.6
 FastAPI on port 8111 | SQLite + in-memory cache | REAL DATA ENGINE
 
 DATA ENGINE (v2.5):
@@ -401,17 +401,27 @@ async def fetch_yahoo_one(sym: str):
         return sym, None
     url = f"https://query1.finance.yahoo.com/v8/finance/chart/{ticker}?interval=1d&range=3mo"
     try:
-        r = await _http.get(url)
+        r = await _http.get(url, timeout=10)
         d = r.json()
-        meta   = d["chart"]["result"][0]["meta"]
-        closes = d["chart"]["result"][0]["indicators"]["quote"][0].get("close", [])
+        # FIX v2.6: explicitly guard against result=null before any indexing
+        chart  = (d.get("chart") or {})
+        result = chart.get("result") or []
+        if not result:
+            print(f"  Yahoo [{sym}] no data (ticker={ticker}) — skipping")
+            return sym, None
+        meta   = result[0]["meta"]
+        closes = result[0]["indicators"]["quote"][0].get("close", [])
         closes = [c for c in closes if c is not None]
-        price  = meta.get("regularMarketPrice", closes[-1] if closes else 0)
+        if not closes:
+            return sym, None
+        price  = meta.get("regularMarketPrice", closes[-1])
         prev   = meta.get("chartPreviousClose",  closes[-2] if len(closes) >= 2 else price)
-        change = round(((price - prev) / prev) * 100, 2) if prev else 0
+        change = round(((float(price) - float(prev)) / float(prev)) * 100, 2) if prev else 0
         return sym, {"price": float(price), "change": change, "history": closes[-90:]}
-    except Exception as e:
-        print(f"  Yahoo [{sym}] error: {e}")
+    except BaseException as e:
+        # FIX v2.6: use BaseException (not just Exception) so asyncio.CancelledError
+        # is also caught here and cannot escape to kill the event loop
+        print(f"  Yahoo [{sym}] error: {type(e).__name__}: {e}")
         return sym, None
 
 async def fetch_yahoo_batch(syms: list[str]) -> dict:
@@ -429,10 +439,15 @@ async def fetch_yahoo_batch(syms: list[str]) -> dict:
             misses.append(sym)
 
     if misses:
-        # FIX #2: all misses fetched concurrently (not sequentially)
+        # FIX v2.6: return_exceptions=True — one bad ticker cannot abort the entire batch
         tasks = [fetch_yahoo_one(sym) for sym in misses]
-        pairs = await asyncio.gather(*tasks, return_exceptions=False)
-        for sym, data in pairs:
+        pairs = await asyncio.gather(*tasks, return_exceptions=True)
+        for item in pairs:
+            if isinstance(item, BaseException):
+                # task itself raised (should not happen after fetch_yahoo_one fix, but belt+braces)
+                print(f"  fetch_yahoo_batch: unexpected task exception — {item}")
+                continue
+            sym, data = item
             if data:
                 set_price(sym, data["price"], data["change"], data["history"])
                 result[sym] = {**data, "symbol": sym}
@@ -589,6 +604,15 @@ async def lifespan(app):
     )
     print("  Shared HTTP client ready.")
 
+    # FIX v2.6: global asyncio task exception handler — prevents any uncaught
+    # background-task exception from crashing the uvicorn event loop
+    def _task_exc_handler(loop, context):
+        exc  = context.get("exception")
+        msg  = context.get("message", "")
+        name = type(exc).__name__ if exc else "unknown"
+        print(f"  [WARN] Unhandled async task exception (non-fatal): {name}: {exc or msg}")
+    asyncio.get_event_loop().set_exception_handler(_task_exc_handler)
+
     # FIX #5: pre-warm cache in background — server is immediately responsive,
     # first user requests get data from cache after a few seconds
     async def prewarm():
@@ -614,7 +638,7 @@ async def lifespan(app):
 # ═══════════════════════════════════════════════════
 # APP
 # ═══════════════════════════════════════════════════
-app = FastAPI(title="World Intelligence API", version="2.5.0", lifespan=lifespan)
+app = FastAPI(title="World Intelligence API", version="2.6.0", lifespan=lifespan)
 app.add_middleware(CORSMiddleware, allow_origins=["*"], allow_methods=["*"], allow_headers=["*"])
 
 init_db()
@@ -625,7 +649,7 @@ init_db()
 def health():
     return {
         "status"          : "ok",
-        "version"         : "2.5.0",
+        "version"         : "2.6.0",
         "time"            : datetime.utcnow().isoformat(),
         "cached_symbols"  : len(_mem_prices),
         "cached_regions"  : len(_mem_news),
@@ -838,7 +862,7 @@ async def get_invest_signals():
 if __name__ == "__main__":
     import uvicorn
     print("=" * 62)
-    print("  World Intelligence Backend v2.5.0  — Real Data + AI Forecast")
+    print("  World Intelligence Backend v2.6.0  — Real Data + AI Forecast + Crash-Safe")
     print("  URL:          http://localhost:8111")
     print("  API docs:     http://localhost:8111/docs")
     print("  Health:       http://localhost:8111/api/health")
