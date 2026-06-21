@@ -9,6 +9,8 @@
 [![MLflow](https://img.shields.io/badge/MLflow-2.9-orange)](https://mlflow.org)
 [![Azure AI](https://img.shields.io/badge/Azure-AI--102-0078D4)](https://azure.microsoft.com)
 [![Dashboard](https://img.shields.io/badge/Dashboard-v3.1-a78bfa)](./dashboard/world-intelligence.html)
+[![Backend](https://img.shields.io/badge/Backend-v2.7-22c55e)](./backend/market_server.py)
+[![Tests](https://img.shields.io/badge/Tests-136%20passed-22c55e)](./backend/tests/TEST_REPORT.md)
 [![Leaflet](https://img.shields.io/badge/Leaflet.js-1.9.4-199900)](https://leafletjs.com)
 
 ---
@@ -77,7 +79,8 @@ An **AI-powered customer intelligence and global market analytics platform** bui
 
 | Version | Release | Highlights |
 |---------|---------|------------|
-| **v2.6** | **Backend** | 🔧 **Backend Crash-Safe Fix** — 3 root causes of restart loop eliminated: (1) `fetch_yahoo_one`: explicit `result=null` guard + `BaseException` handler so `asyncio.CancelledError` can no longer escape and kill the event loop; (2) `fetch_yahoo_batch`: changed inner `asyncio.gather` to `return_exceptions=True` — one bad ticker (NICKEL NI=F returning null) can never abort the entire batch; (3) global `asyncio.set_exception_handler` in lifespan — any uncaught background-task exception is logged as a warning instead of crashing uvicorn. Server restarts went from every 30s to zero. |
+| **v2.7** | **Current** | 🧪 **Comprehensive Test Suite** — 136 tests across 20 categories (Unit, Integration, State Machine, Time-Travel Mocking, Consistent Ticks, Memory Leaks, Thread Safety, Sharpe Ratio, Sortino Ratio, Transaction Costs, Survivorship Bias, Look-Ahead Bias, Zero Liquidity, Order Rejections, Partial Fills, Connection Drops, Rate Limiting 429, Max Drawdown, Stale Data Timeout, Rapid Concurrent Requests). New financial metrics engine: `compute_sharpe`, `compute_sortino`, `compute_max_drawdown`, `compute_volatility`. New `GET /api/metrics/{symbol}` endpoint. Auto-healing DB (`init_db` switches to `/tmp` on corrupt/WAL-incompatible mounts). All 136 tests green in 6.4s. |
+| **v2.6** | Previous | 🔧 **Backend Crash-Safe Fix** — 3 root causes of restart loop eliminated: (1) `fetch_yahoo_one`: explicit `result=null` guard + `BaseException` handler so `asyncio.CancelledError` can no longer escape and kill the event loop; (2) `fetch_yahoo_batch`: changed inner `asyncio.gather` to `return_exceptions=True` — one bad ticker (NICKEL NI=F returning null) can never abort the entire batch; (3) global `asyncio.set_exception_handler` in lifespan — any uncaught background-task exception is logged as a warning instead of crashing uvicorn. Server restarts went from every 30s to zero. |
 | **v3.1** | **Current** | 👶 **Birth Rate ADVANCED II** — ⏵ Auto-play timeline animation (cycles 1960→1980→2000→2024→2050 like a documentary with pulsing play button), 🔍 Country Search (type any name, map flies to it and opens popup), 📈 SVG Sparkline Charts inside every country popup (inline birth rate trend 1960→2050, no extra libraries), 🏆 Rankings Panel (fastest collapsing nations, extreme aging crisis leaders, greatest demographic transformations, near-replacement 2050 projections, all rows clickable to fly to country) |
 | **v3.0** | Previous | 👶 **Birth Rate ADVANCED I** — 📅 Era Timeline Slider (1960/1980/2000/2024/2050⊛), 🔍 Status Filter Panel (draggable, multi-select CRISIS/CRITICAL/LOW/HEALTHY/HIGH, filters map live), 🧬 Demographic AI Predictor (draggable, dropdown, UN DESA/World Bank data: world peak 2086·10.3B, aging leaders, population collapse nations, session-enhanced accuracy), population trajectory per country (shrink/stable/grow by 2100), aging crisis % 65+ by 2050, policy impact notes, full historical trend in each popup |
 | **v2.9** | Previous | 🤖 AI Predictor Dropdown UX — collapsed by default, smooth animation, chevron ▼→▲, rename to "AI Predictor Engine" |
@@ -615,84 +618,4 @@ pytest api/tests/test_security.py -v
 python ml/training/train_churn.py --test-only
 
 # Fairness / bias audit
-python ml/notebooks/06_model_evaluation.py --fairness-audit
-```
-
-**Coverage target: ≥ 85%**
-
----
-
-## 🚢 Deployment
-
-### Azure Container Apps (Production)
-
-```bash
-# Build and push Docker image
-docker build -t acrchurnanalytics.azurecr.io/churn-api:latest -f docker/Dockerfile .
-docker push acrchurnanalytics.azurecr.io/churn-api:latest
-
-# Deploy
-az containerapp update \
-  --name ca-churn-api \
-  --resource-group rg-churn-analytics \
-  --image acrchurnanalytics.azurecr.io/churn-api:latest
-```
-
-### CI/CD Pipeline
-
-| Stage | Steps |
-|-------|-------|
-| CI | Lint → Unit Tests → Security Scan (Bandit + Trivy) → Build → Push to ACR |
-| CD | Deploy to Staging → Integration Tests → Manual Approval → Production |
-
----
-
-## 📅 Sprint Planning
-
-See [SPRINT.md](./SPRINT.md) for the full agile backlog, sprint plans, and velocity tracking.
-
-**Current Sprint Focus:** World Intelligence Platform v2.3 — live markets, global news, price forecasting, investment signals, local backend with caching.
-
----
-
-## 👥 Team & Roles
-
-| Role | Responsibility |
-|------|---------------|
-| AI/Data Architect | Platform design, ML strategy, World Intelligence |
-| ML Engineer | Model training, MLflow, Databricks, price forecasting |
-| Backend Engineer | FastAPI (churn API + market backend), Azure integration |
-| Data Engineer | Pipelines, Databricks, SQL, news/market data |
-| Security Engineer | GDPR/DSGVO, RBAC, PII masking, audit |
-| BI Developer | Power BI, DAX, PL-300, dashboard design |
-
----
-
-## 🛠️ Technology Stack
-
-| Layer | Technology |
-|-------|-----------|
-| ML / AI | XGBoost, LightGBM, Isolation Forest, Azure OpenAI GPT-4o |
-| ML Ops | Azure Databricks, MLflow, Azure ML |
-| Backend (churn) | FastAPI, SQLAlchemy, Pydantic, Azure Container Apps |
-| Backend (markets) | FastAPI, httpx, SQLite, uvicorn |
-| Frontend | HTML5, Chart.js 4.4, Leaflet.js 1.9.4, CSS variables |
-| Market Data | CoinGecko, Open ER API, Yahoo Finance, rss2json |
-| Infrastructure | Azure Bicep, Docker, GitHub Actions |
-| Security | Azure Key Vault, Azure AD RBAC, AES-256, JWT |
-| Storage | Azure Blob, Azure SQL, SQLite (local cache) |
-
----
-
-## ⚠️ Security Notice
-
-- Never commit real customer data — all sample data uses masked/synthetic PII
-- Never hardcode secrets — use Azure Key Vault or environment variables
-- All GitHub tokens used only for push operations, never stored in project files
-- Report security issues to: security@churn-analytics.example.com
-
----
-
-## 📜 License
-
-MIT License — © 2025 DACH AI Analytics Team · Muhammad Umer
+python ml/notebooks/06_model_eval

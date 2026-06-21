@@ -1,5 +1,5 @@
 """
-World Intelligence Platform — Local Backend Server v2.6
+World Intelligence Platform — Local Backend Server v2.7
 FastAPI on port 8111 | SQLite + in-memory cache | REAL DATA ENGINE
 
 DATA ENGINE (v2.5):
@@ -27,7 +27,7 @@ if hasattr(sys.stderr, "reconfigure"):
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from contextlib import asynccontextmanager
-import sqlite3, json, time, httpx, asyncio, os
+import sqlite3, json, time, httpx, asyncio, os, math as _math, statistics as _stats
 from datetime import datetime
 from functools import partial
 
@@ -97,20 +97,48 @@ def mem_set_news(region: str, articles: list):
 DB_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), "market_cache.db")
 
 def init_db():
-    con = sqlite3.connect(DB_PATH)
-    con.execute("PRAGMA journal_mode=WAL")   # much faster concurrent writes
-    con.execute("""CREATE TABLE IF NOT EXISTS price_cache (
-        symbol TEXT PRIMARY KEY, price REAL, change_pct REAL,
-        history TEXT, updated INTEGER)""")
-    con.execute("""CREATE TABLE IF NOT EXISTS news_cache (
-        id INTEGER PRIMARY KEY AUTOINCREMENT, region TEXT,
-        title TEXT, link TEXT, pub_date TEXT, source TEXT, thumbnail TEXT,
-        created INTEGER)""")
-    con.execute("CREATE INDEX IF NOT EXISTS idx_news_region ON news_cache(region, created)")
-    # v2.5: AI forecast cache
-    con.execute("""CREATE TABLE IF NOT EXISTS forecast_cache (
-        key TEXT PRIMARY KEY, result TEXT, updated INTEGER)""")
-    con.commit(); con.close()
+    """
+    v2.7: Auto-heals a corrupt / inaccessible DB.
+    On first failure it deletes the old file and switches to a temp path.
+    WAL mode silently falls back to DELETE mode on network mounts.
+    """
+    global DB_PATH
+    import tempfile as _tf
+    _tables = [
+        """CREATE TABLE IF NOT EXISTS price_cache (
+            symbol TEXT PRIMARY KEY, price REAL, change_pct REAL,
+            history TEXT, updated INTEGER)""",
+        """CREATE TABLE IF NOT EXISTS news_cache (
+            id INTEGER PRIMARY KEY AUTOINCREMENT, region TEXT,
+            title TEXT, link TEXT, pub_date TEXT, source TEXT, thumbnail TEXT,
+            created INTEGER)""",
+        "CREATE INDEX IF NOT EXISTS idx_news_region ON news_cache(region, created)",
+        """CREATE TABLE IF NOT EXISTS forecast_cache (
+            key TEXT PRIMARY KEY, result TEXT, updated INTEGER)""",
+    ]
+    for attempt in range(2):
+        try:
+            con = sqlite3.connect(DB_PATH)
+            try:
+                con.execute("PRAGMA journal_mode=WAL")
+            except (sqlite3.OperationalError, sqlite3.DatabaseError):
+                pass   # WAL unsupported on network mounts — fall back to DELETE mode
+            for stmt in _tables:
+                con.execute(stmt)
+            con.commit(); con.close()
+            return
+        except (sqlite3.DatabaseError, sqlite3.OperationalError) as exc:
+            if attempt == 0:
+                print(f"  [WARN] DB error ({exc}) — switching to temp DB")
+                try:
+                    os.unlink(DB_PATH)
+                except Exception:
+                    pass
+                DB_PATH = os.path.join(_tf.gettempdir(), f"market_cache_{os.getpid()}.db")
+                print(f"  [INFO] Using temp DB: {DB_PATH}")
+            else:
+                print(f"  [ERROR] DB init failed after recovery: {exc}")
+                raise
 
 def db_get_price(sym: str, max_age: int = 300):
     """Read from SQLite — used only when mem cache misses."""
@@ -523,6 +551,80 @@ def lin_forecast(history: list, steps: int) -> list:
     return [round(b + m*(n+i), 6) for i in range(steps)]
 
 # ═══════════════════════════════════════════════════
+# FINANCIAL METRICS  (v2.7 — Sharpe / Sortino / Drawdown)
+# ═══════════════════════════════════════════════════
+
+def compute_returns(history: list) -> list:
+    """Daily returns from a price series. Returns empty list if < 2 bars."""
+    if len(history) < 2:
+        return []
+    return [(history[i] - history[i-1]) / history[i-1]
+            for i in range(1, len(history)) if history[i-1] != 0]
+
+def compute_sharpe(history: list, rf_annual: float = 0.02) -> float | None:
+    """
+    Annualised Sharpe ratio.
+    rf_annual: annual risk-free rate as a decimal (default 2 %).
+    Returns None when history is too short or std is zero.
+    """
+    rets = compute_returns(history)
+    if len(rets) < 2:
+        return None
+    rf_daily = rf_annual / 252
+    mean_r   = _stats.mean(rets)
+    std_r    = _stats.stdev(rets)
+    if std_r == 0:
+        return None
+    return round((mean_r - rf_daily) / std_r * _math.sqrt(252), 4)
+
+def compute_sortino(history: list, rf_annual: float = 0.02) -> float | None:
+    """
+    Annualised Sortino ratio — penalises only downside (negative) returns.
+    Returns None when too short or no negative returns exist.
+    """
+    rets = compute_returns(history)
+    if len(rets) < 2:
+        return None
+    rf_daily     = rf_annual / 252
+    mean_r       = _stats.mean(rets)
+    neg_rets     = [r for r in rets if r < 0]
+    if not neg_rets:
+        return None   # no downside — Sortino would be ∞, caller treats as extremely high
+    downside_var = sum(r ** 2 for r in neg_rets) / len(rets)
+    downside_std = _math.sqrt(downside_var)
+    if downside_std == 0:
+        return None
+    return round((mean_r - rf_daily) / downside_std * _math.sqrt(252), 4)
+
+def compute_max_drawdown(history: list) -> float:
+    """
+    Max peak-to-trough drawdown as a percentage (always ≤ 0).
+    A flat or rising series returns 0.0.
+    """
+    if len(history) < 2:
+        return 0.0
+    peak   = history[0]
+    max_dd = 0.0
+    for price in history:
+        if price > peak:
+            peak = price
+        if peak > 0:
+            dd = (price - peak) / peak * 100
+            if dd < max_dd:
+                max_dd = dd
+    return round(max_dd, 4)
+
+def compute_volatility(history: list) -> float | None:
+    """
+    Annualised historical volatility = std(daily_returns) × √252, expressed as %.
+    Returns None when too few bars.
+    """
+    rets = compute_returns(history)
+    if len(rets) < 2:
+        return None
+    return round(_stats.stdev(rets) * _math.sqrt(252) * 100, 4)
+
+# ═══════════════════════════════════════════════════
 # NEWS FEEDS
 # ═══════════════════════════════════════════════════
 NEWS_FEEDS = {
@@ -638,7 +740,7 @@ async def lifespan(app):
 # ═══════════════════════════════════════════════════
 # APP
 # ═══════════════════════════════════════════════════
-app = FastAPI(title="World Intelligence API", version="2.6.0", lifespan=lifespan)
+app = FastAPI(title="World Intelligence API", version="2.7.0", lifespan=lifespan)
 app.add_middleware(CORSMiddleware, allow_origins=["*"], allow_methods=["*"], allow_headers=["*"])
 
 init_db()
@@ -649,7 +751,7 @@ init_db()
 def health():
     return {
         "status"          : "ok",
-        "version"         : "2.6.0",
+        "version"         : "2.7.0",
         "time"            : datetime.utcnow().isoformat(),
         "cached_symbols"  : len(_mem_prices),
         "cached_regions"  : len(_mem_news),
@@ -782,7 +884,6 @@ async def get_metals():
 
 @app.get("/api/crypto")
 async def get_crypto():
-    # Check if all are cached first
     syms = list(COINGECKO_IDS.keys())
     if all(mem_get_price(s) for s in syms):
         return {s: mem_get_price(s) for s in syms}
@@ -809,7 +910,8 @@ async def get_forecast(symbol: str, horizon: str = "1M"):
     steps = steps_map.get(horizon.upper(), 30)
     d = get_price(symbol.upper())
     if not d or not d.get("history"):
-        raise HTTPException(status_code=404, detail=f"No history cached for {symbol}. Call /api/metals or /api/indices first.")
+        raise HTTPException(status_code=404,
+            detail=f"No history cached for {symbol}. Call /api/metals or /api/indices first.")
     hist = d["history"]
     fc   = lin_forecast(hist, steps)
     last = hist[-1]
@@ -854,24 +956,61 @@ async def get_invest_signals():
         else:                      sig="HOLD"
         fc7 = lin_forecast(hist, 7)
         signals.append({
-            "symbol":sym,"price":d["price"],"change":ch,
-            "rsi":rsi_val,"signal":sig,"forecast_7d":fc7[-1] if fc7 else None
+            "symbol"      : sym,
+            "price"       : d["price"],
+            "change"      : ch,
+            "rsi"         : rsi_val,
+            "signal"      : sig,
+            "forecast_7d" : fc7[-1] if fc7 else None,
+            "sharpe"      : compute_sharpe(hist),
+            "sortino"     : compute_sortino(hist),
+            "max_drawdown": compute_max_drawdown(hist),
+            "volatility"  : compute_volatility(hist),
         })
     return signals
+
+@app.get("/api/metrics/{symbol}")
+def get_metrics(symbol: str):
+    """
+    v2.7: Returns Sharpe ratio, Sortino ratio, max drawdown, and annualised
+    volatility for any symbol that has cached price history.
+    Pre-load via /api/metals, /api/indices, /api/crypto, or /api/realhistory/{symbol}.
+    """
+    sym = symbol.upper()
+    d   = get_price(sym)
+    if not d or len(d.get("history", [])) < 5:
+        raise HTTPException(status_code=404,
+            detail=(f"No sufficient history for '{sym}'. "
+                    f"Call /api/metals, /api/indices, or /api/realhistory/{sym} first."))
+    hist = d["history"]
+    return {
+        "symbol"        : sym,
+        "bars"          : len(hist),
+        "sharpe"        : compute_sharpe(hist),
+        "sortino"       : compute_sortino(hist),
+        "max_drawdown"  : compute_max_drawdown(hist),
+        "volatility_pct": compute_volatility(hist),
+        "current_price" : d["price"],
+        "change_pct"    : d.get("change", 0),
+    }
 
 if __name__ == "__main__":
     import uvicorn
     print("=" * 62)
-    print("  World Intelligence Backend v2.6.0  — Real Data + AI Forecast + Crash-Safe")
+    print("  World Intelligence Backend v2.7.0 -- Real Data + AI Forecast + Crash-Safe + Financial Metrics")
     print("  URL:          http://localhost:8111")
     print("  API docs:     http://localhost:8111/docs")
     print("  Health:       http://localhost:8111/api/health")
     print("  Real history: http://localhost:8111/api/realhistory/BTC")
     print("  AI forecast:  http://localhost:8111/api/prophet/BTC?horizon=1Y")
-    print("─" * 62)
-    print(f"  yfinance:      {'✓ REAL DATA' if YF_AVAILABLE else '✗ install: pip install yfinance'}")
-    print(f"  Prophet:       {'✓ AI FORECAST' if PROPHET_AVAILABLE else '✗ install: pip install prophet'}")
-    print(f"  Holt-Winters:  {'✓ available' if STATSMODELS_AVAILABLE else '✗ install: pip install statsmodels'}")
-    print(f"  Linear Reg:    ✓ always available (fallback)")
+    print("  Metrics:      http://localhost:8111/api/metrics/GOLD")
+    print("-" * 62)
+    yf_s  = "OK: REAL DATA"    if YF_AVAILABLE        else "install: pip install yfinance"
+    pr_s  = "OK: AI FORECAST"  if PROPHET_AVAILABLE   else "install: pip install prophet"
+    hw_s  = "OK: available"    if STATSMODELS_AVAILABLE else "install: pip install statsmodels"
+    print(f"  yfinance:      {yf_s}")
+    print(f"  Prophet:       {pr_s}")
+    print(f"  Holt-Winters:  {hw_s}")
+    print(f"  Linear Reg:    OK: always available (fallback)")
     print("=" * 62)
     uvicorn.run(app, host="0.0.0.0", port=8111, reload=False)
