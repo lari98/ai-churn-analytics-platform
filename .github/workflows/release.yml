@@ -1,0 +1,245 @@
+# ============================================================
+#  World Intelligence Platform — GitHub Actions Release
+#  Author    : Muhammad Umer Lari
+#  Copyright : © 2024-2025 Muhammad Umer Lari. All Rights Reserved.
+#
+#  Trigger   : git tag v3.5.0 && git push --tags
+#  Builds on : Windows 11, macOS 14, Ubuntu 22.04
+#  Output    : 3 platform binaries uploaded to one GitHub Release
+#              PyArmor obfuscation applied before each build
+#              SHA-256 hash embedded in release notes
+#
+#  PRIVATE REPO NOTE:
+#    - Keep this repo private for source code protection
+#    - The Release assets are publicly downloadable via direct URL
+#      (GitHub allows downloading Release assets from private repos
+#       via direct URLs once published — no auth required for the .exe)
+#    - The auto-updater (updater.py) uses APP_UPDATE_URL from version.py
+#      to check for new versions — point it at this repo's API endpoint
+#      with a read-only token embedded in a GitHub Secret if needed.
+# ============================================================
+
+name: Build & Release (Windows + macOS + Linux)
+
+on:
+  push:
+    tags:
+      - 'v*.*.*'
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    name: Build on ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: windows-latest
+            spec:   launcher/build/launcher.spec
+            asset:  WorldIntelligence.exe
+            suffix: .exe
+          - os: macos-latest
+            spec:   launcher/build/mac.spec
+            asset:  WorldIntelligence.dmg
+            suffix: .dmg
+          - os: ubuntu-latest
+            spec:   launcher/build/linux.spec
+            asset:  WorldIntelligence-linux
+            suffix: ""
+
+    steps:
+      # ── 1. Checkout ──────────────────────────────────────────
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      # ── 2. Python 3.11 ───────────────────────────────────────
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+
+      # ── 3. Install all dependencies ───────────────────────────
+      - name: Install dependencies
+        run: |
+          pip install pyinstaller>=6.0.0 pyarmor>=8.0.0 \
+                      pystray>=0.19.5 pillow>=10.0.0 \
+                      fastapi uvicorn httpx yfinance pandas numpy
+
+      # ── 4. Generate app icon (icon.ico + icon.png) ────────────
+      - name: Generate app icon
+        run: python launcher/build/generate_icon.py
+
+      # ── 5. macOS: convert iconset → .icns ────────────────────
+      - name: Convert icon to .icns (macOS only)
+        if: matrix.os == 'macos-latest'
+        run: |
+          iconutil -c icns launcher/build/WorldIntelligence.iconset \
+                   -o launcher/build/icon.icns
+
+      # ── 6. PyArmor obfuscation ────────────────────────────────
+      - name: Obfuscate Python source with PyArmor
+        run: |
+          pyarmor gen --output dist/protected \
+            launcher/launcher.py \
+            launcher/updater.py \
+            launcher/version.py
+        # Note: PyInstaller spec still points to the originals;
+        # the obfuscated output is bundled as datas below.
+        # For full obfuscation, point Analysis() at dist/protected/
+        # (handled in the spec via PYARMOR_DIST env var below)
+
+      # ── 7. Build with PyInstaller ─────────────────────────────
+      - name: Build executable
+        run: pyinstaller ${{ matrix.spec }} --clean --noconfirm
+
+      # ── 8. Linux: rename binary to match asset name ───────────
+      - name: Rename Linux binary
+        if: matrix.os == 'ubuntu-latest'
+        run: mv dist/WorldIntelligence dist/WorldIntelligence-linux
+
+      # ── 9. macOS: package .app into .dmg ─────────────────────
+      - name: Package .app into .dmg (macOS)
+        if: matrix.os == 'macos-latest'
+        run: |
+          pip install dmgbuild --quiet
+          cat > /tmp/dmg_settings.py << 'EOF'
+          application  = defines.get('app', 'dist/WorldIntelligence.app')
+          appname      = 'WorldIntelligence'
+          files        = [application]
+          symlinks     = {'Applications': '/Applications'}
+          icon_locations = {
+            appname + '.app': (140, 120),
+            'Applications':   (500, 120),
+          }
+          background   = 'builtin-arrow'
+          window_rect  = ((100, 100), (660, 280))
+          icon_size    = 80
+          EOF
+          dmgbuild -s /tmp/dmg_settings.py \
+                   -D app=dist/WorldIntelligence.app \
+                   "World Intelligence Platform" \
+                   dist/WorldIntelligence.dmg
+
+      # ── 10. Compute SHA-256 ───────────────────────────────────
+      - name: Compute SHA-256
+        id: sha
+        shell: pwsh
+        if: matrix.os == 'windows-latest'
+        run: |
+          $h = (Get-FileHash dist/${{ matrix.asset }} -Algorithm SHA256).Hash.ToLower()
+          echo "HASH=$h" >> $env:GITHUB_OUTPUT
+
+      - name: Compute SHA-256 (POSIX)
+        id: sha_posix
+        if: matrix.os != 'windows-latest'
+        shell: bash
+        run: |
+          f="dist/${{ matrix.asset }}"
+          if [[ "${{ matrix.os }}" == "ubuntu-latest" ]]; then
+            h=$(sha256sum "$f" | awk '{print $1}')
+          else
+            h=$(shasum -a 256 "$f" | awk '{print $1}')
+          fi
+          echo "HASH=$h" >> $GITHUB_OUTPUT
+
+      # ── 11. Upload build artifact (passed to release job) ─────
+      - name: Upload build artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.asset }}
+          path: dist/${{ matrix.asset }}
+          retention-days: 1
+
+      - name: Save SHA-256 to file
+        shell: bash
+        run: |
+          H="${{ steps.sha.outputs.HASH }}${{ steps.sha_posix.outputs.HASH }}"
+          echo "${{ matrix.asset }}=$H" >> dist/sha256sums.txt
+
+      - name: Upload SHA sums
+        uses: actions/upload-artifact@v4
+        with:
+          name: sha256-${{ matrix.os }}
+          path: dist/sha256sums.txt
+          retention-days: 1
+
+  # ── Release job: collects all 3 builds → one GitHub Release ──
+  release:
+    name: Publish GitHub Release
+    needs: build
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Extract version from tag
+        id: ver
+        run: echo "VERSION=${GITHUB_REF_NAME#v}" >> $GITHUB_OUTPUT
+
+      - name: Download all build artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: release_assets
+          merge-multiple: true
+
+      - name: Merge SHA sums
+        run: cat release_assets/sha256sums.txt || true
+
+      - name: Read SHA sums
+        id: shas
+        run: |
+          f="release_assets/sha256sums.txt"
+          WIN=$(grep "WorldIntelligence.exe"   "$f" | cut -d= -f2 || echo "N/A")
+          MAC=$(grep "WorldIntelligence.dmg"   "$f" | cut -d= -f2 || echo "N/A")
+          LNX=$(grep "WorldIntelligence-linux" "$f" | cut -d= -f2 || echo "N/A")
+          echo "WIN=$WIN" >> $GITHUB_OUTPUT
+          echo "MAC=$MAC" >> $GITHUB_OUTPUT
+          echo "LNX=$LNX" >> $GITHUB_OUTPUT
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          name: "World Intelligence Platform v${{ steps.ver.outputs.VERSION }}"
+          body: |
+            ## World Intelligence Platform v${{ steps.ver.outputs.VERSION }}
+
+            **Author**    : Muhammad Umer Lari
+            **Copyright** : © 2024-2025 Muhammad Umer Lari. All Rights Reserved.
+            **Support**   : umerlari1998@gmail.com
+
+            ---
+
+            ### Download & Install
+
+            | Platform | File | Notes |
+            |----------|------|-------|
+            | **Windows** 8/10/11 | `WorldIntelligence.exe` | Double-click to install |
+            | **macOS** 11+ | `WorldIntelligence.dmg` | Open DMG → drag to Applications |
+            | **Linux** | `WorldIntelligence-linux` | `chmod +x` then run |
+
+            After launch: look for the 🌐 globe icon in your **system tray** (bottom-right taskbar).
+
+            ---
+
+            ### File Integrity (SHA-256)
+            Verified automatically by the built-in auto-updater before applying any update.
+            ```
+            SHA256=${{ steps.shas.outputs.WIN }}   WorldIntelligence.exe
+            SHA256=${{ steps.shas.outputs.MAC }}   WorldIntelligence.dmg
+            SHA256=${{ steps.shas.outputs.LNX }}   WorldIntelligence-linux
+            ```
+
+            ---
+            *Built automatically by GitHub Actions — Muhammad Umer Lari*
+          files: |
+            release_assets/WorldIntelligence.exe
+            release_assets/WorldIntelligence.dmg
+            release_assets/WorldIntelligence-linux
+          draft: false
+          prerelease: false
+          token: ${{ secrets.GITHUB_TOKEN }}

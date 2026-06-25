@@ -1,0 +1,28 @@
+World Intelligence Platform
+Copyright © 2024-2025 Muhammad Umer Lari. All Rights Reserved.
+
+Author  : Muhammad Umer Lari
+Contact : umerlari1998@gmail.com
+GitHub  : https://github.com/lari98/ai-churn-analytics-platform
+
+PROPRIETARY SOFTWARE LICENSE
+
+This software and all associated files, documentation, and data are the
+exclusive property of Muhammad Umer Lari ("Author").
+
+Permission is granted to use this software solely for personal,
+non-commercial purposes on machines owned or controlled by the licensee.
+
+The following are strictly prohibited without express written consent
+from Muhammad Umer Lari:
+
+  1. Redistribution of this software in source or binary form
+  2. Modification, reverse engineering, or decompilation
+  3. Commercial use or sublicensing
+  4. Removal or alteration of this copyright notice
+  5. Claiming authorship or ownership of this software
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+EXPRESS OR IMPLIED. IN NO EVENT SHALL MUHAMMAD UMER LARI BE LIABLE
+FOR ANY CLAIM, DAMAGES, OR OTHER LIABILITY ARISING FROM THE USE
+OF THIS SOFTWARE.

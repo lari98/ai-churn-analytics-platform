@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>World Intelligence Platform v3.1</title>
+<title>World Intelligence Platform v3.5.1</title>
 <!-- Leaflet -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css"/>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
@@ -201,6 +201,49 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:'Segoe 
 #backend-status{position:fixed;bottom:32px;right:12px;z-index:2000;font-size:10px;font-weight:700;padding:3px 10px;border-radius:6px;pointer-events:none;transition:opacity .5s;}
 .bs-live{background:#064e3b;color:#6ee7b7;border:1px solid #065f46;}
 .bs-off{background:#1c1917;color:#78716c;border:1px solid #292524;}
+/* ══════════════ CENTRAL BANKS LIVE v3.5 ══════════════ */
+#page-centralbanks{padding:16px;}
+.cb-kpi-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin-bottom:16px;}
+.cb-kpi{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:13px 15px;position:relative;overflow:hidden;transition:transform .2s;}
+.cb-kpi:hover{transform:translateY(-2px);}
+.cb-kpi::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;}
+.cb-kpi.fed::before{background:linear-gradient(90deg,#3b82f6,#1d4ed8);}
+.cb-kpi.ecb::before{background:linear-gradient(90deg,#f59e0b,#d97706);}
+.cb-kpi.boe::before{background:linear-gradient(90deg,#8b5cf6,#6d28d9);}
+.cb-kpi.boj::before{background:linear-gradient(90deg,#ec4899,#be185d);}
+.cb-kpi.avg::before{background:linear-gradient(90deg,#10b981,#059669);}
+.cb-kpi-label{font-size:10px;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:.5px;}
+.cb-kpi-val{font-size:26px;font-weight:700;color:var(--text);line-height:1.1;margin:4px 0 2px;}
+.cb-kpi-sub{font-size:10px;color:var(--muted);}
+.cb-kpi-change{font-size:11px;font-weight:600;margin-top:4px;}
+.cb-kpi-change.up{color:#f87171;}.cb-kpi-change.down{color:#34d399;}.cb-kpi-change.flat{color:var(--muted);}
+.cb-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px;}
+.cb-card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:16px;}
+.cb-card-full{grid-column:1/-1;}
+.cb-card h3{font-size:12px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.6px;margin:0 0 12px;}
+.cb-table{width:100%;border-collapse:collapse;font-size:12px;}
+.cb-table th{text-align:left;padding:6px 8px;color:var(--muted);font-weight:600;font-size:10px;text-transform:uppercase;border-bottom:1px solid var(--border);}
+.cb-table td{padding:7px 8px;border-bottom:1px solid rgba(255,255,255,.04);color:var(--text);}
+.cb-table tr:last-child td{border-bottom:none;}
+.cb-table tr:hover td{background:rgba(255,255,255,.03);}
+.cb-rate-val{font-weight:700;font-size:13px;}
+.cb-change{font-size:11px;font-weight:600;padding:2px 6px;border-radius:4px;}
+.cb-change.up{background:rgba(248,113,113,.15);color:#f87171;}
+.cb-change.dn{background:rgba(52,211,153,.15);color:#34d399;}
+.cb-change.fl{background:rgba(156,163,175,.12);color:var(--muted);}
+.cb-trend{font-size:14px;}
+.cb-badge{font-size:9px;padding:2px 7px;border-radius:10px;font-weight:600;white-space:nowrap;}
+.cb-badge.adv{background:rgba(59,130,246,.15);color:#60a5fa;}
+.cb-badge.em{background:rgba(251,191,36,.15);color:#fbbf24;}
+.cb-live-dot{display:inline-block;width:6px;height:6px;border-radius:50%;background:#34d399;margin-right:4px;animation:cb-pulse 2s infinite;}
+@keyframes cb-pulse{0%,100%{opacity:1;transform:scale(1);}50%{opacity:.5;transform:scale(.7);}}
+.cb-chart-wrap{position:relative;height:200px;}
+.cb-chart-wrap-lg{position:relative;height:240px;}
+.cbdc-badge{font-size:9px;padding:2px 8px;border-radius:10px;font-weight:700;}
+.cbdc-badge.live{background:rgba(52,211,153,.2);color:#34d399;}
+.cbdc-badge.pilot{background:rgba(251,191,36,.2);color:#fbbf24;}
+.cbdc-badge.research{background:rgba(156,163,175,.15);color:#9ca3af;}
+.cb-src{font-size:9px;color:var(--muted);margin-top:10px;line-height:1.6;}
 /* ══════════════ ENVIRONMENT INTELLIGENCE v3.3 ══════════════ */
 #page-environment{padding:16px;}
 .env-kpi-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(155px,1fr));gap:10px;margin-bottom:16px;}
@@ -400,7 +443,7 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:'Segoe 
 <div id="topbar">
   <a href="index.html">← Dashboard</a>
   <span class="title">🌍 World Intelligence Platform</span>
-  <span class="badge">v3.4</span>
+  <span class="badge">v3.5.1</span>
   <div style="display:flex;align-items:center;gap:6px;margin-left:auto;margin-right:16px;">
     <div class="live-dot"></div><span style="font-size:11px;color:var(--muted);">Live</span>
   </div>
@@ -418,6 +461,7 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:'Segoe 
   <div class="mtab" onclick="showPage('climate',this)">🌡 Climate</div>
   <div class="mtab" onclick="showPage('birth',this)">👶 Birth Rate</div>
   <div class="mtab" onclick="showPage('environment',this)">🌱 Environment</div>
+  <div class="mtab" onclick="showPage('centralbanks',this)">🏦 Central Banks</div>
 </div>
 
 <div id="pages">
@@ -880,6 +924,95 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:'Segoe 
   </div>
   <!-- ══════════════ END ENVIRONMENT ══════════════ -->
 
+  <!-- ══════════════ CENTRAL BANKS LIVE v3.5 ══════════════ -->
+  <div class="page" id="page-centralbanks">
+
+    <!-- KPI row -->
+    <div class="cb-kpi-row">
+      <div class="cb-kpi fed">
+        <div class="cb-kpi-label">🇺🇸 Federal Reserve</div>
+        <div class="cb-kpi-val" id="cb-kpi-fed">4.25%</div>
+        <div class="cb-kpi-sub">Upper bound target rate</div>
+        <div class="cb-kpi-change down" id="cb-kpi-fed-ch">▼ −0.25 (Dec 2024)</div>
+      </div>
+      <div class="cb-kpi ecb">
+        <div class="cb-kpi-label"><span class="cb-live-dot"></span>🇪🇺 ECB <small style="font-size:9px;color:#34d399">LIVE</small></div>
+        <div class="cb-kpi-val" id="cb-kpi-ecb">—</div>
+        <div class="cb-kpi-sub">Deposit facility rate</div>
+        <div class="cb-kpi-change down" id="cb-kpi-ecb-ch">▼ Cutting cycle</div>
+      </div>
+      <div class="cb-kpi boe">
+        <div class="cb-kpi-label">🇬🇧 Bank of England</div>
+        <div class="cb-kpi-val" id="cb-kpi-boe">4.25%</div>
+        <div class="cb-kpi-sub">Bank Rate</div>
+        <div class="cb-kpi-change down">▼ −0.25 (May 2025)</div>
+      </div>
+      <div class="cb-kpi boj">
+        <div class="cb-kpi-label">🇯🇵 Bank of Japan</div>
+        <div class="cb-kpi-val" id="cb-kpi-boj">0.50%</div>
+        <div class="cb-kpi-sub">Policy rate</div>
+        <div class="cb-kpi-change up">▲ +0.25 (Jan 2025)</div>
+      </div>
+      <div class="cb-kpi avg">
+        <div class="cb-kpi-label">🌍 G20 Avg Rate</div>
+        <div class="cb-kpi-val" id="cb-kpi-avg">—</div>
+        <div class="cb-kpi-sub">Simple average · 20 banks</div>
+        <div class="cb-kpi-change flat" id="cb-kpi-avg-trend">Computed from table</div>
+      </div>
+    </div>
+
+    <div class="cb-grid">
+
+      <!-- Rate Table (full width) -->
+      <div class="cb-card cb-card-full">
+        <h3>📊 20 Major Central Banks — Policy Rates <span class="cb-badge adv" style="margin-left:6px">Verified May 2025</span></h3>
+        <div style="overflow-x:auto;">
+          <table class="cb-table" id="cb-rate-table">
+            <thead>
+              <tr>
+                <th></th><th>Central Bank</th><th>Country</th>
+                <th>Rate (%)</th><th>Change</th><th>Dir</th>
+                <th>Category</th><th>Since</th><th>Source</th>
+              </tr>
+            </thead>
+            <tbody id="cb-table-body"></tbody>
+          </table>
+        </div>
+        <div class="cb-src">Sources: federalreserve.gov · ecb.europa.eu (live) · bankofengland.co.uk · boj.or.jp · rba.gov.au · snb.ch · riksbank.se · rbi.org.in · pbc.gov.cn · bcb.gov.br · banxico.org.mx · resbank.co.za · bok.or.kr · bsp.gov.ph · bnm.gov.my · tcmb.gov.tr · cbr.ru · rbnz.govt.nz · bankofcanada.ca · norges-bank.no</div>
+      </div>
+
+      <!-- Historical Rate Chart -->
+      <div class="cb-card">
+        <h3>📈 Policy Rate History — Top 6 Central Banks (2020–2025)</h3>
+        <div class="cb-chart-wrap-lg"><canvas id="cb-history-chart"></canvas></div>
+        <div class="cb-src">Sources: Official central bank publications · Quarterly end-of-period values</div>
+      </div>
+
+      <!-- US Treasury Yield Curve -->
+      <div class="cb-card">
+        <h3>📉 US Treasury Yield Curve <span class="cb-live-dot" style="margin-left:4px"></span><span style="font-size:9px;color:#34d399">LIVE via yfinance</span></h3>
+        <div class="cb-chart-wrap-lg"><canvas id="cb-yield-chart"></canvas></div>
+        <div class="cb-src">Source: Yahoo Finance (^IRX ^FVX ^TNX ^TYX) · US Treasury · Updated on load</div>
+      </div>
+
+      <!-- CBDC Tracker (full width) -->
+      <div class="cb-card cb-card-full">
+        <h3>💳 Central Bank Digital Currency (CBDC) Global Tracker</h3>
+        <div style="overflow-x:auto;">
+          <table class="cb-table">
+            <thead>
+              <tr><th></th><th>Country</th><th>CBDC Name</th><th>Status</th><th>Stage</th><th>Launch / Start</th><th>Notes</th></tr>
+            </thead>
+            <tbody id="cb-cbdc-body"></tbody>
+          </table>
+        </div>
+        <div class="cb-src">Sources: BIS CBDC Tracker · Atlantic Council CBDC Tracker · Official central bank announcements · Updated May 2025</div>
+      </div>
+
+    </div><!-- /.cb-grid -->
+  </div>
+  <!-- ══════════════ END CENTRAL BANKS ══════════════ -->
+
 </div><!-- /#pages -->
 
 <!-- ══ AQI CITY DETAIL MODAL v3.4 ══ -->
@@ -996,6 +1129,7 @@ function showPage(id,el){
   document.getElementById('page-'+id).classList.add('active');
   if(el) el.classList.add('active');
   if(!pageInited[id]){pageInited[id]=true;
+    if(id==='map') initMap();
     if(id==='markets') initMarkets();
     if(id==='news') loadNewsTab('world');
     if(id==='forecast') renderFcPage();
@@ -1005,10 +1139,12 @@ function showPage(id,el){
     if(id==='climate') initClimate();
     if(id==='birth') initBirthRate();
     if(id==='environment') initEnvironment();
+    if(id==='centralbanks') initCentralBanks();
   }
   requestAnimationFrame(()=>{
     Object.values(sparks).forEach(c=>{if(c&&c.resize)c.resize();});
     if(fcChart)fcChart.resize();
+    if(id==='map'&&leafMap) leafMap.invalidateSize();
     if(id==='climate'&&climateMap) climateMap.invalidateSize();
     if(id==='birth'&&birthMap) birthMap.invalidateSize();
     if(id==='environment'&&envAqiMap) envAqiMap.invalidateSize();
@@ -3100,6 +3236,8 @@ function makeDraggable(el){
 document.addEventListener('DOMContentLoaded',()=>{
   makeDraggable(document.getElementById('seasPanel'));
   makeDraggable(document.getElementById('predPanel'));
+  // World Map is the default active page — initialise it on boot
+  if(!pageInited['map']){pageInited['map']=true; initMap();}
 });
 
 // ════════════════════════════════════════
@@ -3644,9 +3782,192 @@ function initEnvironment(){
 
   console.log('[Environment v3.3] All charts, map & tables initialized ✅');
 }
+
 // ══════════════════════════════════════════════════════════════════════════
-// AQI MODAL v3.4 — openAqiModal / showAqiTab / closeAqiModal
+// CENTRAL BANKS LIVE v3.5
+// Free APIs: ECB Data Portal (ecb.europa.eu, no key) + yfinance via backend
+// All other rates: official central bank websites, verified May 2025
 // ══════════════════════════════════════════════════════════════════════════
+let cbHistChart=null, cbYieldChart=null;
+
+const CB_BANKS=[
+  {flag:'🇺🇸',bank:'Federal Reserve', country:'United States', rate:4.25,prev:4.50,ch:-0.25,trend:'dn',cat:'adv',since:'Dec 2024',src:'federalreserve.gov',live:false},
+  {flag:'🇪🇺',bank:'ECB',             country:'Eurozone',      rate:2.25,prev:2.50,ch:-0.25,trend:'dn',cat:'adv',since:'Apr 2025',src:'ecb.europa.eu',    live:true },
+  {flag:'🇬🇧',bank:'Bank of England', country:'United Kingdom',rate:4.25,prev:4.50,ch:-0.25,trend:'dn',cat:'adv',since:'May 2025',src:'bankofengland.co.uk',live:false},
+  {flag:'🇯🇵',bank:'Bank of Japan',   country:'Japan',         rate:0.50,prev:0.25,ch:+0.25,trend:'up',cat:'adv',since:'Jan 2025',src:'boj.or.jp',         live:false},
+  {flag:'🇨🇦',bank:'Bank of Canada',  country:'Canada',        rate:2.75,prev:3.00,ch:-0.25,trend:'dn',cat:'adv',since:'Mar 2025',src:'bankofcanada.ca',   live:false},
+  {flag:'🇦🇺',bank:'RBA',             country:'Australia',     rate:3.85,prev:4.10,ch:-0.25,trend:'dn',cat:'adv',since:'May 2025',src:'rba.gov.au',        live:false},
+  {flag:'🇨🇭',bank:'Swiss Natl Bank', country:'Switzerland',   rate:0.25,prev:0.50,ch:-0.25,trend:'dn',cat:'adv',since:'Mar 2025',src:'snb.ch',            live:false},
+  {flag:'🇸🇪',bank:'Riksbank',        country:'Sweden',        rate:2.25,prev:2.50,ch:-0.25,trend:'dn',cat:'adv',since:'May 2025',src:'riksbank.se',       live:false},
+  {flag:'🇳🇿',bank:'RBNZ',            country:'New Zealand',   rate:3.25,prev:3.50,ch:-0.25,trend:'dn',cat:'adv',since:'Apr 2025',src:'rbnz.govt.nz',      live:false},
+  {flag:'🇳🇴',bank:'Norges Bank',     country:'Norway',        rate:4.50,prev:4.50,ch:0,    trend:'fl',cat:'adv',since:'Dec 2023',src:'norges-bank.no',    live:false},
+  {flag:'🇰🇷',bank:'Bank of Korea',   country:'South Korea',   rate:2.75,prev:3.00,ch:-0.25,trend:'dn',cat:'adv',since:'Feb 2025',src:'bok.or.kr',         live:false},
+
+  {flag:'🇮🇳',bank:'RBI',             country:'India',         rate:6.00,prev:6.25,ch:-0.25,trend:'dn',cat:'em', since:'Apr 2025',src:'rbi.org.in',        live:false},
+  {flag:'🇨🇳',bank:'PBOC',            country:'China',         rate:3.10,prev:3.30,ch:-0.20,trend:'dn',cat:'em', since:'Oct 2024',src:'pbc.gov.cn',        live:false},
+  {flag:'🇧🇷',bank:'BCB',             country:'Brazil',        rate:14.75,prev:13.75,ch:+1.0,trend:'up',cat:'em',since:'Mar 2025',src:'bcb.gov.br',        live:false},
+  {flag:'🇲🇽',bank:'Banxico',         country:'Mexico',        rate:9.00,prev:9.50,ch:-0.50,trend:'dn',cat:'em', since:'Mar 2025',src:'banxico.org.mx',    live:false},
+  {flag:'🇿🇦',bank:'SARB',            country:'South Africa',  rate:7.50,prev:7.75,ch:-0.25,trend:'dn',cat:'em', since:'Nov 2024',src:'resbank.co.za',     live:false},
+  {flag:'🇵🇭',bank:'BSP',             country:'Philippines',   rate:5.50,prev:5.75,ch:-0.25,trend:'dn',cat:'em', since:'Feb 2025',src:'bsp.gov.ph',        live:false},
+  {flag:'🇲🇾',bank:'BNM',             country:'Malaysia',      rate:3.00,prev:3.00,ch:0,    trend:'fl',cat:'em', since:'May 2023',src:'bnm.gov.my',        live:false},
+  {flag:'🇹🇷',bank:'CBRT',            country:'Turkey',        rate:42.50,prev:45.00,ch:-2.5,trend:'dn',cat:'em',since:'Mar 2025',src:'tcmb.gov.tr',       live:false},
+  {flag:'🇷🇺',bank:'CBR',             country:'Russia',        rate:21.00,prev:21.00,ch:0,  trend:'fl',cat:'em', since:'Oct 2024',src:'cbr.ru',            live:false},
+];
+
+const CBDC_LIST=[
+  {flag:'🇧🇸',country:'Bahamas',       name:'Sand Dollar',       status:'live',    stage:'Fully Live',         year:'2020', note:"World's first retail CBDC"},
+  {flag:'🇯🇲',country:'Jamaica',       name:'JAM-DEX',           status:'live',    stage:'Fully Live',         year:'2022', note:'Legal tender, QR-based'},
+  {flag:'🇳🇬',country:'Nigeria',       name:'eNaira',            status:'live',    stage:'Live (low adoption)',year:'2021', note:'Mandatory merchant acceptance'},
+  {flag:'🇨🇳',country:'China',         name:'Digital Yuan (e-CNY)',status:'pilot', stage:'Large-scale Pilot',  year:'2020', note:'100M+ wallets, 26 cities'},
+  {flag:'🇮🇳',country:'India',         name:'Digital Rupee',     status:'pilot',   stage:'Retail Pilot',       year:'2022', note:'RBI phased rollout'},
+  {flag:'🇧🇷',country:'Brazil',        name:'DREX',              status:'pilot',   stage:'Wholesale Pilot',    year:'2023', note:'Tokenised finance focus'},
+  {flag:'🇦🇪',country:'UAE',           name:'Digital Dirham',    status:'pilot',   stage:'Wholesale Pilot',    year:'2023', note:'Cross-border settlement focus'},
+  {flag:'🇸🇬',country:'Singapore',     name:'Project Orchid',    status:'pilot',   stage:'Wholesale Pilot',    year:'2021', note:'MAS-led, programmable money'},
+  {flag:'🇯🇵',country:'Japan',         name:'Digital Yen',       status:'pilot',   stage:'Phase 3 Pilot',      year:'2021', note:'BOJ testing with consumers'},
+  {flag:'🇰🇷',country:'South Korea',   name:'Digital Won',       status:'pilot',   stage:'Retail Pilot',       year:'2022', note:'BOK limited user trials'},
+  {flag:'🇸🇪',country:'Sweden',        name:'e-Krona',           status:'pilot',   stage:'Pilot Concluded',    year:'2020', note:'Riksbank reviewing results'},
+  {flag:'🇪🇺',country:'Eurozone',      name:'Digital Euro',      status:'research',stage:'Preparation Phase',  year:'—',    note:'ECB design phase, 2028 est.'},
+  {flag:'🇬🇧',country:'United Kingdom',name:'Digital Pound',     status:'research',stage:'Design Phase',       year:'—',    note:'HM Treasury + BOE consulting'},
+  {flag:'🇺🇸',country:'United States', name:'Digital Dollar',    status:'research',stage:'Research',           year:'—',    note:'Fed not committed to issuance'},
+  {flag:'🇨🇦',country:'Canada',        name:'Digital CAD',       status:'research',stage:'Contingency Planning',year:'—',  note:'BOC contingency only'},
+  {flag:'🇦🇺',country:'Australia',     name:'Digital AUD',       status:'research',stage:'Wholesale Focus',    year:'—',    note:'RBA wholesale CBDC study'},
+];
+
+// Quarterly end-of-period policy rates 2020Q1 → 2025Q2 (22 points)
+const CB_HIST_LABELS=['20Q1','20Q2','20Q3','20Q4','21Q1','21Q2','21Q3','21Q4','22Q1','22Q2','22Q3','22Q4','23Q1','23Q2','23Q3','23Q4','24Q1','24Q2','24Q3','24Q4','25Q1','25Q2'];
+const CB_HIST={
+  fed:[0.25,0.25,0.25,0.25,0.25,0.25,0.25,0.25,0.50,1.75,3.25,4.50,5.00,5.25,5.50,5.50,5.50,5.50,5.00,4.50,4.25,4.25],
+  ecb:[-0.50,-0.50,-0.50,-0.50,-0.50,-0.50,-0.50,-0.50,-0.50,0.00,0.75,2.00,2.50,3.25,4.00,4.00,3.75,3.75,3.50,3.00,2.50,2.25],
+  boe:[0.10,0.10,0.10,0.10,0.10,0.10,0.10,0.10,0.75,1.25,2.25,3.50,4.00,5.00,5.25,5.25,5.25,5.25,4.75,4.75,4.50,4.25],
+  boj:[-0.10,-0.10,-0.10,-0.10,-0.10,-0.10,-0.10,-0.10,-0.10,-0.10,-0.10,-0.10,-0.10,-0.10,-0.10,-0.10,-0.10,-0.10,-0.10,-0.10,0.25,0.50],
+  boc:[0.25,0.25,0.25,0.25,0.25,0.25,0.25,0.25,0.50,1.50,3.25,4.25,4.50,5.00,5.00,5.00,5.00,4.75,4.25,3.25,3.00,2.75],
+  rba:[0.25,0.25,0.25,0.25,0.10,0.10,0.10,0.10,0.10,0.85,2.35,3.10,3.60,4.10,4.10,4.35,4.35,4.35,4.35,4.35,4.10,3.85],
+};
+
+function initCentralBanks(){
+  // ── Build rate table ──────────────────────────────────────
+  const tbody=document.getElementById('cb-table-body');
+  tbody.innerHTML='';
+  let totalRate=0;
+  CB_BANKS.forEach(b=>{
+    const chClass=b.ch>0?'up':b.ch<0?'dn':'fl';
+    const chSign=b.ch>0?'+':'';
+    const trendIcon=b.trend==='up'?'🔴↑':b.trend==='dn'?'🟢↓':'⬜→';
+    const liveTag=b.live?'<span class="cb-live-dot"></span>':'';
+    tbody.innerHTML+=`<tr>
+      <td style="font-size:18px">${b.flag}</td>
+      <td>${liveTag}<strong>${b.bank}</strong></td>
+      <td style="color:var(--muted)">${b.country}</td>
+      <td class="cb-rate-val">${b.rate.toFixed(2)}%</td>
+      <td><span class="cb-change ${chClass}">${chSign}${b.ch.toFixed(2)}%</span></td>
+      <td class="cb-trend">${trendIcon}</td>
+      <td><span class="cb-badge ${b.cat}">${b.cat==='adv'?'Advanced':'Emerging'}</span></td>
+      <td style="color:var(--muted);font-size:11px">${b.since}</td>
+      <td style="color:var(--muted);font-size:10px">${b.src}</td>
+    </tr>`;
+    totalRate+=b.rate;
+  });
+
+  // ── G20 average KPI ───────────────────────────────────────
+  const avg=(totalRate/CB_BANKS.length).toFixed(2);
+  document.getElementById('cb-kpi-avg').textContent=avg+'%';
+  document.getElementById('cb-kpi-avg-trend').textContent='Avg of '+CB_BANKS.length+' banks · May 2025';
+
+  // ── CBDC Table ────────────────────────────────────────────
+  const cbdcBody=document.getElementById('cb-cbdc-body');
+  cbdcBody.innerHTML='';
+  CBDC_LIST.forEach(c=>{
+    cbdcBody.innerHTML+=`<tr>
+      <td style="font-size:16px">${c.flag}</td>
+      <td><strong>${c.country}</strong></td>
+      <td>${c.name}</td>
+      <td><span class="cbdc-badge ${c.status}">${c.status.charAt(0).toUpperCase()+c.status.slice(1)}</span></td>
+      <td style="font-size:11px;color:var(--muted)">${c.stage}</td>
+      <td style="font-size:11px;color:var(--muted)">${c.year}</td>
+      <td style="font-size:11px;color:var(--muted)">${c.note}</td>
+    </tr>`;
+  });
+
+  // ── History chart (Chart.js) ──────────────────────────────
+  if(cbHistChart){cbHistChart.destroy();cbHistChart=null;}
+  const hCtx=document.getElementById('cb-history-chart').getContext('2d');
+  cbHistChart=new Chart(hCtx,{
+    type:'line',
+    data:{
+      labels:CB_HIST_LABELS,
+      datasets:[
+        {label:'Fed (US)', data:CB_HIST.fed,borderColor:'#60a5fa',backgroundColor:'rgba(96,165,250,.08)',borderWidth:2,pointRadius:0,tension:.3},
+        {label:'ECB (EU)', data:CB_HIST.ecb,borderColor:'#fbbf24',backgroundColor:'rgba(251,191,36,.06)', borderWidth:2,pointRadius:0,tension:.3},
+        {label:'BOE (UK)', data:CB_HIST.boe,borderColor:'#a78bfa',backgroundColor:'rgba(167,139,250,.06)',borderWidth:2,pointRadius:0,tension:.3},
+        {label:'BOJ (JP)', data:CB_HIST.boj,borderColor:'#f472b6',backgroundColor:'rgba(244,114,182,.06)',borderWidth:2,pointRadius:0,tension:.3},
+        {label:'BOC (CA)', data:CB_HIST.boc,borderColor:'#34d399',backgroundColor:'rgba(52,211,153,.06)', borderWidth:2,pointRadius:0,tension:.3},
+        {label:'RBA (AU)', data:CB_HIST.rba,borderColor:'#fb923c',backgroundColor:'rgba(251,146,60,.06)', borderWidth:2,pointRadius:0,tension:.3},
+      ]
+    },
+    options:{responsive:true,maintainAspectRatio:false,interaction:{mode:'index',intersect:false},
+      plugins:{legend:{labels:{color:'#9ca3af',boxWidth:12,font:{size:10}}},
+        tooltip:{backgroundColor:'#1f2937',titleColor:'#f9fafb',bodyColor:'#d1d5db',
+          callbacks:{label:c=>' '+c.dataset.label+': '+c.parsed.y.toFixed(2)+'%'}}},
+      scales:{
+        x:{ticks:{color:'#6b7280',font:{size:9}},grid:{color:'rgba(255,255,255,.04)'}},
+        y:{ticks:{color:'#6b7280',font:{size:9},callback:v=>v+'%'},grid:{color:'rgba(255,255,255,.06)'},
+           title:{display:true,text:'Policy Rate (%)',color:'#6b7280',font:{size:9}}}
+      }}
+  });
+
+  // ── Yield curve chart + live ECB fetch ───────────────────
+  _buildYieldChart({});
+  fetch('/api/central-banks')
+    .then(r=>r.ok?r.json():null)
+    .then(data=>{
+      if(!data) return;
+      if(data.ecb_deposit_rate!=null){
+        const ecbV=parseFloat(data.ecb_deposit_rate).toFixed(2)+'%';
+        document.getElementById('cb-kpi-ecb').textContent=ecbV;
+        const chEl=document.getElementById('cb-kpi-ecb-ch');
+        if(chEl) chEl.textContent=(data.ecb_date?'Live · '+data.ecb_date:'Live · ECB Data Portal');
+        const rows=document.querySelectorAll('#cb-table-body tr');
+        if(rows[1]) rows[1].cells[3].textContent=ecbV;
+      }
+      _buildYieldChart(data.yield_curve||{});
+    })
+    .catch(()=>{});
+}
+
+function _buildYieldChart(yc){
+  const labels=['3M','2Y','5Y','10Y','30Y'];
+  const vals=[yc['3m']??null, yc['2y']??null, yc['5y']??null, yc['10y']??null, yc['30y']??null];
+  const hasLive=vals.some(v=>v!==null);
+  if(cbYieldChart){cbYieldChart.destroy();cbYieldChart=null;}
+  const yCtx=document.getElementById('cb-yield-chart').getContext('2d');
+  cbYieldChart=new Chart(yCtx,{
+    type:'line',
+    data:{
+      labels,
+      datasets:[{
+        label:hasLive?'US Treasury Yield (Live)':'US Treasury (start backend to load)',
+        data:vals,
+        borderColor:'#34d399',
+        backgroundColor:'rgba(52,211,153,.10)',
+        borderWidth:2.5,pointRadius:5,pointBackgroundColor:'#34d399',tension:.35,fill:true,
+      }]
+    },
+    options:{responsive:true,maintainAspectRatio:false,
+      plugins:{legend:{labels:{color:'#9ca3af',font:{size:10}}},
+        tooltip:{backgroundColor:'#1f2937',titleColor:'#f9fafb',bodyColor:'#d1d5db',
+          callbacks:{label:c=>c.parsed.y!=null?' Yield: '+c.parsed.y.toFixed(3)+'%':' No data'}}},
+      scales:{
+        x:{ticks:{color:'#6b7280'},grid:{color:'rgba(255,255,255,.04)'}},
+        y:{ticks:{color:'#6b7280',callback:v=>v+'%'},grid:{color:'rgba(255,255,255,.06)'},
+           title:{display:true,text:'Yield (%)',color:'#6b7280',font:{size:9}}}
+      }}
+  });
+}
+console.log('[Central Banks v3.5] module loaded ✅');
+
+// ======================================================================
+// AQI MODAL v3.4 — global functions (openAqiModal / showAqiTab / closeAqiModal)
+// ======================================================================
 let _aqiCity=null;
 function aqiColor(a){return a<50?'#10b981':a<100?'#fbbf24':a<150?'#f97316':a<200?'#ef4444':a<300?'#7c3aed':'#7c2d12';}
 function aqiLabel(a){return a<50?'Good':a<100?'Moderate':a<150?'Unhealthy (Sensitive)':a<200?'Unhealthy':a<300?'Very Unhealthy':'Hazardous';}
@@ -3654,14 +3975,11 @@ function aqiLabel(a){return a<50?'Good':a<100?'Moderate':a<150?'Unhealthy (Sensi
 function openAqiModal(city){
   _aqiCity=city;
   const col=aqiColor(city.aqi);
-  // Header
   document.getElementById('aqi-m-city').textContent=city.flag+' '+city.n;
   document.getElementById('aqi-m-sub').textContent=city.country+' · Pop. '+city.pop+'M · Dominant: '+city.dom;
   const badge=document.getElementById('aqi-m-badge');
   badge.textContent='AQI '+city.aqi;
-  badge.style.color=col; badge.style.borderColor=col;
-  badge.style.background=col+'22';
-  // reset to overview tab
+  badge.style.color=col; badge.style.borderColor=col; badge.style.background=col+'22';
   showAqiTab('overview');
   document.getElementById('aqi-modal').classList.add('open');
   document.body.style.overflow='hidden';
@@ -3678,144 +3996,70 @@ function showAqiTab(tab){
   if(!_aqiCity) return;
   const c=_aqiCity;
   const col=aqiColor(c.aqi);
-  const days=['Today','Tomorrow','Day 3'];
 
   if(tab==='overview'){
-    document.getElementById('aqi-ov-cat').textContent=aqiLabel(c.aqi);
-    document.getElementById('aqi-ov-cat').style.color=col;
-    document.getElementById('aqi-ov-dom').textContent=c.dom;
-    document.getElementById('aqi-ov-pop').textContent=c.pop+'M people';
-    const delta=c.trend[4]-c.trend[0];
-    const tEl=document.getElementById('aqi-ov-trend');
-    tEl.textContent=(delta<0?'▼ ':'▲ ')+Math.abs(delta)+' pts vs 2020';
-    tEl.style.color=delta<0?'#10b981':'#ef4444';
-    // 3-day forecast
-    document.getElementById('aqi-ov-fc').innerHTML=c.fc.map((v,i)=>{
-      const fc=aqiColor(v);
-      const arr=v>c.aqi?'▲':v<c.aqi?'▼':'—';
-      return `<div class="fc-day">
-        <div class="fc-day-lbl">${days[i]}</div>
-        <div class="fc-day-aqi" style="color:${fc}">${v}</div>
-        <div class="fc-day-lv" style="color:${fc}">${aqiLabel(v)}</div>
-        <div class="fc-day-arr" style="color:${v>c.aqi?'#ef4444':v<c.aqi?'#10b981':'#64748b'}">${arr}</div>
-      </div>`;
-    }).join('');
+    document.getElementById('aqi-ov-aqi').textContent=c.aqi;
+    document.getElementById('aqi-ov-aqi').style.color=col;
+    document.getElementById('aqi-ov-label').textContent=aqiLabel(c.aqi);
+    document.getElementById('aqi-ov-label').style.color=col;
+    document.getElementById('aqi-ov-dom').textContent='Dominant: '+c.dom;
+    document.getElementById('aqi-ov-rg-gen').textContent=c.rg.gen;
+    document.getElementById('aqi-ov-rg-sen').textContent=c.rg.sen;
+    document.getElementById('aqi-ov-rg-child').textContent=c.rg.child;
+    document.getElementById('aqi-ov-rg-eld').textContent=c.rg.eld;
   }
-
   if(tab==='pollutants'){
+    const WHO={pm25:15,pm10:45,no2:25,o3:100,co:4,so2:40};
     const polls=[
-      {l:'PM2.5',v:c.pm25,who:15,  unit:'µg/m³',desc:'Fine particles — penetrate deep into lungs',bc:'#ef4444'},
-      {l:'PM10', v:c.pm10,who:45,  unit:'µg/m³',desc:'Coarse particles — irritate airways',bc:'#f97316'},
-      {l:'NO₂',  v:c.no2, who:25,  unit:'µg/m³',desc:'Nitrogen dioxide — traffic & combustion',bc:'#fbbf24'},
-      {l:'O₃',   v:c.o3,  who:100, unit:'µg/m³',desc:'Ozone — sunlight + NOx reaction',bc:'#a3e635'},
-      {l:'CO',   v:c.co,  who:4,   unit:'ppm',  desc:'Carbon monoxide — incomplete combustion',bc:'#60a5fa'},
-      {l:'SO₂',  v:c.so2, who:40,  unit:'µg/m³',desc:'Sulfur dioxide — industrial & volcanic',bc:'#c084fc'}
+      {n:'PM2.5',v:c.pm25,u:'µg/m³',lim:WHO.pm25},
+      {n:'PM10', v:c.pm10,u:'µg/m³',lim:WHO.pm10},
+      {n:'NO₂',  v:c.no2, u:'µg/m³',lim:WHO.no2},
+      {n:'O₃',   v:c.o3,  u:'µg/m³',lim:WHO.o3},
+      {n:'CO',   v:c.co,  u:'ppm',   lim:WHO.co},
+      {n:'SO₂',  v:c.so2, u:'µg/m³',lim:WHO.so2},
     ];
-    document.getElementById('aqi-poll-bars').innerHTML=polls.map(p=>{
-      const pct=Math.min(100,Math.round(p.v/p.who*60));
-      const exceed=p.v>p.who;
-      return `<div class="poll-row">
-        <div class="poll-lbl">${p.l}</div>
-        <div style="flex:1;">
-          <div style="font-size:9px;color:#475569;margin-bottom:2px;">${p.desc}</div>
-          <div class="poll-bar-wrap">
-            <div class="poll-bar-fill" style="width:${pct}%;background:${exceed?'#ef4444':p.bc};"></div>
-          </div>
+    let html='';
+    polls.forEach(p=>{
+      const pct=Math.min(100,Math.round((p.v/p.lim)*100));
+      const over=p.v>p.lim;
+      const barCol=over?'#ef4444':'#34d399';
+      html+=`<div class="poll-row">
+        <div style="display:flex;justify-content:space-between;margin-bottom:3px">
+          <span style="font-weight:600;font-size:12px">${p.n}</span>
+          <span style="font-size:12px">${p.v} ${p.u} ${over?'<span style="color:#f87171;font-size:10px">⚠ '+Math.round(pct)+'% over WHO</span>':'<span style="color:#34d399;font-size:10px">✓ WHO safe</span>'}</span>
         </div>
-        <div class="poll-val" style="color:${exceed?'#fca5a5':'#e2e8f0'}">${p.v} ${p.unit}</div>
-        <div class="poll-who" style="color:${exceed?'#ef4444':'#10b981'}">${exceed?'▲ ':'✓ '}WHO: ${p.who}</div>
+        <div class="poll-bar-wrap"><div class="poll-bar-fill" style="width:${Math.min(100,pct)}%;background:${barCol}"></div></div>
+        <div style="font-size:9px;color:var(--muted);margin-top:2px">WHO limit: ${p.lim} ${p.u}</div>
       </div>`;
-    }).join('');
+    });
+    document.getElementById('aqi-sec-pollutants').innerHTML=html;
   }
-
   if(tab==='trends'){
-    const yrs=[2020,2021,2022,2023,2024];
-    const maxT=Math.max(...c.trend);
-    const colsH=document.getElementById('aqi-trend-cols');
-    const yrsH=document.getElementById('aqi-trend-yrs');
-    colsH.innerHTML=c.trend.map((v,i)=>{
-      const h=Math.round((v/maxT)*58)+4;
-      const tc=aqiColor(v);
-      return `<div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;">
-        <div style="font-size:10px;font-weight:700;color:${tc}">${v}</div>
-        <div class="aqi-trend-col" title="${yrs[i]}: AQI ${v}" style="height:${h}px;background:${tc};width:80%;align-self:center;"></div>
-      </div>`;
-    }).join('');
-    yrsH.innerHTML=yrs.map(y=>`<div style="flex:1;font-size:9px;color:#475569;text-align:center;">${y}</div>`).join('');
-    const firstY=c.trend[0], lastY=c.trend[4];
-    const chg=lastY-firstY, pct=Math.round(Math.abs(chg)/firstY*100);
-    document.getElementById('aqi-trend-note').textContent=
-      `5-year change: ${chg>0?'+':''}${chg} AQI pts (${pct}% ${chg>0?'worse':'better'} since 2020). ${chg<0?'Air quality improving ✅':'Continued deterioration ⚠️'}`;
-    // Forecast
-    document.getElementById('aqi-trend-fc').innerHTML=c.fc.map((v,i)=>{
-      const fc=aqiColor(v);
-      const arr=v>c.aqi?'▲':v<c.aqi?'▼':'—';
-      return `<div class="fc-day">
-        <div class="fc-day-lbl">${days[i]}</div>
-        <div class="fc-day-aqi" style="color:${fc}">${v}</div>
-        <div class="fc-day-lv" style="color:${fc}">${aqiLabel(v)}</div>
-        <div class="fc-day-arr" style="color:${v>c.aqi?'#ef4444':v<c.aqi?'#10b981':'#64748b'}">${arr}</div>
-      </div>`;
-    }).join('');
+    const tLabels=['4 days ago','3 days ago','2 days ago','Yesterday','Today'];
+    const fLabels=['Tomorrow','Day +2','Day +3'];
+    let html=`<div style="font-size:11px;color:var(--muted);margin-bottom:8px">Past 5 days &amp; 3-day forecast · AQI values</div>
+    <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px">`;
+    c.trend.forEach((v,i)=>{const lc=aqiColor(v);html+=`<div class="fc-day" style="border-color:${lc}22;background:${lc}11"><div style="font-size:9px;color:var(--muted)">${tLabels[i]}</div><div style="font-size:18px;font-weight:700;color:${lc}">${v}</div><div style="font-size:9px;color:${lc}">${aqiLabel(v).split(' ')[0]}</div></div>`;});
+    html+=`</div><div style="font-size:11px;color:var(--muted);margin-bottom:8px">3-day forecast</div><div style="display:flex;gap:6px;flex-wrap:wrap">`;
+    c.fc.forEach((v,i)=>{const lc=aqiColor(v);html+=`<div class="fc-day" style="border-color:${lc}22;background:${lc}11;opacity:.85"><div style="font-size:9px;color:var(--muted)">${fLabels[i]}</div><div style="font-size:18px;font-weight:700;color:${lc}">${v}</div><div style="font-size:9px;color:${lc}">${aqiLabel(v).split(' ')[0]}</div></div>`;});
+    html+=`</div>`;
+    document.getElementById('aqi-sec-trends').innerHTML=html;
   }
-
   if(tab==='health'){
-    // Risk level block
+    const riskLvl=c.aqi<50?'Low':c.aqi<100?'Moderate':c.aqi<150?'Elevated':c.aqi<200?'High':'Very High';
     const riskCol=aqiColor(c.aqi);
-    document.getElementById('aqi-risk-level-block').innerHTML=`
-      <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px;">
-        <div style="width:14px;height:14px;border-radius:50%;background:${riskCol};flex-shrink:0;"></div>
-        <span style="font-size:15px;font-weight:800;color:${riskCol};">${aqiLabel(c.aqi)}</span>
-        <span style="font-size:12px;color:#64748b;margin-left:4px;">AQI ${c.aqi}</span>
-      </div>
-      <div style="background:${riskCol}18;border:1px solid ${riskCol}44;border-radius:6px;padding:8px 12px;font-size:11px;color:#cbd5e1;line-height:1.6;">
-        ${c.aqi<50?'Air quality is considered satisfactory and air pollution poses little or no risk to health.':
-          c.aqi<100?'Air quality is acceptable. However, some pollutants may be a concern for a small number of sensitive individuals.':
-          c.aqi<150?'Members of sensitive groups may experience health effects. The general public is less likely to be affected.':
-          c.aqi<200?'Some members of the general public may experience health effects; sensitive groups may experience more serious effects.':
-          c.aqi<300?'Health alert: risk of health effects is increased. Everyone may experience more serious health effects.':
-          'Health warning of emergency conditions. Everyone is more likely to be affected.'}
+    document.getElementById('aqi-sec-health').innerHTML=`
+      <div class="risk-section">
+        <div style="font-size:13px;font-weight:700;color:${riskCol};margin-bottom:8px">Overall Risk Level: ${riskLvl}</div>
+        <div class="risk-grp"><div style="font-weight:600;font-size:11px;margin-bottom:3px">👨 General Public</div><div style="font-size:11px;color:var(--muted)">${c.rg.gen}</div></div>
+        <div class="risk-grp"><div style="font-weight:600;font-size:11px;margin-bottom:3px">🥺 Sensitive Groups</div><div style="font-size:11px;color:var(--muted)">${c.rg.sen}</div></div>
+        <div class="risk-grp"><div style="font-weight:600;font-size:11px;margin-bottom:3px">👶 Children</div><div style="font-size:11px;color:var(--muted)">${c.rg.child}</div></div>
+        <div class="risk-grp"><div style="font-weight:600;font-size:11px;margin-bottom:3px">👴 Elderly</div><div style="font-size:11px;color:var(--muted)">${c.rg.eld}</div></div>
+        <div style="margin-top:12px;font-size:10px;color:var(--muted)">Data: OpenAQ · WHO Air Quality Guidelines 2021 · Forecasts: CAMS Copernicus</div>
       </div>`;
-    // Risk groups
-    document.getElementById('aqi-risk-groups').innerHTML=[
-      {icon:'🌍',name:'General Public',msg:c.rg.gen},
-      {icon:'🫁',name:'Sensitive Groups',msg:c.rg.sen},
-      {icon:'👶',name:'Children',msg:c.rg.child},
-      {icon:'👴',name:'Elderly',msg:c.rg.eld}
-    ].map(g=>`<div class="risk-grp">
-      <span class="risk-icon">${g.icon}</span>
-      <span class="risk-grp-name">${g.name}</span>
-      <span class="risk-grp-msg">${g.msg}</span>
-    </div>`).join('');
-    // Health effects
-    document.getElementById('aqi-health-effects').innerHTML=
-      c.aqi<50?'✅ Minimal impact. Normal outdoor activities are safe for everyone.':
-      c.aqi<100?'⚠️ Respiratory symptoms possible in unusually sensitive individuals. May cause breathing discomfort if exposed for long durations.':
-      c.aqi<150?'🔶 Irritation to eyes, nose and throat. Coughing, sneezing. Aggravated asthma. Reduced lung function possible with prolonged exposure.':
-      c.aqi<200?'🔴 Significant aggravation of heart/lung disease. Increased respiratory symptoms in general population. Premature mortality possible in high-risk groups.':
-      c.aqi<300?'🟣 Serious risk of respiratory and cardiovascular effects. Emergency department visits increase. High-risk individuals may experience severe health effects.':
-      '⚫ Serious aggravation of heart and lung diseases. Premature mortality. Healthy individuals also experience serious health effects.';
-    // Protective actions
-    document.getElementById('aqi-protect').innerHTML=
-      c.aqi<50?'✅ Enjoy outdoor activities normally. No protective actions needed.':
-      c.aqi<100?'💡 Sensitive individuals should consider limiting prolonged outdoor exertion. Keep windows partially closed on hot days.':
-      c.aqi<150?'😷 Wear N95/FFP2 mask outdoors. Keep windows closed. Run air purifier indoors. Avoid high-traffic areas. Check AQI before outdoor exercise.':
-      c.aqi<200?'🚨 Wear N95 mask at all times outdoors. Stay indoors as much as possible. Use air purifier with HEPA filter. Avoid outdoor exercise entirely. Seek medical advice if symptoms develop.':
-      c.aqi<300?'🆘 Do not go outdoors unless essential. Seal windows/doors. Use air purifier continuously. If you must go out: N95 mask + goggles. Children/elderly: stay indoors at all times.':
-      '☣️ EMERGENCY: Remain indoors. Seal all ventilation. N95/P100 mask essential if outdoors. Contact local health authorities. Follow emergency broadcast instructions.';
   }
 }
-// ── keyboard close ──
-document.addEventListener('keydown',e=>{if(e.key==='Escape') closeAqiModal();});
-// ══════════════════════════════════════════════════════════════════════════
-
-document.addEventListener('DOMContentLoaded',async()=>{
-  initMap();
-  loadNewsTab('world');
-  document.getElementById('clock').textContent=new Date().toUTCString().slice(5,25)+' UTC';
-  // Check backend and load real data
-  await checkBackend();
-});
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeAqiModal();});
 </script>
 </body>
 </html>

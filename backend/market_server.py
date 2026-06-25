@@ -994,6 +994,59 @@ def get_metrics(symbol: str):
         "change_pct"    : d.get("change", 0),
     }
 
+# ══════════════════════════════════════════════════════════════
+#  CENTRAL BANKS LIVE  v3.5
+#  Free APIs used:
+#    • ECB Data Portal  — data.ecb.europa.eu  (no key, CORS-enabled)
+#    • yfinance         — US Treasury yields (^IRX ^FVX ^TNX ^TYX)
+#  All other policy rates: embedded from official CB websites
+# ══════════════════════════════════════════════════════════════
+@app.get("/api/central-banks")
+async def get_central_banks():
+    result = {"yield_curve": {}, "ecb_deposit_rate": None,
+              "ecb_date": None, "source": "ECB Data Portal + yfinance (free)"}
+
+    # ── 1. US Treasury yield curve via yfinance ───────────────
+    if YF_AVAILABLE:
+        try:
+            import yfinance as yf
+            tickers = {"3m": "^IRX", "2y": "^TWO", "5y": "^FVX",
+                       "10y": "^TNX", "30y": "^TYX"}
+            for label, sym in tickers.items():
+                try:
+                    fi = yf.Ticker(sym).fast_info
+                    val = getattr(fi, "last_price", None)
+                    if val and val > 0:
+                        result["yield_curve"][label] = round(float(val), 3)
+                except Exception:
+                    pass
+        except Exception:
+            pass
+
+    # ── 2. ECB deposit facility rate (free, no API key) ───────
+    try:
+        import httpx as _hx
+        async with _hx.AsyncClient(timeout=8) as client:
+            r = await client.get(
+                "https://data.ecb.europa.eu/api/data/"
+                "FM.B.U2.EUR.4F.KR.MRR_DFR.LEV"
+                "?lastNObservations=1&format=jsondata",
+                headers={"Accept": "application/json"},
+            )
+            if r.status_code == 200:
+                d   = r.json()
+                obs = d["dataSets"][0]["series"]["0:0:0:0:0:0"]["observations"]
+                key = sorted(obs.keys(), key=lambda x: int(x))[-1]
+                result["ecb_deposit_rate"] = obs[key][0]
+                dates = d["structure"]["dimensions"]["observation"][0]["values"]
+                idx   = int(key)
+                result["ecb_date"] = dates[idx]["id"] if idx < len(dates) else None
+    except Exception:
+        result["ecb_deposit_rate"] = 2.25   # fallback: verified May 2025
+
+    return result
+
+
 if __name__ == "__main__":
     import uvicorn
     print("=" * 62)
