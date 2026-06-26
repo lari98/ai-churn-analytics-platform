@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>World Intelligence Platform v3.15</title>
+<title>World Intelligence Platform v3.16</title>
 <!-- Leaflet -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css"/>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
@@ -511,7 +511,7 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:'Segoe 
 <div id="topbar">
   <a href="index.html">← Dashboard</a>
   <span class="title">🌍 World Intelligence Platform</span>
-  <span class="badge">v3.15</span>
+  <span class="badge">v3.16</span>
   <div style="display:flex;align-items:center;gap:6px;margin-left:auto;margin-right:16px;">
     <div class="live-dot"></div><span style="font-size:11px;color:var(--muted);">Live</span>
   </div>
@@ -563,8 +563,20 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:'Segoe 
             <button id="mlbtn-risk" onclick="setMapLayer('risk',this)" style="flex:1;font-size:9px;font-weight:700;padding:3px 5px;border-radius:4px;border:1px solid var(--accent);background:var(--accent);color:#fff;cursor:pointer;">Risk</button>
             <button id="mlbtn-growth" onclick="setMapLayer('growth',this)" style="flex:1;font-size:9px;font-weight:700;padding:3px 5px;border-radius:4px;border:1px solid var(--border);background:transparent;color:var(--muted);cursor:pointer;">GDP%</button>
             <button id="mlbtn-inflation" onclick="setMapLayer('inflation',this)" style="flex:1;font-size:9px;font-weight:700;padding:3px 5px;border-radius:4px;border:1px solid var(--border);background:transparent;color:var(--muted);cursor:pointer;">Inflation</button>
+            <button id="mlbtn-population" onclick="setMapLayer('population',this)" style="flex:1;font-size:9px;font-weight:700;padding:3px 5px;border-radius:4px;border:1px solid var(--border);background:transparent;color:var(--muted);cursor:pointer;">Pop</button>
           </div>
           <div id="map-wb-badge" style="font-size:9px;color:var(--muted);margin-top:5px;min-height:12px;"></div>
+          <!-- v3.16: Alliance Overlay Controls -->
+          <div style="margin-top:6px;padding-top:5px;border-top:1px solid var(--border);">
+            <div style="font-size:9px;font-weight:700;color:var(--muted);margin-bottom:4px;text-transform:uppercase;letter-spacing:.05em;">⚔ Alliances</div>
+            <div style="display:flex;gap:3px;flex-wrap:wrap;">
+              <button id="albtn-nato" onclick="toggleAlliancesLayer('nato',this)" style="font-size:8px;font-weight:700;padding:2px 5px;border-radius:3px;border:1px solid #3b82f6;background:transparent;color:#3b82f6;cursor:pointer;">NATO</button>
+              <button id="albtn-sco" onclick="toggleAlliancesLayer('sco',this)" style="font-size:8px;font-weight:700;padding:2px 5px;border-radius:3px;border:1px solid #ef4444;background:transparent;color:#ef4444;cursor:pointer;">SCO</button>
+              <button id="albtn-brics" onclick="toggleAlliancesLayer('brics',this)" style="font-size:8px;font-weight:700;padding:2px 5px;border-radius:3px;border:1px solid #f97316;background:transparent;color:#f97316;cursor:pointer;">BRICS+</button>
+              <button id="albtn-asean" onclick="toggleAlliancesLayer('asean',this)" style="font-size:8px;font-weight:700;padding:2px 5px;border-radius:3px;border:1px solid #eab308;background:transparent;color:#eab308;cursor:pointer;">ASEAN</button>
+              <button id="albtn-eu" onclick="toggleAlliancesLayer('eu',this)" style="font-size:8px;font-weight:700;padding:2px 5px;border-radius:3px;border:1px solid #8b5cf6;background:transparent;color:#8b5cf6;cursor:pointer;">EU</button>
+            </div>
+          </div>
         </div>
         <div style="margin-top:4px;padding-top:4px;border-top:1px solid var(--border);font-size:10px;color:var(--muted);">Click country for details</div>
       </div>
@@ -1840,16 +1852,32 @@ function _inflationCol(inf){
   if(inf<=20)return'#f97316';
   return'#ef4444';
 }
+// v3.16: Population colour — logarithmic scale
+function _popCol(pop){
+  if(!pop||isNaN(pop))return'#475569';
+  if(pop>8e8)return'#dc2626';   // >800M (India/China)
+  if(pop>2e8)return'#ea580c';   // >200M
+  if(pop>8e7)return'#d97706';   // >80M
+  if(pop>3e7)return'#65a30d';   // >30M
+  if(pop>8e6)return'#0891b2';   // >8M
+  return'#6366f1';               // <8M
+}
 
 function setMapLayer(mode,btn){
   _mapLayer=mode;
   // Update button styles
-  ['risk','growth','inflation'].forEach(m=>{
+  ['risk','growth','inflation','population'].forEach(m=>{
     const b=document.getElementById('mlbtn-'+m);
     if(!b)return;
     if(m===mode){b.style.background='var(--accent)';b.style.color='#fff';b.style.borderColor='var(--accent)';}
     else{b.style.background='transparent';b.style.color='var(--muted)';b.style.borderColor='var(--border)';}
   });
+  // v3.16: lazy-load population data on first use
+  if(mode==='population'&&!window._popLoaded){
+    window._popLoaded=true;
+    _fetchWBPopulation();
+    return; // will re-call after data arrives
+  }
   // Re-colour all circles
   Object.entries(_mapCircles).forEach(([iso,circle])=>{
     const c=CTRY[iso]; if(!c)return;
@@ -1858,6 +1886,9 @@ function setMapLayer(mode,btn){
     else if(mode==='growth'){
       const g=(_wbLive[iso]&&_wbLive[iso].gdp!=null)?_wbLive[iso].gdp:c.g;
       col=_growthCol(g);
+    } else if(mode==='population'){
+      const pop=(_wbLive[iso]&&_wbLive[iso].pop!=null)?_wbLive[iso].pop:null;
+      col=_popCol(pop);
     } else {
       col=_inflationCol(c.inf);
     }
@@ -1897,6 +1928,108 @@ async function _fetchWorldBankLive(){
   }catch(e){
     if(badge)badge.textContent='📌 Embedded data';
     console.warn('[WorldMap] World Bank fallback:',e.message);
+  }
+}
+
+// v3.16: Alliance data + overlay toggle
+const _ALLIANCES={
+  nato:{col:'#3b82f6',label:'NATO',members:['US','CA','GB','FR','DE','IT','ES','NL','BE','PT','NO','PL','CZ','HU','RO','BG','HR','AL','ME','SK','SI','EE','LV','LT','TR','GR','DK','IS']},
+  sco:{col:'#ef4444',label:'SCO',members:['CN','RU','IN','PK','KZ','IR','UZ','KG','TJ']},
+  brics:{col:'#f97316',label:'BRICS+',members:['BR','RU','IN','CN','ZA','EG','AE','ET','IR']},
+  asean:{col:'#eab308',label:'ASEAN',members:['ID','MY','SG','TH','PH','VN','MM','KH','LA','BN']},
+  eu:{col:'#8b5cf6',label:'EU',members:['DE','FR','IT','ES','NL','BE','PL','SE','AT','FI','DK','GR','PT','CZ','RO','HU','SK','BG','HR','SI','EE','LV','LT','IE','MT','CY','LU']}
+};
+window._allianceActive={};
+window._allianceCircles={};
+
+function toggleAlliancesLayer(key,btn){
+  if(!_ALLIANCES[key]||typeof leafMap==='undefined'||typeof L==='undefined')return;
+  const al=_ALLIANCES[key];
+  if(window._allianceActive[key]){
+    // Remove existing rings
+    (window._allianceCircles[key]||[]).forEach(m=>{try{leafMap.removeLayer(m);}catch(e){}});
+    window._allianceCircles[key]=[];
+    window._allianceActive[key]=false;
+    if(btn){btn.style.background='transparent';}
+  } else {
+    // Draw coloured rings
+    const markers=[];
+    al.members.forEach(iso=>{
+      if(!LL[iso])return;
+      const baseR=(_mapCircles[iso]&&_mapCircles[iso].options)?(_mapCircles[iso].options.radius||8):8;
+      const m=L.circleMarker(LL[iso],{
+        radius:baseR+6,color:al.col,weight:2.5,fill:false,opacity:.85,interactive:false
+      }).addTo(leafMap);
+      m.bindTooltip(al.label+': '+(CTRY[iso]?CTRY[iso].n:iso),{className:'map-tt',sticky:true,opacity:.9});
+      markers.push(m);
+    });
+    window._allianceCircles[key]=markers;
+    window._allianceActive[key]=true;
+    if(btn){btn.style.background=al.col+'22';btn.style.borderColor=al.col;}
+  }
+}
+
+// v3.16: Fetch WB population data (SP.POP.TOTL) — lazy, on first Pop layer select
+async function _fetchWBPopulation(){
+  const badge=document.getElementById('map-wb-badge');
+  if(badge)badge.textContent='⟳ Fetching population data…';
+  const isos=Object.keys(CTRY).join(';');
+  try{
+    const url='https://api.worldbank.org/v2/country/'+isos+'/indicator/SP.POP.TOTL?format=json&mrv=1&per_page=200';
+    const r=await fetch(url,{signal:AbortSignal.timeout(9000)});
+    if(!r.ok)throw new Error('WB '+r.status);
+    const json=await r.json();
+    const records=json[1]||[];
+    let count=0;
+    records.forEach(rec=>{
+      if(!rec||rec.value==null)return;
+      const iso2=_wb3to2((rec.countryiso3code||'').toUpperCase());
+      if(!iso2||!CTRY[iso2])return;
+      if(!_wbLive[iso2])_wbLive[iso2]={};
+      _wbLive[iso2].pop=rec.value;
+      count++;
+    });
+    if(badge)badge.innerHTML='🟢 Population — '+count+' countries';
+    setMapLayer('population',null);
+  }catch(e){
+    if(badge)badge.textContent='📌 Estimated pop';
+    // Static fallback population data
+    const fp={CN:1412e6,IN:1428e6,US:335e6,ID:276e6,PK:229e6,BR:215e6,NG:223e6,BD:170e6,RU:146e6,ET:126e6,MX:130e6,JP:125e6,PH:115e6,EG:106e6,CD:102e6,VN:98e6,IR:87e6,TR:85e6,DE:84e6,TH:71e6,GB:67e6,FR:67e6,ZA:60e6,TZ:64e6,KR:52e6,SA:36e6,AR:46e6,DZ:45e6,UA:44e6,CA:38e6,PL:38e6,MA:37e6,IQ:42e6,MY:33e6,PE:33e6,KZ:19e6,AU:26e6,MZ:32e6,GH:32e6,AF:40e6,SY:22e6,RO:19e6,BO:12e6,CL:19e6,AO:35e6,ML:22e6,ZM:19e6,TW:23e6,IL:9e6,AE:10e6,QA:3e6,SG:6e6,NZ:5e6,HU:10e6,CZ:11e6,SE:10e6,BE:11e6,AT:9e6,CH:8e6,NL:17e6,PT:10e6,GR:11e6,NO:5e6,BG:6e6};
+    Object.entries(fp).forEach(([iso,pop])=>{
+      if(!_wbLive[iso])_wbLive[iso]={};
+      _wbLive[iso].pop=pop;
+    });
+    setMapLayer('population',null);
+  }
+}
+
+// v3.16: Fetch live WB tourism arrivals for Passport Power tab (lazy)
+async function _fetchPassportLive(){
+  const badge=document.getElementById('pp-live-badge');
+  if(badge)badge.textContent='⟳ Fetching WB tourism data…';
+  const isos=['AE','SA','CN','IN','QA','TR','PK','JP','SG','US'].join(';');
+  try{
+    const url='https://api.worldbank.org/v2/country/'+isos+'/indicator/ST.INT.ARVL?format=json&mrv=3&per_page=100';
+    const r=await fetch(url,{signal:AbortSignal.timeout(8000)});
+    if(!r.ok)throw new Error('WB '+r.status);
+    const json=await r.json();
+    const records=json[1]||[];
+    const arrivals={};
+    records.forEach(rec=>{
+      if(!rec||rec.value==null)return;
+      const iso2=_wb3to2((rec.countryiso3code||'').toUpperCase());
+      if(!iso2)return;
+      if(!arrivals[iso2]||rec.date>arrivals[iso2].year){arrivals[iso2]={val:rec.value,year:rec.date};}
+    });
+    if(badge){
+      const ae=arrivals['AE'];
+      badge.innerHTML='🟢 WB Live — UAE arrivals '+(ae?((ae.val/1e6).toFixed(1)+'M in '+ae.year):'data fetched');
+    }
+    // Update UAE gain cell if we have data
+    const aeCell=document.getElementById('pp-gain-ae');
+    if(aeCell&&arrivals['AE']){aeCell.textContent='+152 ('+arrivals['AE'].val.toLocaleString()+' arrivals '+arrivals['AE'].year+')';}
+  }catch(e){
+    if(badge)badge.textContent='📌 Curated Henley Index data';
   }
 }
 
@@ -2897,7 +3030,7 @@ function _applyRpLiveData(isos){
 
 // v3.14: Sub-tab switcher for Rising Powers (Cards / Next China / Future Migration)
 function showRpSubTab(tab,btn){
-  ['cards','nextchina','migration'].forEach(t=>{
+  ['cards','nextchina','migration','passport','language','newnations'].forEach(t=>{
     const panel=document.getElementById('rp-panel-'+t);
     if(panel) panel.style.display=(t===tab)?'block':'none';
   });
@@ -2915,6 +3048,11 @@ function showRpSubTab(tab,btn){
   if(tab==='nextchina' && !window._ncLiveLoaded){
     window._ncLiveLoaded=true;
     _fetchNextChinaLive();
+  }
+  // v3.16: lazy-init Passport live WB data
+  if(tab==='passport' && !window._ppLiveLoaded){
+    window._ppLiveLoaded=true;
+    _fetchPassportLive();
   }
 }
 
@@ -2971,6 +3109,9 @@ function initRisingPowers(){
   <button class="rp-subtab active" id="rp-st-cards" onclick="showRpSubTab('cards',this)" style="padding:7px 18px;border-radius:8px 8px 0 0;border:1px solid var(--accent);background:var(--accent);color:#fff;cursor:pointer;font-size:12px;font-weight:700;">🃏 Rising Powers</button>
   <button class="rp-subtab" id="rp-st-nextchina" onclick="showRpSubTab('nextchina',this)" style="padding:7px 18px;border-radius:8px 8px 0 0;border:1px solid var(--border);background:var(--card);color:var(--muted);cursor:pointer;font-size:12px;font-weight:700;">🏭 Next China</button>
   <button class="rp-subtab" id="rp-st-migration" onclick="showRpSubTab('migration',this)" style="padding:7px 18px;border-radius:8px 8px 0 0;border:1px solid var(--border);background:var(--card);color:var(--muted);cursor:pointer;font-size:12px;font-weight:700;">✈️ Future Migration</button>
+  <button class="rp-subtab" id="rp-st-passport" onclick="showRpSubTab('passport',this)" style="padding:7px 18px;border-radius:8px 8px 0 0;border:1px solid var(--border);background:var(--card);color:var(--muted);cursor:pointer;font-size:12px;font-weight:700;">🛂 Passport Power</button>
+  <button class="rp-subtab" id="rp-st-language" onclick="showRpSubTab('language',this)" style="padding:7px 18px;border-radius:8px 8px 0 0;border:1px solid var(--border);background:var(--card);color:var(--muted);cursor:pointer;font-size:12px;font-weight:700;">🗣 Language Future</button>
+  <button class="rp-subtab" id="rp-st-newnations" onclick="showRpSubTab('newnations',this)" style="padding:7px 18px;border-radius:8px 8px 0 0;border:1px solid var(--border);background:var(--card);color:var(--muted);cursor:pointer;font-size:12px;font-weight:700;">🌐 New Nations</button>
 </div>
 
 <!-- SUB-TAB: Rising Powers (default active) -->
@@ -3210,6 +3351,337 @@ ${[
 
 <div style="font-size:11px;color:var(--muted);text-align:right;">Sources: World Bank Migration (SM.POP.NETM) · UNHCR · OECD Migration Outlook · IOM World Migration Report 2024</div>
 </div><!-- end #rp-panel-migration -->
+
+<!-- v3.16 SUB-TAB: Passport Power -->
+<div id="rp-panel-passport" style="display:none;">
+<div style="margin-bottom:18px;">
+  <h2 style="font-size:18px;font-weight:800;margin-bottom:8px;">🛂 Future Passport Power Index</h2>
+  <p style="font-size:13px;color:var(--muted);line-height:1.6;">The <strong style="color:#60a5fa;">Henley Passport Index</strong> ranks 199 passports by visa-free/on-arrival access. As geopolitical alliances shift, passport values are reshuffling dramatically — the UAE climbed 150+ places in 20 years. Here is where power is heading.</p>
+</div>
+
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:20px;">
+  <!-- Current Top 10 -->
+  <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;padding:16px;">
+    <div style="font-size:12px;font-weight:700;color:#60a5fa;margin-bottom:12px;text-transform:uppercase;letter-spacing:.05em;">🏆 Henley Top 10 (2024)</div>
+    <table style="width:100%;border-collapse:collapse;font-size:11px;">
+      <tr style="color:var(--muted);font-size:10px;"><th style="text-align:left;padding:3px 0;">Passport</th><th style="text-align:right;padding:3px 0;">Visa-Free</th><th style="text-align:right;padding:3px 0;">2035 Fcst</th></tr>
+      <tr style="border-top:1px solid rgba(255,255,255,.06);"><td style="padding:4px 0;">🇯🇵 Japan</td><td style="text-align:right;color:#10b981;font-weight:700;">193</td><td style="text-align:right;color:#60a5fa;">191</td></tr>
+      <tr style="border-top:1px solid rgba(255,255,255,.06);"><td style="padding:4px 0;">🇸🇬 Singapore</td><td style="text-align:right;color:#10b981;font-weight:700;">192</td><td style="text-align:right;color:#60a5fa;">193</td></tr>
+      <tr style="border-top:1px solid rgba(255,255,255,.06);"><td style="padding:4px 0;">🇩🇪 Germany</td><td style="text-align:right;color:#10b981;font-weight:700;">190</td><td style="text-align:right;color:#60a5fa;">188</td></tr>
+      <tr style="border-top:1px solid rgba(255,255,255,.06);"><td style="padding:4px 0;">🇫🇷 France / 🇮🇹 Italy</td><td style="text-align:right;color:#10b981;font-weight:700;">190</td><td style="text-align:right;color:#60a5fa;">188</td></tr>
+      <tr style="border-top:1px solid rgba(255,255,255,.06);"><td style="padding:4px 0;">🇪🇸 Spain</td><td style="text-align:right;color:#10b981;font-weight:700;">190</td><td style="text-align:right;color:#60a5fa;">187</td></tr>
+      <tr style="border-top:1px solid rgba(255,255,255,.06);"><td style="padding:4px 0;">🇫🇮 Finland / 🇸🇪 Sweden</td><td style="text-align:right;color:#10b981;font-weight:700;">189</td><td style="text-align:right;color:#60a5fa;">186</td></tr>
+      <tr style="border-top:1px solid rgba(255,255,255,.06);"><td style="padding:4px 0;">🇰🇷 South Korea</td><td style="text-align:right;color:#10b981;font-weight:700;">189</td><td style="text-align:right;color:#10b981;">191</td></tr>
+      <tr style="border-top:1px solid rgba(255,255,255,.06);"><td style="padding:4px 0;">🇬🇧 United Kingdom</td><td style="text-align:right;color:#f59e0b;font-weight:700;">187</td><td style="text-align:right;color:#f59e0b;">183</td></tr>
+      <tr style="border-top:1px solid rgba(255,255,255,.06);"><td style="padding:4px 0;">🇺🇸 United States</td><td style="text-align:right;color:#f59e0b;font-weight:700;">186</td><td style="text-align:right;color:#ef4444;">180</td></tr>
+      <tr style="border-top:1px solid rgba(255,255,255,.06);"><td style="padding:4px 0;">🇨🇦 Canada</td><td style="text-align:right;color:#10b981;font-weight:700;">185</td><td style="text-align:right;color:#10b981;">186</td></tr>
+    </table>
+  </div>
+  <!-- Rising Passports -->
+  <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;padding:16px;">
+    <div style="font-size:12px;font-weight:700;color:#10b981;margin-bottom:12px;text-transform:uppercase;letter-spacing:.05em;">🚀 Rising Fastest (10-Year Gain)</div>
+    <div id="pp-live-badge" style="font-size:10px;color:var(--muted);margin-bottom:8px;">Fetching live WB tourism data…</div>
+    <table style="width:100%;border-collapse:collapse;font-size:11px;">
+      <tr style="color:var(--muted);font-size:10px;"><th style="text-align:left;padding:3px 0;">Passport</th><th style="text-align:right;padding:3px 0;">Now</th><th style="text-align:right;padding:3px 0;">+Gain</th></tr>
+      <tr style="border-top:1px solid rgba(255,255,255,.06);"><td style="padding:4px 0;">🇦🇪 UAE</td><td style="text-align:right;font-weight:700;color:#10b981;">181</td><td style="text-align:right;color:#10b981;font-weight:700;" id="pp-gain-ae">+152</td></tr>
+      <tr style="border-top:1px solid rgba(255,255,255,.06);"><td style="padding:4px 0;">🇸🇦 Saudi Arabia</td><td style="text-align:right;font-weight:700;color:#f59e0b;">168</td><td style="text-align:right;color:#10b981;font-weight:700;">+38</td></tr>
+      <tr style="border-top:1px solid rgba(255,255,255,.06);"><td style="padding:4px 0;">🇨🇳 China</td><td style="text-align:right;font-weight:700;color:#f97316;">85</td><td style="text-align:right;color:#f59e0b;">+22</td></tr>
+      <tr style="border-top:1px solid rgba(255,255,255,.06);"><td style="padding:4px 0;">🇮🇳 India</td><td style="text-align:right;font-weight:700;color:#ef4444;">62</td><td style="text-align:right;color:#f59e0b;">+18</td></tr>
+      <tr style="border-top:1px solid rgba(255,255,255,.06);"><td style="padding:4px 0;">🇶🇦 Qatar</td><td style="text-align:right;font-weight:700;color:#f59e0b;">100</td><td style="text-align:right;color:#10b981;">+31</td></tr>
+      <tr style="border-top:1px solid rgba(255,255,255,.06);"><td style="padding:4px 0;">🇰🇿 Kazakhstan</td><td style="text-align:right;font-weight:700;color:#f59e0b;">76</td><td style="text-align:right;color:#f59e0b;">+20</td></tr>
+      <tr style="border-top:1px solid rgba(255,255,255,.06);"><td style="padding:4px 0;">🇹🇷 Turkey</td><td style="text-align:right;font-weight:700;color:#f59e0b;">111</td><td style="text-align:right;color:#f59e0b;">+15</td></tr>
+      <tr style="border-top:1px solid rgba(255,255,255,.06);"><td style="padding:4px 0;">🇵🇰 Pakistan</td><td style="text-align:right;font-weight:700;color:#ef4444;">33</td><td style="text-align:right;color:#f59e0b;">+8</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- 2035 Passport Projections -->
+<div style="background:var(--card);border:1px solid var(--border);border-radius:12px;padding:16px;margin-bottom:18px;">
+  <div style="font-size:12px;font-weight:700;color:#a78bfa;margin-bottom:12px;">🔮 2035 Passport Power Projections</div>
+  <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:10px;">
+    <div style="background:rgba(16,185,129,.08);border:1px solid rgba(16,185,129,.25);border-radius:8px;padding:10px;">
+      <div style="font-size:13px;font-weight:700;">🇦🇪 UAE — Top 5</div>
+      <div style="font-size:11px;color:var(--muted);margin-top:4px;">At current diplomatic pace, UAE will breach top 5 by 2030. Golden Visa 10yr + 200+ bilateral deals accelerating</div>
+    </div>
+    <div style="background:rgba(251,191,36,.08);border:1px solid rgba(251,191,36,.25);border-radius:8px;padding:10px;">
+      <div style="font-size:13px;font-weight:700;">🇮🇳 India — Top 30</div>
+      <div style="font-size:11px;color:var(--muted);margin-top:4px;">India-Middle East-Europe corridor + G20 chair + bilateral VoA deals will push to ~100 by 2035</div>
+    </div>
+    <div style="background:rgba(251,191,36,.08);border:1px solid rgba(251,191,36,.25);border-radius:8px;padding:10px;">
+      <div style="font-size:13px;font-weight:700;">🇸🇦 Saudi Arabia — Top 40</div>
+      <div style="font-size:11px;color:var(--muted);margin-top:4px;">Vision 2030 tourism + normalization deals (Israel, India, US) boosting visa-free access by 5-8/yr</div>
+    </div>
+    <div style="background:rgba(239,68,68,.08);border:1px solid rgba(239,68,68,.25);border-radius:8px;padding:10px;">
+      <div style="font-size:13px;font-weight:700;">🇺🇸 US — Declining</div>
+      <div style="font-size:11px;color:var(--muted);margin-top:4px;">Geopolitical tensions + perceived overreach reducing reciprocal VoA grants. Projected -8 destinations by 2035</div>
+    </div>
+    <div style="background:rgba(96,165,250,.08);border:1px solid rgba(96,165,250,.25);border-radius:8px;padding:10px;">
+      <div style="font-size:13px;font-weight:700;">🇨🇳 China — Slow Rise</div>
+      <div style="font-size:11px;color:var(--muted);margin-top:4px;">BRI partnerships converting to VoA reciprocity. Projected ~120 destinations by 2035 (from 85)</div>
+    </div>
+    <div style="background:rgba(16,185,129,.08);border:1px solid rgba(16,185,129,.25);border-radius:8px;padding:10px;">
+      <div style="font-size:13px;font-weight:700;">🇸🇬 Singapore — #1?</div>
+      <div style="font-size:11px;color:var(--muted);margin-top:4px;">Already at 192. Neutral diplomacy + ASEAN hub + Schengen-adjacent status keeps it at top. Could hit 195</div>
+    </div>
+  </div>
+</div>
+
+<!-- Investment Passport Programs -->
+<div style="background:var(--card);border:1px solid var(--border);border-radius:12px;padding:16px;margin-bottom:14px;">
+  <div style="font-size:12px;font-weight:700;color:#f59e0b;margin-bottom:10px;">💼 Investment-Based Second Citizenship (2024 Active Programs)</div>
+  <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:8px;">
+    <div style="background:rgba(255,255,255,.04);border-radius:7px;padding:9px;font-size:11px;"><div style="font-weight:700;margin-bottom:3px;">🇲🇹 Malta</div><div style="color:var(--muted);">€690K+ · EU passport · 183 destinations · 14 months</div></div>
+    <div style="background:rgba(255,255,255,.04);border-radius:7px;padding:9px;font-size:11px;"><div style="font-weight:700;margin-bottom:3px;">🇵🇹 Portugal (NHR)</div><div style="color:var(--muted);">€500K+ · EU passport · 10yr NHR tax · Golden Visa</div></div>
+    <div style="background:rgba(255,255,255,.04);border-radius:7px;padding:9px;font-size:11px;"><div style="font-weight:700;margin-bottom:3px;">🇰🇳 St Kitts & Nevis</div><div style="color:var(--muted);">$250K+ · Oldest CBI · 156 destinations · Fastest (45 days)</div></div>
+    <div style="background:rgba(255,255,255,.04);border-radius:7px;padding:9px;font-size:11px;"><div style="font-weight:700;margin-bottom:3px;">🇩🇲 Dominica</div><div style="color:var(--muted);">$100K+ · Most affordable · 145 destinations · 2 months</div></div>
+    <div style="background:rgba(255,255,255,.04);border-radius:7px;padding:9px;font-size:11px;"><div style="font-weight:700;margin-bottom:3px;">🇦🇪 UAE Golden Visa</div><div style="color:var(--muted);">Not citizenship, 10yr residency · No CIT tax · Strategic hub</div></div>
+    <div style="background:rgba(255,255,255,.04);border-radius:7px;padding:9px;font-size:11px;"><div style="font-weight:700;margin-bottom:3px;">🇯🇴 Jordan</div><div style="color:var(--muted);">$750K+ · Arab world bridge · Growing visa-free access</div></div>
+  </div>
+</div>
+<div style="font-size:10px;color:var(--muted);">Sources: Henley Passport Index 2024 · Arton Capital · OECD · Global Passport Power Rank · World Bank Tourism</div>
+</div><!-- end #rp-panel-passport -->
+
+<!-- v3.16 SUB-TAB: Language Future -->
+<div id="rp-panel-language" style="display:none;">
+<div style="margin-bottom:18px;">
+  <h2 style="font-size:18px;font-weight:800;margin-bottom:8px;">🗣 Post-English Language Dominance — 2050 Outlook</h2>
+  <p style="font-size:13px;color:var(--muted);line-height:1.6;">English dominates today — but by 2050, demographic shifts, AI translation, and economic realignment will elevate new languages as career-defining tools. <strong style="color:#10b981;">1 billion new speakers</strong> will come from Africa alone. Here is which languages will matter most — and why.</p>
+</div>
+
+<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));gap:12px;margin-bottom:20px;">
+
+  <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;padding:14px;border-left:4px solid #ef4444;">
+    <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px;">
+      <div><div style="font-size:14px;font-weight:800;">🇨🇳 Mandarin Chinese</div><div style="font-size:10px;color:var(--muted);margin-top:2px;">Sino-Tibetan family</div></div>
+      <div style="text-align:right;"><div style="font-size:18px;font-weight:800;color:#ef4444;">1.12B</div><div style="font-size:9px;color:var(--muted);">native speakers</div></div>
+    </div>
+    <div style="font-size:11px;color:var(--muted);line-height:1.5;margin-bottom:8px;">Dominant in East/SE Asia commerce. Hardest to learn but biggest economic return. AI translation closing the gap for non-learners, but writing/speaking STILL essential for business in China, Taiwan, Singapore.</div>
+    <div style="display:flex;gap:5px;flex-wrap:wrap;">
+      <span style="background:rgba(239,68,68,.15);color:#ef4444;padding:2px 7px;border-radius:3px;font-size:9px;font-weight:700;">Finance</span>
+      <span style="background:rgba(239,68,68,.15);color:#ef4444;padding:2px 7px;border-radius:3px;font-size:9px;font-weight:700;">Tech</span>
+      <span style="background:rgba(239,68,68,.15);color:#ef4444;padding:2px 7px;border-radius:3px;font-size:9px;font-weight:700;">Manufacturing</span>
+      <span style="background:rgba(16,185,129,.15);color:#10b981;padding:2px 7px;border-radius:3px;font-size:9px;font-weight:700;">2050 Power: ⬆ HIGH</span>
+    </div>
+  </div>
+
+  <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;padding:14px;border-left:4px solid #f97316;">
+    <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px;">
+      <div><div style="font-size:14px;font-weight:800;">🇪🇸 Spanish</div><div style="font-size:10px;color:var(--muted);margin-top:2px;">Indo-European · 21 countries</div></div>
+      <div style="text-align:right;"><div style="font-size:18px;font-weight:800;color:#f97316;">534M</div><div style="font-size:9px;color:var(--muted);">native · 560M total</div></div>
+    </div>
+    <div style="font-size:11px;color:var(--muted);line-height:1.5;margin-bottom:8px;">2nd most learned globally. US will be largest Spanish-speaking nation by 2060 (35% Hispanic). Latin America's nearshoring boom makes it essential for Americas commerce. Easy to learn for English speakers.</div>
+    <div style="display:flex;gap:5px;flex-wrap:wrap;">
+      <span style="background:rgba(249,115,22,.15);color:#f97316;padding:2px 7px;border-radius:3px;font-size:9px;font-weight:700;">Americas</span>
+      <span style="background:rgba(249,115,22,.15);color:#f97316;padding:2px 7px;border-radius:3px;font-size:9px;font-weight:700;">Trade</span>
+      <span style="background:rgba(249,115,22,.15);color:#f97316;padding:2px 7px;border-radius:3px;font-size:9px;font-weight:700;">Media</span>
+      <span style="background:rgba(16,185,129,.15);color:#10b981;padding:2px 7px;border-radius:3px;font-size:9px;font-weight:700;">2050 Power: ⬆ VERY HIGH</span>
+    </div>
+  </div>
+
+  <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;padding:14px;border-left:4px solid #f59e0b;">
+    <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px;">
+      <div><div style="font-size:14px;font-weight:800;">🇸🇦 Arabic</div><div style="font-size:10px;color:var(--muted);margin-top:2px;">Semitic · 26+ countries</div></div>
+      <div style="text-align:right;"><div style="font-size:18px;font-weight:800;color:#f59e0b;">422M</div><div style="font-size:9px;color:var(--muted);">native · 1.8B religious</div></div>
+    </div>
+    <div style="font-size:11px;color:var(--muted);line-height:1.5;margin-bottom:8px;">Language of energy, Islamic finance, and MENA diplomacy. Gulf Vision 2030s + African growth making it increasingly valuable. 420M+ internet users. Arabic content online growing 25%/yr.</div>
+    <div style="display:flex;gap:5px;flex-wrap:wrap;">
+      <span style="background:rgba(245,158,11,.15);color:#f59e0b;padding:2px 7px;border-radius:3px;font-size:9px;font-weight:700;">MENA Finance</span>
+      <span style="background:rgba(245,158,11,.15);color:#f59e0b;padding:2px 7px;border-radius:3px;font-size:9px;font-weight:700;">Energy</span>
+      <span style="background:rgba(245,158,11,.15);color:#f59e0b;padding:2px 7px;border-radius:3px;font-size:9px;font-weight:700;">Diplomacy</span>
+      <span style="background:rgba(16,185,129,.15);color:#10b981;padding:2px 7px;border-radius:3px;font-size:9px;font-weight:700;">2050 Power: ⬆ HIGH</span>
+    </div>
+  </div>
+
+  <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;padding:14px;border-left:4px solid #a78bfa;">
+    <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px;">
+      <div><div style="font-size:14px;font-weight:800;">🇮🇳 Hindi</div><div style="font-size:10px;color:var(--muted);margin-top:2px;">Indo-Aryan · India sub-continent</div></div>
+      <div style="text-align:right;"><div style="font-size:18px;font-weight:800;color:#a78bfa;">600M</div><div style="font-size:9px;color:var(--muted);">native · 700M total</div></div>
+    </div>
+    <div style="font-size:11px;color:var(--muted);line-height:1.5;margin-bottom:8px;">Growing with India as the world's largest economy by 2050. Bollywood soft power + yoga + tech. India actively pushing Hindi in UN/diplomacy. Essential for South Asia business, outsourcing, pharma, IT.</div>
+    <div style="display:flex;gap:5px;flex-wrap:wrap;">
+      <span style="background:rgba(167,139,250,.15);color:#a78bfa;padding:2px 7px;border-radius:3px;font-size:9px;font-weight:700;">IT/Tech</span>
+      <span style="background:rgba(167,139,250,.15);color:#a78bfa;padding:2px 7px;border-radius:3px;font-size:9px;font-weight:700;">Pharma</span>
+      <span style="background:rgba(167,139,250,.15);color:#a78bfa;padding:2px 7px;border-radius:3px;font-size:9px;font-weight:700;">Soft Power</span>
+      <span style="background:rgba(16,185,129,.15);color:#10b981;padding:2px 7px;border-radius:3px;font-size:9px;font-weight:700;">2050 Power: ⬆ HIGH</span>
+    </div>
+  </div>
+
+  <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;padding:14px;border-left:4px solid #60a5fa;">
+    <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px;">
+      <div><div style="font-size:14px;font-weight:800;">🇫🇷 French</div><div style="font-size:10px;color:var(--muted);margin-top:2px;">Romance · 29 countries</div></div>
+      <div style="text-align:right;"><div style="font-size:18px;font-weight:800;color:#60a5fa;">321M</div><div style="font-size:9px;color:var(--muted);">now → 700M by 2050</div></div>
+    </div>
+    <div style="font-size:11px;color:var(--muted);line-height:1.5;margin-bottom:8px;">Africa will have 85% of French speakers by 2050 (sub-Saharan demographic explosion). By 2060, French will overtake English by total speaker count. Language of EU institutions, diplomacy, and African business boom.</div>
+    <div style="display:flex;gap:5px;flex-wrap:wrap;">
+      <span style="background:rgba(96,165,250,.15);color:#60a5fa;padding:2px 7px;border-radius:3px;font-size:9px;font-weight:700;">EU/Diplomacy</span>
+      <span style="background:rgba(96,165,250,.15);color:#60a5fa;padding:2px 7px;border-radius:3px;font-size:9px;font-weight:700;">Africa</span>
+      <span style="background:rgba(96,165,250,.15);color:#60a5fa;padding:2px 7px;border-radius:3px;font-size:9px;font-weight:700;">Luxury</span>
+      <span style="background:rgba(16,185,129,.15);color:#10b981;padding:2px 7px;border-radius:3px;font-size:9px;font-weight:700;">2050 Power: ⬆ VERY HIGH</span>
+    </div>
+  </div>
+
+  <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;padding:14px;border-left:4px solid #10b981;">
+    <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px;">
+      <div><div style="font-size:14px;font-weight:800;">🇹🇿 Swahili / Kiswahili</div><div style="font-size:10px;color:var(--muted);margin-top:2px;">Bantu · East Africa lingua franca</div></div>
+      <div style="text-align:right;"><div style="font-size:18px;font-weight:800;color:#10b981;">200M+</div><div style="font-size:9px;color:var(--muted);">speakers · fast growing</div></div>
+    </div>
+    <div style="font-size:11px;color:var(--muted);line-height:1.5;margin-bottom:8px;">AfCFTA integration language for East/Central Africa. Kenya-Tanzania-Uganda corridor = $400B economy. African Union officially added Swahili as its 4th working language. Fastest growing African language online.</div>
+    <div style="display:flex;gap:5px;flex-wrap:wrap;">
+      <span style="background:rgba(16,185,129,.15);color:#10b981;padding:2px 7px;border-radius:3px;font-size:9px;font-weight:700;">AfCFTA</span>
+      <span style="background:rgba(16,185,129,.15);color:#10b981;padding:2px 7px;border-radius:3px;font-size:9px;font-weight:700;">E.Africa Trade</span>
+      <span style="background:rgba(16,185,129,.15);color:#10b981;padding:2px 7px;border-radius:3px;font-size:9px;font-weight:700;">Tech Hubs</span>
+      <span style="background:rgba(16,185,129,.15);color:#10b981;padding:2px 7px;border-radius:3px;font-size:9px;font-weight:700;">2050 Power: ⬆ EMERGING</span>
+    </div>
+  </div>
+
+  <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;padding:14px;border-left:4px solid #34d399;">
+    <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px;">
+      <div><div style="font-size:14px;font-weight:800;">🇮🇩 Indonesian / Malay</div><div style="font-size:10px;color:var(--muted);margin-top:2px;">Austronesian · SE Asia</div></div>
+      <div style="text-align:right;"><div style="font-size:18px;font-weight:800;color:#34d399;">270M</div><div style="font-size:9px;color:var(--muted);">speakers across ASEAN</div></div>
+    </div>
+    <div style="font-size:11px;color:var(--muted);line-height:1.5;margin-bottom:8px;">ASEAN lingua franca bridging Indonesia (4th largest country), Malaysia, Brunei, and Singapore. Indonesia alone is a $1.5T economy growing 5%/yr. Easy to learn. Key for ASEAN business integration and manufacturing.</div>
+    <div style="display:flex;gap:5px;flex-wrap:wrap;">
+      <span style="background:rgba(52,211,153,.15);color:#34d399;padding:2px 7px;border-radius:3px;font-size:9px;font-weight:700;">ASEAN</span>
+      <span style="background:rgba(52,211,153,.15);color:#34d399;padding:2px 7px;border-radius:3px;font-size:9px;font-weight:700;">Manufacturing</span>
+      <span style="background:rgba(16,185,129,.15);color:#10b981;padding:2px 7px;border-radius:3px;font-size:9px;font-weight:700;">2050 Power: ⬆ HIGH</span>
+    </div>
+  </div>
+
+  <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;padding:14px;border-left:4px solid #64748b;">
+    <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px;">
+      <div><div style="font-size:14px;font-weight:800;">🇧🇩 Bengali</div><div style="font-size:10px;color:var(--muted);margin-top:2px;">Indo-Aryan · 7th most spoken</div></div>
+      <div style="text-align:right;"><div style="font-size:18px;font-weight:800;color:#64748b;">265M</div><div style="font-size:9px;color:var(--muted);">native speakers</div></div>
+    </div>
+    <div style="font-size:11px;color:var(--muted);line-height:1.5;margin-bottom:8px;">Massively underrated — 7th most spoken yet ignored. Bangladesh is the 2nd largest garment exporter. Growing tech sector. West Bengal (India) + 170M Bangladesh combined = undervalued language for South Asia trade.</div>
+    <div style="display:flex;gap:5px;flex-wrap:wrap;">
+      <span style="background:rgba(100,116,139,.15);color:#94a3b8;padding:2px 7px;border-radius:3px;font-size:9px;font-weight:700;">Textiles</span>
+      <span style="background:rgba(100,116,139,.15);color:#94a3b8;padding:2px 7px;border-radius:3px;font-size:9px;font-weight:700;">Manufacturing</span>
+      <span style="background:rgba(16,185,129,.15);color:#10b981;padding:2px 7px;border-radius:3px;font-size:9px;font-weight:700;">2050 Power: ⬆ UNDERRATED</span>
+    </div>
+  </div>
+
+</div>
+
+<!-- AI Impact on Languages -->
+<div style="background:rgba(139,92,246,.08);border:1px solid rgba(139,92,246,.25);border-radius:12px;padding:16px;margin-bottom:14px;">
+  <div style="font-size:12px;font-weight:700;color:#a78bfa;margin-bottom:10px;">🤖 How AI Will Reshape Language Power</div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;font-size:11px;">
+    <div><div style="font-weight:700;color:#10b981;margin-bottom:4px;">✅ Languages AI Will Amplify</div><div style="color:var(--muted);line-height:1.6;">Mandarin, Arabic, Hindi — AI makes them accessible to learners who previously lacked native exposure. Real-time translation removes day-to-day barriers while business depth still rewards fluency.</div></div>
+    <div><div style="font-weight:700;color:#ef4444;margin-bottom:4px;">⚠ Languages AI May Threaten</div><div style="color:var(--muted);line-height:1.6;">Smaller European languages (Czech, Hungarian, Norwegian) may see reduced learning incentive as English+AI covers most needs. But cultural identity will sustain them longer than predicted.</div></div>
+    <div><div style="font-weight:700;color:#f59e0b;margin-bottom:4px;">💡 The Hybrid Future</div><div style="color:var(--muted);line-height:1.6;">English remains the AI interface language. But local language fluency = deeper trust, negotiation power, and cultural intelligence that no AI can replicate in 2025-2040.</div></div>
+    <div><div style="font-weight:700;color:#60a5fa;margin-bottom:4px;">🎯 Best Career Bets</div><div style="color:var(--muted);line-height:1.6;">English+Mandarin (Asia tech), English+Spanish (Americas), English+Arabic (MENA finance), English+French (Africa expansion), English+Hindi (South Asia/outsourcing)</div></div>
+  </div>
+</div>
+<div style="font-size:10px;color:var(--muted);">Sources: Ethnologue 2024 · UN Language Data · Institut Francais · OIF · World Economic Forum Language Report · CSMonitor</div>
+</div><!-- end #rp-panel-language -->
+
+<!-- v3.16 SUB-TAB: New Nations -->
+<div id="rp-panel-newnations" style="display:none;">
+<div style="margin-bottom:18px;">
+  <h2 style="font-size:18px;font-weight:800;margin-bottom:8px;">🌐 Future New Nations — Independence & Emergence 2025–2050</h2>
+  <p style="font-size:13px;color:var(--muted);line-height:1.6;">The world has <strong style="color:#60a5fa;">193 UN member states</strong> today — but the map is not finished. Secessionist movements, decolonization processes, and geopolitical fragmentation will create new states. South Sudan (2011) was the last — but not the last ever. Here is what the intelligence says.</p>
+</div>
+
+<!-- Already Existing — Limited Recognition -->
+<div style="margin-bottom:16px;">
+  <div style="font-size:12px;font-weight:700;color:#10b981;text-transform:uppercase;letter-spacing:.06em;margin-bottom:10px;padding-bottom:6px;border-bottom:2px solid rgba(16,185,129,.3);">✅ Existing De Facto States (Unrecognized/Partial)</div>
+  <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:10px;">
+    <div style="background:var(--card);border:1px solid var(--border);border-left:4px solid #10b981;border-radius:10px;padding:12px;">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
+        <div style="font-size:13px;font-weight:700;">🇽🇰 Kosovo</div>
+        <span style="background:rgba(16,185,129,.15);color:#10b981;padding:2px 8px;border-radius:3px;font-size:10px;font-weight:700;">101/193 nations</span>
+      </div>
+      <div style="font-size:11px;color:var(--muted);line-height:1.5;">Declared independence from Serbia 2008. US, EU, UK recognize. Russia/China/Serbia block UN membership. EU membership candidate since 2022. Functionally independent — currency is the Euro.</div>
+    </div>
+    <div style="background:var(--card);border:1px solid var(--border);border-left:4px solid #60a5fa;border-radius:10px;padding:12px;">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
+        <div style="font-size:13px;font-weight:700;">🇵🇸 Palestine</div>
+        <span style="background:rgba(96,165,250,.15);color:#60a5fa;padding:2px 8px;border-radius:3px;font-size:10px;font-weight:700;">146/193 nations</span>
+      </div>
+      <div style="font-size:11px;color:var(--muted);line-height:1.5;">UN observer state. Spain, Ireland, Norway, Jamaica recognized 2024. UK recognised Nov 2024. Growing recognition wave. Full UN membership blocked by US veto. Two-state path contested but alive.</div>
+    </div>
+    <div style="background:var(--card);border:1px solid var(--border);border-left:4px solid #f59e0b;border-radius:10px;padding:12px;">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
+        <div style="font-size:13px;font-weight:700;">🇸🇴 Somaliland</div>
+        <span style="background:rgba(245,158,11,.15);color:#f59e0b;padding:2px 8px;border-radius:3px;font-size:10px;font-weight:700;">0 formal / stable</span>
+      </div>
+      <div style="font-size:11px;color:var(--muted);line-height:1.5;">Declared independence from Somalia 1991. Has own currency, government, elections, army. No UN recognition — African Union principle of inherited borders blocks it. Ethiopia 2024 MoU sparked new attention.</div>
+    </div>
+    <div style="background:var(--card);border:1px solid var(--border);border-left:4px solid #a78bfa;border-radius:10px;padding:12px;">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
+        <div style="font-size:13px;font-weight:700;">🇹🇼 Taiwan</div>
+        <span style="background:rgba(167,139,250,.15);color:#a78bfa;padding:2px 8px;border-radius:3px;font-size:10px;font-weight:700;">13 formal + de facto</span>
+      </div>
+      <div style="font-size:11px;color:var(--muted);line-height:1.5;">Full democracy, military, currency, passport (188 VF destinations). Expelled from UN 1971. Most countries maintain informal relations. China vows reunification by 2049. TSMC makes Taiwan geopolitically irreplaceable.</div>
+    </div>
+  </div>
+</div>
+
+<!-- Very High Probability -->
+<div style="margin-bottom:16px;">
+  <div style="font-size:12px;font-weight:700;color:#f59e0b;text-transform:uppercase;letter-spacing:.06em;margin-bottom:10px;padding-bottom:6px;border-bottom:2px solid rgba(245,158,11,.3);">🔥 Very High Probability Independence 2025–2035</div>
+  <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:10px;">
+    <div style="background:var(--card);border:1px solid var(--border);border-left:4px solid #f59e0b;border-radius:10px;padding:12px;">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
+        <div><div style="font-size:13px;font-weight:700;">🌊 Bougainville (PNG)</div><div style="font-size:10px;color:var(--muted);">Pacific Island, Pop. 300K</div></div>
+        <span style="background:rgba(245,158,11,.15);color:#f59e0b;padding:2px 8px;border-radius:3px;font-size:10px;font-weight:700;">92% probability</span>
+      </div>
+      <div style="font-size:11px;color:var(--muted);line-height:1.5;">2019 referendum: 98.31% voted YES for independence. PNG parliament must agree — negotiations ongoing. Rich in copper/gold. Australia/NZ backing. Expected formal independence 2027–2030. Will be newest Pacific nation.</div>
+    </div>
+    <div style="background:var(--card);border:1px solid var(--border);border-left:4px solid #f59e0b;border-radius:10px;padding:12px;">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
+        <div><div style="font-size:13px;font-weight:700;">🇫🇷 New Caledonia</div><div style="font-size:10px;color:var(--muted);">French Pacific Territory</div></div>
+        <span style="background:rgba(245,158,11,.15);color:#f59e0b;padding:2px 8px;border-radius:3px;font-size:10px;font-weight:700;">65% probability</span>
+      </div>
+      <div style="font-size:11px;color:var(--muted);line-height:1.5;">3 referendums: 2018 (56% no), 2020 (53% no), 2021 (96% yes — Kanak boycott). Framework talks underway. France reluctant due to strategic Pacific position and nickel reserves. Independence expected 2030–2035.</div>
+    </div>
+  </div>
+</div>
+
+<!-- Medium Probability -->
+<div style="margin-bottom:16px;">
+  <div style="font-size:12px;font-weight:700;color:#f97316;text-transform:uppercase;letter-spacing:.06em;margin-bottom:10px;padding-bottom:6px;border-bottom:2px solid rgba(249,115,22,.3);">⚠ Medium Probability 2035–2045</div>
+  <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:10px;">
+    <div style="background:var(--card);border:1px solid var(--border);border-left:4px solid #f97316;border-radius:10px;padding:12px;">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;"><div><div style="font-size:13px;font-weight:700;">🏴󠁧󠁢󠁳󠁣󠁴󠁿 Scotland</div><div style="font-size:10px;color:var(--muted);">UK constituent country</div></div><span style="background:rgba(249,115,22,.15);color:#f97316;padding:2px 8px;border-radius:3px;font-size:10px;font-weight:700;">45% probability</span></div>
+      <div style="font-size:11px;color:var(--muted);line-height:1.5;">SNP holds majority in Holyrood. 50-55% independence support post-Brexit. IndyRef2 blocked by UK courts but political pressure rising. EU re-entry would be a major incentive. 5.4M pop, North Sea oil, whisky exports.</div>
+    </div>
+    <div style="background:var(--card);border:1px solid var(--border);border-left:4px solid #f97316;border-radius:10px;padding:12px;">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;"><div><div style="font-size:13px;font-weight:700;">🌍 Iraqi Kurdistan</div><div style="font-size:10px;color:var(--muted);">Northern Iraq, Pop. 6M</div></div><span style="background:rgba(249,115,22,.15);color:#f97316;padding:2px 8px;border-radius:3px;font-size:10px;font-weight:700;">40% probability</span></div>
+      <div style="font-size:11px;color:var(--muted);line-height:1.5;">De facto autonomous region since 1991. 2017 referendum: 93% YES. Baghdad + Iran + Turkey opposed. But Erbil functions independently — own Peshmerga, currency, airport, oil deals. Formal statehood if Iraq fragments further.</div>
+    </div>
+    <div style="background:var(--card);border:1px solid var(--border);border-left:4px solid #f97316;border-radius:10px;padding:12px;">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;"><div><div style="font-size:13px;font-weight:700;">🇧🇪 Flanders</div><div style="font-size:10px;color:var(--muted);">Northern Belgium, Pop. 6.6M</div></div><span style="background:rgba(249,115,22,.15);color:#f97316;padding:2px 8px;border-radius:3px;font-size:10px;font-weight:700;">30% probability</span></div>
+      <div style="font-size:11px;color:var(--muted);line-height:1.5;">Belgium has gone 500+ days without a federal government (2 times). Dutch-speaking Flanders (60% GDP) wants separation from French-speaking Wallonia. N-VA + Vlaams Belang = majority calling for confederalism. EU capital Brussels complicates this enormously.</div>
+    </div>
+  </div>
+</div>
+
+<!-- Future Geopolitical Wildcards -->
+<div style="margin-bottom:16px;">
+  <div style="font-size:12px;font-weight:700;color:#a78bfa;text-transform:uppercase;letter-spacing:.06em;margin-bottom:10px;padding-bottom:6px;border-bottom:2px solid rgba(139,92,246,.3);">🃏 Wild Cards 2040–2050</div>
+  <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:8px;font-size:11px;">
+    <div style="background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.07);border-radius:8px;padding:10px;"><div style="font-weight:700;margin-bottom:4px;">🌍 Azawad (Mali North)</div><div style="color:var(--muted);">Tuareg independence movement. Sahel state collapse accelerating. 15% probability full statehood by 2040.</div></div>
+    <div style="background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.07);border-radius:8px;padding:10px;"><div style="font-weight:700;margin-bottom:4px;">🇪🇸 Catalonia</div><div style="color:var(--muted);">Richest Spanish region, 7.7M pop. Post-amnesty law shifting politics. 25% probability in favourable conditions.</div></div>
+    <div style="background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.07);border-radius:8px;padding:10px;"><div style="font-weight:700;margin-bottom:4px;">🌊 Cabinda (Angola)</div><div style="color:var(--muted);">Enclave with 70% of Angola oil. FLEC insurgency. If Angola weakens — 20% probability.</div></div>
+    <div style="background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.07);border-radius:8px;padding:10px;"><div style="font-weight:700;margin-bottom:4px;">🇨🇦 Quebec</div><div style="color:var(--muted);">3 referendums — 1980 (40% yes), 1995 (49.4% yes). PQ not in power. 10% probability without trigger event.</div></div>
+    <div style="background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.07);border-radius:8px;padding:10px;"><div style="font-weight:700;margin-bottom:4px;">🌺 Hawaii Sovereignty</div><div style="color:var(--muted);">Native Hawaiian movement + illegal annexation arguments. UN discussions. 5% but growing academic legitimacy.</div></div>
+    <div style="background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.07);border-radius:8px;padding:10px;"><div style="font-weight:700;margin-bottom:4px;">🇨🇩 Eastern DRC State</div><div style="color:var(--muted);">Ongoing M23/Rwanda conflict. Eastern provinces have never been fully controlled. Resource-rich. 20% probability of partition.</div></div>
+  </div>
+</div>
+
+<!-- Recent Independence Timeline -->
+<div style="background:var(--card);border:1px solid var(--border);border-radius:12px;padding:14px;margin-bottom:14px;">
+  <div style="font-size:12px;font-weight:700;color:#60a5fa;margin-bottom:10px;">📅 Nations Born Since 2000 — Independence Template</div>
+  <div style="display:flex;gap:8px;flex-wrap:wrap;">
+    <div style="background:rgba(96,165,250,.08);border:1px solid rgba(96,165,250,.2);border-radius:8px;padding:8px 12px;font-size:11px;text-align:center;"><div style="font-size:16px;">🇹🇱</div><div style="font-weight:700;">Timor-Leste</div><div style="color:var(--muted);">2002 · 1.3M pop</div><div style="color:#10b981;font-size:10px;">UN-backed process</div></div>
+    <div style="background:rgba(96,165,250,.08);border:1px solid rgba(96,165,250,.2);border-radius:8px;padding:8px 12px;font-size:11px;text-align:center;"><div style="font-size:16px;">🇲🇪</div><div style="font-weight:700;">Montenegro</div><div style="color:var(--muted);">2006 · 600K pop</div><div style="color:#10b981;font-size:10px;">Referendum 55.5% yes</div></div>
+    <div style="background:rgba(96,165,250,.08);border:1px solid rgba(96,165,250,.2);border-radius:8px;padding:8px 12px;font-size:11px;text-align:center;"><div style="font-size:16px;">🇽🇰</div><div style="font-weight:700;">Kosovo</div><div style="color:var(--muted);">2008 · 1.8M pop</div><div style="color:#f59e0b;font-size:10px;">Contested — 101 nations</div></div>
+    <div style="background:rgba(96,165,250,.08);border:1px solid rgba(96,165,250,.2);border-radius:8px;padding:8px 12px;font-size:11px;text-align:center;"><div style="font-size:16px;">🇸🇸</div><div style="font-weight:700;">South Sudan</div><div style="color:var(--muted);">2011 · 11M pop</div><div style="color:#10b981;font-size:10px;">193rd UN member</div></div>
+  </div>
+</div>
+<div style="font-size:10px;color:var(--muted);">Sources: UN Charter Art.1 · Freedom House · ICJ Advisory Opinions · Crisis Group · Henley &amp; Partners · Carnegie Endowment · RAND Corp</div>
+</div><!-- end #rp-panel-newnations -->
 
 <!-- v3.13: Drill-down modal -->
 <div id="rp-modal" style="display:none;position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,.75);backdrop-filter:blur(6px);overflow-y:auto;" onclick="if(event.target===this)closeRpModal()">
