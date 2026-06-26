@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>World Intelligence Platform v3.27</title>
+<title>World Intelligence Platform v3.28</title>
 <!-- Leaflet -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css"/>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
@@ -613,7 +613,7 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:'Segoe 
 <div id="topbar">
   <a href="index.html">← Dashboard</a>
   <span class="title">🌍 World Intelligence Platform</span>
-  <span class="badge">v3.27</span><button onclick="_showAISetup()" title="Configure free MiniMax AI key (100% free)" style="margin-left:8px;background:linear-gradient(135deg,#7c3aed,#4f46e5);color:#fff;border:none;border-radius:6px;padding:3px 10px;cursor:pointer;font-size:11px;font-weight:700;">🤖 AI</button>
+  <span class="badge">v3.28</span><button onclick="_showAISetup()" title="Configure free MiniMax AI key (100% free)" style="margin-left:8px;background:linear-gradient(135deg,#7c3aed,#4f46e5);color:#fff;border:none;border-radius:6px;padding:3px 10px;cursor:pointer;font-size:11px;font-weight:700;">🤖 AI</button>
   <div style="display:flex;align-items:center;gap:6px;margin-left:auto;margin-right:16px;">
     <div class="live-dot"></div><span style="font-size:11px;color:var(--muted);">Live</span>
   </div>
@@ -2923,6 +2923,187 @@ function drawDrill(sym,tf){
 }
 
 // ════════════════════════════════════════
+// v3.28 RISING POWERS AI INTELLIGENCE
+// MiniMax M2.7 · 100% Free · No paid APIs
+// 9 AI features across all 7 Rising Powers sub-tabs
+// ════════════════════════════════════════
+
+// ── AI Global Power Oracle: macro brief for all 15 nations ───────────────
+async function _mmRpOracle(){
+  var panel=document.getElementById('ai-rp-oracle-panel');
+  if(!panel)return;
+  _aiThinking(panel,'Synthesizing intelligence across all 15 emerging powers…');
+  if(!_groqKey()){_aiNoKey(panel);return;}
+  var nations=Object.keys(CTRY).filter(function(iso){return CTRY[iso]&&CTRY[iso].g!=null;}).slice(0,15);
+  var lines=nations.map(function(iso){
+    var c=CTRY[iso];var live=_rpLiveData[iso]||{};
+    var g=live.gdp!=null?live.gdp:c.g;
+    var ms=_calcMomentum?_calcMomentum(iso):Math.round(Math.min(100,Math.max(0,(g+2)*8)));
+    return c.n+' ('+c.f+'): GDP_growth='+g+'% Inf='+c.inf+'% GDPpc=$'+c.gdppc+' MomentumScore='+ms+'/100 Catalyst='+(c.op?c.op[0]:'—');
+  });
+  var prompt='You are a leading geopolitical economist. Analyze these 15 emerging powers (2025 data) and write a 4-paragraph strategic intelligence brief:\n\n'+lines.join('\n')+'\n\nParagraph 1 — GLOBAL POWER SHIFT: Which regions are ascending fastest? Where is the centre of economic gravity moving? Paragraph 2 — TOP 3 BREAKOUT NATIONS: Which 3 nations have the most compelling 2025–2030 growth story and why? Paragraph 3 — STRUCTURAL RISKS: 2-3 cross-cutting risks that could derail multiple emerging markets simultaneously (debt, geopolitics, climate, commodity cycles). Paragraph 4 — DECADE VERDICT: How does the global economic map look in 2035? Who are the new G10 candidates? End with POWER SHIFT DIRECTION: [EAST / SOUTH / MULTIPOLAR / FRAGMENTED]';
+  try{
+    var txt=await _groqCall([{role:'user',content:prompt}],600);
+    panel.innerHTML='<div class="ai-panel-hdr">🔮 Global Power Oracle <span style="font-size:9px;font-weight:400;opacity:.7;">MiniMax M2.7 · '+lines.length+' nations</span></div>'
+      +'<div class="ai-result">'+_aiEsc(txt)+'</div>'
+      +'<div style="font-size:10px;color:var(--muted);margin-top:6px;">'+new Date().toLocaleTimeString()+' · <span style="cursor:pointer;color:#a78bfa;" onclick="_mmRpOracle()">Refresh</span> · <span style="cursor:pointer;color:var(--muted);" onclick="_showAISetup()">&#9881; Key</span></div>';
+  }catch(e){if(e.message==='NO_KEY')_aiNoKey(panel);else panel.innerHTML='<div style="color:#ef4444;font-size:11px;">'+_aiEsc(e.message)+'</div>';}
+}
+
+// ── AI Power Race Predictor 2035: ranking shift analysis ─────────────────
+async function _mmRpRacePredictor(){
+  var panel=document.getElementById('ai-rp-oracle-panel');
+  if(!panel)return;
+  _aiThinking(panel,'Running 2035 Power Race simulation across all 15 nations…');
+  if(!_groqKey()){_aiNoKey(panel);return;}
+  var nations=Object.keys(CTRY).filter(function(iso){return CTRY[iso]&&CTRY[iso].g!=null;}).slice(0,15);
+  var lines=nations.map(function(iso){
+    var c=CTRY[iso];var live=_rpLiveData[iso]||{};
+    var g=live.gdp!=null?live.gdp:c.g;
+    var pred=c.pred&&c.pred.g?c.pred.g:[];
+    var g2030=pred.length>=5?pred[4].toFixed(1):g;
+    var ms=_calcMomentum?_calcMomentum(iso):Math.round(Math.min(100,Math.max(0,(g+2)*8)));
+    return c.n+': Now='+g+'% GDP_growth Momentum='+ms+'/100 Proj_2030='+g2030+'% GDP_pc=$'+c.gdppc+' Risks='+(c.ri?c.ri[0]:'—')+' Opportunity='+(c.op?c.op[0]:'—');
+  });
+  var prompt='You are a quantitative geopolitical forecaster. Based on these trajectories, predict the 2035 Power Race outcome:\n\n'+lines.join('\n')+'\n\nWrite a structured prediction brief (180 words):\nSection 1 — 2035 POWER RANKINGS: Rank the top 5 emerging powers by 2035 with a one-line rationale for each. Section 2 — BIGGEST RISERS: Which 2-3 nations will dramatically outperform expectations and why? Section 3 — BIGGEST FALLERS: Which 1-2 nations face structural headwinds that will drag them down the rankings? Section 4 — WILDCARD: One country not on this list that could enter the top tier by 2035 (from Latin America, Africa, or Middle East). End with 2035 POWER ORDER: [list top 5 in order]';
+  try{
+    var txt=await _groqCall([{role:'user',content:prompt}],520);
+    panel.innerHTML='<div class="ai-panel-hdr">🏁 Power Race Predictor 2035 <span style="font-size:9px;font-weight:400;opacity:.7;">MiniMax M2.7</span></div>'
+      +'<div class="ai-result">'+_aiEsc(txt)+'</div>'
+      +'<div style="font-size:10px;color:var(--muted);margin-top:6px;"><span style="cursor:pointer;color:#a78bfa;" onclick="_mmRpRacePredictor()">Refresh</span> · <span style="cursor:pointer;color:var(--muted);" onclick="_showAISetup()">&#9881; Key</span></div>';
+  }catch(e){if(e.message==='NO_KEY')_aiNoKey(panel);else panel.innerHTML='<div style="color:#ef4444;font-size:11px;">'+_aiEsc(e.message)+'</div>';}
+}
+
+// ── AI Future Predictor: per-country 10-year deep scenario ───────────────
+async function _mmRpFuturePredictor(iso){
+  var panel=document.getElementById('ai-future-pred-panel');
+  if(!panel)return;
+  panel.style.display='';
+  _aiThinking(panel,'Building 10-year future scenario for '+iso+'…');
+  if(!_groqKey()){_aiNoKey(panel);return;}
+  window._aiLastIso=iso;
+  var c=CTRY[iso];if(!c)return;
+  var live=_rpLiveData[iso]||{};
+  var g=live.gdp!=null?live.gdp:c.g;
+  var fdi=live.fdi!=null?live.fdi.toFixed(1)+'% GDP':'—';
+  var pred=c.pred&&c.pred.g?c.pred.g:[];
+  var g2030=pred.length>=5?pred[4].toFixed(1):g;
+  var g2034=pred.length>=9?pred[9].toFixed(1):g;
+  var prompt='You are a strategic futures analyst. Write a precise 180-word 10-year scenario (2025–2035) for this nation:\n\nCountry: '+c.n+'\nCurrent GDP growth: '+g+'%\nInflation: '+c.inf+'%\nGDP per capita: $'+c.gdppc+'\nFDI: '+fdi+'\nProjected 2030 growth: '+g2030+'%\nProjected 2034 growth: '+g2034+'%\nKey opportunities: '+(c.op?c.op.join(', '):'—')+'\nRisk factors: '+(c.ri?c.ri.join(', '):'—')+'\n\nParagraph 1 — BASE CASE (70% probability): Most likely trajectory 2025–2030. What does the economy look like? What sectors lead? What is GDP/capita by 2030? Paragraph 2 — BULL CASE (20% probability): Best plausible scenario — what catalysts unlock outperformance? Paragraph 3 — BEAR CASE (10% probability): Downside risk scenario — what shocks could derail progress? End with DECADE FORECAST: [GDP growth rate 2030] · [GDP/capita 2034 estimate] · SCENARIO: [OUTPERFORM / IN-LINE / UNDERPERFORM vs EM peers]';
+  var btns=panel.parentElement?panel.parentElement.querySelectorAll('.ai-btn'):[];
+  btns.forEach(function(b){b.disabled=true;});
+  try{
+    var txt=await _groqCall([{role:'user',content:prompt}],500);
+    panel.innerHTML='<div class="ai-panel-hdr">🔮 '+c.n+' · AI Future Predictor 2025–2035 <span style="font-size:9px;font-weight:400;opacity:.7;">MiniMax M2.7</span></div>'
+      +'<div class="ai-result">'+_aiEsc(txt)+'</div>'
+      +'<div style="font-size:10px;color:var(--muted);margin-top:6px;"><span style="cursor:pointer;color:#a78bfa;" onclick="_mmRpFuturePredictor(window._aiLastIso)">Regenerate</span> · <span style="cursor:pointer;color:var(--muted);" onclick="_showAISetup()">&#9881; Key</span></div>';
+  }catch(e){if(e.message==='NO_KEY')_aiNoKey(panel);else panel.innerHTML='<div style="color:#ef4444;font-size:11px;">'+_aiEsc(e.message)+'</div>';}
+  finally{btns.forEach(function(b){b.disabled=false;});}
+}
+
+// ── AI Next China: manufacturing superpower analysis ─────────────────────
+async function _mmNextChina(){
+  var panel=document.getElementById('ai-rp-nextchina-panel');
+  if(!panel)return;
+  _aiThinking(panel,'Analysing 6 Next China candidates…');
+  if(!_groqKey()){_aiNoKey(panel);return;}
+  var candidates=[
+    {n:'India',iso:'IN',score:82,mfg:'13%',exp:'21.8%',fdi:'1.7%',gdp:'7.2%',wage:'$2.3K/yr',edge:'Largest working-age population by 2030, PLI schemes'},
+    {n:'Vietnam',iso:'VN',score:79,mfg:'25%',exp:'93.3%',fdi:'4.5%',gdp:'6.0%',wage:'$4.2K/yr',edge:'Apple supply chain, 93% export ratio, FDI inflows'},
+    {n:'Indonesia',iso:'ID',score:74,mfg:'20%',exp:'21.4%',fdi:'2.1%',gdp:'5.0%',wage:'$4.9K/yr',edge:'Nickel dominance, ASEAN hub, downstream minerals'},
+    {n:'Bangladesh',iso:'BD',score:71,mfg:'21%',exp:'14.7%',fdi:'0.9%',gdp:'5.8%',wage:'$1.8K/yr',edge:'Garments leader, BPO growth, ultra-low wages'},
+    {n:'Mexico',iso:'MX',score:68,mfg:'18%',exp:'39.5%',fdi:'2.8%',gdp:'2.0%',wage:'$11K/yr',edge:'Nearshoring boom, USMCA, US proximity'},
+    {n:'Ethiopia',iso:'ET',score:58,mfg:'5%',exp:'7.1%',fdi:'2.4%',gdp:'6.0%',wage:'$0.8K/yr',edge:'Youngest population, cheapest labour, Addis corridor'}
+  ];
+  var lines=candidates.map(function(c){
+    var live=_rpLiveData[c.iso]||{};
+    return c.n+': Score='+c.score+'/100 Mfg%GDP='+c.mfg+' Exports%GDP='+c.exp+' FDI='+c.fdi+' GDP_growth='+(live.gdp!=null?live.gdp:c.gdp)+' Wage='+c.wage+' Edge='+c.edge;
+  });
+  var prompt='You are a manufacturing strategy expert. China\'s model was: cheap labour + infrastructure + export orientation + strategic FDI attraction (1990–2015). Analyse these 6 candidates and decide who replicates it:\n\n'+lines.join('\n')+'\n\nWrite a 4-paragraph analysis (180 words):\nParagraph 1 — THE WINNER: Which single country is most likely to become the next manufacturing superpower by 2035, and what is the decisive factor? Paragraph 2 — RUNNER-UP CASE: Which country is the closest challenger, and what would need to happen for it to leapfrog the leader? Paragraph 3 — DARK HORSE: Identify one surprising contender that markets are underestimating and why. Paragraph 4 — STRUCTURAL BARRIERS: What is the single biggest obstacle preventing any country from fully replicating China\'s 1990–2015 trajectory? End with VERDICT: [country name] — KEY ADVANTAGE: [one line] — TIMELINE: [year they peak as mfg hub]';
+  try{
+    var txt=await _groqCall([{role:'user',content:prompt}],520);
+    panel.innerHTML='<div class="ai-panel-hdr">🏭 AI: Next Manufacturing Superpower <span style="font-size:9px;font-weight:400;opacity:.7;">MiniMax M2.7 · 6 candidates</span></div>'
+      +'<div class="ai-result">'+_aiEsc(txt)+'</div>'
+      +'<div style="font-size:10px;color:var(--muted);margin-top:6px;"><span style="cursor:pointer;color:#a78bfa;" onclick="_mmNextChina()">Refresh</span> · <span style="cursor:pointer;color:var(--muted);" onclick="_showAISetup()">&#9881; Key</span></div>';
+  }catch(e){if(e.message==='NO_KEY')_aiNoKey(panel);else panel.innerHTML='<div style="color:#ef4444;font-size:11px;">'+_aiEsc(e.message)+'</div>';}
+}
+
+// ── AI Migration Forecast: 2035–2050 flow analysis ───────────────────────
+async function _mmMigrationAI(){
+  var panel=document.getElementById('ai-rp-migration-panel');
+  if(!panel)return;
+  _aiThinking(panel,'Analysing global migration patterns through 2050…');
+  if(!_groqKey()){_aiNoKey(panel);return;}
+  var prompt='You are a demographer and migration economist. Analyze near-future (2025–2035) and extended-future (2035–2050) global migration trends.\n\nKey current data:\n- Canada: 485K/yr target, Express Entry 6-month processing\n- Germany: 7M worker shortage by 2030, Opportunity Card 2024\n- UAE: 0% tax, Golden Visa 10yr, 200+ nationalities\n- Australia: Skills shortage in 332 occupations\n- Climate displacement: 216M+ internal climate migrants by 2050 (World Bank)\n- Digital nomads: 35M globally by 2025, growing at 15%/yr\n- Aging population: EU working-age ratio dropping from 65% to 55% by 2040\n\nWrite a 3-paragraph migration intelligence brief (180 words):\nParagraph 1 — 2025–2035 DOMINANT FLOWS: Which 3 migration corridors will see the biggest growth? What are the dominant push (sending) and pull (receiving) factors? Which countries will LOSE the most talent?\nParagraph 2 — 2035–2050 STRUCTURAL SHIFTS: How does climate displacement change the map? Which new destinations emerge? How does technology (remote work, digital nomad visa) reshape who migrates and where?\nParagraph 3 — GEOPOLITICAL IMPACT: Which nation gains the most from brain gain? Which nation faces existential demographic crisis from emigration? What is the biggest unresolved policy conflict in international migration?\nEnd with MIGRATION MEGA-TREND: [one defining phrase for 2035–2050] · TOP DESTINATION 2035: [country]';
+  try{
+    var txt=await _groqCall([{role:'user',content:prompt}],520);
+    panel.innerHTML='<div class="ai-panel-hdr">✈️ AI Migration Forecast 2035–2050 <span style="font-size:9px;font-weight:400;opacity:.7;">MiniMax M2.7</span></div>'
+      +'<div class="ai-result">'+_aiEsc(txt)+'</div>'
+      +'<div style="font-size:10px;color:var(--muted);margin-top:6px;"><span style="cursor:pointer;color:#a78bfa;" onclick="_mmMigrationAI()">Refresh</span> · <span style="cursor:pointer;color:var(--muted);" onclick="_showAISetup()">&#9881; Key</span></div>';
+  }catch(e){if(e.message==='NO_KEY')_aiNoKey(panel);else panel.innerHTML='<div style="color:#ef4444;font-size:11px;">'+_aiEsc(e.message)+'</div>';}
+}
+
+// ── AI Passport Strategy: power landscape by 2030 ───────────────────────
+async function _mmPassportAI(){
+  var panel=document.getElementById('ai-rp-passport-panel');
+  if(!panel)return;
+  _aiThinking(panel,'Analysing global passport power landscape through 2030…');
+  if(!_groqKey()){_aiNoKey(panel);return;}
+  var prompt='You are a global mobility expert and geopolitical analyst. Analyze the passport power landscape and forecast shifts by 2030.\n\nCurrent landscape (Henley Index leaders): Japan/Singapore/Germany/France/Italy/Spain ~190+ destinations. Bottom: Afghanistan/Iraq/Syria/Pakistan <30 destinations.\n\nKey dynamics: UAE climbed from 65 to 180+ countries in 15 years. Qatar: 96→170+. Gulf states investing heavily in visa agreements. Post-Brexit UK fell. EU consolidation strengthening bloc mobility. China passport constrained despite economic power.\n\nFuture variables: BRICS visa-free zone discussions. ASEAN single travel area progress. Africa Continental Free Trade Area (AfCFTA) mobility ambitions. Digital passports and biometric travel.\n\nWrite a 3-paragraph analysis (170 words):\nParagraph 1 — RISING PASSPORTS 2030: Which 3-4 passports will gain the most visa-free access by 2030 and why? What deals/alliances are driving this?\nParagraph 2 — PASSPORT POWER SHIFTS: Which currently strong passports face declining power (Brexit effects, sanctions, geopolitical isolation)? Which BRICS passports have a path to top-20 by 2035?\nParagraph 3 — THE PASSPORT STRATEGY: For someone optimising global mobility in 2030, what is the ideal passport portfolio strategy? What is the most undervalued passport right now?\nEnd with TOP RISER 2030: [country] · BIGGEST DECLINER: [country] · STRATEGIC PICK: [country]';
+  try{
+    var txt=await _groqCall([{role:'user',content:prompt}],500);
+    panel.innerHTML='<div class="ai-panel-hdr">🛂 AI Passport Strategy 2030 <span style="font-size:9px;font-weight:400;opacity:.7;">MiniMax M2.7</span></div>'
+      +'<div class="ai-result">'+_aiEsc(txt)+'</div>'
+      +'<div style="font-size:10px;color:var(--muted);margin-top:6px;"><span style="cursor:pointer;color:#a78bfa;" onclick="_mmPassportAI()">Refresh</span> · <span style="cursor:pointer;color:var(--muted);" onclick="_showAISetup()">&#9881; Key</span></div>';
+  }catch(e){if(e.message==='NO_KEY')_aiNoKey(panel);else panel.innerHTML='<div style="color:#ef4444;font-size:11px;">'+_aiEsc(e.message)+'</div>';}
+}
+
+// ── AI Language Future: shift in diplomatic/tech/commercial dominance ────
+async function _mmLanguageAI(){
+  var panel=document.getElementById('ai-rp-language-panel');
+  if(!panel)return;
+  _aiThinking(panel,'Forecasting language power shifts through 2040…');
+  if(!_groqKey()){_aiNoKey(panel);return;}
+  var prompt='You are a linguist and geopolitical analyst. Forecast which languages gain and lose power through 2040.\n\nCurrent data: English: 1.5B speakers, 60% internet content, lingua franca of science/finance. Mandarin: 920M native, growing AI training data. Spanish: 500M+, fastest-growing in US. Arabic: 450M+, 22 countries. Hindi: 600M+, India economic rise. French: 80M native, 300M total, 29 African countries. Portuguese: 280M, Brazil dominant. Swahili: 200M+, East Africa integration.\n\nKey dynamics: India projected #1 economy by 2050 (IMF). AI translation eroding language barriers. Belt and Road mandarin spread. Africa fastest-growing youth population (Swahili, Hausa, Yoruba rising). Spanish surpassing English in US by 2050 (Pew). Tech industry still English-dominant but shifting.\n\nWrite 3 paragraphs (160 words):\nParagraph 1 — RISING LANGUAGES 2040: Which 3 languages gain the most geopolitical weight by 2040? Specific reasons (economic rise, demographic growth, AI adoption, diplomatic reach). Paragraph 2 — PRESSURE ON ENGLISH: How does English\'s dominance evolve? Does it remain THE lingua franca or fragment into regional clusters? What is the biggest threat to its primacy? Paragraph 3 — BUSINESS IMPLICATION: What language(s) should be prioritised for someone entering global business in 2025 for maximum career optionality by 2040? End with LANGUAGE OF 2040: [prediction] · FASTEST RISER: [language] · STRATEGIC LEARN: [recommendation]';
+  try{
+    var txt=await _groqCall([{role:'user',content:prompt}],500);
+    panel.innerHTML='<div class="ai-panel-hdr">🗣 AI Language Shift Forecast 2040 <span style="font-size:9px;font-weight:400;opacity:.7;">MiniMax M2.7</span></div>'
+      +'<div class="ai-result">'+_aiEsc(txt)+'</div>'
+      +'<div style="font-size:10px;color:var(--muted);margin-top:6px;"><span style="cursor:pointer;color:#a78bfa;" onclick="_mmLanguageAI()">Refresh</span> · <span style="cursor:pointer;color:var(--muted);" onclick="_showAISetup()">&#9881; Key</span></div>';
+  }catch(e){if(e.message==='NO_KEY')_aiNoKey(panel);else panel.innerHTML='<div style="color:#ef4444;font-size:11px;">'+_aiEsc(e.message)+'</div>';}
+}
+
+// ── AI New Nations: independence probability scoring ─────────────────────
+async function _mmNewNationsAI(){
+  var panel=document.getElementById('ai-rp-newnations-panel');
+  if(!panel)return;
+  _aiThinking(panel,'Scoring independence movement probabilities through 2035…');
+  if(!_groqKey()){_aiNoKey(panel);return;}
+  var prompt='You are a political scientist specialising in state formation and self-determination. Score independence movements by probability of achieving statehood by 2035.\n\nKey movements and current status:\n- Kurdistan (Iraq/Syria): De facto autonomous since 1991, 2017 referendum 93% YES, 6M+ people, own military + oil, blocked by Baghdad/Iran/Turkey\n- Catalonia (Spain): 2017 referendum 90% YES, EU membership conflict, 7.8M people, 20% of Spanish GDP, legal blockade\n- Scotland (UK): 2014 55% NO, post-Brexit case stronger, SNP majority, next referendum path unclear\n- Taiwan: De facto independent since 1949, 23M people, $760B economy, US security guarantee, China pressure escalating\n- Kosovo: 100+ UN recognitions, Serbia/Russia blockade, EU accession path, stability improving\n- Somaliland: 35 years de facto independent, 0 UN recognitions, elections held, strategic Horn of Africa location\n- New Caledonia: 3 referendums (2018/2020/2021 NO), 2024 riots, nickel dependency, French Pacific strategy\n- Western Sahara: POLISARIO vs Morocco, 50yr conflict, UN mission failed, Morocco normalisation agreements\n\nWrite a probability assessment (190 words):\nParagraph 1 — HIGHEST PROBABILITY (>40% by 2035): Rank the top 2-3 independence movements most likely to succeed. What is the decisive catalyst for each? Paragraph 2 — MEDIUM PROBABILITY (15-40%): Which movements are in a grey zone and what single event would tip them toward independence? Paragraph 3 — STRUCTURAL BARRIERS: What is the single biggest obstacle to new state formation in the current international system? Is the post-1945 territorial integrity norm weakening? End with TOP CANDIDATE 2035: [territory] · PROBABILITY: [%] · TRIGGER EVENT: [what would make it happen]';
+  try{
+    var txt=await _groqCall([{role:'user',content:prompt}],540);
+    panel.innerHTML='<div class="ai-panel-hdr">🌐 AI New Nations Probability 2035 <span style="font-size:9px;font-weight:400;opacity:.7;">MiniMax M2.7</span></div>'
+      +'<div class="ai-result">'+_aiEsc(txt)+'</div>'
+      +'<div style="font-size:10px;color:var(--muted);margin-top:6px;"><span style="cursor:pointer;color:#a78bfa;" onclick="_mmNewNationsAI()">Refresh</span> · <span style="cursor:pointer;color:var(--muted);" onclick="_showAISetup()">&#9881; Key</span></div>';
+  }catch(e){if(e.message==='NO_KEY')_aiNoKey(panel);else panel.innerHTML='<div style="color:#ef4444;font-size:11px;">'+_aiEsc(e.message)+'</div>';}
+}
+
+// ── AI Currencies/De-dollarization: reserve currency shift forecast ───────
+async function _mmCurrenciesAI(){
+  var panel=document.getElementById('ai-rp-currencies-panel');
+  if(!panel)return;
+  _aiThinking(panel,'Analysing de-dollarization trajectory and future reserve currencies…');
+  if(!_groqKey()){_aiNoKey(panel);return;}
+  var prompt='You are a monetary economist and geopolitical analyst. Forecast the global reserve currency landscape through 2035.\n\nCurrent data (2025): USD: 58% of global reserves (down from 72% in 2001). EUR: 20%. JPY: 6%. GBP: 5%. CNY: 2.3% (far below China\'s 17% global GDP share). Gold: central bank buying at 50yr highs (1,100+ tonnes in 2023). BRICS: $30T GDP bloc, discussing payment system alternative to SWIFT. mBridge: BIS multi-CBDC platform live. India bilateral trade in INR. Saudi Arabia accepting RMB for oil (small volumes). Digital Yuan (e-CNY): 260M users, $250B transactions in 2023. US debt: $35T, fiscal deficit $2T+/yr.\n\nWrite a 3-paragraph analysis (190 words):\nParagraph 1 — DEDOLLARIZATION SPEED: Is this a gradual drift (20yr) or an accelerating shift (10yr)? What is the USD reserve share in 2030 and 2035? What is the biggest wildcard that could either accelerate or halt this process?\nParagraph 2 — THE WINNERS: Which currencies/assets gain the most as USD slowly recedes? Specific case for CNY, EUR, gold, SDR, crypto, and regional currency blocs. What does a multipolar reserve system look like?\nParagraph 3 — BRICS CURRENCY: How realistic is a BRICS common currency or payment rail by 2030? What are the 3 specific political/economic obstacles that have prevented it so far?\nEnd with USD SHARE 2030: [%] · USD SHARE 2035: [%] · BIGGEST CHALLENGER: [asset/currency] · PROBABILITY OF BRICS PAYMENT RAIL BY 2030: [%]';
+  try{
+    var txt=await _groqCall([{role:'user',content:prompt}],560);
+    panel.innerHTML='<div class="ai-panel-hdr">💱 AI De-Dollarization Forecast 2035 <span style="font-size:9px;font-weight:400;opacity:.7;">MiniMax M2.7</span></div>'
+      +'<div class="ai-result">'+_aiEsc(txt)+'</div>'
+      +'<div style="font-size:10px;color:var(--muted);margin-top:6px;"><span style="cursor:pointer;color:#a78bfa;" onclick="_mmCurrenciesAI()">Refresh</span> · <span style="cursor:pointer;color:var(--muted);" onclick="_showAISetup()">&#9881; Key</span></div>';
+  }catch(e){if(e.message==='NO_KEY')_aiNoKey(panel);else panel.innerHTML='<div style="color:#ef4444;font-size:11px;">'+_aiEsc(e.message)+'</div>';}
+}
+
+// ════════════════════════════════════════
 // v3.27 MARKETS & STOCKS AI INTELLIGENCE
 // MiniMax M2.7 · 100% Free · No paid APIs
 // 6 AI features: MarketPulse, SectorRotation, AssetAI, StockOutlook, EMScanner, ExchangeAI
@@ -4317,6 +4498,22 @@ ${[
 <div style="font-size:14px;font-weight:700;margin-bottom:12px;">🃏 Country Cards — <span style="color:var(--muted);font-weight:400;font-size:12px;">Click any card for full drill-down analysis</span></div>
 <div class="rp-grid" id="rp-cards"></div>
 
+
+<!-- AI Rising Powers Intelligence v3.28 -->
+<div style="margin-top:24px;border-top:1px solid var(--border);padding-top:16px;">
+  <div style="font-size:14px;font-weight:700;margin-bottom:10px;display:flex;align-items:center;gap:8px;">
+    🤖 <span>AI Rising Powers Intelligence</span>
+    <span style="font-size:10px;font-weight:400;color:var(--muted);">MiniMax M2.7 · reads live World Bank data</span>
+  </div>
+  <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px;">
+    <button class="ai-btn" onclick="_mmRpOracle()" style="padding:5px 14px;font-size:11px;">🔮 Global Power Oracle</button>
+    <button class="ai-btn" onclick="_mmRpRacePredictor()" style="padding:5px 14px;font-size:11px;background:linear-gradient(135deg,#f59e0b,#ef4444);">🏁 Power Race Predictor 2035</button>
+    <span style="font-size:11px;color:var(--muted);align-self:center;">· <span style="cursor:pointer;color:#a78bfa;" onclick="_showAISetup()">&#9881; Setup key</span></span>
+  </div>
+  <div id="ai-rp-oracle-panel" class="ai-panel">
+    <div style="font-size:11px;color:var(--muted);">Click <strong style="color:#a78bfa;">Global Power Oracle</strong> for a geopolitical mega-brief across all 15 nations, or <strong style="color:#f59e0b;">Power Race Predictor 2035</strong> to see who rises and who falls</div>
+  </div>
+</div>
 </div><!-- end #rp-panel-cards -->
 
 <!-- SUB-TAB: Next China Analysis -->
@@ -4407,6 +4604,17 @@ ${[
 </div>
 
 <div style="font-size:11px;color:var(--muted);text-align:right;">Live data: World Bank FDI (BX.KLT.DINV.WD.GD.ZS) · Exports (NE.EXP.GNFS.ZS) · GDP (NY.GDP.MKTP.KD.ZG) · Updates with Rising Powers refresh</div>
+
+<!-- AI Next China v3.28 -->
+<div style="margin-top:20px;border-top:1px solid var(--border);padding-top:14px;">
+  <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:8px;">
+    <button class="ai-btn" onclick="_mmNextChina()" style="padding:5px 14px;font-size:11px;">🏭 AI: Who Replaces China?</button>
+    <span style="font-size:11px;color:var(--muted);">AI deep-dives all 6 candidates · manufacturing + FDI + labour · <span style="cursor:pointer;color:#a78bfa;" onclick="_showAISetup()">&#9881; Setup key</span></span>
+  </div>
+  <div id="ai-rp-nextchina-panel" class="ai-panel">
+    <div style="font-size:11px;color:var(--muted);">Click to get AI analysis of which nation is most likely to become the next manufacturing superpower and why</div>
+  </div>
+</div>
 </div><!-- end #rp-panel-nextchina -->
 
 <!-- SUB-TAB: Future Migration Destinations -->
@@ -4483,6 +4691,17 @@ ${[
 </div>
 
 <div style="font-size:11px;color:var(--muted);text-align:right;">Sources: World Bank Migration (SM.POP.NETM) · UNHCR · OECD Migration Outlook · IOM World Migration Report 2024</div>
+
+<!-- AI Migration v3.28 -->
+<div style="margin-top:20px;border-top:1px solid var(--border);padding-top:14px;">
+  <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:8px;">
+    <button class="ai-btn" onclick="_mmMigrationAI()" style="padding:5px 14px;font-size:11px;">✈️ AI Migration Forecast 2035–2050</button>
+    <span style="font-size:11px;color:var(--muted);">AI analyses migration flows, climate displacement, demographic shifts · <span style="cursor:pointer;color:#a78bfa;" onclick="_showAISetup()">&#9881; Setup key</span></span>
+  </div>
+  <div id="ai-rp-migration-panel" class="ai-panel">
+    <div style="font-size:11px;color:var(--muted);">Click to forecast where migration flows will shift by 2035 and 2050 — climate, demographics, and policy drivers</div>
+  </div>
+</div>
 </div><!-- end #rp-panel-migration -->
 
 <!-- v3.16 SUB-TAB: Passport Power -->
@@ -4572,6 +4791,17 @@ ${[
   </div>
 </div>
 <div style="font-size:10px;color:var(--muted);">Sources: Henley Passport Index 2024 · Arton Capital · OECD · Global Passport Power Rank · World Bank Tourism</div>
+
+<!-- AI Passport Strategy v3.28 -->
+<div style="margin-top:20px;border-top:1px solid var(--border);padding-top:14px;">
+  <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:8px;">
+    <button class="ai-btn" onclick="_mmPassportAI()" style="padding:5px 14px;font-size:11px;">🛂 AI Passport Strategy 2030</button>
+    <span style="font-size:11px;color:var(--muted);">AI ranks rising passport powers and predicts 2030 visa-free landscape · <span style="cursor:pointer;color:#a78bfa;" onclick="_showAISetup()">&#9881; Setup key</span></span>
+  </div>
+  <div id="ai-rp-passport-panel" class="ai-panel">
+    <div style="font-size:11px;color:var(--muted);">Click to get AI analysis of which passports gain the most power by 2030 and why</div>
+  </div>
+</div>
 </div><!-- end #rp-panel-passport -->
 
 <!-- v3.16 SUB-TAB: Language Future -->
@@ -4706,6 +4936,17 @@ ${[
   </div>
 </div>
 <div style="font-size:10px;color:var(--muted);">Sources: Ethnologue 2024 · UN Language Data · Institut Francais · OIF · World Economic Forum Language Report · CSMonitor</div>
+
+<!-- AI Language Future v3.28 -->
+<div style="margin-top:20px;border-top:1px solid var(--border);padding-top:14px;">
+  <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:8px;">
+    <button class="ai-btn" onclick="_mmLanguageAI()" style="padding:5px 14px;font-size:11px;">🗣 AI Language Shift Forecast</button>
+    <span style="font-size:11px;color:var(--muted);">AI predicts language dominance shifts in diplomacy, tech, and commerce by 2040 · <span style="cursor:pointer;color:#a78bfa;" onclick="_showAISetup()">&#9881; Setup key</span></span>
+  </div>
+  <div id="ai-rp-language-panel" class="ai-panel">
+    <div style="font-size:11px;color:var(--muted);">Click to forecast which languages gain and lose geopolitical power through 2040</div>
+  </div>
+</div>
 </div><!-- end #rp-panel-language -->
 
 <!-- v3.16 SUB-TAB: New Nations -->
@@ -4814,6 +5055,17 @@ ${[
   </div>
 </div>
 <div style="font-size:10px;color:var(--muted);">Sources: UN Charter Art.1 · Freedom House · ICJ Advisory Opinions · Crisis Group · Henley &amp; Partners · Carnegie Endowment · RAND Corp</div>
+
+<!-- AI New Nations v3.28 -->
+<div style="margin-top:20px;border-top:1px solid var(--border);padding-top:14px;">
+  <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:8px;">
+    <button class="ai-btn" onclick="_mmNewNationsAI()" style="padding:5px 14px;font-size:11px;">🌐 AI New Nations Probability</button>
+    <span style="font-size:11px;color:var(--muted);">AI scores independence movement probability by 2035 · <span style="cursor:pointer;color:#a78bfa;" onclick="_showAISetup()">&#9881; Setup key</span></span>
+  </div>
+  <div id="ai-rp-newnations-panel" class="ai-panel">
+    <div style="font-size:11px;color:var(--muted);">Click to get AI probability scoring for which independence movements are most likely to succeed by 2035</div>
+  </div>
+</div>
 </div><!-- end #rp-panel-newnations -->
 
 <!-- SUB-TAB: Future Currencies v3.22 -->
@@ -4907,6 +5159,17 @@ ${[
     <div style="font-size:13px;font-weight:700;margin-bottom:10px;">🌐 Post-Dollar World: 3 Scenarios for 2035</div>
     <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;" id="rpc-scenarios"></div>
   </div>
+
+<!-- AI Currencies v3.28 -->
+<div style="margin-top:20px;border-top:1px solid var(--border);padding-top:14px;">
+  <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:8px;">
+    <button class="ai-btn" onclick="_mmCurrenciesAI()" style="padding:5px 14px;font-size:11px;">💱 AI De-Dollarization Forecast</button>
+    <span style="font-size:11px;color:var(--muted);">AI analyses BRICS, CBDC timelines, reserve currency shifts through 2035 · <span style="cursor:pointer;color:#a78bfa;" onclick="_showAISetup()">&#9881; Setup key</span></span>
+  </div>
+  <div id="ai-rp-currencies-panel" class="ai-panel">
+    <div style="font-size:11px;color:var(--muted);">Click to get AI analysis of the de-dollarization trajectory and which currencies gain reserve status by 2035</div>
+  </div>
+</div>
 </div><!-- end #rp-panel-currencies -->
 
 <!-- v3.13: Drill-down modal -->
@@ -5603,15 +5866,17 @@ function rpDrillDown(iso){
   <canvas id="rp-drill-chart"></canvas>
 </div>
 <div style="font-size:10px;color:var(--muted);margin-top:8px;text-align:center;">Source: World Bank GDP Growth (${live.year||'embedded'}) · FDI: WB BX.KLT.DINV.WD.GD.ZS · Forecast: embedded trajectory model</div>
-<!-- AI Country Assessment v3.26 -->
+<!-- AI Country Intelligence v3.28 -->
 <div style="margin-top:16px;display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
   <button class="ai-btn" onclick="_groqCountryReport('${iso}')">🤖 AI Assessment</button>
+  <button class="ai-btn" onclick="_mmRpFuturePredictor('${iso}')" style="background:linear-gradient(135deg,#f59e0b,#ef4444);">🔮 AI Future Predictor</button>
   <span style="font-size:10px;color:var(--muted);">Geopolitical brief · MiniMax free tier</span>
   <button onclick="_showAISetup()" style="background:none;border:none;color:#a78bfa;font-size:10px;cursor:pointer;text-decoration:underline;">⚙ Setup key</button>
 </div>
 <div id="ai-country-panel" class="ai-panel" style="margin-top:10px;">
-  <div style="font-size:11px;color:var(--muted);">Click <strong style="color:#a78bfa;">AI Assessment</strong> to generate a geopolitical brief for ${c.n}</div>
-</div>`;
+  <div style="font-size:11px;color:var(--muted);">Click <strong style="color:#a78bfa;">AI Assessment</strong> for geopolitical brief · <strong style="color:#f59e0b;">AI Future Predictor</strong> for 10-year scenario</div>
+</div>
+<div id="ai-future-pred-panel" class="ai-panel" style="margin-top:8px;display:none;"></div>`;
 
   modal.style.display='block';
   document.body.style.overflow='hidden';
