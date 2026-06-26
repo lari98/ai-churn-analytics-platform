@@ -8,9 +8,9 @@
 [![FastAPI](https://img.shields.io/badge/FastAPI-0.111-009688)](https://fastapi.tiangolo.com)
 [![MLflow](https://img.shields.io/badge/MLflow-2.9-orange)](https://mlflow.org)
 [![Azure AI](https://img.shields.io/badge/Azure-AI--102-0078D4)](https://azure.microsoft.com)
-[![Dashboard](https://img.shields.io/badge/Dashboard-v3.4-a78bfa)](./dashboard/world-intelligence.html)
+[![Dashboard](https://img.shields.io/badge/Dashboard-v3.17-a78bfa)](./dashboard/world-intelligence.html)
 [![Backend](https://img.shields.io/badge/Backend-v2.7-22c55e)](./backend/market_server.py)
-[![Tests](https://img.shields.io/badge/Tests-261%20passed-22c55e)](./dashboard/tests/)
+[![Tests](https://img.shields.io/badge/Tests-515%20passed-22c55e)](./dashboard/tests/)
 [![Leaflet](https://img.shields.io/badge/Leaflet.js-1.9.4-199900)](https://leafletjs.com)
 [![Environment](https://img.shields.io/badge/Environment_Tab-v3.4-10b981)](./dashboard/world-intelligence.html)
 [![AQI Cities](https://img.shields.io/badge/AQI_Cities-50-38bdf8)](./dashboard/tests/TEST_AQI_MODAL_v3.4.md)
@@ -25,20 +25,23 @@
 
 | World Map — 37 Countries | Markets — Real-Time Crypto |
 |:---:|:---:|
+| 🗺 World Map — 56 Countries + Layers | 📈 Markets — Real-Time Crypto & Forex |
+|:---:|:---:|
 | ![World Map](./screenshots/world-map.png) | ![Markets](./screenshots/markets.png) |
 
-| Rising Powers — Pakistan Next China Analysis |
-|:---:|
-| ![Rising Powers](./screenshots/rising-powers.png) |
+| 🌏 Rising Powers — 15 Countries + Drill-down | 🌍 Platform Banner |
+|:---:|:---:|
+| ![Rising Powers](./screenshots/rising-powers.png) | ![Banner](./screenshots/banner.png) |
 
-| 🌡 Climate Intelligence — Past/Present/Future | 👶 Birth Rate — Era Timeline + Filter + Rankings |
+| 🌡 Climate Intelligence — Past/Present/Future | 👶 Birth Rate — Era Timeline + Filter |
 |:---:|:---:|
 | ![Climate Intelligence](./screenshots/climate-intelligence.png) | ![Birth Rate](./screenshots/birth-rate.png) |
 
-| 🤖 AI Prediction Engine — Climate Forecasts | 🧬 Demographic AI Predictor — Population Collapse |
-|:---:|:---:|
-| ![AI Predictor](./screenshots/climate-ai-predictor.png) | ![Birth Rate Advanced](./screenshots/birth-rate-advanced.png) |
+| 🤖 AI Prediction Engine — Climate Forecasts |
+|:---:|
+| ![AI Predictor](./screenshots/climate-ai-predictor.png) |
 
+> **New in v3.13–v3.17**: 📰 12 News Tabs (World/Sports/AI/Energy/Education/Metals + more) · 🌏 Rising Powers 6 sub-tabs (Passport Power/Language Future/New Nations/Next China/Migration) · 🗺 World Map: Alliance overlays (NATO/SCO/BRICS+/ASEAN/EU), Population layer, 🚢 Trade Corridors (13 routes), ⚖ Country Compare (30 countries), 🔮 Future Geopolitics panel · 🏦 Central Banks (35 banks) · ⚔️ Crisis Map (25 active zones)
 ---
 
 ## 📋 Table of Contents
@@ -72,6 +75,18 @@ An **AI-powered customer intelligence and global market analytics platform** bui
 - Detect fraudulent/anomalous behavior within minutes
 - Monitor global market risk, commodity prices, and currency exposure in real time
 - Generate automated, explainable AI insights for C-suite executives
+
+---
+
+## 🆕 What's New — v3.17 World Intelligence Platform
+
+| Version | Status | What Changed |
+|---------|--------|--------------|
+| **v3.17** | **Latest** | 🐛 **Sub-tab persistence fix** — Rising Powers no longer resets to Cards on revisit · 📰 **5 new news tabs**: Sports (BBC/ESPN/Sky), AI (TechCrunch/Wired/VentureBeat), Future Energy (CleanTechnica/Electrek), Education (BBC/Edutopia), Metals (Kitco/Mining.com) · 🚢 **Trade Corridors panel** — 13 sea/land/future routes with map flyTo · ⚖ **Country Compare** — 30-country picker · 🟢 **Live pulse animations** · ⏱ **90s news auto-refresh** with countdown · **515 tests all pass** |
+| **v3.16** | Previous | 🛂 Passport Power sub-tab (Henley Index + 2035 projections) · 🗣 Language Future sub-tab (8 post-English languages) · 🌐 New Nations sub-tab (independence movements + probabilities) · Population layer (WB SP.POP.TOTL) · Alliance overlays: NATO/SCO/BRICS+/ASEAN/EU |
+| **v3.15** | Previous | 🔮 Future Geopolitics panel — 40 data rows: Independence Movements, Climate Vulnerability, Belt & Road, Emerging Blocs, 2035-2050 Projections |
+| **v3.14** | Previous | Next China + Future Migration sub-tabs · Pakistan neutral badge fix · Parallel RSS fetch |
+| **v3.13** | Previous | 15 rising powers neutral palette · Drill-down modal · Auto-refresh · News multi-source RSS |
 
 ---
 
