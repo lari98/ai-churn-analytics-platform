@@ -3120,7 +3120,7 @@ const FC_SYM_MAP={BTC:'bitcoin',ETH:'ethereum',SOL:'solana',XRP:'ripple',ADA:'ca
 const FC_NAMES={BTC:'Bitcoin',ETH:'Ethereum',SOL:'Solana',XRP:'XRP',GOLD:'Gold (XAU)',SILVER:'Silver (XAG)',WTI:'WTI Crude Oil',EUR:'EUR/USD',SPX:'S&P 500',DAX:'DAX'};
 const FC_SEEDS={BTC:67000,ETH:3500,SOL:145,XRP:0.52,GOLD:2380,SILVER:28,WTI:78,EUR:1.085,SPX:5400,DAX:18800};
 const FC_VOL={BTC:.035,ETH:.04,SOL:.055,XRP:.05,GOLD:.008,SILVER:.015,WTI:.018,EUR:.004,SPX:.009,DAX:.01};
-let fcActiveSym='BTC',fcActiveDays=90,fcChart=null,fcHistCache={},fcLiveCache={};
+let fcActiveSym='BTC',fcActiveDays=90,fcHistCache={},fcLiveCache={};
 
 // ── Technical Indicators ──────────────────────────────────────────
 function calcSMA(arr,p){return arr.map((_,i)=>i<p-1?null:arr.slice(i-p+1,i+1).reduce((a,b)=>a+b,0)/p);}
