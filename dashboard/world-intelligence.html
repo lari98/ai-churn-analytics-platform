@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>World Intelligence Platform v3.26</title>
+<title>World Intelligence Platform v3.27</title>
 <!-- Leaflet -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css"/>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
@@ -613,7 +613,7 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:'Segoe 
 <div id="topbar">
   <a href="index.html">← Dashboard</a>
   <span class="title">🌍 World Intelligence Platform</span>
-  <span class="badge">v3.26</span><button onclick="_showAISetup()" title="Configure free MiniMax AI key (100% free)" style="margin-left:8px;background:linear-gradient(135deg,#7c3aed,#4f46e5);color:#fff;border:none;border-radius:6px;padding:3px 10px;cursor:pointer;font-size:11px;font-weight:700;">🤖 AI</button>
+  <span class="badge">v3.27</span><button onclick="_showAISetup()" title="Configure free MiniMax AI key (100% free)" style="margin-left:8px;background:linear-gradient(135deg,#7c3aed,#4f46e5);color:#fff;border:none;border-radius:6px;padding:3px 10px;cursor:pointer;font-size:11px;font-weight:700;">🤖 AI</button>
   <div style="display:flex;align-items:center;gap:6px;margin-left:auto;margin-right:16px;">
     <div class="live-dot"></div><span style="font-size:11px;color:var(--muted);">Live</span>
   </div>
@@ -802,6 +802,15 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:'Segoe 
 
   <!-- MARKETS -->
   <div class="page" id="page-markets">
+    <!-- AI Market Intelligence v3.27 -->
+    <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px;flex-wrap:wrap;">
+      <button class="ai-btn" onclick="_mmMarketPulse()" style="padding:5px 14px;font-size:11px;">🤖 AI Market Pulse</button>
+      <button class="ai-btn" onclick="_mmSectorRotation()" style="padding:5px 14px;font-size:11px;background:linear-gradient(135deg,#0ea5e9,#6366f1);">🔄 Sector Rotation</button>
+      <span style="font-size:11px;color:var(--muted);">MiniMax analyses all signals · <span style="cursor:pointer;color:#a78bfa;" onclick="_showAISetup()">&#9881; Setup key</span></span>
+    </div>
+    <div id="ai-mkt-pulse-panel" class="ai-panel" style="margin-bottom:12px;">
+      <div style="font-size:11px;color:var(--muted);">Click <strong style="color:#a78bfa;">AI Market Pulse</strong> for cross-asset analysis or <strong style="color:#0ea5e9;">Sector Rotation</strong> for allocation signals</div>
+    </div>
     <div class="mktabs">
       <div class="mktab-btn active" onclick="showMkt('metals',this)">🥇 Metals</div>
       <div class="mktab-btn" onclick="showMkt('crypto',this)">₿ Crypto</div>
@@ -1004,6 +1013,15 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:'Segoe 
   <!-- WORLD STOCKS -->
   <div class="page" id="page-stocks">
     <div style="font-size:15px;font-weight:700;margin-bottom:12px;padding-bottom:8px;border-bottom:1px solid var(--border);">🌐 World Stock Exchanges — 28+ Markets with Drilldown & Forecasts</div>
+    <!-- AI Stock Intelligence v3.27 -->
+    <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px;flex-wrap:wrap;">
+      <button class="ai-btn" onclick="_mmStockOutlook()" style="padding:5px 14px;font-size:11px;">🤖 AI Global Equity Outlook</button>
+      <button class="ai-btn" onclick="_mmEmergingScanner()" style="padding:5px 14px;font-size:11px;background:linear-gradient(135deg,#10b981,#0ea5e9);">🌱 EM Opportunity Scanner</button>
+      <span style="font-size:11px;color:var(--muted);">AI scans all 28 exchanges · <span style="cursor:pointer;color:#a78bfa;" onclick="_showAISetup()">&#9881; Setup key</span></span>
+    </div>
+    <div id="ai-stocks-panel" class="ai-panel" style="margin-bottom:12px;">
+      <div style="font-size:11px;color:var(--muted);">Click <strong style="color:#a78bfa;">AI Global Equity Outlook</strong> for regime analysis or <strong style="color:#10b981;">EM Opportunity Scanner</strong> for emerging market picks</div>
+    </div>
     <div class="ws-region-tabs">
       <div class="ws-rtab active" onclick="showWsRegion('all',this)">🌍 All Markets</div>
       <div class="ws-rtab" onclick="showWsRegion('americas',this)">🌎 Americas</div>
@@ -2853,6 +2871,8 @@ function makeCard(a){
 <div class="drilldown" id="dd-${a.sym}">
   <div class="fcwrap"><canvas id="${fid}"></canvas></div>
   <table class="fctbl"><thead><tr><th>Horizon</th><th>Price</th><th>Δ%</th><th>View</th></tr></thead><tbody id="tb-${a.sym}"></tbody></table>
+<div id="ai-asset-${a.sym}" class="ai-panel" style="margin-top:8px;"></div>
+<button class="ai-btn" onclick="_mmAssetAI('${a.sym}')" style="font-size:10px;padding:4px 10px;width:100%;margin-top:6px;">🤖 AI Asset Analysis</button>
 </div>`;
   requestAnimationFrame(()=>drawSpark(cid,d.history||[d.price],pos));
   return card;
@@ -2900,6 +2920,135 @@ function drawDrill(sym,tf){
     const fp=fc[row.i];const pct=(((fp-d.price)/d.price)*100);const up=pct>=0;
     return`<tr><td>${row.l}</td><td>${fmt(fp,sym)}</td><td class="${up?'pos':'neg'}">${up?'+':''}${pct.toFixed(2)}%</td><td style="color:${up?'var(--green)':'var(--red)'}">${up?'▲ Bullish':'▼ Bearish'}</td></tr>`;
   }).join('');
+}
+
+// ════════════════════════════════════════
+// v3.27 MARKETS & STOCKS AI INTELLIGENCE
+// MiniMax M2.7 · 100% Free · No paid APIs
+// 6 AI features: MarketPulse, SectorRotation, AssetAI, StockOutlook, EMScanner, ExchangeAI
+// ════════════════════════════════════════
+
+async function _mmMarketPulse(){
+  var panel=document.getElementById('ai-mkt-pulse-panel');
+  if(!panel)return;
+  _aiThinking(panel,'Analyzing cross-asset signals across all market categories…');
+  if(!_groqKey()){_aiNoKey(panel);return;}
+  var snapshots=[];
+  ['metals','crypto','fx','oil','indices'].forEach(function(cat){
+    if(!ADEFS[cat])return;
+    ADEFS[cat].forEach(function(a){
+      var d=mktData[a.sym]||{};
+      if(d.price)snapshots.push(cat.toUpperCase()+' '+a.n+'('+a.sym+'): Price='+fmt(d.price,a.sym)+' Chg='+(d.change>=0?'+':'')+d.change+'% RSI='+(d.rsi||50)+' Sig='+((d.sig&&d.sig.l)||'HOLD'));
+    });
+  });
+  if(!snapshots.length){panel.innerHTML='<div style="font-size:11px;color:var(--muted);">Open the Markets tab first, then click AI Market Pulse.</div>';return;}
+  var prompt='You are a professional macro strategist. Analyze these live market signals (2025) and write a sharp 3-paragraph intelligence brief:\n\n'+snapshots.slice(0,28).join('\n')+'\n\nParagraph 1 — CROSS-ASSET REGIME: Dominant macro theme (risk-on/off, inflation trade, dollar direction, safe-haven flows). Paragraph 2 — STANDOUT SIGNALS: 3 most significant RSI/momentum readings — what they collectively signal. Paragraph 3 — TACTICAL OUTLOOK: 30-day directional bias for each category (Metals/Crypto/FX/Oil/Indices). Smart money read. End with: REGIME: [RISK-ON / RISK-OFF / NEUTRAL / TRANSITIONING] — one-line justification.';
+  try{
+    var txt=await _groqCall([{role:'user',content:prompt}],550);
+    panel.innerHTML='<div class="ai-panel-hdr">🤖 AI Market Pulse <span style="font-size:9px;font-weight:400;opacity:.7;">MiniMax M2.7 · '+snapshots.length+' signals</span></div>'
+      +'<div class="ai-result">'+_aiEsc(txt)+'</div>'
+      +'<div style="font-size:10px;color:var(--muted);margin-top:6px;">'+new Date().toLocaleTimeString()+' · <span style="cursor:pointer;color:#a78bfa;" onclick="_mmMarketPulse()">Refresh</span> · <span style="cursor:pointer;color:var(--muted);" onclick="_showAISetup()">&#9881; Key</span></div>';
+  }catch(e){if(e.message==='NO_KEY')_aiNoKey(panel);else panel.innerHTML='<div style="color:#ef4444;font-size:11px;">'+_aiEsc(e.message)+'</div>';}
+}
+
+async function _mmSectorRotation(){
+  var panel=document.getElementById('ai-mkt-pulse-panel');
+  if(!panel)return;
+  _aiThinking(panel,'Running sector rotation model across 5 asset categories…');
+  if(!_groqKey()){_aiNoKey(panel);return;}
+  var catStats={};
+  ['metals','crypto','fx','oil','indices'].forEach(function(cat){
+    if(!ADEFS[cat])return;
+    var rs=[],ch=[];
+    ADEFS[cat].forEach(function(a){var d=mktData[a.sym]||{};if(d.rsi)rs.push(d.rsi);if(d.change!==undefined)ch.push(d.change);});
+    if(rs.length)catStats[cat]={avgRsi:Math.round(rs.reduce(function(s,v){return s+v;},0)/rs.length),avgChg:+(ch.reduce(function(s,v){return s+v;},0)/ch.length).toFixed(2),bullPct:Math.round(ch.filter(function(v){return v>0;}).length/ch.length*100)};
+  });
+  var statsLines=Object.entries(catStats).map(function(kv){return kv[0].toUpperCase()+': AvgRSI='+kv[1].avgRsi+' AvgChg='+kv[1].avgChg+'% Bulls='+kv[1].bullPct+'%';}).join('\n');
+  var prompt='You are a tactical asset allocator. Based on these category-level market stats:\n\n'+statsLines+'\n\nWrite a concise sector rotation recommendation (140 words):\nLine 1 — OVERWEIGHT: 1-2 categories to increase allocation and why (technicals + macro). Line 2 — UNDERWEIGHT: 1-2 categories to reduce. Line 3 — NEUTRAL: categories to hold. Paragraph 2 — ROTATION LOGIC: macro rationale (rates, growth, momentum). End with ROTATION SIGNAL: [DEFENSIVE SHIFT / RISK ROTATION / STAY POSITIONED]';
+  try{
+    var txt=await _groqCall([{role:'user',content:prompt}],380);
+    panel.innerHTML='<div class="ai-panel-hdr">🔄 AI Sector Rotation Model <span style="font-size:9px;font-weight:400;opacity:.7;">MiniMax M2.7</span></div>'
+      +'<div class="ai-result">'+_aiEsc(txt)+'</div>'
+      +'<div style="font-size:10px;color:var(--muted);margin-top:6px;"><span style="cursor:pointer;color:#a78bfa;" onclick="_mmSectorRotation()">Refresh</span> · <span style="cursor:pointer;color:var(--muted);" onclick="_showAISetup()">&#9881; Key</span></div>';
+  }catch(e){if(e.message==='NO_KEY')_aiNoKey(panel);else panel.innerHTML='<div style="color:#ef4444;font-size:11px;">'+_aiEsc(e.message)+'</div>';}
+}
+
+async function _mmAssetAI(sym){
+  var panel=document.getElementById('ai-asset-'+sym);
+  if(!panel)return;
+  _aiThinking(panel,'Analysing '+sym+'…');
+  if(!_groqKey()){_aiNoKey(panel);return;}
+  window._aiLastSym=sym;
+  var a=null;
+  ['metals','crypto','fx','oil','indices'].forEach(function(cat){if(ADEFS[cat]){var f=ADEFS[cat].find(function(x){return x.sym===sym;});if(f)a=f;}});
+  if(!a){panel.innerHTML='<div style="font-size:11px;color:#ef4444;">Asset data not found.</div>';return;}
+  var d=mktData[sym]||{price:a.b,change:0,rsi:50,sig:{l:'HOLD'}};
+  var hist=d.history||[];
+  var vol=hist.length>5?+(Math.sqrt(hist.slice(-20).reduce(function(s,v,i,arr){return i===0?0:s+Math.pow(v-arr[i-1],2);},0)/Math.max(hist.slice(-20).length-1,1))/d.price*100).toFixed(2):null;
+  var prompt='You are a professional asset analyst. Analyse this asset and write a precise 160-word brief:\n\nAsset: '+a.n+' ('+a.sym+')\nCategory: '+(a.cat||'—')+'\nPrice: '+fmt(d.price,sym)+'\n24h Change: '+(d.change>=0?'+':'')+d.change+'%\nRSI (14): '+d.rsi+'\nSignal: '+((d.sig&&d.sig.l)||'HOLD')+(vol?'\nVol (20D): '+vol+'%':'')+'\n\nParagraph 1 — TECHNICAL PICTURE: RSI zone, momentum quality, key level context. Paragraph 2 — MACRO CONTEXT: Key macro forces for this asset in 2025 (policy, inflation, geopolitics, supply/demand). Paragraph 3 — TRADE SETUP: Entry thesis, invalidation level, 30/90 day target direction. End with SIGNAL: [STRONG BUY / BUY / HOLD / SELL / STRONG SELL] | 30D TARGET: [direction + %]';
+  var btns=panel.parentElement?panel.parentElement.querySelectorAll('.ai-btn'):[];
+  btns.forEach(function(b){b.disabled=true;});
+  try{
+    var txt=await _groqCall([{role:'user',content:prompt}],420);
+    panel.innerHTML='<div class="ai-panel-hdr">🤖 '+a.n+' AI Analysis <span style="font-size:9px;font-weight:400;opacity:.7;">MiniMax M2.7</span></div>'
+      +'<div class="ai-result">'+_aiEsc(txt)+'</div>'
+      +'<div style="font-size:10px;color:var(--muted);margin-top:6px;"><span style="cursor:pointer;color:#a78bfa;" onclick="_mmAssetAI(window._aiLastSym)">Regenerate</span> · <span style="cursor:pointer;color:var(--muted);" onclick="_showAISetup()">&#9881; Key</span></div>';
+  }catch(e){if(e.message==='NO_KEY')_aiNoKey(panel);else panel.innerHTML='<div style="color:#ef4444;font-size:11px;">'+_aiEsc(e.message)+'</div>';}
+  finally{btns.forEach(function(b){b.disabled=false;});}
+}
+
+async function _mmStockOutlook(){
+  var panel=document.getElementById('ai-stocks-panel');
+  if(!panel)return;
+  _aiThinking(panel,'Scanning all 28 global exchanges for regime analysis…');
+  if(!_groqKey()){_aiNoKey(panel);return;}
+  var exData=EXCHANGES.map(function(e){var d=mktData[e.sym]||{change:0,rsi:50,sig:{l:'HOLD'}};return e.ctry+' '+e.n+'['+e.sym+']: '+(d.change>=0?'+':'')+d.change+'% RSI:'+(d.rsi||50)+' '+((d.sig&&d.sig.l)||'HOLD')+' MC:'+e.mc;});
+  var bullCount=EXCHANGES.filter(function(e){var d=mktData[e.sym]||{change:0};return d.change>0;}).length;
+  var prompt='You are a global equity strategist. Analyze these 28 stock exchange signals (2025):\n\n'+exData.join('\n')+'\nBullish: '+bullCount+'/28 ('+Math.round(bullCount/28*100)+'% breadth)\n\nWrite a 3-paragraph global equity brief:\nParagraph 1 — GLOBAL REGIME: Market breadth analysis, dominant regional theme, risk-on vs defensive signals. Paragraph 2 — TOP 3 OPPORTUNITIES: Best 3 exchanges by technical + macro setup — specific rationale. Paragraph 3 — KEY RISKS: 2-3 deteriorating markets + macro risks to watch. End with GLOBAL EQUITY BIAS: [BULLISH / BEARISH / NEUTRAL] — one-line justification.';
+  try{
+    var txt=await _groqCall([{role:'user',content:prompt}],560);
+    panel.innerHTML='<div class="ai-panel-hdr">🤖 AI Global Equity Outlook <span style="font-size:9px;font-weight:400;opacity:.7;">MiniMax M2.7 · 28 exchanges · '+bullCount+'/28 bullish</span></div>'
+      +'<div class="ai-result">'+_aiEsc(txt)+'</div>'
+      +'<div style="font-size:10px;color:var(--muted);margin-top:6px;">'+new Date().toLocaleTimeString()+' · <span style="cursor:pointer;color:#a78bfa;" onclick="_mmStockOutlook()">Refresh</span> · <span style="cursor:pointer;color:var(--muted);" onclick="_showAISetup()">&#9881; Key</span></div>';
+  }catch(e){if(e.message==='NO_KEY')_aiNoKey(panel);else panel.innerHTML='<div style="color:#ef4444;font-size:11px;">'+_aiEsc(e.message)+'</div>';}
+}
+
+async function _mmEmergingScanner(){
+  var panel=document.getElementById('ai-stocks-panel');
+  if(!panel)return;
+  _aiThinking(panel,'Running emerging market opportunity scanner…');
+  if(!_groqKey()){_aiNoKey(panel);return;}
+  var emEx=EXCHANGES.filter(function(e){return e.reg==='mea'||e.reg==='asia';});
+  var emData=emEx.map(function(e){var d=mktData[e.sym]||{change:0,rsi:50,sig:{l:'HOLD'}};return e.ctry+' '+e.n+'['+e.sym+']: '+(d.change>=0?'+':'')+d.change+'% RSI:'+(d.rsi||50)+' '+((d.sig&&d.sig.l)||'HOLD')+' MC:'+e.mc+' 2030:'+e.yr2030;});
+  var weak=EXCHANGES.filter(function(e){var d=mktData[e.sym]||{change:0};return d.change<-1;}).map(function(e){var d=mktData[e.sym]||{change:0,rsi:50};return e.ctry+' '+e.n+': '+(d.change>=0?'+':'')+d.change+'% RSI:'+(d.rsi||50);});
+  var prompt='You are an emerging markets specialist. Analyze these EM/Asia-Pacific exchanges (2025):\n\n'+emData.join('\n')+'\n\nWeakening markets globally:\n'+(weak.slice(0,8).join('\n')||'None severely negative')+'\n\nWrite a concise EM brief (170 words):\nSection 1 — TOP 3 EM PICKS: Best 3 EM exchanges for accumulation — technicals, macro catalyst, 12M thesis. Section 2 — RED FLAGS: 2 markets to avoid and why. Section 3 — EM MACRO THEME: Dominant EM driver in 2025 (USD, China, commodity cycle, geopolitics). End with EM POSTURE: [ACCUMULATE / HOLD / REDUCE] and top single pick.';
+  try{
+    var txt=await _groqCall([{role:'user',content:prompt}],460);
+    panel.innerHTML='<div class="ai-panel-hdr">🌱 AI EM Opportunity Scanner <span style="font-size:9px;font-weight:400;opacity:.7;">MiniMax M2.7 · '+emEx.length+' EM exchanges</span></div>'
+      +'<div class="ai-result">'+_aiEsc(txt)+'</div>'
+      +'<div style="font-size:10px;color:var(--muted);margin-top:6px;"><span style="cursor:pointer;color:#a78bfa;" onclick="_mmEmergingScanner()">Refresh</span> · <span style="cursor:pointer;color:var(--muted);" onclick="_showAISetup()">&#9881; Key</span></div>';
+  }catch(e){if(e.message==='NO_KEY')_aiNoKey(panel);else panel.innerHTML='<div style="color:#ef4444;font-size:11px;">'+_aiEsc(e.message)+'</div>';}
+}
+
+async function _mmExchangeAI(sym){
+  var panel=document.getElementById('ai-exch-'+sym);
+  if(!panel)return;
+  _aiThinking(panel,'Analysing exchange '+sym+'…');
+  if(!_groqKey()){_aiNoKey(panel);return;}
+  window._aiLastExch=sym;
+  var e=EXCHANGES.find(function(x){return x.sym===sym;});
+  if(!e){panel.innerHTML='<div style="font-size:11px;color:#ef4444;">Exchange data not found.</div>';return;}
+  var d=mktData[sym]||{price:e.b,change:0,rsi:50,sig:{l:'HOLD'}};
+  var prompt='You are a global equity strategist. Write a concise 170-word assessment:\n\nExchange: '+e.n+'\nCountry: '+e.ctry+'\nLevel: '+d.price+'\n24h Change: '+(d.change>=0?'+':'')+d.change+'%\nRSI: '+d.rsi+'\nSignal: '+((d.sig&&d.sig.l)||'HOLD')+'\nMarket Cap: '+e.mc+'\nTargets: 2030→'+e.yr2030+' | 2035→'+e.yr2035+' | 2040→'+e.yr2040+'\n\nParagraph 1 — TECHNICAL PICTURE: RSI zone, momentum quality, short-term bias. Paragraph 2 — COUNTRY/MACRO CONTEXT: 2-3 biggest macro drivers for this market in 2025 (policy, growth, sector composition, geopolitics). Paragraph 3 — INVESTMENT CASE: Bull case for the long-run targets vs bear case risks. Is the 2030 target achievable? End with OUTLOOK: [BULLISH / BEARISH / NEUTRAL] · 12M Bias: [direction] · Key risk: [one line]';
+  var btns=panel.parentElement?panel.parentElement.querySelectorAll('.ai-btn'):[];
+  btns.forEach(function(b){b.disabled=true;});
+  try{
+    var txt=await _groqCall([{role:'user',content:prompt}],440);
+    panel.innerHTML='<div class="ai-panel-hdr">🤖 '+e.n+' Analysis <span style="font-size:9px;font-weight:400;opacity:.7;">MiniMax M2.7</span></div>'
+      +'<div class="ai-result">'+_aiEsc(txt)+'</div>'
+      +'<div style="font-size:10px;color:var(--muted);margin-top:6px;"><span style="cursor:pointer;color:#a78bfa;" onclick="_mmExchangeAI(window._aiLastExch)">Regenerate</span> · <span style="cursor:pointer;color:var(--muted);" onclick="_showAISetup()">&#9881; Key</span></div>';
+  }catch(e2){if(e2.message==='NO_KEY')_aiNoKey(panel);else panel.innerHTML='<div style="color:#ef4444;font-size:11px;">'+_aiEsc(e2.message)+'</div>';}
+  finally{btns.forEach(function(b){b.disabled=false;});}
 }
 
 // ════════════════════════════════════════
@@ -3768,6 +3917,8 @@ function makeExchCard(e){
 <div class="drilldown" id="wsdd-${e.sym}">
   <div class="fcwrap" style="margin-top:10px;"><canvas id="wsfc-${e.sym}"></canvas></div>
   <table class="fctbl"><thead><tr><th>Horizon</th><th>Est. Value</th><th>Δ%</th></tr></thead><tbody id="wstb-${e.sym}"></tbody></table>
+<div id="ai-exch-${e.sym}" class="ai-panel" style="margin-top:8px;"></div>
+<button class="ai-btn" onclick="_mmExchangeAI('${e.sym}')" style="font-size:10px;padding:4px 10px;width:100%;margin-top:6px;">🤖 AI Exchange Analysis</button>
 </div>
 <div style="margin-top:8px;"><button class="tfbtn" style="width:100%;padding:5px;text-align:center;" onclick="toggleWsDrill('${e.sym}',event)">📊 Drilldown & Full Forecast</button></div>`;
   requestAnimationFrame(()=>drawSpark(cid,d.history||[d.price],pos));
