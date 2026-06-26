@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>World Intelligence Platform v3.20</title>
+<title>World Intelligence Platform v3.21</title>
 <!-- Leaflet -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css"/>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
@@ -253,28 +253,24 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:'Segoe 
 .rp-m{background:var(--surface);border-radius:5px;padding:8px;text-align:center;}
 .rp-m .rv{font-size:15px;font-weight:700;}.rp-m .rl{font-size:10px;color:var(--muted);margin-top:2px;}
 .rp-gdp-chart{height:90px;margin-bottom:10px;}
-/* Rising Powers v3.20 — Ultra-Advanced Intelligence Suite */
-.rp-intel-suite{margin-bottom:20px;}
-.rp-intel-row{display:grid;grid-template-columns:1.3fr 1fr;gap:12px;margin-bottom:12px;}
-@media(max-width:820px){.rp-intel-row{grid-template-columns:1fr;}}
-.rp-intel-card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:16px;}
-.rp-intel-title{font-size:13px;font-weight:700;margin-bottom:3px;}
-.rp-intel-sub{font-size:10px;color:var(--muted);margin-bottom:12px;}
-.rp-power-bar-row{display:flex;align-items:center;gap:8px;margin-bottom:6px;cursor:pointer;border-radius:6px;padding:3px 4px;transition:background .15s;}
-.rp-power-bar-row:hover{background:rgba(139,92,246,.08);}
-.rp-power-bar-flag{font-size:16px;width:22px;text-align:center;flex-shrink:0;}
-.rp-power-bar-name{font-size:11px;font-weight:600;width:80px;flex-shrink:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-.rp-power-bar-track{flex:1;height:14px;background:var(--surface);border-radius:7px;overflow:hidden;position:relative;}
-.rp-power-bar-fill{height:100%;border-radius:7px;transition:width 1.2s cubic-bezier(.4,0,.2,1);width:0%;}
-.rp-power-bar-score{font-size:11px;font-weight:800;width:36px;text-align:right;flex-shrink:0;}
-.rp-power-bar-chg{font-size:9px;width:32px;text-align:right;flex-shrink:0;}
-.rp-heatmap-grid{display:grid;gap:2px;overflow-x:auto;}
-.rp-heatmap-cell{border-radius:4px;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;cursor:default;transition:transform .1s;}
-.rp-heatmap-cell:hover{transform:scale(1.12);z-index:2;position:relative;}
-.rp-heatmap-header{font-size:9px;font-weight:700;color:var(--muted);text-align:center;padding:3px;}
-.rp-intel-legend{display:flex;gap:12px;flex-wrap:wrap;margin-top:8px;padding-top:8px;border-top:1px solid var(--border);}
-.rp-intel-legend-item{display:flex;align-items:center;gap:4px;font-size:9px;color:var(--muted);}
-.rp-intel-legend-dot{width:8px;height:8px;border-radius:50%;}
+/* Rising Powers v3.21 — Power Vortex Suite */
+.rp-ultra-suite{margin-bottom:20px;}
+.rp-ultra-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px;}
+@media(max-width:820px){.rp-ultra-row{grid-template-columns:1fr;}}
+.rp-ultra-card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:16px;}
+.rp-ultra-title{font-size:13px;font-weight:700;margin-bottom:3px;}
+.rp-ultra-sub{font-size:10px;color:var(--muted);margin-bottom:12px;}
+.rp-duel-select{background:var(--surface);border:1px solid var(--border);color:var(--text);border-radius:6px;padding:4px 8px;font-size:12px;cursor:pointer;flex:1;}
+.rp-race-row{display:flex;align-items:center;gap:8px;margin-bottom:5px;}
+.rp-race-track{flex:1;height:22px;background:var(--surface);border-radius:11px;overflow:hidden;position:relative;}
+.rp-race-fill{height:100%;border-radius:11px;transition:width .85s cubic-bezier(.4,0,.2,1);display:flex;align-items:center;justify-content:flex-end;padding-right:6px;font-size:9px;font-weight:700;}
+.rp-race-rank{width:24px;font-size:10px;font-weight:800;color:var(--muted);text-align:right;flex-shrink:0;}
+.rp-race-flag{font-size:15px;width:20px;text-align:center;flex-shrink:0;}
+.rp-race-name{font-size:10px;width:70px;flex-shrink:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.rp-race-score{font-size:11px;font-weight:800;width:32px;text-align:right;flex-shrink:0;}
+.rp-play-btn{background:linear-gradient(135deg,#8b5cf6,#6366f1);color:#fff;border:none;border-radius:8px;padding:6px 18px;font-size:12px;font-weight:700;cursor:pointer;transition:opacity .2s;white-space:nowrap;}
+.rp-play-btn:hover{opacity:.82;}
+.rp-year-badge{font-size:30px;font-weight:900;color:var(--accent,#8b5cf6);font-variant-numeric:tabular-nums;line-height:1;}
 .rp-factors{font-size:11px;color:var(--muted);line-height:1.6;border-top:1px solid var(--border);padding-top:10px;}
 .rp-factors strong{color:var(--text);}
 .rp-why-pk{background:linear-gradient(135deg,#0a2010,#0f172a);border:1px solid #10b981;border-radius:12px;padding:20px;margin-bottom:20px;}
@@ -590,7 +586,7 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:'Segoe 
 <div id="topbar">
   <a href="index.html">← Dashboard</a>
   <span class="title">🌍 World Intelligence Platform</span>
-  <span class="badge">v3.20</span>
+  <span class="badge">v3.21</span>
   <div style="display:flex;align-items:center;gap:6px;margin-left:auto;margin-right:16px;">
     <div class="live-dot"></div><span style="font-size:11px;color:var(--muted);">Live</span>
   </div>
@@ -3870,34 +3866,41 @@ function initRisingPowers(){
   </div>
 </div>
 
-<!-- INTELLIGENCE SUITE v3.20 — replaces old GDP line chart -->
-<div class="rp-intel-suite">
-  <div class="rp-intel-row">
-    <!-- Power Score animated bars -->
-    <div class="rp-intel-card">
-      <div class="rp-intel-title">⚡ Global Power Index — Composite Score</div>
-      <div class="rp-intel-sub">GDP Growth · Trade · Demographics · FDI · Innovation · Stability — 0 to 100</div>
-      <div id="rp-power-bars"></div>
+<!-- POWER VORTEX SUITE v3.21 — 3-panel ultra-advanced intelligence -->
+<div class="rp-ultra-suite">
+  <div class="rp-ultra-row">
+    <!-- Polar Power Vortex -->
+    <div class="rp-ultra-card">
+      <div class="rp-ultra-title">🌀 Power Vortex — 15 Nation Constellation</div>
+      <div class="rp-ultra-sub">Polar area · every segment = composite power score · hover for full breakdown</div>
+      <div style="height:300px;position:relative;"><canvas id="rp-polar-chart"></canvas></div>
     </div>
-    <!-- Bubble Intelligence Matrix (Chart.js) -->
-    <div class="rp-intel-card">
-      <div class="rp-intel-title">🔬 Growth Intelligence Matrix</div>
-      <div class="rp-intel-sub">Bubble size = Population · X = GDP Growth % · Y = FDI Inflows %</div>
-      <div style="height:290px;position:relative;"><canvas id="rp-bubble-chart"></canvas></div>
+    <!-- Intelligence Duel Radar -->
+    <div class="rp-ultra-card">
+      <div class="rp-ultra-title">⚔️ Intelligence Duel — 6-Axis Radar</div>
+      <div class="rp-ultra-sub">Head-to-head: GDP · Trade · Demographics · FDI · Innovation · Stability</div>
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px;">
+        <select id="rp-duel-a" class="rp-duel-select" onchange="renderRpDuel()"></select>
+        <span style="font-size:15px;font-weight:900;color:var(--accent,#8b5cf6);">vs</span>
+        <select id="rp-duel-b" class="rp-duel-select" onchange="renderRpDuel()"></select>
+      </div>
+      <div style="height:250px;position:relative;"><canvas id="rp-radar-chart"></canvas></div>
     </div>
   </div>
-  <!-- Heat Map Matrix -->
-  <div class="rp-intel-card">
-    <div class="rp-intel-title">🌡 Multi-Indicator Intelligence Heat Map — 15 Nations × 6 Metrics</div>
-    <div class="rp-intel-sub">Colour intensity = performance tier · Hover any cell for value</div>
-    <div id="rp-heat-map" style="overflow-x:auto;"></div>
-    <div class="rp-intel-legend">
-      <div class="rp-intel-legend-item"><div class="rp-intel-legend-dot" style="background:#10b981"></div>Exceptional</div>
-      <div class="rp-intel-legend-item"><div class="rp-intel-legend-dot" style="background:#34d399"></div>Strong</div>
-      <div class="rp-intel-legend-item"><div class="rp-intel-legend-dot" style="background:#fbbf24"></div>Moderate</div>
-      <div class="rp-intel-legend-item"><div class="rp-intel-legend-dot" style="background:#f97316"></div>Weak</div>
-      <div class="rp-intel-legend-item"><div class="rp-intel-legend-dot" style="background:#ef4444"></div>Concern</div>
+  <!-- Geopolitical Race 2020–2034 -->
+  <div class="rp-ultra-card">
+    <div style="display:flex;align-items:center;gap:16px;margin-bottom:10px;flex-wrap:wrap;">
+      <div>
+        <div class="rp-ultra-title">🏁 Geopolitical Power Race 2020–2034</div>
+        <div class="rp-ultra-sub">Watch nations rise and fall — play the full animated trajectory or drag the scrubber</div>
+      </div>
+      <div style="display:flex;align-items:center;gap:10px;margin-left:auto;">
+        <span class="rp-year-badge" id="rp-race-year">2020</span>
+        <button class="rp-play-btn" id="rp-race-play" onclick="_racePlay()">▶ Play</button>
+      </div>
     </div>
+    <input type="range" id="rp-race-slider" min="0" max="14" value="0" oninput="_raceScrub(this.value)" style="width:100%;margin-bottom:10px;accent-color:var(--accent,#8b5cf6);">
+    <div id="rp-race-bars"></div>
   </div>
 </div>
 
@@ -4523,164 +4526,194 @@ function _rpScoreColor(score){
 }
 function _rpTierColor(tier){return{S:'#f59e0b',A:'#10b981',B:'#3b82f6',C:'#94a3b8'}[tier]||'#94a3b8';}
 
-// ── 1. Power Score Animated Bars ─────────────────────────────────
-function _drawPowerBars(){
-  const el=document.getElementById('rp-power-bars');if(!el)return;
-  const sorted=Object.entries(RP_INTEL).sort((a,b)=>b[1].score-a[1].score);
-  el.innerHTML=sorted.map(([iso,d])=>{
-    const{bg,text}=_rpScoreColor(d.score);
-    const tierCol=_rpTierColor(d.tier);
-    // Live WB data overlay if available
-    const wb=CTRY[iso];
-    const liveGdp=wb&&wb.wbGdp?`${wb.wbGdp>0?'+':''}${wb.wbGdp.toFixed(1)}%`:`+${d.gdp}%`;
-    return`<div class="rp-power-bar-row" onclick="rpDrillDown('${iso}')" title="${d.name} — Score: ${d.score}/100 | GDP: ${liveGdp} | ${d.region}">
-  <div class="rp-power-bar-flag">${d.flag}</div>
-  <div class="rp-power-bar-name">${d.name}</div>
-  <div class="rp-power-bar-track">
-    <div class="rp-power-bar-fill" id="rpbar-${iso}" style="width:0%;background:linear-gradient(90deg,${bg}cc,${bg})"></div>
-  </div>
-  <div class="rp-power-bar-score" style="color:${bg}">${d.score}</div>
-  <div class="rp-power-bar-chg" style="color:${_rpTierColor(d.tier)};font-weight:700;">Tier ${d.tier}</div>
-</div>`;
-  }).join('');
-  // Animate bars after small delay
-  requestAnimationFrame(()=>requestAnimationFrame(()=>{
-    sorted.forEach(([iso,d],i)=>{
-      setTimeout(()=>{
-        const bar=document.getElementById('rpbar-'+iso);
-        if(bar)bar.style.width=d.score+'%';
-      },i*60);
-    });
-  }));
+// ═══════════════════════════════════════════════════════════════
+// Rising Powers v3.21 — Power Vortex Suite
+// 3 unique panels: Polar Constellation + Intelligence Duel + Geopolitical Race
+// RP_INTEL / RP_DIMS / RP_DIM_MAX / _rpScoreColor / _rpTierColor preserved
+// ═══════════════════════════════════════════════════════════════
+
+// Race trajectory [score2020, score2034] — linear interpolation per year
+const RP_RACE={
+  IN:[72,96],VN:[68,91],ET:[58,72],BD:[62,78],PH:[67,82],
+  ID:[68,84],CN:[84,72],KZ:[66,74],MX:[65,70],TH:[67,73],
+  MA:[60,72],EG:[60,60],CO:[58,66],PK:[63,62],NG:[52,62]
+};
+function _rpRaceScore(iso,yi){// yi 0-14 = 2020-2034
+  const[s0,s14]=RP_RACE[iso]||[50,50];
+  return Math.round(s0+(s14-s0)*yi/14);
 }
 
-// ── 2. Bubble Intelligence Matrix ─────────────────────────────────
-function _drawBubbleChart(){
-  const cv=document.getElementById('rp-bubble-chart');if(!cv)return;
-  const data=Object.entries(RP_INTEL).map(([iso,d])=>({
-    x:d.gdp,y:d.fdi,
-    r:Math.max(6,Math.min(32,Math.sqrt(d.pop)*1.4)),
-    label:d.flag+' '+d.name,
-    iso,score:d.score
-  }));
-  const{bg}=_rpScoreColor;
-  if(sparks['rp-bubble'])sparks['rp-bubble'].destroy();
-  sparks['rp-bubble']=new Chart(cv,{
-    type:'bubble',
+// ── 1. Polar Power Vortex ─────────────────────────────────────────
+function _drawPowerVortex(){
+  const cv=document.getElementById('rp-polar-chart');if(!cv)return;
+  const sorted=Object.keys(RP_INTEL).sort((a,b)=>RP_INTEL[b].score-RP_INTEL[a].score);
+  if(sparks['rp-polar'])sparks['rp-polar'].destroy();
+  sparks['rp-polar']=new Chart(cv,{
+    type:'polarArea',
     data:{
+      labels:sorted.map(iso=>RP_INTEL[iso].flag+' '+RP_INTEL[iso].name),
       datasets:[{
-        label:'Emerging Markets',
-        data,
-        backgroundColor:data.map(d=>RP_INTEL[d.iso].col+'88'),
-        borderColor:data.map(d=>RP_INTEL[d.iso].col),
-        borderWidth:2
+        data:sorted.map(iso=>RP_INTEL[iso].score),
+        backgroundColor:sorted.map(iso=>RP_INTEL[iso].col+'88'),
+        borderColor:sorted.map(iso=>RP_INTEL[iso].col),
+        borderWidth:1.5
       }]
     },
     options:{
       responsive:true,maintainAspectRatio:false,
+      animation:{animateRotate:true,animateScale:true,duration:1400},
       plugins:{
         legend:{display:false},
         tooltip:{
           backgroundColor:'rgba(15,23,42,.95)',borderColor:'#334155',borderWidth:1,
           callbacks:{
-            title:ctx=>`${ctx[0].raw.label}`,
             label:ctx=>{
-              const d=ctx.raw,iso=d.iso,info=RP_INTEL[iso];
-              return[
-                `GDP Growth: ${d.x}%`,
-                `FDI Inflows: ${d.y}%`,
-                `Population: ${info.pop}M`,
-                `Power Score: ${info.score}/100`,
-                `Tier: ${info.tier} · ${info.region}`
-              ];
+              const iso=sorted[ctx.dataIndex],d=RP_INTEL[iso];
+              return[`Score: ${d.score}/100  Tier: ${d.tier}`,`GDP: +${d.gdp}%  FDI: ${d.fdi}%`,`${d.region}`];
             }
           }
         }
       },
-      scales:{
-        x:{title:{display:true,text:'GDP Growth %',color:'#64748b',font:{size:10}},
-           ticks:{color:'#64748b',font:{size:9},callback:v=>v+'%'},
-           grid:{color:'rgba(51,65,85,.4)'}},
-        y:{title:{display:true,text:'FDI Inflows %',color:'#64748b',font:{size:10}},
-           ticks:{color:'#64748b',font:{size:9},callback:v=>v+'%'},
-           grid:{color:'rgba(51,65,85,.4)'}}
-      }
-    },
-    plugins:[{
-      afterDraw(chart){
-        const{ctx}=chart;
-        chart.data.datasets[0].data.forEach((d,i)=>{
-          const meta=chart.getDatasetMeta(0);
-          const pt=meta.data[i];
-          if(pt){
-            ctx.save();
-            ctx.font='11px sans-serif';
-            ctx.textAlign='center';
-            ctx.textBaseline='middle';
-            ctx.fillText(RP_INTEL[d.iso].flag,pt.x,pt.y);
-            ctx.restore();
-          }
-        });
-      }
-    }]
+      scales:{r:{
+        ticks:{color:'#64748b',font:{size:8},backdropColor:'transparent',stepSize:20},
+        grid:{color:'rgba(51,65,85,.45)'},
+        pointLabels:{display:false}
+      }}
+    }
   });
 }
 
-// ── 3. Multi-Indicator Heat Map ────────────────────────────────────
-function _drawHeatMap(){
-  const el=document.getElementById('rp-heat-map');if(!el)return;
-  const metrics=[
-    {key:'gdp', label:'GDP Growth', fmt:v=>v.toFixed(1)+'%', max:8,  inv:false},
-    {key:'fdi', label:'FDI %',      fmt:v=>v.toFixed(1)+'%', max:6,  inv:false},
-    {key:'exp', label:'Exports %',  fmt:v=>v.toFixed(0)+'%', max:95, inv:false},
-    {key:'inf', label:'Inflation',  fmt:v=>v.toFixed(0)+'%', max:32, inv:true },
-    {key:'gpc', label:'GDP/Cap',    fmt:v=>'$'+Math.round(v/1000)+'K',max:13000,inv:false},
-    {key:'pop', label:'Pop(M)',     fmt:v=>v>=1000?(v/1000).toFixed(1)+'B':v+'M',max:1430,inv:false}
-  ];
-  const sorted=Object.entries(RP_INTEL).sort((a,b)=>b[1].score-a[1].score);
-  const COLS=['#ef4444','#f97316','#fbbf24','#34d399','#10b981'];
-
-  function heatCol(val,max,inv){
-    let pct=Math.min(1,Math.max(0,val/max));
-    if(inv)pct=1-pct;
-    const idx=Math.min(4,Math.floor(pct*5));
-    return COLS[idx];
+// ── 2. Intelligence Duel Radar ─────────────────────────────────────
+function renderRpDuel(){
+  const cv=document.getElementById('rp-radar-chart');if(!cv)return;
+  const selA=document.getElementById('rp-duel-a');
+  const selB=document.getElementById('rp-duel-b');
+  if(!selA||!selB)return;
+  const isoA=selA.value,isoB=selB.value;
+  const dA=RP_INTEL[isoA]||RP_INTEL.IN,dB=RP_INTEL[isoB]||RP_INTEL.CN;
+  if(sparks['rp-duel']){
+    const ch=sparks['rp-duel'];
+    ch.data.datasets[0].data=dA.dim;
+    ch.data.datasets[0].label=dA.flag+' '+dA.name;
+    ch.data.datasets[0].borderColor=dA.col;
+    ch.data.datasets[0].backgroundColor=dA.col+'33';
+    ch.data.datasets[0].pointBackgroundColor=dA.col;
+    ch.data.datasets[1].data=dB.dim;
+    ch.data.datasets[1].label=dB.flag+' '+dB.name;
+    ch.data.datasets[1].borderColor=dB.col;
+    ch.data.datasets[1].backgroundColor=dB.col+'33';
+    ch.data.datasets[1].pointBackgroundColor=dB.col;
+    ch.update('active');return;
   }
-
-  const cellW=52, cellH=32;
-  const totalCols=metrics.length+1; // +1 for country name
-
-  let html=`<div style="display:grid;grid-template-columns:90px repeat(${metrics.length},${cellW}px);gap:2px;min-width:${90+metrics.length*54}px;">`;
-  // Header row
-  html+=`<div class="rp-heatmap-header" style="text-align:left;font-size:9px;color:var(--muted);padding:4px 6px;align-self:end;">Country</div>`;
-  metrics.forEach(m=>{
-    html+=`<div class="rp-heatmap-header" style="writing-mode:vertical-rl;transform:rotate(180deg);height:60px;display:flex;align-items:center;justify-content:center;font-size:8px;">${m.label}</div>`;
+  sparks['rp-duel']=new Chart(cv,{
+    type:'radar',
+    data:{
+      labels:RP_DIMS,
+      datasets:[
+        {label:dA.flag+' '+dA.name,data:dA.dim,borderColor:dA.col,backgroundColor:dA.col+'33',borderWidth:2,pointBackgroundColor:dA.col,pointRadius:3},
+        {label:dB.flag+' '+dB.name,data:dB.dim,borderColor:dB.col,backgroundColor:dB.col+'33',borderWidth:2,pointBackgroundColor:dB.col,pointRadius:3}
+      ]
+    },
+    options:{
+      responsive:true,maintainAspectRatio:false,
+      animation:{duration:700},
+      plugins:{
+        legend:{labels:{color:'#94a3b8',font:{size:10},boxWidth:10}},
+        tooltip:{backgroundColor:'rgba(15,23,42,.95)',borderColor:'#334155',borderWidth:1}
+      },
+      scales:{r:{
+        ticks:{color:'#64748b',font:{size:8},backdropColor:'transparent'},
+        grid:{color:'rgba(51,65,85,.45)'},
+        pointLabels:{color:'#94a3b8',font:{size:10}},
+        suggestedMin:0,suggestedMax:Math.max(...RP_DIM_MAX)
+      }}
+    }
   });
-  // Data rows
-  sorted.forEach(([iso,d])=>{
-    const scoreCol=_rpScoreColor(d.score).bg;
-    html+=`<div style="display:flex;align-items:center;gap:4px;padding:2px 4px;font-size:10px;font-weight:600;">
-      <span>${d.flag}</span>
-      <span style="color:var(--muted);font-size:9px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:52px;">${d.name}</span>
-      <span style="width:10px;height:10px;border-radius:2px;background:${scoreCol};flex-shrink:0;" title="Score ${d.score}"></span>
-    </div>`;
-    metrics.forEach(m=>{
-      const val=d[m.key];
-      const bg=heatCol(val,m.max,m.inv);
-      const textCol=['#fbbf24','#10b981','#34d399'].includes(bg)?'#1c1917':'#fff';
-      html+=`<div class="rp-heatmap-cell" style="background:${bg};color:${textCol};height:${cellH}px;font-size:8px;" title="${d.name} · ${m.label}: ${m.fmt(val)}">${m.fmt(val)}</div>`;
-    });
-  });
-  html+='</div>';
-  el.innerHTML=html;
 }
 
-// ── Main entry: replaces drawRpGdpChart ────────────────────────────
+// ── 3. Geopolitical Power Race 2020–2034 ──────────────────────────
+let _raceYearIdx=0,_raceTimer=null,_racePlaying=false;
+
+function _renderRaceBars(yi){
+  const el=document.getElementById('rp-race-bars');
+  const yearEl=document.getElementById('rp-race-year');
+  if(!el)return;
+  if(yearEl)yearEl.textContent=2020+yi;
+  const ranked=Object.keys(RP_INTEL).map(iso=>({iso,score:_rpRaceScore(iso,yi)})).sort((a,b)=>b.score-a.score);
+  if(!el.children.length){
+    // First build: create rows in current ranked order
+    el.innerHTML=ranked.map(({iso,score},i)=>{
+      const d=RP_INTEL[iso];
+      return`<div class="rp-race-row" id="rrace-row-${iso}">
+  <div class="rp-race-rank" id="rrace-rank-${iso}">#${i+1}</div>
+  <div class="rp-race-flag">${d.flag}</div>
+  <div class="rp-race-name">${d.name}</div>
+  <div class="rp-race-track"><div class="rp-race-fill" id="rrace-fill-${iso}" style="width:0%;background:${d.col}88;border:1px solid ${d.col};color:#fff;"></div></div>
+  <div class="rp-race-score" id="rrace-score-${iso}" style="color:${d.col}">0</div>
+</div>`;
+    }).join('');
+    requestAnimationFrame(()=>requestAnimationFrame(()=>{
+      ranked.forEach(({iso,score})=>{
+        const f=document.getElementById('rrace-fill-'+iso);
+        const s=document.getElementById('rrace-score-'+iso);
+        if(f)f.style.width=score+'%';
+        if(s)s.textContent=score;
+      });
+    }));
+    return;
+  }
+  // Update values only — rows keep their initial order for perf
+  ranked.forEach(({iso,score},i)=>{
+    const f=document.getElementById('rrace-fill-'+iso);
+    const s=document.getElementById('rrace-score-'+iso);
+    const r=document.getElementById('rrace-rank-'+iso);
+    if(f)f.style.width=score+'%';
+    if(s)s.textContent=score;
+    if(r)r.textContent='#'+(i+1);
+  });
+}
+
+function _racePlay(){
+  const playBtn=document.getElementById('rp-race-play');
+  if(_racePlaying){
+    _racePlaying=false;clearInterval(_raceTimer);
+    if(playBtn)playBtn.textContent='▶ Play';return;
+  }
+  if(_raceYearIdx>=14)_raceYearIdx=0;
+  _racePlaying=true;if(playBtn)playBtn.textContent='⏸ Pause';
+  _raceTimer=setInterval(()=>{
+    _raceYearIdx++;
+    const sl=document.getElementById('rp-race-slider');
+    if(sl)sl.value=_raceYearIdx;
+    _renderRaceBars(_raceYearIdx);
+    if(_raceYearIdx>=14){
+      _racePlaying=false;clearInterval(_raceTimer);
+      if(playBtn)playBtn.textContent='▶ Replay';
+    }
+  },900);
+}
+function _raceScrub(val){_raceYearIdx=parseInt(val);_renderRaceBars(_raceYearIdx);}
+
+// ── Main entry — called by showPage('rising-powers') ───────────────
 function drawRpGdpChart(){
-  // v3.20: calls all 3 ultra-advanced intelligence visualizations
-  _drawPowerBars();
-  _drawBubbleChart();
-  _drawHeatMap();
+  // v3.21: Power Vortex Suite — seed duel selects first
+  ['rp-duel-a','rp-duel-b'].forEach((id,idx)=>{
+    const sel=document.getElementById(id);
+    if(sel&&!sel.children.length){
+      sel.innerHTML=Object.keys(RP_INTEL).map(iso=>{
+        const d=RP_INTEL[iso];
+        return`<option value="${iso}" ${iso===(idx===0?'IN':'CN')?'selected':''}>${d.flag} ${d.name}</option>`;
+      }).join('');
+    }
+  });
+  _drawPowerVortex();
+  renderRpDuel();
+  // Reset race
+  _raceYearIdx=0;_racePlaying=false;clearInterval(_raceTimer);
+  const pb=document.getElementById('rp-race-play');if(pb)pb.textContent='▶ Play';
+  const sl=document.getElementById('rp-race-slider');if(sl)sl.value=0;
+  const re=document.getElementById('rp-race-bars');if(re)re.innerHTML='';
+  _renderRaceBars(0);
 }
 
 
