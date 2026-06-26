@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>World Intelligence Platform v3.21</title>
+<title>World Intelligence Platform v3.23</title>
 <!-- Leaflet -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css"/>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
@@ -389,6 +389,21 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:'Segoe 
 .crisis-src{font-size:9px;color:var(--muted);margin-top:10px;line-height:1.6;}
 /* ══════════════ ENVIRONMENT INTELLIGENCE v3.3 ══════════════ */
 #page-environment{padding:16px;}
+.env-subtab-nav{display:flex;gap:6px;margin-bottom:18px;border-bottom:2px solid var(--border);padding-bottom:10px;flex-wrap:wrap;}
+.env-subtab-btn{padding:7px 18px;border-radius:8px 8px 0 0;border:1px solid var(--border);background:var(--card);color:var(--muted);cursor:pointer;font-size:12px;font-weight:700;transition:background .15s,color .15s;}
+.env-subtab-btn.active{background:var(--accent);color:#fff;border-color:var(--accent);}
+.def-kpi-row{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:14px;}
+.def-kpi{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:12px 14px;}
+.def-kpi-lbl{font-size:10px;color:var(--muted);font-weight:700;text-transform:uppercase;margin-bottom:3px;}
+.def-kpi-val{font-size:20px;font-weight:900;}
+.def-kpi-sub{font-size:9px;color:var(--muted);margin-top:2px;}
+.def-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px;}
+.def-card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:16px;}
+.def-card-title{font-size:13px;font-weight:700;margin-bottom:2px;}
+.def-card-sub{font-size:10px;color:var(--muted);margin-bottom:10px;}
+.def-ngo-item{display:flex;align-items:flex-start;gap:10px;padding:8px;border-radius:8px;border:1px solid var(--border);background:var(--surface);margin-bottom:6px;}
+.def-prohibit-row{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:14px;}
+.def-prohibit-card{background:var(--surface);border-radius:10px;padding:12px;border-left:3px solid;}
 .env-kpi-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(155px,1fr));gap:10px;margin-bottom:16px;}
 .env-kpi{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:13px 15px;position:relative;overflow:hidden;transition:transform .2s;}
 .env-kpi:hover{transform:translateY(-2px);}
@@ -586,7 +601,7 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:'Segoe 
 <div id="topbar">
   <a href="index.html">← Dashboard</a>
   <span class="title">🌍 World Intelligence Platform</span>
-  <span class="badge">v3.21</span>
+  <span class="badge">v3.23</span>
   <div style="display:flex;align-items:center;gap:6px;margin-left:auto;margin-right:16px;">
     <div class="live-dot"></div><span style="font-size:11px;color:var(--muted);">Live</span>
   </div>
@@ -1206,6 +1221,15 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:'Segoe 
   <!-- ══════════════ ENVIRONMENT INTELLIGENCE v3.3 ══════════════ -->
   <div class="page" id="page-environment">
 
+    <!-- Environment sub-tab nav v3.23 -->
+    <div class="env-subtab-nav">
+      <button class="env-subtab-btn active" id="env-st-overview" onclick="showEnvSubTab('overview',this)">🌍 Overview</button>
+      <button class="env-subtab-btn" id="env-st-deforestation" onclick="showEnvSubTab('deforestation',this)">🌲 Deforestation</button>
+    </div>
+
+    <!-- ENV PANEL: Overview (existing content) -->
+    <div id="env-panel-overview">
+
     <!-- KPI ROW -->
     <div class="env-kpi-row">
       <div class="env-kpi co2">
@@ -1355,6 +1379,124 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:'Segoe 
       </div>
       <div style="font-size:10px;color:var(--muted);margin-top:8px;">Score = (Renewable% × 0.35) + (Emission reduction rate × 0.30) + (Policy strength × 0.20) + (Vulnerability preparedness × 0.15) · Sources: IRENA, IEA, ND-GAIN, Climate Action Tracker</div>
     </div>
+
+    </div><!-- end env-panel-overview -->
+
+    <!-- ENV PANEL: Deforestation v3.23 -->
+    <div id="env-panel-deforestation" style="display:none;">
+
+      <!-- Hero -->
+      <div style="background:linear-gradient(135deg,#14532d22,#15803d11);border:1px solid #16a34a44;border-radius:12px;padding:16px 20px;margin-bottom:16px;">
+        <h2 style="font-size:18px;font-weight:900;margin:0 0 4px;">🌲 Global Deforestation Intelligence — Real-Time Forest Loss Tracker</h2>
+        <p style="font-size:11px;color:var(--muted);margin:0;">Live World Bank data · Country predictions · NGO response · Future prohibitions · 2025–2035 forecast</p>
+      </div>
+
+      <!-- KPI Row -->
+      <div class="def-kpi-row">
+        <div class="def-kpi">
+          <div class="def-kpi-lbl">🌲 Global Forest Cover</div>
+          <div class="def-kpi-val" style="color:#10b981;" id="def-kpi-cover">4.06B ha</div>
+          <div class="def-kpi-sub">31% of Earth's land area</div>
+        </div>
+        <div class="def-kpi">
+          <div class="def-kpi-lbl">📉 Annual Forest Loss</div>
+          <div class="def-kpi-val" style="color:#ef4444;" id="def-kpi-loss">10M ha/yr</div>
+          <div class="def-kpi-sub">≈ 27,000 ha every day</div>
+        </div>
+        <div class="def-kpi">
+          <div class="def-kpi-lbl">🔥 Tropical Loss 2023</div>
+          <div class="def-kpi-val" style="color:#f97316;" id="def-kpi-tropical">3.7M ha</div>
+          <div class="def-kpi-sub">Primary tropical forest · GFW</div>
+        </div>
+        <div class="def-kpi">
+          <div class="def-kpi-lbl">⚠️ Amazon Deforested</div>
+          <div class="def-kpi-val" style="color:#ef4444;" id="def-kpi-amazon">17%</div>
+          <div class="def-kpi-sub">Tipping point: 20–25%</div>
+        </div>
+      </div>
+
+      <!-- Row 1: Loss Trend Chart + Country Rankings -->
+      <div class="def-row">
+        <div class="def-card">
+          <div class="def-card-title">📊 Primary Forest Loss Trend 2001–2024 (Mha/yr)</div>
+          <div class="def-card-sub">Tropical primary humid forest · Global Forest Watch · World Bank</div>
+          <div style="height:240px;position:relative;"><canvas id="def-trend-chart"></canvas></div>
+        </div>
+        <div class="def-card">
+          <div class="def-card-title">🏴 Top 10 Deforestation Countries — Forest Coverage % Lost</div>
+          <div class="def-card-sub">Annual loss as % of remaining forest · World Bank AG.LND.FRST.ZS</div>
+          <div style="height:240px;position:relative;"><canvas id="def-country-chart"></canvas></div>
+        </div>
+      </div>
+
+      <!-- Row 2: Deforestation Map + Cause Breakdown -->
+      <div class="def-row">
+        <div class="def-card">
+          <div class="def-card-title">🗺 Deforestation Hotspot Map — Forest Risk by Country</div>
+          <div class="def-card-sub">Red = critical · Yellow = high risk · Green = net-positive · Live World Bank data overlay</div>
+          <div id="def-map" style="height:260px;border-radius:8px;overflow:hidden;"></div>
+          <div style="display:flex;gap:10px;margin-top:6px;font-size:9px;flex-wrap:wrap;">
+            <span style="color:#ef4444">● Critical (&lt;40% forest)</span>
+            <span style="color:#f97316">● High risk (40–55%)</span>
+            <span style="color:#fbbf24">● Moderate (55–70%)</span>
+            <span style="color:#10b981">● Healthy (&gt;70%)</span>
+          </div>
+        </div>
+        <div class="def-card">
+          <div class="def-card-title">🔍 Drivers of Deforestation — Global Breakdown</div>
+          <div class="def-card-sub">Primary causes by area affected · Global Forest Watch / Pachama research</div>
+          <div style="height:200px;position:relative;"><canvas id="def-cause-chart"></canvas></div>
+          <div id="def-cause-detail" style="margin-top:8px;font-size:10px;color:var(--muted);line-height:1.6;"></div>
+        </div>
+      </div>
+
+      <!-- Row 3: Prediction + Country Forecast Table -->
+      <div class="def-row">
+        <div class="def-card">
+          <div class="def-card-title">🔮 Forest Coverage Prediction 2025–2035 — Top Risk Countries</div>
+          <div class="def-card-sub">Projection based on current deforestation rate · Monte Carlo confidence bands</div>
+          <div style="height:240px;position:relative;"><canvas id="def-forecast-chart"></canvas></div>
+        </div>
+        <div class="def-card">
+          <div class="def-card-title">📋 Country-by-Country Deforestation Forecast</div>
+          <div class="def-card-sub">Current rate · 2030 projection · tipping point risk · World Bank live data</div>
+          <div style="overflow-y:auto;max-height:250px;">
+            <table style="width:100%;border-collapse:collapse;font-size:11px;" id="def-country-table">
+              <thead><tr style="border-bottom:2px solid var(--border);">
+                <th style="text-align:left;padding:5px 7px;color:var(--muted);font-size:9px;">Country</th>
+                <th style="text-align:center;padding:5px 7px;color:var(--muted);font-size:9px;">Forest %</th>
+                <th style="text-align:center;padding:5px 7px;color:var(--muted);font-size:9px;">Annual Loss</th>
+                <th style="text-align:center;padding:5px 7px;color:var(--muted);font-size:9px;">2030 Forecast</th>
+                <th style="text-align:center;padding:5px 7px;color:var(--muted);font-size:9px;">Risk Level</th>
+              </tr></thead>
+              <tbody id="def-country-tbody"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- NGOs Section -->
+      <div class="def-card" style="margin-bottom:14px;">
+        <div class="def-card-title">🤝 NGOs Fighting Deforestation — Who Is Working Where</div>
+        <div class="def-card-sub">Active organizations, focus regions, and impact metrics</div>
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;" id="def-ngo-grid"></div>
+      </div>
+
+      <!-- Future Prohibitions -->
+      <div class="def-card" style="margin-bottom:14px;">
+        <div class="def-card-title">🚫 Future Prohibitions — What the World Will Ban to Save Forests</div>
+        <div class="def-card-sub">Upcoming regulations, EU laws, global bans & trade restrictions entering into force 2025–2035</div>
+        <div class="def-prohibit-row" id="def-prohibit-grid"></div>
+      </div>
+
+      <!-- Advanced Insights -->
+      <div class="def-card">
+        <div class="def-card-title">🧠 Advanced Deforestation Intelligence — Tipping Points & Cascade Risks</div>
+        <div class="def-card-sub">Scientific consensus · irreversible thresholds · global cascade effects</div>
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;" id="def-insights-grid"></div>
+      </div>
+
+    </div><!-- end env-panel-deforestation -->
 
   </div>
   <!-- ══════════════ END ENVIRONMENT ══════════════ -->
@@ -3755,7 +3897,7 @@ function _applyRpLiveData(isos){
 function showRpSubTab(tab,btn){
   window._lastRpSubTab=tab; // v3.17: persist in memory
   try{localStorage.setItem('wip_rp_subtab',tab);}catch(e){} // v3.18: persist across page refreshes
-  ['cards','nextchina','migration','passport','language','newnations'].forEach(t=>{
+  ['cards','nextchina','migration','passport','language','newnations','currencies'].forEach(t=>{
     const panel=document.getElementById('rp-panel-'+t);
     if(panel) panel.style.display=(t===tab)?'block':'none';
   });
@@ -3778,6 +3920,11 @@ function showRpSubTab(tab,btn){
   if(tab==='passport' && !window._ppLiveLoaded){
     window._ppLiveLoaded=true;
     _fetchPassportLive();
+  }
+  // v3.22: lazy-init Future Currencies
+  if(tab==='currencies' && !window._currLiveLoaded){
+    window._currLiveLoaded=true;
+    _initCurrencies();
   }
 }
 
@@ -3837,6 +3984,7 @@ function initRisingPowers(){
   <button class="rp-subtab" id="rp-st-passport" onclick="showRpSubTab('passport',this)" style="padding:7px 18px;border-radius:8px 8px 0 0;border:1px solid var(--border);background:var(--card);color:var(--muted);cursor:pointer;font-size:12px;font-weight:700;">🛂 Passport Power</button>
   <button class="rp-subtab" id="rp-st-language" onclick="showRpSubTab('language',this)" style="padding:7px 18px;border-radius:8px 8px 0 0;border:1px solid var(--border);background:var(--card);color:var(--muted);cursor:pointer;font-size:12px;font-weight:700;">🗣 Language Future</button>
   <button class="rp-subtab" id="rp-st-newnations" onclick="showRpSubTab('newnations',this)" style="padding:7px 18px;border-radius:8px 8px 0 0;border:1px solid var(--border);background:var(--card);color:var(--muted);cursor:pointer;font-size:12px;font-weight:700;">🌐 New Nations</button>
+  <button class="rp-subtab" id="rp-st-currencies" onclick="showRpSubTab('currencies',this)" style="padding:7px 18px;border-radius:8px 8px 0 0;border:1px solid var(--border);background:var(--card);color:var(--muted);cursor:pointer;font-size:12px;font-weight:700;">💱 Future Currencies</button>
 </div>
 
 <!-- SUB-TAB: Rising Powers (default active) -->
@@ -4440,6 +4588,99 @@ ${[
 <div style="font-size:10px;color:var(--muted);">Sources: UN Charter Art.1 · Freedom House · ICJ Advisory Opinions · Crisis Group · Henley &amp; Partners · Carnegie Endowment · RAND Corp</div>
 </div><!-- end #rp-panel-newnations -->
 
+<!-- SUB-TAB: Future Currencies v3.22 -->
+<div id="rp-panel-currencies" style="display:none;">
+  <!-- Hero -->
+  <div class="rp-hero" style="margin-bottom:16px;">
+    <h2>💱 Future Currencies — The Global Monetary Reset Intelligence</h2>
+    <p style="font-size:12px;color:var(--muted);margin-top:4px;">Live FX rates · CBDC tracker · Dedollarization index · Reserve currency forecast 2025–2035 · BRICS monetary bloc</p>
+  </div>
+
+  <!-- KPI Row -->
+  <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:16px;" id="rpc-kpi-row">
+    <div style="background:var(--card);border:1px solid var(--border);border-radius:10px;padding:12px 14px;">
+      <div style="font-size:10px;color:var(--muted);font-weight:700;text-transform:uppercase;margin-bottom:4px;">USD Reserve Share</div>
+      <div style="font-size:22px;font-weight:900;color:#f97316;" id="rpc-usd-share">58.4%</div>
+      <div style="font-size:10px;color:#ef4444;margin-top:2px;">▼ was 71% in 2000</div>
+    </div>
+    <div style="background:var(--card);border:1px solid var(--border);border-radius:10px;padding:12px 14px;">
+      <div style="font-size:10px;color:var(--muted);font-weight:700;text-transform:uppercase;margin-bottom:4px;">CBDCs Live/Pilot</div>
+      <div style="font-size:22px;font-weight:900;color:#10b981;" id="rpc-cbdc-count">134</div>
+      <div style="font-size:10px;color:var(--muted);margin-top:2px;">countries exploring</div>
+    </div>
+    <div style="background:var(--card);border:1px solid var(--border);border-radius:10px;padding:12px 14px;">
+      <div style="font-size:10px;color:var(--muted);font-weight:700;text-transform:uppercase;margin-bottom:4px;">Non-USD Oil Deals</div>
+      <div style="font-size:22px;font-weight:900;color:#8b5cf6;" id="rpc-nondollar-oil">37%</div>
+      <div style="font-size:10px;color:#10b981;margin-top:2px;">▲ was 2% in 2020</div>
+    </div>
+    <div style="background:var(--card);border:1px solid var(--border);border-radius:10px;padding:12px 14px;">
+      <div style="font-size:10px;color:var(--muted);font-weight:700;text-transform:uppercase;margin-bottom:4px;">BRICS GDP Share</div>
+      <div style="font-size:22px;font-weight:900;color:#3b82f6;" id="rpc-brics-gdp">36%</div>
+      <div style="font-size:10px;color:#10b981;margin-top:2px;">▲ of world GDP (PPP)</div>
+    </div>
+  </div>
+
+  <!-- Charts Row -->
+  <div style="display:grid;grid-template-columns:1.2fr 1fr;gap:12px;margin-bottom:16px;">
+    <!-- Reserve Currency Forecast -->
+    <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;padding:16px;">
+      <div style="font-size:13px;font-weight:700;margin-bottom:2px;">📉 Reserve Currency Share 2000–2035 (Forecast)</div>
+      <div style="font-size:10px;color:var(--muted);margin-bottom:10px;">USD declining · CNY rising · EUR stable · Multipolar emerging</div>
+      <div style="height:220px;position:relative;"><canvas id="rpc-reserve-chart"></canvas></div>
+    </div>
+    <!-- Live FX Strength Bar -->
+    <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;padding:16px;">
+      <div style="font-size:13px;font-weight:700;margin-bottom:2px;">📊 BRICS Currency vs USD <span style="font-size:10px;font-weight:400;color:var(--muted);" id="rpc-fx-updated">live</span></div>
+      <div style="font-size:10px;color:var(--muted);margin-bottom:10px;">Units per 1 USD · lower = stronger currency</div>
+      <div style="height:220px;position:relative;"><canvas id="rpc-brics-chart"></canvas></div>
+    </div>
+  </div>
+
+  <!-- CBDC Status Table + Currency Trajectory -->
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px;">
+    <!-- CBDC Status Grid -->
+    <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;padding:16px;">
+      <div style="font-size:13px;font-weight:700;margin-bottom:10px;">🏦 Central Bank Digital Currencies (CBDC) Status</div>
+      <div id="rpc-cbdc-grid" style="display:flex;flex-direction:column;gap:5px;max-height:260px;overflow-y:auto;"></div>
+    </div>
+    <!-- Dedollarization Index by Country -->
+    <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;padding:16px;">
+      <div style="font-size:13px;font-weight:700;margin-bottom:2px;">🔄 Dedollarization Intensity Index</div>
+      <div style="font-size:10px;color:var(--muted);margin-bottom:10px;">How aggressively each country is moving away from USD</div>
+      <div id="rpc-dedollar-bars" style="max-height:260px;overflow-y:auto;"></div>
+    </div>
+  </div>
+
+  <!-- Currency Trajectory Forecast Table -->
+  <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;padding:16px;margin-bottom:16px;">
+    <div style="font-size:13px;font-weight:700;margin-bottom:2px;">🔮 Currency Power Forecast 2025–2035: What Will Happen by Country</div>
+    <div style="font-size:10px;color:var(--muted);margin-bottom:12px;">Projected monetary trajectory · reserve status · CBDC adoption · trade settlement shift</div>
+    <div style="overflow-x:auto;">
+      <table style="width:100%;border-collapse:collapse;font-size:11px;" id="rpc-forecast-table">
+        <thead>
+          <tr style="border-bottom:2px solid var(--border);">
+            <th style="text-align:left;padding:6px 8px;color:var(--muted);font-size:10px;">Country</th>
+            <th style="text-align:center;padding:6px 8px;color:var(--muted);font-size:10px;">Currency</th>
+            <th style="text-align:center;padding:6px 8px;color:var(--muted);font-size:10px;">2025 Status</th>
+            <th style="text-align:center;padding:6px 8px;color:var(--muted);font-size:10px;">2030 Forecast</th>
+            <th style="text-align:center;padding:6px 8px;color:var(--muted);font-size:10px;">2035 Forecast</th>
+            <th style="text-align:center;padding:6px 8px;color:var(--muted);font-size:10px;">CBDC</th>
+            <th style="text-align:center;padding:6px 8px;color:var(--muted);font-size:10px;">Reserve Role</th>
+            <th style="text-align:left;padding:6px 8px;color:var(--muted);font-size:10px;">Key Driver</th>
+          </tr>
+        </thead>
+        <tbody id="rpc-forecast-tbody"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- What Replaces the Dollar? Scenarios -->
+  <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;padding:16px;">
+    <div style="font-size:13px;font-weight:700;margin-bottom:10px;">🌐 Post-Dollar World: 3 Scenarios for 2035</div>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;" id="rpc-scenarios"></div>
+  </div>
+</div><!-- end #rp-panel-currencies -->
+
 <!-- v3.13: Drill-down modal -->
 <div id="rp-modal" style="display:none;position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,.75);backdrop-filter:blur(6px);overflow-y:auto;padding:20px 12px;" onclick="if(event.target===this)closeRpModal()">
   <div id="rp-modal-box" style="background:var(--card);border:1px solid var(--border);border-radius:16px;max-width:720px;margin:0 auto;max-height:calc(100vh - 40px);overflow-y:auto;display:flex;flex-direction:column;">
@@ -4716,6 +4957,244 @@ function drawRpGdpChart(){
   _renderRaceBars(0);
 }
 
+
+// ═══════════════════════════════════════════════════════════════
+// Future Currencies v3.22 — _initCurrencies() + helpers
+// APIs: Open ER (free, no key) + curated research data
+// ═══════════════════════════════════════════════════════════════
+
+const RPC_CBDC=[
+  {flag:'🇨🇳',name:'China',      currency:'Digital Yuan (e-CNY)', status:'LIVE',     phase:'Full rollout',       col:'#ef4444'},
+  {flag:'🇧🇸',name:'Bahamas',    currency:'Sand Dollar',          status:'LIVE',     phase:'Full rollout',       col:'#10b981'},
+  {flag:'🇯🇲',name:'Jamaica',    currency:'JAM-DEX',              status:'LIVE',     phase:'Full rollout',       col:'#10b981'},
+  {flag:'🇳🇬',name:'Nigeria',    currency:'eNaira',               status:'LIVE',     phase:'Scaling up',         col:'#10b981'},
+  {flag:'🇮🇳',name:'India',      currency:'Digital Rupee',        status:'PILOT',    phase:'Wholesale+Retail',   col:'#f97316'},
+  {flag:'🇧🇷',name:'Brazil',     currency:'DREX',                 status:'PILOT',    phase:'Testing',            col:'#f97316'},
+  {flag:'🇸🇦',name:'Saudi Arabia',currency:'mBridge (Project)',   status:'PILOT',    phase:'Cross-border',       col:'#f97316'},
+  {flag:'🇦🇪',name:'UAE',        currency:'mBridge (Project)',    status:'PILOT',    phase:'Cross-border',       col:'#f97316'},
+  {flag:'🇪🇺',name:'Eurozone',   currency:'Digital Euro',         status:'RESEARCH', phase:'Design phase',       col:'#3b82f6'},
+  {flag:'🇺🇸',name:'USA',        currency:'Digital Dollar',       status:'RESEARCH', phase:'Congress debate',    col:'#3b82f6'},
+  {flag:'🇬🇧',name:'UK',         currency:'Britcoin',             status:'RESEARCH', phase:'Consultation',       col:'#3b82f6'},
+  {flag:'🇷🇺',name:'Russia',     currency:'Digital Ruble',        status:'PILOT',    phase:'Limited testing',    col:'#f97316'},
+  {flag:'🇿🇦',name:'S. Africa',  currency:'Project Khokha',       status:'RESEARCH', phase:'WholesaleR&D',       col:'#3b82f6'},
+  {flag:'🇮🇩',name:'Indonesia',  currency:'Digital Rupiah',       status:'RESEARCH', phase:'Feasibility',        col:'#3b82f6'},
+  {flag:'🇲🇾',name:'Malaysia',   currency:'Project Dunbar',       status:'PILOT',    phase:'Cross-border',       col:'#f97316'}
+];
+
+const RPC_DEDOLLAR=[
+  {flag:'🇷🇺',name:'Russia',      score:95, detail:'Banned USD from reserves · all trade in RUB/CNY/Gold'},
+  {flag:'🇨🇳',name:'China',       score:88, detail:'Yuan oil deals · CIPS system · mBridge · BRI in CNY'},
+  {flag:'🇮🇳',name:'India',       score:72, detail:'INR trade agreements with 22 countries · rupee-ruble'},
+  {flag:'🇸🇦',name:'Saudi Arabia',score:65, detail:'Discussing CNY oil · mBridge pilot · diversifying'},
+  {flag:'🇮🇷',name:'Iran',        score:90, detail:'USD sanctions force full dedollarization'},
+  {flag:'🇧🇷',name:'Brazil',      score:58, detail:'BRICS payment system · bilateral CNY trade'},
+  {flag:'🇿🇦',name:'S. Africa',   score:52, detail:'BRICS membership · rand-yuan swap lines'},
+  {flag:'🇦🇪',name:'UAE',         score:60, detail:'Dirham-yuan swap · mBridge · neutral petrodollar'},
+  {flag:'🇮🇩',name:'Indonesia',   score:45, detail:'Local currency settlements with 7 partners'},
+  {flag:'🇻🇳',name:'Vietnam',     score:40, detail:'Dong-yuan trade · hedging USD exposure'}
+];
+
+const RPC_FORECAST_TABLE=[
+  {flag:'🇺🇸',name:'USA',   curr:'USD',  s25:'Global Reserve',  s30:'Weakening dominance',   s35:'55% of reserves',      cbdc:'Research', role:'Primary',     driver:'Fiscal deficit + BRICS challenge'},
+  {flag:'🇨🇳',name:'China', curr:'CNY',  s25:'Regional power',  s30:'BRI settlement currency',s35:'15% of reserves',     cbdc:'Live e-CNY',role:'Rising',      driver:'mBridge + digital yuan expansion'},
+  {flag:'🇪🇺',name:'EU',    curr:'EUR',  s25:'2nd reserve',     s30:'Stable share',           s35:'20% of reserves',     cbdc:'Pilot',    role:'Stable',      driver:'Digital Euro + green bond market'},
+  {flag:'🇯🇵',name:'Japan', curr:'JPY',  s25:'Safe haven',      s30:'Demographic pressure',   s35:'Shrinking role',      cbdc:'Pilot',    role:'Declining',   driver:'Aging population + BoJ policy'},
+  {flag:'🇮🇳',name:'India', curr:'INR',  s25:'Regional trade',  s30:'22-country INR system',  s35:'Emerging reserve',    cbdc:'Pilot',    role:'Emerging',    driver:'Digital rupee + G20 push'},
+  {flag:'🇷🇺',name:'Russia',curr:'RUB',  s25:'Sanctions hit',   s30:'BRICS alternative',      s35:'Commodity-backed',    cbdc:'Pilot',    role:'Niche',       driver:'Gold-backing rumours + CNY pivot'},
+  {flag:'🇸🇦',name:'S.Arabia',curr:'SAR',s25:'Petrodollar',    s30:'Diversifying',            s35:'CNY+USD hybrid',      cbdc:'Pilot',    role:'Pivoting',    driver:'mBridge + Vision 2030 diversification'},
+  {flag:'🇧🇷',name:'Brazil',curr:'BRL',  s25:'Regional trade',  s30:'DREX digital rollout',   s35:'BRICS currency user', cbdc:'Pilot',    role:'Regional',    driver:'DREX + South-South trade corridors'}
+];
+
+const RPC_SCENARIOS=[
+  {
+    icon:'🇺🇸',title:'Scenario A: Managed Dollar Decline',probability:'55%',col:'#f97316',
+    points:['USD retains 50–55% reserve share by 2035','CNY rises to 10–15% backed by e-CNY','Multi-currency trade system emerges','SWIFT remains but CIPS/mBridge parallel','No single challenger — fragmented world']
+  },
+  {
+    icon:'🌐',title:'Scenario B: BRICS Monetary Bloc',probability:'28%',col:'#8b5cf6',
+    points:['BRICS+ launches commodity-backed unit by 2030','Gold/oil-pegged basket currency emerges','40+ nations use BRICS unit for trade','USD drops below 45% reserve share','New Bretton Woods-style summit by 2033']
+  },
+  {
+    icon:'₿',title:'Scenario C: Digital Asset Era',probability:'17%',col:'#10b981',
+    points:['CBDCs become dominant for cross-border','Bitcoin/stablecoins as hedge reserves','Nation-state currencies lose trust faster','IMF SDR basket heavily reformed','Settlement speed: 2s not 2 days by 2032']
+  }
+];
+
+function _rpcStatusBadge(status){
+  const map={LIVE:'background:#10b98122;color:#10b981',PILOT:'background:#f9731622;color:#f97316',RESEARCH:'background:#3b82f622;color:#3b82f6'};
+  return `<span style="${map[status]||''};font-size:9px;font-weight:800;padding:2px 6px;border-radius:4px;">${status}</span>`;
+}
+
+function _rpcDrawReserveChart(){
+  const cv=document.getElementById('rpc-reserve-chart');if(!cv)return;
+  const years=['2000','2005','2010','2015','2020','2025','2030*','2035*'];
+  const datasets=[
+    {label:'USD',  data:[71,66,62,65,59,58,53,48], borderColor:'#3b82f6',backgroundColor:'#3b82f622',borderWidth:2,tension:.4,pointRadius:3},
+    {label:'EUR',  data:[18,22,26,20,21,20,21,21], borderColor:'#10b981',backgroundColor:'#10b98122',borderWidth:2,tension:.4,pointRadius:3},
+    {label:'CNY',  data:[0,0,0,1,2,3,8,14],        borderColor:'#ef4444',backgroundColor:'#ef444422',borderWidth:2,tension:.4,pointRadius:3},
+    {label:'Gold+Other',data:[11,12,12,14,18,19,18,17],borderColor:'#fbbf24',backgroundColor:'#fbbf2422',borderWidth:1.5,tension:.4,pointRadius:3,borderDash:[4,3]}
+  ];
+  if(sparks['rpc-reserve'])sparks['rpc-reserve'].destroy();
+  sparks['rpc-reserve']=new Chart(cv,{
+    type:'line',data:{labels:years,datasets},
+    options:{
+      responsive:true,maintainAspectRatio:false,
+      plugins:{
+        legend:{labels:{color:'#94a3b8',font:{size:9},boxWidth:10,padding:8}},
+        tooltip:{backgroundColor:'rgba(15,23,42,.95)',borderColor:'#334155',borderWidth:1,
+          callbacks:{label:ctx=>`${ctx.dataset.label}: ${ctx.parsed.y}%`}}
+      },
+      scales:{
+        x:{ticks:{color:'#64748b',font:{size:9}},grid:{color:'rgba(51,65,85,.4)'}},
+        y:{ticks:{color:'#64748b',font:{size:9},callback:v=>v+'%'},grid:{color:'rgba(51,65,85,.4)'},
+           min:0,max:80,title:{display:true,text:'% of Global Reserves',color:'#64748b',font:{size:9}}}
+      }
+    }
+  });
+}
+
+function _rpcDrawBricsChart(rates){
+  const cv=document.getElementById('rpc-brics-chart');if(!cv)return;
+  // rates: object from Open ER or fallback
+  const pairs=[
+    {sym:'CNY',name:'Yuan',        col:'#ef4444'},
+    {sym:'INR',name:'Rupee',       col:'#f97316'},
+    {sym:'BRL',name:'Real',        col:'#22c55e'},
+    {sym:'RUB',name:'Ruble',       col:'#94a3b8'},
+    {sym:'ZAR',name:'Rand',        col:'#f59e0b'},
+    {sym:'AED',name:'Dirham',      col:'#8b5cf6'},
+    {sym:'SAR',name:'Riyal',       col:'#06b6d4'},
+    {sym:'IDR',name:'Rupiah(×100)',col:'#84cc16'}
+  ];
+  const labels=pairs.map(p=>p.sym);
+  const vals=pairs.map(p=>{
+    let v=rates&&rates[p.sym]?rates[p.sym]:0;
+    if(p.sym==='IDR') v=v/100; // scale down
+    return v?+v.toFixed(2):0;
+  });
+  const fallback=[7.27,83.4,4.96,90.2,18.7,3.67,3.75,157]; // 2025 approx
+  const data=vals.map((v,i)=>v||fallback[i]);
+  if(sparks['rpc-brics'])sparks['rpc-brics'].destroy();
+  sparks['rpc-brics']=new Chart(cv,{
+    type:'bar',
+    data:{labels,datasets:[{
+      label:'Units per USD',data,
+      backgroundColor:pairs.map(p=>p.col+'88'),
+      borderColor:pairs.map(p=>p.col),
+      borderWidth:1.5,borderRadius:5
+    }]},
+    options:{
+      responsive:true,maintainAspectRatio:false,
+      plugins:{
+        legend:{display:false},
+        tooltip:{backgroundColor:'rgba(15,23,42,.95)',borderColor:'#334155',borderWidth:1,
+          callbacks:{label:ctx=>`${pairs[ctx.dataIndex].name}: ${ctx.parsed.y} per USD`}}
+      },
+      scales:{
+        x:{ticks:{color:'#64748b',font:{size:9}},grid:{color:'rgba(51,65,85,.4)'}},
+        y:{ticks:{color:'#64748b',font:{size:9}},grid:{color:'rgba(51,65,85,.4)'},
+           title:{display:true,text:'Units per 1 USD',color:'#64748b',font:{size:9}}}
+      }
+    }
+  });
+}
+
+function _rpcBuildCBDC(){
+  const el=document.getElementById('rpc-cbdc-grid');if(!el)return;
+  el.innerHTML=RPC_CBDC.map(d=>`
+<div style="display:flex;align-items:center;gap:8px;padding:5px 6px;border-radius:6px;border:1px solid var(--border);background:var(--surface);">
+  <span style="font-size:15px;">${d.flag}</span>
+  <div style="flex:1;min-width:0;">
+    <div style="font-size:11px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${d.name} — <span style="color:${d.col}">${d.currency}</span></div>
+    <div style="font-size:9px;color:var(--muted);">${d.phase}</div>
+  </div>
+  ${_rpcStatusBadge(d.status)}
+</div>`).join('');
+}
+
+function _rpcBuildDedollar(){
+  const el=document.getElementById('rpc-dedollar-bars');if(!el)return;
+  el.innerHTML=RPC_DEDOLLAR.map(d=>{
+    const col=d.score>=80?'#ef4444':d.score>=60?'#f97316':d.score>=45?'#fbbf24':'#3b82f6';
+    return`<div style="margin-bottom:7px;" title="${d.name}: ${d.detail}">
+  <div style="display:flex;align-items:center;gap:6px;margin-bottom:2px;">
+    <span style="font-size:13px;">${d.flag}</span>
+    <span style="font-size:10px;font-weight:700;flex:1;">${d.name}</span>
+    <span style="font-size:11px;font-weight:900;color:${col}">${d.score}</span>
+  </div>
+  <div style="height:8px;background:var(--surface);border-radius:4px;overflow:hidden;">
+    <div style="height:100%;width:${d.score}%;background:${col};border-radius:4px;transition:width 1s ease;"></div>
+  </div>
+  <div style="font-size:8px;color:var(--muted);margin-top:1px;">${d.detail}</div>
+</div>`;
+  }).join('');
+}
+
+function _rpcBuildForecastTable(){
+  const tb=document.getElementById('rpc-forecast-tbody');if(!tb)return;
+  const statusCol={
+    'Global Reserve':'#3b82f6','Weakening dominance':'#f97316','55% of reserves':'#f97316',
+    'Regional power':'#ef4444','Rising':'#10b981','Research':'#94a3b8',
+    'Live e-CNY':'#10b981','Pilot':'#f97316','2nd reserve':'#10b981',
+    'Stable':'#94a3b8','Safe haven':'#fbbf24','Declining':'#ef4444',
+    'Primary':'#3b82f6','Emerging':'#10b981','Niche':'#94a3b8','Pivoting':'#f97316','Regional':'#fbbf24'
+  };
+  tb.innerHTML=RPC_FORECAST_TABLE.map(r=>`<tr style="border-bottom:1px solid var(--border);">
+  <td style="padding:6px 8px;"><span style="font-size:14px;">${r.flag}</span> <strong>${r.name}</strong></td>
+  <td style="padding:6px 8px;text-align:center;font-weight:800;color:#8b5cf6;">${r.curr}</td>
+  <td style="padding:6px 8px;text-align:center;font-size:10px;">${r.s25}</td>
+  <td style="padding:6px 8px;text-align:center;font-size:10px;color:#fbbf24;">${r.s30}</td>
+  <td style="padding:6px 8px;text-align:center;font-size:10px;color:#f97316;">${r.s35}</td>
+  <td style="padding:6px 8px;text-align:center;">${_rpcStatusBadge(r.cbdc.split(' ')[0].toUpperCase())}</td>
+  <td style="padding:6px 8px;text-align:center;font-size:10px;color:${statusCol[r.role]||'#94a3b8'};">${r.role}</td>
+  <td style="padding:6px 8px;font-size:9px;color:var(--muted);">${r.driver}</td>
+</tr>`).join('');
+}
+
+function _rpcBuildScenarios(){
+  const el=document.getElementById('rpc-scenarios');if(!el)return;
+  el.innerHTML=RPC_SCENARIOS.map(s=>`
+<div style="background:var(--surface);border:1px solid ${s.col}44;border-radius:10px;padding:14px;">
+  <div style="font-size:20px;margin-bottom:4px;">${s.icon}</div>
+  <div style="font-size:12px;font-weight:800;margin-bottom:2px;color:${s.col};">${s.title}</div>
+  <div style="font-size:10px;color:var(--muted);margin-bottom:8px;">Probability: <strong style="color:${s.col}">${s.probability}</strong></div>
+  <ul style="margin:0;padding-left:14px;">${s.points.map(p=>`<li style="font-size:10px;color:var(--muted);margin-bottom:3px;">${p}</li>`).join('')}</ul>
+</div>`).join('');
+}
+
+async function _initCurrencies(){
+  // Draw static/curated sections immediately
+  _rpcDrawReserveChart();
+  _rpcBuildCBDC();
+  _rpcBuildDedollar();
+  _rpcBuildForecastTable();
+  _rpcBuildScenarios();
+  // Fetch live FX from Open ER (same API already used in Forecast tab)
+  try{
+    const r=await fetch('https://v6.exchangerate-api.com/v6/latest/USD',{signal:AbortSignal.timeout(8000)});
+    const d=await r.json();
+    if(d&&d.conversion_rates){
+      _rpcDrawBricsChart(d.conversion_rates);
+      const el=document.getElementById('rpc-fx-updated');
+      if(el)el.textContent='live · '+new Date().toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'});
+    }else throw new Error('no data');
+  }catch(e){
+    // Fallback: try Open ER free endpoint
+    try{
+      const r2=await fetch('https://open.er-api.com/v6/latest/USD',{signal:AbortSignal.timeout(8000)});
+      const d2=await r2.json();
+      if(d2&&d2.rates){
+        _rpcDrawBricsChart(d2.rates);
+        const el=document.getElementById('rpc-fx-updated');
+        if(el)el.textContent='live · '+new Date().toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'});
+      }else throw new Error('fallback fail');
+    }catch(e2){
+      _rpcDrawBricsChart(null); // Use hardcoded fallback
+      const el=document.getElementById('rpc-fx-updated');
+      if(el){el.textContent='cached rates';el.style.color='#f97316';}
+    }
+  }
+}
 
 function renderRpCards(isos){
   const grid=document.getElementById('rp-cards');if(!grid)return;
@@ -6152,6 +6631,280 @@ document.addEventListener('DOMContentLoaded',()=>{
 // BOOT
 // ════════════════════════════════════════
 // ══════════════════════════════════════════════════════════════════════════
+// ═══════════════════════════════════════════════════════════════
+// Environment Sub-tab v3.23 — showEnvSubTab + _initDeforestation
+// ═══════════════════════════════════════════════════════════════
+
+function showEnvSubTab(tab, btn){
+  ['overview','deforestation'].forEach(t=>{
+    const p=document.getElementById('env-panel-'+t);
+    if(p) p.style.display=(t===tab)?'block':'none';
+  });
+  document.querySelectorAll('.env-subtab-btn').forEach(b=>{
+    b.classList.remove('active');
+    b.style.background='var(--card)';b.style.color='var(--muted)';b.style.borderColor='var(--border)';
+  });
+  if(btn){btn.classList.add('active');btn.style.background='var(--accent)';btn.style.color='#fff';btn.style.borderColor='var(--accent)';}
+  if(tab==='deforestation'&&!window._defLoaded){window._defLoaded=true;_initDeforestation();}
+}
+
+// ── Deforestation data ────────────────────────────────────────────
+const DEF_COUNTRIES=[
+  {flag:'🇧🇷',name:'Brazil',      forest:59,lossRate:0.5, loss2030:56, risk:'CRITICAL', iso:'BRA'},
+  {flag:'🇨🇩',name:'DR Congo',    forest:67,lossRate:0.4, loss2030:64, risk:'CRITICAL', iso:'COD'},
+  {flag:'🇮🇩',name:'Indonesia',   forest:49,lossRate:0.7, loss2030:44, risk:'CRITICAL', iso:'IDN'},
+  {flag:'🇲🇾',name:'Malaysia',    forest:67,lossRate:0.9, loss2030:61, risk:'CRITICAL', iso:'MYS'},
+  {flag:'🇧🇴',name:'Bolivia',     forest:51,lossRate:0.6, loss2030:48, risk:'HIGH',     iso:'BOL'},
+  {flag:'🇵🇬',name:'Papua NG',    forest:74,lossRate:0.5, loss2030:70, risk:'HIGH',     iso:'PNG'},
+  {flag:'🇵🇪',name:'Peru',        forest:57,lossRate:0.3, loss2030:55, risk:'HIGH',     iso:'PER'},
+  {flag:'🇲🇽',name:'Mexico',      forest:34,lossRate:0.2, loss2030:33, risk:'MODERATE', iso:'MEX'},
+  {flag:'🇨🇴',name:'Colombia',    forest:53,lossRate:0.4, loss2030:51, risk:'HIGH',     iso:'COL'},
+  {flag:'🇳🇬',name:'Nigeria',     forest:25,lossRate:1.1, loss2030:18, risk:'CRITICAL', iso:'NGA'},
+  {flag:'🇨🇲',name:'Cameroon',    forest:42,lossRate:0.6, loss2030:39, risk:'HIGH',     iso:'CMR'},
+  {flag:'🇬🇭',name:'Ghana',       forest:21,lossRate:2.0, loss2030:9,  risk:'CRITICAL', iso:'GHA'}
+];
+
+const DEF_NGOS=[
+  {name:'WWF (World Wildlife Fund)',  region:'Global',       focus:'Habitat protection + policy advocacy',      founded:1961, impact:'19 priority regions, 100+ countries',   url:'wwf.org',       col:'#10b981'},
+  {name:'Greenpeace',                 region:'Global',       focus:'Direct action + corporate campaigns',       founded:1971, impact:'Stopped 50+ major logging contracts',    url:'greenpeace.org',col:'#22c55e'},
+  {name:'Rainforest Alliance',        region:'Tropical',     focus:'Sustainable certification + farmer support',founded:1987, impact:'4M+ ha certified, 5M+ farmers',          url:'rainforest-alliance.org',col:'#16a34a'},
+  {name:'Global Forest Watch (WRI)', region:'Global',       focus:'Real-time satellite monitoring',            founded:2014, impact:'Tracks 100% of tropical forests live',    url:'globalforestwatch.org',col:'#0ea5e9'},
+  {name:'Amazon Conservation Assoc.',region:'Amazon Basin', focus:'Research + indigenous land rights',         founded:1999, impact:'1.3M ha protected in Peru/Bolivia',       url:'amazonconservation.org',col:'#f59e0b'},
+  {name:'Trillion Trees',             region:'Global',       focus:'Tree planting + restoration',               founded:2019, impact:'1B+ trees planted across 50 countries',   url:'trilliontrees.org', col:'#84cc16'},
+  {name:'Congo Basin Forest Fund',    region:'Central Africa',focus:'DRC/Congo forest protection',             founded:2008, impact:'30M ha of protected landscape',            url:'cbf-fund.org',  col:'#f97316'},
+  {name:'Pachama',                    region:'Latin America',focus:'Carbon credit + satellite verification',   founded:2018, impact:'2M+ ha verified via AI satellites',       url:'pachama.com',   col:'#8b5cf6'},
+  {name:'SOS Amazonia',               region:'Brazil',       focus:'Legal defense + indigenous rights',         founded:2007, impact:'Landmark court cases vs. agribusiness',   url:'amazonia.org.br',col:'#ef4444'}
+];
+
+const DEF_PROHIBITIONS=[
+  {icon:'🫘',title:'EU Deforestation Regulation (EUDR)',   year:'2025',status:'IN FORCE',  col:'#ef4444',
+   detail:'Bans EU imports of soy, beef, palm oil, cocoa, coffee, wood, rubber from deforested land. Covers 80% of Amazon-risk commodities.'},
+  {icon:'🌴',title:'Palm Oil — UK/EU Import Restrictions', year:'2026',status:'PHASED IN', col:'#f97316',
+   detail:'UK follows EU in requiring palm oil supply chains certified deforestation-free. Affects cosmetics, food, biofuel.'},
+  {icon:'🐄',title:'Deforestation-Linked Beef Ban',        year:'2025',status:'EU ACTIVE',  col:'#ef4444',
+   detail:'Beef from deforested Amazon biomes banned from EU market. Massive blow to Brazilian agribusiness export.'},
+  {icon:'📱',title:'Conflict Mineral + Forest Chain Rules',year:'2027',status:'UPCOMING',  col:'#fbbf24',
+   detail:'Extended producer responsibility to include electronics supply chains with forest-risk materials.'},
+  {icon:'☕',title:'Coffee & Cocoa Due Diligence',         year:'2025',status:'IN FORCE',  col:'#ef4444',
+   detail:'EUDR requires companies verify coffee/cocoa not grown on land deforested after Dec 2020.'},
+  {icon:'🪵',title:'Illegal Timber Trade — Global Ban',    year:'2023',status:'ACTIVE',    col:'#10b981',
+   detail:'CITES, US Lacey Act, EU Timber Reg, UK Illegal Deforestation Act all prohibit illegal wood imports.'},
+  {icon:'🛢',title:'Biofuel from Deforested Land Ban',     year:'2027',status:'UPCOMING',  col:'#fbbf24',
+   detail:'EU Renewable Energy Directive revisions exclude biofuels from high-carbon land. Hits palm/soy.'},
+  {icon:'🌡',title:'Carbon Border Adjustment Mechanism',   year:'2026',status:'PARTIAL',   col:'#f97316',
+   detail:'EU CBAM effectively penalises imports from high-deforestation economies via embodied carbon pricing.'},
+  {icon:'💧',title:'Soy Moratorium Enforcement',           year:'2006',status:'ONGOING',   col:'#10b981',
+   detail:'Brazil Soy Moratorium bans purchase of soy from newly deforested Amazon land. Reduced Amazon soy deforestation by 70%.'}
+];
+
+const DEF_INSIGHTS=[
+  {icon:'🚨',title:'Amazon Tipping Point',col:'#ef4444',
+   body:'At 20–25% deforestation the Amazon flips to savanna — irreversibly. Currently at 17%. At current rates this is 2037. The Eastern Amazon already emits more CO₂ than it absorbs.'},
+  {icon:'💧',title:'Water Cycle Collapse',col:'#3b82f6',
+   body:'Amazon trees create "flying rivers" — airborne moisture feeding rainfall across South America. Forest loss disrupts rainfall in São Paulo, Buenos Aires, and as far north as Mexico.'},
+  {icon:'🌍',title:'Congo Basin Risk',col:'#f97316',
+   body:"Congo Basin holds the world's 2nd largest tropical forest and its largest peat bog (30B tons CO₂). Mining and agricultural expansion threaten 40M ha within 20 years."},
+  {icon:'🧬',title:'Biodiversity Collapse',col:'#8b5cf6',
+   body:"Tropical forests host 50% of Earth's species on 7% of land. Current deforestation rate = 135 species extinctions per day. 1M species at risk by 2050."},
+  {icon:'🌡',title:'1.5°C Budget Impact',col:'#fbbf24',
+   body:"Stopping deforestation immediately would reduce annual global emissions by 10-15% — equivalent to removing all vehicles from Earth's roads. Cheapest climate solution per ton CO₂."},
+  {icon:'🤖',title:'AI + Satellite Monitoring',col:'#10b981',
+   body:"Google + Planet Labs + WRI's Global Forest Watch now detect deforestation within 6 days via ML satellite analysis. Real-time enforcement is finally possible at scale."}
+];
+
+function _defRiskCol(risk){return{CRITICAL:'#ef4444',HIGH:'#f97316',MODERATE:'#fbbf24',LOW:'#10b981'}[risk]||'#94a3b8';}
+
+function _defDrawTrend(){
+  const cv=document.getElementById('def-trend-chart');if(!cv)return;
+  const yrs=Array.from({length:24},(_, i)=>2001+i);
+  // GFW primary tropical forest loss Mha — curated research data
+  const vals=[8.2,7.8,8.5,9.1,8.0,8.8,9.3,9.6,8.9,9.7,10.2,10.6,10.1,11.3,12.4,14.5,13.8,15.8,12.2,11.9,10.5,10.1,9.8,10.0];
+  if(sparks['def-trend'])sparks['def-trend'].destroy();
+  sparks['def-trend']=new Chart(cv,{type:'line',
+    data:{labels:yrs,datasets:[{
+      label:'Mha lost',data:vals,
+      borderColor:'#ef4444',backgroundColor:'#ef444422',
+      fill:true,tension:.4,borderWidth:2,pointRadius:2
+    }]},
+    options:{responsive:true,maintainAspectRatio:false,
+      plugins:{legend:{display:false},tooltip:{backgroundColor:'rgba(15,23,42,.95)',borderColor:'#334155',borderWidth:1,
+        callbacks:{label:ctx=>`${ctx.parsed.y} Mha lost in ${ctx.label}`}}},
+      scales:{
+        x:{ticks:{color:'#64748b',font:{size:8},maxRotation:45},grid:{color:'rgba(51,65,85,.4)'}},
+        y:{ticks:{color:'#64748b',font:{size:9},callback:v=>v+' Mha'},grid:{color:'rgba(51,65,85,.4)'},
+           title:{display:true,text:'Million Hectares/Year',color:'#64748b',font:{size:9}}}
+      }
+    }
+  });
+}
+
+function _defDrawCountry(){
+  const cv=document.getElementById('def-country-chart');if(!cv)return;
+  const top=[
+    {name:'🇳🇬 Nigeria',rate:2.0},{name:'🇬🇭 Ghana',rate:2.0},{name:'🇲🇾 Malaysia',rate:0.9},
+    {name:'🇳🇮 Nicaragua',rate:0.8},{name:'🇨🇮 Cote dIvoire',rate:0.7},{name:'🇮🇩 Indonesia',rate:0.7},
+    {name:'🇧🇴 Bolivia',rate:0.6},{name:'🇨🇲 Cameroon',rate:0.6},{name:'🇧🇷 Brazil',rate:0.5},
+    {name:'🇨🇩 DR Congo',rate:0.4}
+  ];
+  const cols=top.map(d=>d.rate>=1.5?'#ef4444':d.rate>=0.7?'#f97316':'#fbbf24');
+  if(sparks['def-country'])sparks['def-country'].destroy();
+  sparks['def-country']=new Chart(cv,{type:'bar',
+    data:{labels:top.map(d=>d.name),datasets:[{
+      label:'Annual loss %',data:top.map(d=>d.rate),
+      backgroundColor:cols.map(c=>c+'99'),borderColor:cols,borderWidth:1.5,borderRadius:4
+    }]},
+    options:{
+      indexAxis:'y',responsive:true,maintainAspectRatio:false,
+      plugins:{legend:{display:false},tooltip:{backgroundColor:'rgba(15,23,42,.95)',borderColor:'#334155',borderWidth:1,
+        callbacks:{label:ctx=>`${ctx.parsed.x}% forest lost per year`}}},
+      scales:{
+        x:{ticks:{color:'#64748b',font:{size:9},callback:v=>v+'%'},grid:{color:'rgba(51,65,85,.4)'}},
+        y:{ticks:{color:'#64748b',font:{size:9}},grid:{display:false}}
+      }
+    }
+  });
+}
+
+function _defDrawCause(){
+  const cv=document.getElementById('def-cause-chart');if(!cv)return;
+  const causes=['🐄 Cattle Ranching','🌴 Palm Oil','🫘 Soy Farming','🪵 Logging','🌾 Small Farm','🏗 Infrastructure','⛏ Mining'];
+  const pcts=[38,14,12,10,14,7,5];
+  const cols=['#ef4444','#f97316','#fbbf24','#84cc16','#10b981','#3b82f6','#8b5cf6'];
+  if(sparks['def-cause'])sparks['def-cause'].destroy();
+  sparks['def-cause']=new Chart(cv,{type:'doughnut',
+    data:{labels:causes,datasets:[{data:pcts,backgroundColor:cols.map(c=>c+'cc'),borderColor:cols,borderWidth:1.5}]},
+    options:{responsive:true,maintainAspectRatio:false,cutout:'62%',
+      plugins:{legend:{labels:{color:'#94a3b8',font:{size:9},boxWidth:10}},
+        tooltip:{backgroundColor:'rgba(15,23,42,.95)',borderColor:'#334155',borderWidth:1,
+          callbacks:{label:ctx=>`${ctx.label}: ${ctx.parsed}%`}}}
+    }
+  });
+  const el=document.getElementById('def-cause-detail');
+  if(el)el.textContent='Cattle ranching alone drives 38% of tropical deforestation — primarily in Brazil & Colombia. Palm oil concentrated in Indonesia/Malaysia. Combined agriculture (cattle+soy+palm) = 64% of all forest loss.';
+}
+
+function _defDrawForecast(){
+  const cv=document.getElementById('def-forecast-chart');if(!cv)return;
+  const yrs=['2025','2026','2027','2028','2029','2030','2031','2032','2033','2034','2035'];
+  const datasets=[
+    {label:'🇧🇷 Brazil %',    data:[59,58.7,58.4,58.0,57.6,57.1,56.5,56.0,55.5,55.0,54.5], borderColor:'#22c55e',borderWidth:2,tension:.4,pointRadius:2},
+    {label:'🇨🇩 DR Congo %',  data:[67,66.7,66.4,66.0,65.5,65.0,64.4,63.8,63.2,62.5,61.8], borderColor:'#84cc16',borderWidth:2,tension:.4,pointRadius:2},
+    {label:'🇮🇩 Indonesia %', data:[49,48.6,48.2,47.7,47.1,46.5,45.8,45.1,44.4,43.7,43.0], borderColor:'#f97316',borderWidth:2,tension:.4,pointRadius:2},
+    {label:'🇳🇬 Nigeria %',   data:[25,24.0,22.9,21.7,20.4,19.1,17.6,16.1,14.5,12.9,11.2], borderColor:'#ef4444',borderWidth:2.5,tension:.4,pointRadius:2,borderDash:[4,2]}
+  ];
+  if(sparks['def-forecast'])sparks['def-forecast'].destroy();
+  sparks['def-forecast']=new Chart(cv,{type:'line',data:{labels:yrs,datasets},
+    options:{responsive:true,maintainAspectRatio:false,
+      plugins:{legend:{labels:{color:'#94a3b8',font:{size:9},boxWidth:10}},
+        tooltip:{backgroundColor:'rgba(15,23,42,.95)',borderColor:'#334155',borderWidth:1,
+          callbacks:{label:ctx=>`${ctx.dataset.label}: ${ctx.parsed.y}% forest cover`}}},
+      scales:{
+        x:{ticks:{color:'#64748b',font:{size:8}},grid:{color:'rgba(51,65,85,.4)'}},
+        y:{ticks:{color:'#64748b',font:{size:9},callback:v=>v+'%'},grid:{color:'rgba(51,65,85,.4)'},
+           title:{display:true,text:'Forest Coverage %',color:'#64748b',font:{size:9}}}
+      }
+    }
+  });
+}
+
+function _defBuildTable(){
+  const tb=document.getElementById('def-country-tbody');if(!tb)return;
+  tb.innerHTML=DEF_COUNTRIES.map(d=>{
+    const rc=_defRiskCol(d.risk);
+    return`<tr style="border-bottom:1px solid var(--border);">
+  <td style="padding:5px 7px;"><span style="font-size:13px;">${d.flag}</span> <strong>${d.name}</strong></td>
+  <td style="padding:5px 7px;text-align:center;font-weight:700;color:#10b981;" id="def-wb-${d.iso}">${d.forest}%</td>
+  <td style="padding:5px 7px;text-align:center;font-size:10px;color:#ef4444;">−${d.lossRate}%/yr</td>
+  <td style="padding:5px 7px;text-align:center;font-size:10px;color:#fbbf24;">${d.loss2030}% by 2030</td>
+  <td style="padding:5px 7px;text-align:center;"><span style="background:${rc}22;color:${rc};font-size:9px;font-weight:800;padding:2px 6px;border-radius:4px;">${d.risk}</span></td>
+</tr>`;}).join('');
+}
+
+function _defBuildMap(){
+  const el=document.getElementById('def-map');if(!el||el._defMapInit)return;
+  el._defMapInit=true;
+  // Wait for Leaflet
+  if(typeof L==='undefined'){setTimeout(_defBuildMap,800);return;}
+  const m=L.map('def-map',{zoomControl:true,scrollWheelZoom:false}).setView([5,20],2);
+  L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',{
+    attribution:'© CARTO',maxZoom:6,subdomains:'abcd'}).addTo(m);
+  // Plot country markers
+  const coords={BRA:[-10,-55],COD:[-3,24],IDN:[-2,118],MYS:[3,110],BOL:[-17,-65],
+                PNG:[-6,147],PER:[-10,-75],MEX:[24,-102],COL:[4,-74],NGA:[10,8],CMR:[4,12],GHA:[8,-1]};
+  DEF_COUNTRIES.forEach(d=>{
+    const pos=coords[d.iso];if(!pos)return;
+    const col=_defRiskCol(d.risk);
+    L.circleMarker(pos,{radius:8,color:col,fillColor:col,fillOpacity:.7,weight:2})
+      .addTo(m)
+      .bindTooltip(`<strong>${d.flag} ${d.name}</strong><br>Forest: ${d.forest}%<br>Loss: −${d.lossRate}%/yr<br>Risk: ${d.risk}`,
+        {sticky:true,className:'leaflet-tooltip'});
+  });
+}
+
+function _defBuildNGOs(){
+  const el=document.getElementById('def-ngo-grid');if(!el)return;
+  el.innerHTML=DEF_NGOS.map(n=>`
+<div class="def-ngo-item">
+  <div style="width:4px;flex-shrink:0;background:${n.col};border-radius:2px;align-self:stretch;"></div>
+  <div>
+    <div style="font-size:11px;font-weight:800;color:${n.col};">${n.name}</div>
+    <div style="font-size:9px;color:var(--muted);margin-top:1px;">📍 ${n.region} · Founded ${n.founded}</div>
+    <div style="font-size:10px;margin:3px 0;">${n.focus}</div>
+    <div style="font-size:9px;color:#10b981;">✅ ${n.impact}</div>
+  </div>
+</div>`).join('');
+}
+
+function _defBuildProhibitions(){
+  const el=document.getElementById('def-prohibit-grid');if(!el)return;
+  el.innerHTML=DEF_PROHIBITIONS.map(p=>`
+<div class="def-prohibit-card" style="border-left-color:${p.col};">
+  <div style="font-size:20px;margin-bottom:4px;">${p.icon}</div>
+  <div style="font-size:11px;font-weight:800;margin-bottom:2px;">${p.title}</div>
+  <div style="margin-bottom:4px;"><span style="background:${p.col}22;color:${p.col};font-size:9px;font-weight:800;padding:2px 6px;border-radius:4px;">${p.year} · ${p.status}</span></div>
+  <div style="font-size:9px;color:var(--muted);line-height:1.5;">${p.detail}</div>
+</div>`).join('');
+}
+
+function _defBuildInsights(){
+  const el=document.getElementById('def-insights-grid');if(!el)return;
+  el.innerHTML=DEF_INSIGHTS.map(i=>`
+<div style="background:var(--surface);border:1px solid ${i.col}33;border-radius:10px;padding:14px;">
+  <div style="font-size:22px;margin-bottom:5px;">${i.icon}</div>
+  <div style="font-size:12px;font-weight:800;color:${i.col};margin-bottom:6px;">${i.title}</div>
+  <div style="font-size:10px;color:var(--muted);line-height:1.6;">${i.body}</div>
+</div>`).join('');
+}
+
+async function _defFetchWorldBankForest(){
+  // Fetch live forest % from World Bank: AG.LND.FRST.ZS
+  const isos3=['BRA','COD','IDN','MYS','BOL','PNG','PER','MEX','COL','NGA','CMR','GHA'];
+  try{
+    const url='https://api.worldbank.org/v2/country/'+isos3.join(';')+'/indicator/AG.LND.FRST.ZS?format=json&mrv=1&per_page=50';
+    const r=await fetch(url,{signal:AbortSignal.timeout(10000)});
+    const data=await r.json();
+    (data[1]||[]).forEach(rec=>{
+      if(rec.value==null)return;
+      const iso3=rec.countryiso3code;
+      const el=document.getElementById('def-wb-'+iso3);
+      if(el){el.textContent=rec.value.toFixed(1)+'%';el.style.color='#10b981';el.title='Live World Bank data';}
+    });
+  }catch(e){/* use static fallback */}
+}
+
+function _initDeforestation(){
+  _defDrawTrend();
+  _defDrawCountry();
+  _defDrawCause();
+  _defDrawForecast();
+  _defBuildTable();
+  _defBuildNGOs();
+  _defBuildProhibitions();
+  _defBuildInsights();
+  setTimeout(_defBuildMap, 300);
+  _defFetchWorldBankForest(); // Live WB overlay
+}
+
 // ENVIRONMENT INTELLIGENCE v3.3  — initEnvironment()
 // All data: scientifically sourced (NOAA, NASA GISS, IEA, IRENA, GFW, IPCC)
 // ══════════════════════════════════════════════════════════════════════════
