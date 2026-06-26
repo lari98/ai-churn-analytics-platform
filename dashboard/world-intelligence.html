@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>World Intelligence Platform v3.25</title>
+<title>World Intelligence Platform v3.26</title>
 <!-- Leaflet -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css"/>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
@@ -594,7 +594,7 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:'Segoe 
 .brp-item-val{font-weight:700;}
 /* Sparkline in popup */
 .birth-spark-wrap{margin-top:8px;background:#0d1424;border-radius:5px;padding:6px 8px;}
-/* ── v3.25 Groq AI Intelligence Layer ─── */
+/* ── v3.26 MiniMax AI Intelligence Layer ─── */
 .ai-setup-overlay{position:fixed;inset:0;z-index:10000;background:rgba(0,0,0,.82);backdrop-filter:blur(8px);display:flex;align-items:center;justify-content:center;}
 .ai-setup-box{background:var(--card);border:1px solid rgba(124,58,237,.4);border-radius:16px;padding:28px;max-width:490px;width:92%;box-shadow:0 24px 64px rgba(0,0,0,.7);}
 .ai-btn{background:linear-gradient(135deg,#7c3aed,#4f46e5);color:#fff;border:none;border-radius:8px;padding:7px 16px;cursor:pointer;font-size:12px;font-weight:700;transition:opacity .2s;}
@@ -605,7 +605,7 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:'Segoe 
 .ai-dot{width:8px;height:8px;background:#7c3aed;border-radius:50%;flex-shrink:0;animation:aiDot 1s infinite;}
 @keyframes aiDot{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.3;transform:scale(.65)}}
 .ai-result{font-size:12px;line-height:1.75;color:var(--fg-2);white-space:pre-wrap;word-break:break-word;}
-/* ── end v3.25 ─── */
+/* ── end v3.26 ─── */
 </style>
 </head>
 <body>
@@ -613,7 +613,7 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:'Segoe 
 <div id="topbar">
   <a href="index.html">← Dashboard</a>
   <span class="title">🌍 World Intelligence Platform</span>
-  <span class="badge">v3.25</span><button onclick="_showAISetup()" title="Configure free Groq AI key (100% free)" style="margin-left:8px;background:linear-gradient(135deg,#7c3aed,#4f46e5);color:#fff;border:none;border-radius:6px;padding:3px 10px;cursor:pointer;font-size:11px;font-weight:700;">🤖 AI</button>
+  <span class="badge">v3.26</span><button onclick="_showAISetup()" title="Configure free MiniMax AI key (100% free)" style="margin-left:8px;background:linear-gradient(135deg,#7c3aed,#4f46e5);color:#fff;border:none;border-radius:6px;padding:3px 10px;cursor:pointer;font-size:11px;font-weight:700;">🤖 AI</button>
   <div style="display:flex;align-items:center;gap:6px;margin-left:auto;margin-right:16px;">
     <div class="live-dot"></div><span style="font-size:11px;color:var(--muted);">Live</span>
   </div>
@@ -838,9 +838,9 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:'Segoe 
       <span id="news-refresh-badge" style="font-size:10px;color:var(--accent);">⏱ 90s</span>
       <button class="ai-btn" onclick="_groqNewsBrief()" style="margin-left:auto;padding:4px 12px;font-size:11px;">🤖 AI Brief</button>
     </div>
-    <!-- AI News Brief panel v3.25 -->
+    <!-- AI News Brief panel v3.26 -->
     <div id="ai-news-panel" class="ai-panel" style="margin-bottom:10px;">
-      <div style="font-size:11px;color:var(--muted);">Click <strong style="color:#a78bfa;">AI Brief</strong> to get a 5-bullet intelligence summary of current headlines &middot; <span style="cursor:pointer;color:var(--muted);" onclick="_showAISetup()">&#9881; Setup free Groq key</span></div>
+      <div style="font-size:11px;color:var(--muted);">Click <strong style="color:#a78bfa;">AI Brief</strong> to get a 5-bullet intelligence summary of current headlines &middot; <span style="cursor:pointer;color:var(--muted);" onclick="_showAISetup()">&#9881; Setup free MiniMax key</span></div>
     </div>
     <div id="news-world"   class="news-region active"><div class="spinner-wrap"><div class="spinner"></div>Loading news…</div></div>
     <div id="news-europe"  class="news-region"><div class="spinner-wrap"><div class="spinner"></div>Loading…</div></div>
@@ -986,7 +986,7 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:'Segoe 
         <div style="margin-top:14px;">
           <div class="fc-section-title">🔬 Model Agreement</div>
           <div id="fc-model-agreement" style="font-size:11px;color:var(--muted);line-height:1.7;">—</div>
-          <!-- AI Forecast Explanation v3.25 -->
+          <!-- AI Forecast Explanation v3.26 -->
           <div id="ai-fc-panel" class="ai-panel" style="margin-top:8px;">
             <div style="font-size:11px;color:var(--muted);">🤖 <span style="cursor:pointer;color:#a78bfa;" onclick="_groqForecastExplain()">Interpret model signals with AI</span> &middot; <span style="cursor:pointer;font-size:10px;" onclick="_showAISetup()">&#9881; Setup key</span></div>
           </div>
@@ -1515,13 +1515,13 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:'Segoe 
         <div class="def-card-title">🧠 Advanced Deforestation Intelligence — Tipping Points & Cascade Risks</div>
         <div class="def-card-sub">Scientific consensus · irreversible thresholds · global cascade effects</div>
         <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;" id="def-insights-grid"></div>
-        <!-- AI Risk Narrative v3.25 -->
+        <!-- AI Risk Narrative v3.26 -->
         <div style="margin-top:20px;">
           <div style="font-size:13px;font-weight:700;margin-bottom:8px;">🤖 AI Risk Narrative</div>
           <div id="ai-def-panel" class="ai-panel">
             <div style="font-size:11px;color:var(--muted);display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
               <button class="ai-btn" onclick="_groqDeforestationRisk()" style="padding:5px 14px;font-size:11px;">Generate Narrative</button>
-              <span>AI interprets current data &amp; forecasts tipping points &middot; <span style="cursor:pointer;color:#a78bfa;" onclick="_showAISetup()">&#9881; Setup free Groq key</span></span>
+              <span>AI interprets current data &amp; forecasts tipping points &middot; <span style="cursor:pointer;color:#a78bfa;" onclick="_showAISetup()">&#9881; Setup free MiniMax key</span></span>
             </div>
           </div>
         </div>
@@ -5452,10 +5452,10 @@ function rpDrillDown(iso){
   <canvas id="rp-drill-chart"></canvas>
 </div>
 <div style="font-size:10px;color:var(--muted);margin-top:8px;text-align:center;">Source: World Bank GDP Growth (${live.year||'embedded'}) · FDI: WB BX.KLT.DINV.WD.GD.ZS · Forecast: embedded trajectory model</div>
-<!-- AI Country Assessment v3.25 -->
+<!-- AI Country Assessment v3.26 -->
 <div style="margin-top:16px;display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
   <button class="ai-btn" onclick="_groqCountryReport('${iso}')">🤖 AI Assessment</button>
-  <span style="font-size:10px;color:var(--muted);">Geopolitical brief · Groq free tier</span>
+  <span style="font-size:10px;color:var(--muted);">Geopolitical brief · MiniMax free tier</span>
   <button onclick="_showAISetup()" style="background:none;border:none;color:#a78bfa;font-size:10px;cursor:pointer;text-decoration:underline;">⚙ Setup key</button>
 </div>
 <div id="ai-country-panel" class="ai-panel" style="margin-top:10px;">
@@ -8804,25 +8804,25 @@ function _buildBalanceSheets(){
 document.addEventListener('keydown',e=>{if(e.key==='Escape')closeAqiModal();});
 
 // ════════════════════════════════════════════════════════════════════════════
-// GROQ AI INTELLIGENCE LAYER v3.25
-// 100% Free · llama-3.1-70b-versatile · No paid APIs
-// Key: localStorage('wip_groq_key') ONLY — never in any project file
-// Free tier: 14,400 tokens/min · console.groq.com (no credit card)
+// MINIMAX AI INTELLIGENCE LAYER v3.26
+// 100% Free · MiniMax-M2.7 · No paid APIs
+// Key: localStorage('wip_minimax_key') ONLY — never in any project file
+// Free tier: platform.minimaxi.com (no credit card)
 // ════════════════════════════════════════════════════════════════════════════
 
-function _groqKey(){return localStorage.getItem('wip_groq_key')||'';}
+function _groqKey(){return localStorage.getItem('wip_minimax_key')||'';}
 
 function _saveGroqKey(){
   var v=(document.getElementById('ai-key-input').value||'').trim();
   var st=document.getElementById('ai-key-status');
   if(!v||v.length<20){st.innerHTML='<span style="color:#ef4444;">Key too short — paste full key</span>';return;}
-  localStorage.setItem('wip_groq_key',v);
+  localStorage.setItem('wip_minimax_key',v);
   st.innerHTML='<span style="color:#10b981;">Saved!</span>';
   setTimeout(_closeAISetup,1100);
 }
 
 function _clearGroqKey(){
-  localStorage.removeItem('wip_groq_key');
+  localStorage.removeItem('wip_minimax_key');
   var inp=document.getElementById('ai-key-input');
   if(inp)inp.value='';
   document.getElementById('ai-key-status').innerHTML='<span style="color:#f59e0b;">Cleared</span>';
@@ -8846,14 +8846,14 @@ async function _groqCall(messages,maxTok){
   maxTok=maxTok||600;
   var key=_groqKey();
   if(!key) throw new Error('NO_KEY');
-  var resp=await fetch('https://api.groq.com/openai/v1/chat/completions',{
+  var resp=await fetch('https://api.minimaxi.chat/v1/chat/completions',{
     method:'POST',
     headers:{'Content-Type':'application/json','Authorization':'Bearer '+key},
-    body:JSON.stringify({model:'llama-3.1-70b-versatile',messages:messages,max_tokens:maxTok,temperature:0.7})
+    body:JSON.stringify({model:'MiniMax-M2.7',messages:messages,max_tokens:maxTok,temperature:0.7})
   });
   if(!resp.ok){
     var et=await resp.text();
-    throw new Error('Groq '+resp.status+': '+(et.substring(0,120)));
+    throw new Error('MiniMax '+resp.status+': '+(et.substring(0,120)));
   }
   var d=await resp.json();
   return d.choices[0].message.content;
@@ -8865,8 +8865,8 @@ function _aiThinking(el,msg){
 
 function _aiNoKey(el){
   el.innerHTML='<div style="font-size:11px;line-height:1.65;">'
-    +'<strong style="color:#a78bfa;">Free Groq API key required.</strong> '
-    +'Sign up free at <a href="https://console.groq.com" target="_blank" style="color:#7c3aed;">console.groq.com</a>'
+    +'<strong style="color:#a78bfa;">Free MiniMax API key required.</strong> '
+    +'Get your free key at <a href="https://platform.minimaxi.com" target="_blank" style="color:#7c3aed;">platform.minimaxi.com</a>'
     +' (no credit card) then <span style="cursor:pointer;color:#a78bfa;text-decoration:underline;" onclick="_showAISetup()">add your key here</span>.'
     +'</div>';
 }
@@ -8892,7 +8892,7 @@ async function _groqCountryReport(iso){
       +'Max 200 words. Use numbers. No generic statements.';
     var txt=await _groqCall([{role:'user',content:prompt}],420);
     panel.innerHTML='<div class="ai-panel-hdr">AI Geopolitical Assessment '
-      +'<span style="font-size:9px;font-weight:400;opacity:.7;">Groq llama-3.1-70b</span></div>'
+      +'<span style="font-size:9px;font-weight:400;opacity:.7;">MiniMax M2.7</span></div>'
       +'<div class="ai-result">'+_aiEsc(txt)+'</div>'
       +'<div style="font-size:9px;color:var(--muted);margin-top:8px;">'+c.n
       +' &middot; <span style="cursor:pointer;color:#a78bfa;" onclick="_groqCountryReport(window._aiLastIso)">Regenerate</span></div>';
@@ -8926,7 +8926,7 @@ async function _groqNewsBrief(){
       +'\n\nFormat: exactly 5 bullets, each starting with an emoji + bold category label. Cover key themes, tensions, signals. Max 160 words. Be sharp and specific.';
     var txt=await _groqCall([{role:'user',content:prompt}],380);
     panel.innerHTML='<div class="ai-panel-hdr">AI News Brief '
-      +'<span style="font-size:9px;font-weight:400;opacity:.7;">Groq &middot; '+Math.min(headlines.length,12)+' headlines</span></div>'
+      +'<span style="font-size:9px;font-weight:400;opacity:.7;">MiniMax &middot; '+Math.min(headlines.length,12)+' headlines</span></div>'
       +'<div class="ai-result">'+_aiEsc(txt)+'</div>'
       +'<div style="font-size:9px;color:var(--muted);margin-top:8px;">'
       +'<span style="cursor:pointer;color:#a78bfa;" onclick="_groqNewsBrief()">Refresh</span></div>';
@@ -8954,7 +8954,7 @@ async function _groqDeforestationRisk(){
       +'Use specific numbers and countries. No generic statements.';
     var txt=await _groqCall([{role:'user',content:prompt}],480);
     panel.innerHTML='<div class="ai-panel-hdr">AI Risk Narrative '
-      +'<span style="font-size:9px;font-weight:400;opacity:.7;">Groq &middot; GFW/Hansen/UMD verified data</span></div>'
+      +'<span style="font-size:9px;font-weight:400;opacity:.7;">MiniMax &middot; GFW/Hansen/UMD verified data</span></div>'
       +'<div class="ai-result">'+_aiEsc(txt)+'</div>'
       +'<div style="font-size:9px;color:var(--muted);margin-top:8px;">'
       +'<span style="cursor:pointer;color:#a78bfa;" onclick="_groqDeforestationRisk()">Regenerate</span></div>';
@@ -8987,7 +8987,7 @@ async function _groqForecastExplain(){
       +'Be direct. No disclaimers.';
     var txt=await _groqCall([{role:'user',content:prompt}],300);
     panel.innerHTML='<div class="ai-panel-hdr">AI Forecast Interpretation '
-      +'<span style="font-size:9px;font-weight:400;opacity:.7;">Groq llama-3.1-70b</span></div>'
+      +'<span style="font-size:9px;font-weight:400;opacity:.7;">MiniMax M2.7</span></div>'
       +'<div class="ai-result">'+_aiEsc(txt)+'</div>'
       +'<div style="font-size:9px;color:var(--muted);margin-top:8px;">'+sym
       +' &middot; <span style="cursor:pointer;color:#a78bfa;" onclick="_groqForecastExplain()">Refresh</span></div>';
@@ -8999,24 +8999,24 @@ async function _groqForecastExplain(){
 
 </script>
 
-<!-- Groq AI Setup Modal v3.25 — 100% free, no credit card -->
+<!-- MiniMax AI Setup Modal v3.26 — 100% free, no credit card -->
 <div id="ai-setup-modal" class="ai-setup-overlay" style="display:none;" onclick="if(event.target===this)_closeAISetup()">
   <div class="ai-setup-box">
     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;">
       <div>
         <div style="font-size:19px;font-weight:800;">🤖 AI Intelligence Setup</div>
-        <div style="font-size:11px;color:var(--muted);margin-top:2px;">Powered by Groq · 100% free · no credit card</div>
+        <div style="font-size:11px;color:var(--muted);margin-top:2px;">Powered by MiniMax · 100% free · no credit card</div>
       </div>
       <button onclick="_closeAISetup()" style="background:none;border:none;color:var(--muted);font-size:20px;cursor:pointer;line-height:1;">✕</button>
     </div>
     <div style="background:rgba(16,185,129,.07);border:1px solid rgba(16,185,129,.2);border-radius:8px;padding:12px;margin-bottom:16px;font-size:11px;line-height:1.65;color:var(--fg-2);">
-      <strong style="color:#10b981;">✓ Genuinely 100% free</strong> — Groq gives you <strong>14,400 tokens/min</strong> on
-      <strong>Llama 3.1 70B</strong> at no cost. No credit card. No trial. Just sign up at
-      <a href="https://console.groq.com" target="_blank" style="color:#7c3aed;font-weight:700;">console.groq.com</a>,
+      <strong style="color:#10b981;">✓ Genuinely 100% free</strong> — MiniMax M2.7 is completely free with no credit card.
+      Just sign up at
+      <a href="https://platform.minimaxi.com" target="_blank" style="color:#7c3aed;font-weight:700;">platform.minimaxi.com</a>,
       create an API key, paste below.
     </div>
-    <div style="font-size:11px;font-weight:700;color:#a78bfa;margin-bottom:6px;">Groq API Key</div>
-    <input id="ai-key-input" type="password" placeholder="gsk_..."
+    <div style="font-size:11px;font-weight:700;color:#a78bfa;margin-bottom:6px;">MiniMax API Key</div>
+    <input id="ai-key-input" type="password" placeholder="sk-cp-..."
       style="width:100%;box-sizing:border-box;background:var(--bg);border:1px solid var(--border);color:var(--fg);
       border-radius:8px;padding:10px 12px;font-size:12px;font-family:monospace;margin-bottom:12px;outline:none;"
       onkeydown="if(event.key==='Enter')_saveGroqKey()"
@@ -9041,7 +9041,7 @@ async function _groqForecastExplain(){
       </div>
     </div>
     <div style="font-size:10px;color:var(--muted);margin-top:12px;text-align:center;">
-      Key stored in browser localStorage only · never in any project file · only sent to Groq</div>
+      Key stored in browser localStorage only · never in any project file · only sent to MiniMax</div>
   </div>
 </div>
 </body>
