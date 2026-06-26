@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>World Intelligence Platform v3.24</title>
+<title>World Intelligence Platform v3.25</title>
 <!-- Leaflet -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css"/>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
@@ -594,6 +594,18 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:'Segoe 
 .brp-item-val{font-weight:700;}
 /* Sparkline in popup */
 .birth-spark-wrap{margin-top:8px;background:#0d1424;border-radius:5px;padding:6px 8px;}
+/* ── v3.25 Groq AI Intelligence Layer ─── */
+.ai-setup-overlay{position:fixed;inset:0;z-index:10000;background:rgba(0,0,0,.82);backdrop-filter:blur(8px);display:flex;align-items:center;justify-content:center;}
+.ai-setup-box{background:var(--card);border:1px solid rgba(124,58,237,.4);border-radius:16px;padding:28px;max-width:490px;width:92%;box-shadow:0 24px 64px rgba(0,0,0,.7);}
+.ai-btn{background:linear-gradient(135deg,#7c3aed,#4f46e5);color:#fff;border:none;border-radius:8px;padding:7px 16px;cursor:pointer;font-size:12px;font-weight:700;transition:opacity .2s;}
+.ai-btn:hover{opacity:.82}.ai-btn:disabled{opacity:.45;cursor:not-allowed;}
+.ai-panel{background:rgba(124,58,237,.07);border:1px solid rgba(124,58,237,.22);border-radius:10px;padding:14px;margin-top:10px;}
+.ai-panel-hdr{font-size:12px;font-weight:700;color:#a78bfa;margin-bottom:8px;display:flex;align-items:center;gap:6px;}
+.ai-thinking{display:flex;align-items:center;gap:8px;font-size:11px;color:var(--muted);}
+.ai-dot{width:8px;height:8px;background:#7c3aed;border-radius:50%;flex-shrink:0;animation:aiDot 1s infinite;}
+@keyframes aiDot{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.3;transform:scale(.65)}}
+.ai-result{font-size:12px;line-height:1.75;color:var(--fg-2);white-space:pre-wrap;word-break:break-word;}
+/* ── end v3.25 ─── */
 </style>
 </head>
 <body>
@@ -601,7 +613,7 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:'Segoe 
 <div id="topbar">
   <a href="index.html">← Dashboard</a>
   <span class="title">🌍 World Intelligence Platform</span>
-  <span class="badge">v3.24</span>
+  <span class="badge">v3.25</span><button onclick="_showAISetup()" title="Configure free Groq AI key (100% free)" style="margin-left:8px;background:linear-gradient(135deg,#7c3aed,#4f46e5);color:#fff;border:none;border-radius:6px;padding:3px 10px;cursor:pointer;font-size:11px;font-weight:700;">🤖 AI</button>
   <div style="display:flex;align-items:center;gap:6px;margin-left:auto;margin-right:16px;">
     <div class="live-dot"></div><span style="font-size:11px;color:var(--muted);">Live</span>
   </div>
@@ -824,6 +836,11 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:'Segoe 
       <span class="map-live-pulse" title="News auto-refreshes every 90 seconds"></span>
       <span style="font-size:10px;color:var(--muted);">Live feeds · auto-refresh</span>
       <span id="news-refresh-badge" style="font-size:10px;color:var(--accent);">⏱ 90s</span>
+      <button class="ai-btn" onclick="_groqNewsBrief()" style="margin-left:auto;padding:4px 12px;font-size:11px;">🤖 AI Brief</button>
+    </div>
+    <!-- AI News Brief panel v3.25 -->
+    <div id="ai-news-panel" class="ai-panel" style="margin-bottom:10px;">
+      <div style="font-size:11px;color:var(--muted);">Click <strong style="color:#a78bfa;">AI Brief</strong> to get a 5-bullet intelligence summary of current headlines &middot; <span style="cursor:pointer;color:var(--muted);" onclick="_showAISetup()">&#9881; Setup free Groq key</span></div>
     </div>
     <div id="news-world"   class="news-region active"><div class="spinner-wrap"><div class="spinner"></div>Loading news…</div></div>
     <div id="news-europe"  class="news-region"><div class="spinner-wrap"><div class="spinner"></div>Loading…</div></div>
@@ -969,6 +986,10 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:'Segoe 
         <div style="margin-top:14px;">
           <div class="fc-section-title">🔬 Model Agreement</div>
           <div id="fc-model-agreement" style="font-size:11px;color:var(--muted);line-height:1.7;">—</div>
+          <!-- AI Forecast Explanation v3.25 -->
+          <div id="ai-fc-panel" class="ai-panel" style="margin-top:8px;">
+            <div style="font-size:11px;color:var(--muted);">🤖 <span style="cursor:pointer;color:#a78bfa;" onclick="_groqForecastExplain()">Interpret model signals with AI</span> &middot; <span style="cursor:pointer;font-size:10px;" onclick="_showAISetup()">&#9881; Setup key</span></div>
+          </div>
         </div>
       </div>
     </div>
@@ -1494,6 +1515,16 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:'Segoe 
         <div class="def-card-title">🧠 Advanced Deforestation Intelligence — Tipping Points & Cascade Risks</div>
         <div class="def-card-sub">Scientific consensus · irreversible thresholds · global cascade effects</div>
         <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;" id="def-insights-grid"></div>
+        <!-- AI Risk Narrative v3.25 -->
+        <div style="margin-top:20px;">
+          <div style="font-size:13px;font-weight:700;margin-bottom:8px;">🤖 AI Risk Narrative</div>
+          <div id="ai-def-panel" class="ai-panel">
+            <div style="font-size:11px;color:var(--muted);display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
+              <button class="ai-btn" onclick="_groqDeforestationRisk()" style="padding:5px 14px;font-size:11px;">Generate Narrative</button>
+              <span>AI interprets current data &amp; forecasts tipping points &middot; <span style="cursor:pointer;color:#a78bfa;" onclick="_showAISetup()">&#9881; Setup free Groq key</span></span>
+            </div>
+          </div>
+        </div>
       </div>
 
       <!-- AI + Satellite Monitoring — full section v3.24 -->
@@ -5420,7 +5451,16 @@ function rpDrillDown(iso){
 <div style="background:var(--bg);border-radius:8px;padding:12px;height:160px;position:relative;">
   <canvas id="rp-drill-chart"></canvas>
 </div>
-<div style="font-size:10px;color:var(--muted);margin-top:8px;text-align:center;">Source: World Bank GDP Growth (${live.year||'embedded'}) · FDI: WB BX.KLT.DINV.WD.GD.ZS · Forecast: embedded trajectory model</div>`;
+<div style="font-size:10px;color:var(--muted);margin-top:8px;text-align:center;">Source: World Bank GDP Growth (${live.year||'embedded'}) · FDI: WB BX.KLT.DINV.WD.GD.ZS · Forecast: embedded trajectory model</div>
+<!-- AI Country Assessment v3.25 -->
+<div style="margin-top:16px;display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
+  <button class="ai-btn" onclick="_groqCountryReport('${iso}')">🤖 AI Assessment</button>
+  <span style="font-size:10px;color:var(--muted);">Geopolitical brief · Groq free tier</span>
+  <button onclick="_showAISetup()" style="background:none;border:none;color:#a78bfa;font-size:10px;cursor:pointer;text-decoration:underline;">⚙ Setup key</button>
+</div>
+<div id="ai-country-panel" class="ai-panel" style="margin-top:10px;">
+  <div style="font-size:11px;color:var(--muted);">Click <strong style="color:#a78bfa;">AI Assessment</strong> to generate a geopolitical brief for ${c.n}</div>
+</div>`;
 
   modal.style.display='block';
   document.body.style.overflow='hidden';
@@ -8762,6 +8802,247 @@ function _buildBalanceSheets(){
 /* ─── END v3.7 ADVANCED PANELS ─── */
 
 document.addEventListener('keydown',e=>{if(e.key==='Escape')closeAqiModal();});
+
+// ════════════════════════════════════════════════════════════════════════════
+// GROQ AI INTELLIGENCE LAYER v3.25
+// 100% Free · llama-3.1-70b-versatile · No paid APIs
+// Key: localStorage('wip_groq_key') ONLY — never in any project file
+// Free tier: 14,400 tokens/min · console.groq.com (no credit card)
+// ════════════════════════════════════════════════════════════════════════════
+
+function _groqKey(){return localStorage.getItem('wip_groq_key')||'';}
+
+function _saveGroqKey(){
+  var v=(document.getElementById('ai-key-input').value||'').trim();
+  var st=document.getElementById('ai-key-status');
+  if(!v||v.length<20){st.innerHTML='<span style="color:#ef4444;">Key too short — paste full key</span>';return;}
+  localStorage.setItem('wip_groq_key',v);
+  st.innerHTML='<span style="color:#10b981;">Saved!</span>';
+  setTimeout(_closeAISetup,1100);
+}
+
+function _clearGroqKey(){
+  localStorage.removeItem('wip_groq_key');
+  var inp=document.getElementById('ai-key-input');
+  if(inp)inp.value='';
+  document.getElementById('ai-key-status').innerHTML='<span style="color:#f59e0b;">Cleared</span>';
+}
+
+function _showAISetup(){
+  var m=document.getElementById('ai-setup-modal');
+  if(!m)return;
+  m.style.display='flex';
+  var inp=document.getElementById('ai-key-input');
+  if(inp){inp.value=_groqKey();setTimeout(function(){inp.focus();},80);}
+  document.getElementById('ai-key-status').innerHTML='';
+}
+
+function _closeAISetup(){
+  var m=document.getElementById('ai-setup-modal');
+  if(m)m.style.display='none';
+}
+
+async function _groqCall(messages,maxTok){
+  maxTok=maxTok||600;
+  var key=_groqKey();
+  if(!key) throw new Error('NO_KEY');
+  var resp=await fetch('https://api.groq.com/openai/v1/chat/completions',{
+    method:'POST',
+    headers:{'Content-Type':'application/json','Authorization':'Bearer '+key},
+    body:JSON.stringify({model:'llama-3.1-70b-versatile',messages:messages,max_tokens:maxTok,temperature:0.7})
+  });
+  if(!resp.ok){
+    var et=await resp.text();
+    throw new Error('Groq '+resp.status+': '+(et.substring(0,120)));
+  }
+  var d=await resp.json();
+  return d.choices[0].message.content;
+}
+
+function _aiThinking(el,msg){
+  el.innerHTML='<div class="ai-thinking"><div class="ai-dot"></div>'+msg+'</div>';
+}
+
+function _aiNoKey(el){
+  el.innerHTML='<div style="font-size:11px;line-height:1.65;">'
+    +'<strong style="color:#a78bfa;">Free Groq API key required.</strong> '
+    +'Sign up free at <a href="https://console.groq.com" target="_blank" style="color:#7c3aed;">console.groq.com</a>'
+    +' (no credit card) then <span style="cursor:pointer;color:#a78bfa;text-decoration:underline;" onclick="_showAISetup()">add your key here</span>.'
+    +'</div>';
+}
+
+function _aiEsc(s){return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+
+// ── Feature 1: Country AI Assessment ────────────────────────────────────────
+async function _groqCountryReport(iso){
+  var panel=document.getElementById('ai-country-panel');
+  if(!panel)return;
+  if(!_groqKey()){_aiNoKey(panel);return;}
+  window._aiLastIso=iso; var c=CTRY[iso];if(!c)return;
+  var live=_rpLiveData[iso]||{};
+  var g=live.gdp!=null?live.gdp.toFixed(1):c.g;
+  _aiThinking(panel,'Generating geopolitical assessment for '+c.n+'...');
+  var btns=document.querySelectorAll('.ai-btn[onclick*="_groqCountryReport"]');
+  btns.forEach(function(b){b.disabled=true;});
+  try{
+    var prompt='You are a top-tier geopolitical analyst. Write a concise 3-paragraph intelligence brief on '+c.n+' ('+iso+').'
+      +'Data: GDP Growth '+g+'%, Inflation '+c.inf+'%, GDP/capita $'+c.gdppc+', Population '+c.pop+', Risk Score '+c.r+'/10.'
+      +'Risks: '+c.ri.join(', ')+'. Opportunities: '+c.op.join(', ')+'.'
+      +'Para 1 = current macro situation. Para 2 = top 2 geopolitical risks with specifics. Para 3 = 12-month outlook + signal: BULLISH / BEARISH / NEUTRAL with one sentence reason.'
+      +'Max 200 words. Use numbers. No generic statements.';
+    var txt=await _groqCall([{role:'user',content:prompt}],420);
+    panel.innerHTML='<div class="ai-panel-hdr">AI Geopolitical Assessment '
+      +'<span style="font-size:9px;font-weight:400;opacity:.7;">Groq llama-3.1-70b</span></div>'
+      +'<div class="ai-result">'+_aiEsc(txt)+'</div>'
+      +'<div style="font-size:9px;color:var(--muted);margin-top:8px;">'+c.n
+      +' &middot; <span style="cursor:pointer;color:#a78bfa;" onclick="_groqCountryReport(window._aiLastIso)">Regenerate</span></div>';
+  }catch(e){
+    if(e.message==='NO_KEY'){_aiNoKey(panel);}
+    else{panel.innerHTML='<div style="font-size:11px;color:#ef4444;">Error: '+_aiEsc(e.message.substring(0,120))+'</div>';}
+  }finally{btns.forEach(function(b){b.disabled=false;});}
+}
+
+// ── Feature 2: News AI Brief ─────────────────────────────────────────────────
+async function _groqNewsBrief(){
+  var panel=document.getElementById('ai-news-panel');
+  if(!panel)return;
+  if(!_groqKey()){_aiNoKey(panel);return;}
+  var active=document.querySelector('.news-region.active');
+  var headlines=[];
+  if(active){
+    active.querySelectorAll('.news-card h4').forEach(function(h){
+      var t=(h.textContent||'').trim();
+      if(t&&t.length>10)headlines.push(t);
+    });
+  }
+  if(headlines.length===0){
+    panel.innerHTML='<div style="font-size:11px;color:var(--muted);">No headlines loaded yet — open a news tab and wait for articles to load, then click AI Brief.</div>';
+    return;
+  }
+  _aiThinking(panel,'Analyzing '+Math.min(headlines.length,12)+' headlines...');
+  try{
+    var hdList=headlines.slice(0,12).map(function(h,i){return (i+1)+'. '+h;}).join('\n');
+    var prompt='You are a global intelligence analyst. Based on these headlines, write a 5-bullet situation briefing:\n\n'+hdList
+      +'\n\nFormat: exactly 5 bullets, each starting with an emoji + bold category label. Cover key themes, tensions, signals. Max 160 words. Be sharp and specific.';
+    var txt=await _groqCall([{role:'user',content:prompt}],380);
+    panel.innerHTML='<div class="ai-panel-hdr">AI News Brief '
+      +'<span style="font-size:9px;font-weight:400;opacity:.7;">Groq &middot; '+Math.min(headlines.length,12)+' headlines</span></div>'
+      +'<div class="ai-result">'+_aiEsc(txt)+'</div>'
+      +'<div style="font-size:9px;color:var(--muted);margin-top:8px;">'
+      +'<span style="cursor:pointer;color:#a78bfa;" onclick="_groqNewsBrief()">Refresh</span></div>';
+  }catch(e){
+    if(e.message==='NO_KEY'){_aiNoKey(panel);}
+    else{panel.innerHTML='<div style="font-size:11px;color:#ef4444;">Error: '+_aiEsc(e.message.substring(0,120))+'</div>';}
+  }
+}
+
+// ── Feature 3: Deforestation Risk Narrative ──────────────────────────────────
+async function _groqDeforestationRisk(){
+  var panel=document.getElementById('ai-def-panel');
+  if(!panel)return;
+  if(!_groqKey()){_aiNoKey(panel);return;}
+  _aiThinking(panel,'Generating deforestation risk analysis (GFW/Hansen 2023 data)...');
+  var btn=panel.querySelector('.ai-btn');if(btn)btn.disabled=true;
+  try{
+    var prompt='You are a leading forest conservation scientist specializing in remote sensing and tipping points.\n'
+      +'Verified data (GFW/Hansen/UMD 2023): Global tree cover loss peaked at 15.8 Mha in 2018, dropped to 9.7 Mha in 2023 (Brazil Lula policy + EUDR effect). '
+      +'Brazil 1.5%/yr loss rate, Congo Basin 0.8%/yr, Indonesia recovering. Amazon 17% deforested (850,000 km2 of 4.1M km2 baseline). EUDR (EU Deforestation Regulation) effective 2024.\n\n'
+      +'Write 3 sharp paragraphs (200 words max):\n'
+      +'1. What the 2023 drop really means vs structural long-term risk\n'
+      +'2. Critical tipping points - which ecosystems are closest to irreversible thresholds and when\n'
+      +'3. 2025-2030 scenario - base case, best case if EUDR enforced, worst case if Brazil policy reverses\n\n'
+      +'Use specific numbers and countries. No generic statements.';
+    var txt=await _groqCall([{role:'user',content:prompt}],480);
+    panel.innerHTML='<div class="ai-panel-hdr">AI Risk Narrative '
+      +'<span style="font-size:9px;font-weight:400;opacity:.7;">Groq &middot; GFW/Hansen/UMD verified data</span></div>'
+      +'<div class="ai-result">'+_aiEsc(txt)+'</div>'
+      +'<div style="font-size:9px;color:var(--muted);margin-top:8px;">'
+      +'<span style="cursor:pointer;color:#a78bfa;" onclick="_groqDeforestationRisk()">Regenerate</span></div>';
+  }catch(e){
+    if(e.message==='NO_KEY'){_aiNoKey(panel);}
+    else{panel.innerHTML='<div style="font-size:11px;color:#ef4444;">Error: '+_aiEsc(e.message.substring(0,120))+'</div>';}
+  }finally{
+    var newBtn=panel.querySelector('.ai-btn');if(newBtn)newBtn.disabled=false;
+  }
+}
+
+// ── Feature 4: Forecast Explanation ─────────────────────────────────────────
+async function _groqForecastExplain(){
+  var panel=document.getElementById('ai-fc-panel');
+  if(!panel)return;
+  if(!_groqKey()){_aiNoKey(panel);return;}
+  var sym=(typeof fcActiveSym!=='undefined')?fcActiveSym:'BTC';
+  var agreeEl=document.getElementById('fc-model-agreement');
+  var confEl=document.getElementById('fc-conf-pct');
+  var agreeTxt=agreeEl?(agreeEl.textContent||'not available'):'not available';
+  var confTxt=confEl?(confEl.textContent||'unknown'):'unknown';
+  _aiThinking(panel,'Interpreting model signals for '+sym+'...');
+  try{
+    var prompt='You are a quantitative analyst. Interpret this forecast model output for '+sym+':\n'
+      +'Model agreement: '+agreeTxt+'\n'
+      +'Confidence: '+confTxt+'\n\n'
+      +'Write 2 focused paragraphs (max 130 words):\n'
+      +'1. What the model signals mean in plain English - aligned or diverging? What does the spread tell us?\n'
+      +'2. Key risk factors, then end with a clear line: SIGNAL: BULLISH / BEARISH / NEUTRAL - one sentence reason.\n\n'
+      +'Be direct. No disclaimers.';
+    var txt=await _groqCall([{role:'user',content:prompt}],300);
+    panel.innerHTML='<div class="ai-panel-hdr">AI Forecast Interpretation '
+      +'<span style="font-size:9px;font-weight:400;opacity:.7;">Groq llama-3.1-70b</span></div>'
+      +'<div class="ai-result">'+_aiEsc(txt)+'</div>'
+      +'<div style="font-size:9px;color:var(--muted);margin-top:8px;">'+sym
+      +' &middot; <span style="cursor:pointer;color:#a78bfa;" onclick="_groqForecastExplain()">Refresh</span></div>';
+  }catch(e){
+    if(e.message==='NO_KEY'){_aiNoKey(panel);}
+    else{panel.innerHTML='<div style="font-size:11px;color:#ef4444;">Error: '+_aiEsc(e.message.substring(0,120))+'</div>';}
+  }
+}
+
 </script>
+
+<!-- Groq AI Setup Modal v3.25 — 100% free, no credit card -->
+<div id="ai-setup-modal" class="ai-setup-overlay" style="display:none;" onclick="if(event.target===this)_closeAISetup()">
+  <div class="ai-setup-box">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;">
+      <div>
+        <div style="font-size:19px;font-weight:800;">🤖 AI Intelligence Setup</div>
+        <div style="font-size:11px;color:var(--muted);margin-top:2px;">Powered by Groq · 100% free · no credit card</div>
+      </div>
+      <button onclick="_closeAISetup()" style="background:none;border:none;color:var(--muted);font-size:20px;cursor:pointer;line-height:1;">✕</button>
+    </div>
+    <div style="background:rgba(16,185,129,.07);border:1px solid rgba(16,185,129,.2);border-radius:8px;padding:12px;margin-bottom:16px;font-size:11px;line-height:1.65;color:var(--fg-2);">
+      <strong style="color:#10b981;">✓ Genuinely 100% free</strong> — Groq gives you <strong>14,400 tokens/min</strong> on
+      <strong>Llama 3.1 70B</strong> at no cost. No credit card. No trial. Just sign up at
+      <a href="https://console.groq.com" target="_blank" style="color:#7c3aed;font-weight:700;">console.groq.com</a>,
+      create an API key, paste below.
+    </div>
+    <div style="font-size:11px;font-weight:700;color:#a78bfa;margin-bottom:6px;">Groq API Key</div>
+    <input id="ai-key-input" type="password" placeholder="gsk_..."
+      style="width:100%;box-sizing:border-box;background:var(--bg);border:1px solid var(--border);color:var(--fg);
+      border-radius:8px;padding:10px 12px;font-size:12px;font-family:monospace;margin-bottom:12px;outline:none;"
+      onkeydown="if(event.key==='Enter')_saveGroqKey()"
+      oninput="document.getElementById('ai-key-status').innerHTML=''">
+    <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
+      <button class="ai-btn" onclick="_saveGroqKey()">💾 Save Key</button>
+      <button onclick="_clearGroqKey()" style="background:rgba(239,68,68,.15);color:#ef4444;border:1px solid rgba(239,68,68,.3);
+        border-radius:8px;padding:7px 14px;cursor:pointer;font-size:12px;font-weight:700;">🗑 Clear</button>
+      <span id="ai-key-status" style="font-size:11px;font-weight:700;"></span>
+    </div>
+    <div style="margin-top:16px;border-top:1px solid var(--border);padding-top:14px;">
+      <div style="font-size:11px;font-weight:700;color:var(--fg-2);margin-bottom:8px;">What this unlocks:</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;font-size:11px;color:var(--muted);">
+        <div style="background:var(--bg);border-radius:6px;padding:8px;">
+          🌍 <strong style="color:var(--fg-2);">Country Assessment</strong><br>3-para geopolitical brief on any nation</div>
+        <div style="background:var(--bg);border-radius:6px;padding:8px;">
+          📰 <strong style="color:var(--fg-2);">News AI Brief</strong><br>5-bullet situation summary from headlines</div>
+        <div style="background:var(--bg);border-radius:6px;padding:8px;">
+          🌱 <strong style="color:var(--fg-2);">Deforestation Risk</strong><br>AI narrative + tipping point forecast</div>
+        <div style="background:var(--bg);border-radius:6px;padding:8px;">
+          📈 <strong style="color:var(--fg-2);">Forecast Explanation</strong><br>Plain-English model signal read</div>
+      </div>
+    </div>
+    <div style="font-size:10px;color:var(--muted);margin-top:12px;text-align:center;">
+      Key stored in browser localStorage only · never in any project file · only sent to Groq</div>
+  </div>
+</div>
 </body>
 </html>
