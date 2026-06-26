@@ -9,7 +9,7 @@
 # ============================================================
 
 APP_NAME        = "World Intelligence Platform"
-APP_VERSION     = "3.16.0"
+APP_VERSION     = "3.17.0"
 APP_AUTHOR      = "Muhammad Umer Lari"
 APP_COPYRIGHT   = "Copyright © 2024-2025 Muhammad Umer Lari. All Rights Reserved."
 APP_DESCRIPTION = "Real-time global intelligence: markets, environment, AQI, climate & AI signals."

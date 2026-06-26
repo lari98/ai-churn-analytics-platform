@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>World Intelligence Platform v3.16</title>
+<title>World Intelligence Platform v3.17</title>
 <!-- Leaflet -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css"/>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
@@ -43,7 +43,29 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:'Segoe 
 .map-tt{background:rgba(15,23,42,.95)!important;border:1px solid var(--border)!important;color:#e2e8f0!important;font-size:11px!important;padding:6px 10px!important;border-radius:6px!important;}
 .map-tt::before{display:none!important;}
 .map-lbl{background:rgba(15,23,42,.85);border:1px solid;border-radius:4px;padding:2px 5px;font-size:9px;font-weight:700;white-space:nowrap;transform:translateX(-50%);margin-top:13px;pointer-events:none;}
-#map-search-wrap{position:absolute;top:12px;left:12px;z-index:1001;display:flex;gap:6px;align-items:center;}
+#map-search-wrap{position:absolute;top:12px;left:12px;z-index:1001;display:flex;gap:6px;align-items:center;flex-wrap:wrap;max-width:calc(100vw - 260px);}
+/* v3.17: live-pulse dot */
+.map-live-pulse{display:inline-block;width:8px;height:8px;border-radius:50%;background:#10b981;box-shadow:0 0 0 0 rgba(16,185,129,.6);animation:mapPulse 2s ease-out infinite;}
+@keyframes mapPulse{0%{box-shadow:0 0 0 0 rgba(16,185,129,.6);}70%{box-shadow:0 0 0 10px rgba(16,185,129,0);}100%{box-shadow:0 0 0 0 rgba(16,185,129,0);}}
+/* v3.17: trade corridors panel */
+#map-trade-panel{position:absolute;top:0;left:0;width:300px;height:100%;background:rgba(8,14,28,.97);z-index:1002;overflow-y:auto;display:none;border-right:1px solid var(--border);}
+.mtp-head{position:sticky;top:0;background:rgba(8,14,28,.97);padding:10px 14px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;z-index:2;}
+.mtp-row{padding:8px 14px;border-bottom:1px solid rgba(255,255,255,.05);cursor:pointer;display:flex;align-items:center;gap:10px;}
+.mtp-row:hover{background:rgba(255,255,255,.05);}
+.mtp-icon{font-size:18px;flex-shrink:0;}
+.mtp-info{flex:1;}
+.mtp-name{font-size:11px;font-weight:700;color:var(--fg);}
+.mtp-desc{font-size:10px;color:var(--muted);margin-top:2px;}
+.mtp-val{font-size:10px;font-weight:700;color:#34d399;white-space:nowrap;}
+/* v3.17: compare panel */
+#map-compare-panel{position:absolute;bottom:40px;left:50%;transform:translateX(-50%);z-index:1002;background:rgba(8,14,28,.96);border:1px solid var(--border);border-radius:10px;padding:14px 18px;min-width:480px;max-width:90vw;display:none;}
+.mcp-title{font-size:12px;font-weight:700;color:var(--fg);margin-bottom:10px;display:flex;justify-content:space-between;align-items:center;}
+.mcp-table{width:100%;border-collapse:collapse;font-size:10px;}
+.mcp-table th{color:var(--muted);font-weight:600;padding:4px 8px;border-bottom:1px solid var(--border);text-align:left;}
+.mcp-table td{padding:4px 8px;color:var(--fg);border-bottom:1px solid rgba(255,255,255,.04);}
+.mcp-table tr:hover td{background:rgba(255,255,255,.04);}
+/* v3.17: news countdown badge */
+#news-refresh-badge{font-size:10px;color:var(--muted);padding:2px 8px;border:1px solid var(--border);border-radius:10px;background:rgba(15,23,42,.8);}
 #map-search{background:rgba(15,23,42,.92);border:1px solid var(--border);border-radius:6px;padding:6px 10px;color:#e2e8f0;font-size:12px;width:180px;outline:none;}
 #map-search:focus{border-color:var(--accent);}
 #map-search::placeholder{color:#64748b;}
@@ -511,7 +533,7 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:'Segoe 
 <div id="topbar">
   <a href="index.html">← Dashboard</a>
   <span class="title">🌍 World Intelligence Platform</span>
-  <span class="badge">v3.16</span>
+  <span class="badge">v3.17</span>
   <div style="display:flex;align-items:center;gap:6px;margin-left:auto;margin-right:16px;">
     <div class="live-dot"></div><span style="font-size:11px;color:var(--muted);">Live</span>
   </div>
@@ -549,10 +571,12 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:'Segoe 
         <button onclick="filterMapRegion('mideast',this)" class="map-rfbtn" id="mrb-mideast" style="font-size:10px;padding:5px 9px;border-radius:5px;border:1px solid var(--border);background:transparent;color:var(--muted);cursor:pointer;">🕌 Mid East</button>
         <span style="width:1px;height:18px;background:var(--border);margin:0 2px;display:inline-block;vertical-align:middle;"></span>
         <button id="map-future-btn" onclick="toggleFuturePanel()" style="font-size:10px;padding:5px 10px;border-radius:5px;border:1px solid rgba(139,92,246,.5);background:rgba(139,92,246,.12);color:#a78bfa;cursor:pointer;font-weight:700;white-space:nowrap;">🔮 Future</button>
+        <button id="map-trade-btn" onclick="toggleTradePanel()" style="font-size:10px;padding:5px 10px;border-radius:5px;border:1px solid rgba(20,184,166,.5);background:rgba(20,184,166,.12);color:#2dd4bf;cursor:pointer;font-weight:700;white-space:nowrap;">🚢 Trade</button>
+        <button id="map-compare-btn" onclick="toggleComparePanel()" style="font-size:10px;padding:5px 10px;border-radius:5px;border:1px solid rgba(249,115,22,.5);background:rgba(249,115,22,.12);color:#fb923c;cursor:pointer;font-weight:700;white-space:nowrap;">⚖ Compare</button>
       </div>
       <div id="leaflet-map"></div>
       <div id="map-stats">
-        <h4>Global Risk Index</h4>
+        <h4 style="display:flex;align-items:center;gap:5px;">Global Risk Index <span class="map-live-pulse" title="WB data refreshes every 8h"></span></h4>
         <div class="stat-row"><span>High Risk</span><span id="st-h" style="color:var(--red);">—</span></div>
         <div class="stat-row"><span>Medium Risk</span><span id="st-m" style="color:var(--yellow);">—</span></div>
         <div class="stat-row"><span>Low Risk</span><span id="st-l" style="color:var(--green);">—</span></div>
@@ -581,6 +605,50 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:'Segoe 
         <div style="margin-top:4px;padding-top:4px;border-top:1px solid var(--border);font-size:10px;color:var(--muted);">Click country for details</div>
       </div>
       <div id="ctt"></div>
+      <!-- v3.17: Trade Corridors Panel -->
+      <div id="map-trade-panel">
+        <div class="mtp-head">
+          <span style="font-size:12px;font-weight:700;color:#2dd4bf;">🚢 Global Trade Corridors</span>
+          <button onclick="toggleTradePanel()" style="background:none;border:none;color:var(--muted);cursor:pointer;font-size:18px;line-height:1;padding:0 4px;">×</button>
+        </div>
+        <div style="padding:8px 14px;font-size:10px;color:var(--muted);border-bottom:1px solid rgba(255,255,255,.05);">Top shipping lanes & choke-points — click to fly map</div>
+        <!-- SEA ROUTES -->
+        <div style="padding:6px 14px 3px;font-size:10px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;">⚓ Major Sea Routes</div>
+        <div class="mtp-row" onclick="mfpFly(30.5,32.3,6)"><div class="mtp-icon">🌊</div><div class="mtp-info"><div class="mtp-name">Suez Canal</div><div class="mtp-desc">Egypt — 12% of global trade; 1M barrels/day oil</div></div><div class="mtp-val">~50 ships/day</div></div>
+        <div class="mtp-row" onclick="mfpFly(1.35,103.8,7)"><div class="mtp-icon">🌊</div><div class="mtp-info"><div class="mtp-name">Strait of Malacca</div><div class="mtp-desc">Singapore — 25% of global seaborne trade</div></div><div class="mtp-val">~80,000 ships/yr</div></div>
+        <div class="mtp-row" onclick="mfpFly(27,56.3,6)"><div class="mtp-icon">🌊</div><div class="mtp-info"><div class="mtp-name">Strait of Hormuz</div><div class="mtp-desc">Iran/Oman — 20% of global oil supply</div></div><div class="mtp-val">21M bbl/day</div></div>
+        <div class="mtp-row" onclick="mfpFly(12.5,43.3,6)"><div class="mtp-icon">🌊</div><div class="mtp-info"><div class="mtp-name">Bab-el-Mandeb</div><div class="mtp-desc">Yemen/Djibouti — Red Sea gateway; Houthi risk</div></div><div class="mtp-val">HIGH RISK</div></div>
+        <div class="mtp-row" onclick="mfpFly(8.9,-79.6,7)"><div class="mtp-icon">🌊</div><div class="mtp-info"><div class="mtp-name">Panama Canal</div><div class="mtp-desc">Americas — 6% of global trade; drought risk</div></div><div class="mtp-val">~14,000 ships/yr</div></div>
+        <div class="mtp-row" onclick="mfpFly(55,10,5)"><div class="mtp-icon">🌊</div><div class="mtp-info"><div class="mtp-name">Danish Straits</div><div class="mtp-desc">Baltic Sea gateway — Russian oil export route</div></div><div class="mtp-val">Monitored</div></div>
+        <!-- LAND CORRIDORS -->
+        <div style="padding:6px 14px 3px;font-size:10px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;">🛤 Land Corridors</div>
+        <div class="mtp-row" onclick="mfpFly(35,65,4)"><div class="mtp-icon">🛤</div><div class="mtp-info"><div class="mtp-name">BRI Land Corridor</div><div class="mtp-desc">China → Central Asia → Europe; 12,000km rail</div></div><div class="mtp-val">$1T invested</div></div>
+        <div class="mtp-row" onclick="mfpFly(30,70,5)"><div class="mtp-icon">🛤</div><div class="mtp-info"><div class="mtp-name">CPEC (Pakistan)</div><div class="mtp-desc">Kashgar → Gwadar; China's Arabian Sea access</div></div><div class="mtp-val">$62B</div></div>
+        <div class="mtp-row" onclick="mfpFly(9,38,5)"><div class="mtp-icon">🛤</div><div class="mtp-info"><div class="mtp-name">Addis–Djibouti Rail</div><div class="mtp-desc">Ethiopia landlocked trade corridor to Horn</div></div><div class="mtp-val">$4.5B</div></div>
+        <div class="mtp-row" onclick="mfpFly(50,90,4)"><div class="mtp-icon">🛤</div><div class="mtp-info"><div class="mtp-name">Trans-Siberian Railway</div><div class="mtp-desc">Moscow → Vladivostok 9,289km; Russia-Asia link</div></div><div class="mtp-val">Sanctioned</div></div>
+        <!-- FUTURE CORRIDORS -->
+        <div style="padding:6px 14px 3px;font-size:10px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;">🔮 Future / Emerging</div>
+        <div class="mtp-row" onclick="mfpFly(75,90,3)"><div class="mtp-icon">🧊</div><div class="mtp-info"><div class="mtp-name">Arctic Sea Route</div><div class="mtp-desc">Russia → Europe; 40% shorter than Suez by 2035</div></div><div class="mtp-val">Opening 2030s</div></div>
+        <div class="mtp-row" onclick="mfpFly(25,50,5)"><div class="mtp-icon">🛤</div><div class="mtp-info"><div class="mtp-name">IMEC Corridor</div><div class="mtp-desc">India–Middle East–Europe; G20 2023 alternative to BRI</div></div><div class="mtp-val">Planned</div></div>
+        <div class="mtp-row" onclick="mfpFly(3,25,4)"><div class="mtp-icon">🛤</div><div class="mtp-info"><div class="mtp-name">Lobito Corridor (Africa)</div><div class="mtp-desc">Angola → DRC → Zambia; US-backed critical minerals</div></div><div class="mtp-val">$2.5B</div></div>
+        <div style="padding:10px 14px;font-size:9px;color:var(--muted);border-top:1px solid rgba(255,255,255,.05);">Sources: IMO · WTO · US EIA · World Bank · CSIS · G20 Declaration 2023</div>
+      </div>
+      <!-- v3.17: Country Compare Panel -->
+      <div id="map-compare-panel">
+        <div class="mcp-title">
+          <span>⚖ Country Comparison</span>
+          <div style="display:flex;gap:8px;align-items:center;">
+            <select id="mcp-sel-a" onchange="_updateCompare()" style="font-size:10px;background:var(--surface);border:1px solid var(--border);color:var(--fg);border-radius:4px;padding:2px 5px;"></select>
+            <span style="color:var(--muted);">vs</span>
+            <select id="mcp-sel-b" onchange="_updateCompare()" style="font-size:10px;background:var(--surface);border:1px solid var(--border);color:var(--fg);border-radius:4px;padding:2px 5px;"></select>
+            <button onclick="toggleComparePanel()" style="background:none;border:none;color:var(--muted);cursor:pointer;font-size:16px;line-height:1;padding:0 4px;">×</button>
+          </div>
+        </div>
+        <table class="mcp-table" id="mcp-table-body">
+          <thead><tr><th>Indicator</th><th id="mcp-hd-a">—</th><th id="mcp-hd-b">—</th></tr></thead>
+          <tbody id="mcp-tbody"><tr><td colspan="3" style="color:var(--muted);padding:12px;text-align:center;">Select two countries to compare</td></tr></tbody>
+        </table>
+      </div>
       <!-- v3.15: Future Geopolitics Panel -->
       <div id="map-future-panel">
         <div class="mfp-head">
@@ -678,6 +746,16 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:'Segoe 
       <div class="ntab-btn" onclick="showNewsTab('africa',this)">🌍 Africa</div>
       <div class="ntab-btn" onclick="showNewsTab('oceania',this)">🦘 Oceania</div>
       <div class="ntab-btn" onclick="showNewsTab('tech',this)">💻 Tech</div>
+      <div class="ntab-btn" onclick="showNewsTab('sports',this)">⚽ Sports</div>
+      <div class="ntab-btn" onclick="showNewsTab('ai',this)">🤖 AI</div>
+      <div class="ntab-btn" onclick="showNewsTab('energy',this)">⚡ Future Energy</div>
+      <div class="ntab-btn" onclick="showNewsTab('education',this)">🎓 Education</div>
+      <div class="ntab-btn" onclick="showNewsTab('metals',this)">🪙 Metals</div>
+    <div style="display:flex;align-items:center;gap:8px;margin-top:6px;margin-bottom:2px;">
+      <span class="map-live-pulse" title="News auto-refreshes every 90 seconds"></span>
+      <span style="font-size:10px;color:var(--muted);">Live feeds — auto-refreshes every 90s</span>
+      <span id="news-refresh-badge">⏱ 90s</span>
+    </div>
     </div>
     <div id="news-world"   class="news-region active"><div class="spinner-wrap"><div class="spinner"></div>Loading news…</div></div>
     <div id="news-europe"  class="news-region"><div class="spinner-wrap"><div class="spinner"></div>Loading…</div></div>
@@ -686,6 +764,11 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:'Segoe 
     <div id="news-africa"  class="news-region"><div class="spinner-wrap"><div class="spinner"></div>Loading…</div></div>
     <div id="news-oceania" class="news-region"><div class="spinner-wrap"><div class="spinner"></div>Loading…</div></div>
     <div id="news-tech"    class="news-region"><div class="spinner-wrap"><div class="spinner"></div>Loading…</div></div>
+    <div id="news-sports"   class="news-region"><div class="spinner-wrap"><div class="spinner"></div>Loading…</div></div>
+    <div id="news-ai"       class="news-region"><div class="spinner-wrap"><div class="spinner"></div>Loading…</div></div>
+    <div id="news-energy"   class="news-region"><div class="spinner-wrap"><div class="spinner"></div>Loading…</div></div>
+    <div id="news-education"class="news-region"><div class="spinner-wrap"><div class="spinner"></div>Loading…</div></div>
+    <div id="news-metals"   class="news-region"><div class="spinner-wrap"><div class="spinner"></div>Loading…</div></div>
   </div>
 
   <!-- FORECAST -->
@@ -2498,6 +2581,42 @@ const NFEEDS={
     {u:'https://techcrunch.com/feed/',s:'TechCrunch'},
     {u:'https://feeds.arstechnica.com/arstechnica/index',s:'Ars Technica'},
     {u:'https://www.wired.com/feed/rss',s:'Wired'}
+  ],
+  // v3.17: 5 new tabs
+  sports:[
+    {u:'https://news.google.com/rss/search?q=sports+football+cricket+tennis&hl=en-US&gl=US&ceid=US:en',s:'Google News Sports'},
+    {u:'https://feeds.bbci.co.uk/sport/rss.xml',s:'BBC Sport'},
+    {u:'https://rss.dw.com/rdf/rss-en-sports',s:'DW Sports'},
+    {u:'https://www.skysports.com/rss/12040',s:'Sky Sports'},
+    {u:'https://www.espn.com/espn/rss/news',s:'ESPN'}
+  ],
+  ai:[
+    {u:'https://news.google.com/rss/search?q=artificial+intelligence+machine+learning&hl=en-US&gl=US&ceid=US:en',s:'Google News AI'},
+    {u:'https://techcrunch.com/category/artificial-intelligence/feed/',s:'TechCrunch AI'},
+    {u:'https://www.wired.com/feed/tag/artificial-intelligence/rss',s:'Wired AI'},
+    {u:'https://venturebeat.com/category/ai/feed/',s:'VentureBeat AI'},
+    {u:'https://feeds.arstechnica.com/arstechnica/technology-lab',s:'Ars Technica AI'}
+  ],
+  energy:[
+    {u:'https://news.google.com/rss/search?q=renewable+energy+solar+wind+hydrogen&hl=en-US&gl=US&ceid=US:en',s:'Google News Energy'},
+    {u:'https://feeds.reuters.com/reuters/businessNews',s:'Reuters Business'},
+    {u:'https://cleantechnica.com/feed/',s:'CleanTechnica'},
+    {u:'https://electrek.co/feed/',s:'Electrek'},
+    {u:'https://www.pv-magazine.com/feed/',s:'PV Magazine'}
+  ],
+  education:[
+    {u:'https://news.google.com/rss/search?q=future+education+edtech+learning&hl=en-US&gl=US&ceid=US:en',s:'Google News Education'},
+    {u:'https://feeds.bbci.co.uk/news/education/rss.xml',s:'BBC Education'},
+    {u:'https://www.edutopia.org/feeds/all',s:'Edutopia'},
+    {u:'https://edsurge.com/news.rss',s:'EdSurge'},
+    {u:'https://campustechnology.com/rss-feeds/ct-news.aspx',s:'Campus Technology'}
+  ],
+  metals:[
+    {u:'https://news.google.com/rss/search?q=gold+silver+copper+lithium+commodities&hl=en-US&gl=US&ceid=US:en',s:'Google News Metals'},
+    {u:'https://feeds.reuters.com/reuters/companyNews',s:'Reuters Commodities'},
+    {u:'https://www.kitco.com/rss/kitconews.rss',s:'Kitco'},
+    {u:'https://www.mining.com/feed/',s:'Mining.com'},
+    {u:'https://news.google.com/rss/search?q=iron+ore+cobalt+rare+earth+metals&hl=en-US&gl=US&ceid=US:en',s:'Google News Rare Earth'}
   ]
 };
 
@@ -2543,6 +2662,31 @@ const NEWS_FALLBACK={
     {title:'AI Adoption Accelerates Across Enterprise Sector Globally',link:'https://news.google.com/search?q=AI+enterprise+adoption',src:'World Intelligence',pubDate:''},
     {title:'Semiconductor Supply Chain Diversification Gains Momentum',link:'https://news.google.com/search?q=semiconductor+supply+chain',src:'World Intelligence',pubDate:''},
     {title:'Open Source AI Models Challenge Proprietary Giants',link:'https://news.google.com/search?q=open+source+AI+models',src:'World Intelligence',pubDate:''}
+  ],
+  sports:[
+    {title:'World Cup 2026 Qualifying Enters Final Rounds Across Continents',link:'https://news.google.com/search?q=World+Cup+2026+qualifying',src:'World Intelligence',pubDate:''},
+    {title:'Olympic Committee Unveils New Sports for 2028 Los Angeles Games',link:'https://news.google.com/search?q=Olympics+2028+Los+Angeles',src:'World Intelligence',pubDate:''},
+    {title:'Cricket T20 World Championship Breaks Viewership Records',link:'https://news.google.com/search?q=T20+World+Championship',src:'World Intelligence',pubDate:''}
+  ],
+  ai:[
+    {title:'Large Language Models Reach New Benchmark Performance Milestones',link:'https://news.google.com/search?q=LLM+benchmark+2025',src:'World Intelligence',pubDate:''},
+    {title:'AI Governance Frameworks Emerge Across G7 Nations',link:'https://news.google.com/search?q=AI+governance+G7',src:'World Intelligence',pubDate:''},
+    {title:'Multimodal AI Systems Transform Healthcare Diagnostics Globally',link:'https://news.google.com/search?q=AI+healthcare+diagnostics',src:'World Intelligence',pubDate:''}
+  ],
+  energy:[
+    {title:'Solar Energy Capacity Doubles as Costs Fall to Record Lows',link:'https://news.google.com/search?q=solar+energy+capacity+record',src:'World Intelligence',pubDate:''},
+    {title:'Green Hydrogen Projects Scale Up Across Middle East and Europe',link:'https://news.google.com/search?q=green+hydrogen+projects',src:'World Intelligence',pubDate:''},
+    {title:'Battery Storage Technology Breakthroughs Accelerate Grid Transition',link:'https://news.google.com/search?q=battery+storage+grid+2025',src:'World Intelligence',pubDate:''}
+  ],
+  education:[
+    {title:'AI Tutoring Systems Deployed in 50 Nations, Closing Learning Gaps',link:'https://news.google.com/search?q=AI+tutoring+education+global',src:'World Intelligence',pubDate:''},
+    {title:'Online Learning Platforms Surpass 1 Billion Enrolled Learners',link:'https://news.google.com/search?q=online+learning+1+billion',src:'World Intelligence',pubDate:''},
+    {title:'UNESCO Calls for Universal Digital Literacy by 2030',link:'https://news.google.com/search?q=UNESCO+digital+literacy+2030',src:'World Intelligence',pubDate:''}
+  ],
+  metals:[
+    {title:'Gold Prices Reach Record Highs on Central Bank Demand',link:'https://news.google.com/search?q=gold+price+record+2025',src:'World Intelligence',pubDate:''},
+    {title:'Lithium Supply Crunch Eases as New Mines Come Online in Chile',link:'https://news.google.com/search?q=lithium+supply+Chile+mines',src:'World Intelligence',pubDate:''},
+    {title:'Copper Demand Surges as EV and Renewable Energy Build-out Accelerates',link:'https://news.google.com/search?q=copper+demand+EV+renewable',src:'World Intelligence',pubDate:''}
   ]
 };
 
@@ -2681,6 +2825,118 @@ function updateTicker(arts){
     setTimeout(()=>loadNewsTab('world'),1500);
   }
 })();
+
+// v3.17: News auto-refresh every 90 seconds + countdown badge
+(function _startNewsAutoRefresh(){
+  let _countdown=90;
+  const badge=document.getElementById('news-refresh-badge');
+  setInterval(()=>{
+    _countdown--;
+    if(badge) badge.textContent='⏱ '+_countdown+'s';
+    if(_countdown<=0){
+      _countdown=90;
+      // Refresh the currently visible news tab
+      const active=document.querySelector('.news-region.active');
+      if(active){
+        const region=active.id.replace('news-','');
+        delete newsCache[region];
+        loadNewsTab(region);
+      }
+      if(badge) badge.textContent='↺ Refreshing…';
+      setTimeout(()=>{if(badge)badge.textContent='⏱ 90s';},1500);
+    }
+  },1000);
+})();
+
+// v3.17: Trade Corridors Panel toggle
+function toggleTradePanel(){
+  const p=document.getElementById('map-trade-panel');
+  const btn=document.getElementById('map-trade-btn');
+  if(!p)return;
+  const open=p.style.display==='block';
+  p.style.display=open?'none':'block';
+  if(btn){
+    btn.style.background=open?'rgba(20,184,166,.12)':'rgba(20,184,166,.35)';
+    btn.style.color=open?'#2dd4bf':'#fff';
+  }
+  if(!open&&typeof leafMap!=='undefined'&&leafMap) setTimeout(()=>leafMap.invalidateSize(),200);
+}
+
+// v3.17: Country Compare Panel toggle + data
+const _CTRY_COMPARE_LIST=[
+  {iso:'US',name:'United States',gdp:26.9,pop:334,risk:'Low',inf:3.1,fdi:4.2,region:'Americas'},
+  {iso:'CN',name:'China',gdp:17.7,pop:1412,risk:'Medium',inf:0.2,fdi:1.1,region:'Asia'},
+  {iso:'IN',name:'India',gdp:3.7,pop:1425,risk:'Medium',inf:5.6,fdi:1.5,region:'Asia'},
+  {iso:'DE',name:'Germany',gdp:4.1,pop:84,risk:'Low',inf:5.9,fdi:0.8,region:'Europe'},
+  {iso:'JP',name:'Japan',gdp:4.2,pop:124,risk:'Low',inf:2.8,fdi:0.2,region:'Asia'},
+  {iso:'GB',name:'United Kingdom',gdp:3.1,pop:67,risk:'Low',inf:6.7,fdi:1.9,region:'Europe'},
+  {iso:'FR',name:'France',gdp:2.9,pop:68,risk:'Low',inf:4.9,fdi:2.3,region:'Europe'},
+  {iso:'BR',name:'Brazil',gdp:2.1,pop:215,risk:'High',inf:4.6,fdi:3.8,region:'Americas'},
+  {iso:'RU',name:'Russia',gdp:1.8,pop:144,risk:'High',inf:7.4,fdi:-0.5,region:'Europe'},
+  {iso:'KR',name:'South Korea',gdp:1.7,pop:52,risk:'Low',inf:3.6,fdi:0.9,region:'Asia'},
+  {iso:'AU',name:'Australia',gdp:1.7,pop:26,risk:'Low',inf:4.1,fdi:4.6,region:'Oceania'},
+  {iso:'CA',name:'Canada',gdp:2.1,pop:38,risk:'Low',inf:3.4,fdi:2.7,region:'Americas'},
+  {iso:'ES',name:'Spain',gdp:1.6,pop:47,risk:'Low',inf:3.4,fdi:2.5,region:'Europe'},
+  {iso:'MX',name:'Mexico',gdp:1.3,pop:127,risk:'High',inf:5.1,fdi:3.2,region:'Americas'},
+  {iso:'ID',name:'Indonesia',gdp:1.3,pop:277,risk:'Medium',inf:3.9,fdi:1.8,region:'Asia'},
+  {iso:'TR',name:'Turkey',gdp:1.1,pop:85,risk:'High',inf:64.9,fdi:1.1,region:'Europe'},
+  {iso:'SA',name:'Saudi Arabia',gdp:1.1,pop:36,risk:'Medium',inf:2.3,fdi:3.0,region:'MidEast'},
+  {iso:'PK',name:'Pakistan',gdp:0.34,pop:220,risk:'High',inf:28.0,fdi:0.5,region:'Asia'},
+  {iso:'NG',name:'Nigeria',gdp:0.47,pop:218,risk:'High',inf:22.7,fdi:0.9,region:'Africa'},
+  {iso:'ZA',name:'South Africa',gdp:0.37,pop:60,risk:'High',inf:5.9,fdi:1.7,region:'Africa'},
+  {iso:'EG',name:'Egypt',gdp:0.38,pop:104,risk:'High',inf:26.5,fdi:2.5,region:'Africa'},
+  {iso:'AE',name:'UAE',gdp:0.5,pop:10,risk:'Low',inf:4.8,fdi:5.2,region:'MidEast'},
+  {iso:'SG',name:'Singapore',gdp:0.5,pop:6,risk:'Low',inf:4.7,fdi:22.5,region:'Asia'},
+  {iso:'PL',name:'Poland',gdp:0.69,pop:38,risk:'Low',inf:10.9,fdi:3.2,region:'Europe'},
+  {iso:'VN',name:'Vietnam',gdp:0.43,pop:98,risk:'Low',inf:3.5,fdi:4.6,region:'Asia'},
+  {iso:'AR',name:'Argentina',gdp:0.64,pop:46,risk:'High',inf:133.5,fdi:1.7,region:'Americas'},
+  {iso:'BD',name:'Bangladesh',gdp:0.46,pop:170,risk:'Medium',inf:9.5,fdi:1.0,region:'Asia'},
+  {iso:'TH',name:'Thailand',gdp:0.51,pop:72,risk:'Low',inf:1.2,fdi:1.8,region:'Asia'},
+  {iso:'MY',name:'Malaysia',gdp:0.40,pop:33,risk:'Low',inf:2.5,fdi:3.4,region:'Asia'},
+  {iso:'ET',name:'Ethiopia',gdp:0.16,pop:120,risk:'High',inf:26.1,fdi:1.3,region:'Africa'}
+];
+
+function toggleComparePanel(){
+  const p=document.getElementById('map-compare-panel');
+  const btn=document.getElementById('map-compare-btn');
+  if(!p)return;
+  const open=p.style.display==='block';
+  if(!open && !window._comparePanelInited){
+    window._comparePanelInited=true;
+    const selA=document.getElementById('mcp-sel-a');
+    const selB=document.getElementById('mcp-sel-b');
+    _CTRY_COMPARE_LIST.forEach(c=>{
+      const oa=document.createElement('option'); oa.value=c.iso; oa.textContent=c.name; selA.appendChild(oa);
+      const ob=document.createElement('option'); ob.value=c.iso; ob.textContent=c.name; selB.appendChild(ob);
+    });
+    selA.value='US'; selB.value='CN';
+    _updateCompare();
+  }
+  p.style.display=open?'none':'block';
+  if(btn){
+    btn.style.background=open?'rgba(249,115,22,.12)':'rgba(249,115,22,.35)';
+    btn.style.color=open?'#fb923c':'#fff';
+  }
+}
+
+function _updateCompare(){
+  const a=_CTRY_COMPARE_LIST.find(c=>c.iso===document.getElementById('mcp-sel-a')?.value);
+  const b=_CTRY_COMPARE_LIST.find(c=>c.iso===document.getElementById('mcp-sel-b')?.value);
+  if(!a||!b)return;
+  document.getElementById('mcp-hd-a').textContent=a.name;
+  document.getElementById('mcp-hd-b').textContent=b.name;
+  const riskCol=r=>r==='Low'?'#10b981':r==='Medium'?'#f59e0b':'#ef4444';
+  const rows=[
+    ['GDP (USD tn)',`$${a.gdp}T`,`$${b.gdp}T`],
+    ['Population (M)',a.pop+'M',b.pop+'M'],
+    ['Risk Level',`<span style="color:${riskCol(a.risk)}">${a.risk}</span>`,`<span style="color:${riskCol(b.risk)}">${b.risk}</span>`],
+    ['Inflation %',a.inf+'%',b.inf+'%'],
+    ['FDI % GDP',a.fdi+'%',b.fdi+'%'],
+    ['Region',a.region,b.region]
+  ];
+  const tb=document.getElementById('mcp-tbody');
+  if(tb) tb.innerHTML=rows.map(r=>`<tr><td style="color:var(--muted);">${r[0]}</td><td>${r[1]}</td><td>${r[2]}</td></tr>`).join('');
+}
 
 
 function _calcVolBands(hist,fc){
@@ -3030,6 +3286,7 @@ function _applyRpLiveData(isos){
 
 // v3.14: Sub-tab switcher for Rising Powers (Cards / Next China / Future Migration)
 function showRpSubTab(tab,btn){
+  window._lastRpSubTab=tab; // v3.17: persist last active sub-tab
   ['cards','nextchina','migration','passport','language','newnations'].forEach(t=>{
     const panel=document.getElementById('rp-panel-'+t);
     if(panel) panel.style.display=(t===tab)?'block':'none';
@@ -3694,6 +3951,13 @@ ${[
 
   requestAnimationFrame(()=>drawRpGdpChart());
   renderRpCards(rpCountries);
+  // v3.17: restore last-active sub-tab after re-init (fixes reset-to-cards on page revisit)
+  if(window._lastRpSubTab && window._lastRpSubTab!=='cards'){
+    requestAnimationFrame(()=>{
+      const btn=document.getElementById('rp-st-'+window._lastRpSubTab);
+      showRpSubTab(window._lastRpSubTab, btn);
+    });
+  }
   setTimeout(()=>_fetchRpLiveData(rpCountries),800);
 
   // v3.13: Auto-refresh every 8 minutes
