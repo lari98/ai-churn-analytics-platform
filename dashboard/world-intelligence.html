@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>World Intelligence Platform v3.14</title>
+<title>World Intelligence Platform v3.15</title>
 <!-- Leaflet -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css"/>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
@@ -58,6 +58,17 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:'Segoe 
 .tt-kpi .lbl{font-size:10px;color:var(--muted);margin-top:2px;}
 .risk-bar{height:6px;border-radius:3px;background:var(--border);margin-top:4px;}
 .risk-fill{height:100%;border-radius:3px;}
+/* v3.15: Future Geopolitics Panel */
+#map-future-panel{position:absolute;top:0;right:0;z-index:1002;width:340px;height:100%;background:rgba(8,14,28,.97);border-left:1px solid var(--border);overflow-y:auto;display:none;}
+.mfp-head{display:flex;justify-content:space-between;align-items:center;padding:12px 14px 10px;border-bottom:1px solid var(--border);position:sticky;top:0;background:rgba(8,14,28,.97);z-index:1;}
+.mfp-sec{padding:10px 13px;border-bottom:1px solid rgba(255,255,255,.05);}
+.mfp-sec h4{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);margin-bottom:8px;}
+.mfp-row{display:flex;justify-content:space-between;align-items:flex-start;padding:5px 4px;border-radius:4px;font-size:11px;cursor:pointer;transition:background .12s;}
+.mfp-row:hover{background:rgba(255,255,255,.05);}
+.mfp-lbl{font-weight:600;flex:1;line-height:1.3;}
+.mfp-sub{font-size:10px;color:var(--muted);margin-top:1px;}
+.mfp-val{color:var(--muted);font-size:10px;text-align:right;max-width:120px;line-height:1.3;}
+.mfp-chip{display:inline-block;padding:2px 6px;border-radius:3px;font-size:9px;font-weight:700;margin:2px 2px 0 0;vertical-align:middle;}
 /* MARKETS */
 #page-markets{padding:16px;}
 .mktabs{display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap;}
@@ -500,7 +511,7 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:'Segoe 
 <div id="topbar">
   <a href="index.html">← Dashboard</a>
   <span class="title">🌍 World Intelligence Platform</span>
-  <span class="badge">v3.14</span>
+  <span class="badge">v3.15</span>
   <div style="display:flex;align-items:center;gap:6px;margin-left:auto;margin-right:16px;">
     <div class="live-dot"></div><span style="font-size:11px;color:var(--muted);">Live</span>
   </div>
@@ -536,6 +547,8 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:'Segoe 
         <button onclick="filterMapRegion('americas',this)" class="map-rfbtn" id="mrb-americas" style="font-size:10px;padding:5px 9px;border-radius:5px;border:1px solid var(--border);background:transparent;color:var(--muted);cursor:pointer;">🌎 Americas</button>
         <button onclick="filterMapRegion('africa',this)" class="map-rfbtn" id="mrb-africa" style="font-size:10px;padding:5px 9px;border-radius:5px;border:1px solid var(--border);background:transparent;color:var(--muted);cursor:pointer;">🌍 Africa</button>
         <button onclick="filterMapRegion('mideast',this)" class="map-rfbtn" id="mrb-mideast" style="font-size:10px;padding:5px 9px;border-radius:5px;border:1px solid var(--border);background:transparent;color:var(--muted);cursor:pointer;">🕌 Mid East</button>
+        <span style="width:1px;height:18px;background:var(--border);margin:0 2px;display:inline-block;vertical-align:middle;"></span>
+        <button id="map-future-btn" onclick="toggleFuturePanel()" style="font-size:10px;padding:5px 10px;border-radius:5px;border:1px solid rgba(139,92,246,.5);background:rgba(139,92,246,.12);color:#a78bfa;cursor:pointer;font-weight:700;white-space:nowrap;">🔮 Future</button>
       </div>
       <div id="leaflet-map"></div>
       <div id="map-stats">
@@ -556,6 +569,74 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:'Segoe 
         <div style="margin-top:4px;padding-top:4px;border-top:1px solid var(--border);font-size:10px;color:var(--muted);">Click country for details</div>
       </div>
       <div id="ctt"></div>
+      <!-- v3.15: Future Geopolitics Panel -->
+      <div id="map-future-panel">
+        <div class="mfp-head">
+          <span style="font-size:12px;font-weight:700;color:#a78bfa;">🔮 Future Geopolitics 2035–2050</span>
+          <button onclick="toggleFuturePanel()" style="background:none;border:none;color:var(--muted);cursor:pointer;font-size:18px;line-height:1;padding:0 4px;">×</button>
+        </div>
+        <!-- SECTION 1: Independence Movements -->
+        <div class="mfp-sec">
+          <h4>🏴 Active Independence Movements</h4>
+          <div class="mfp-row" onclick="mfpFly(56.5,-4.2,5)"><div><div class="mfp-lbl">🏴󠁧󠁢󠁳󠁣󠁴󠁿 Scotland (UK)</div><div class="mfp-sub">50–55% independence support; SNP-led push</div></div><div class="mfp-val"><span class="mfp-chip" style="background:rgba(234,179,8,.15);color:#eab308;">HIGH</span></div></div>
+          <div class="mfp-row" onclick="mfpFly(41.8,1.7,6)"><div><div class="mfp-lbl">🇪🇸 Catalonia (Spain)</div><div class="mfp-sub">2017 ref blocked; 48% pro-independence</div></div><div class="mfp-val"><span class="mfp-chip" style="background:rgba(234,179,8,.15);color:#eab308;">MED</span></div></div>
+          <div class="mfp-row" onclick="mfpFly(37,43,5)"><div><div class="mfp-lbl">🌍 Kurdistan</div><div class="mfp-sub">Iraq/Syria/Turkey/Iran — 30M stateless Kurds</div></div><div class="mfp-val"><span class="mfp-chip" style="background:rgba(239,68,68,.15);color:#ef4444;">TENSE</span></div></div>
+          <div class="mfp-row" onclick="mfpFly(23.7,121,6)"><div><div class="mfp-lbl">🇹🇼 Taiwan</div><div class="mfp-sub">De facto independent; China claims by 2049</div></div><div class="mfp-val"><span class="mfp-chip" style="background:rgba(239,68,68,.15);color:#ef4444;">CRITICAL</span></div></div>
+          <div class="mfp-row" onclick="mfpFly(24.5,-13,5)"><div><div class="mfp-lbl">🇪🇭 Western Sahara</div><div class="mfp-sub">Morocco vs Polisario Front; UN unresolved</div></div><div class="mfp-val"><span class="mfp-chip" style="background:rgba(234,179,8,.15);color:#eab308;">FROZEN</span></div></div>
+          <div class="mfp-row" onclick="mfpFly(-21.5,165.6,6)"><div><div class="mfp-lbl">🇫🇷 New Caledonia</div><div class="mfp-sub">3 referendums done; independence path open</div></div><div class="mfp-val"><span class="mfp-chip" style="background:rgba(16,185,129,.15);color:#10b981;">LIKELY</span></div></div>
+          <div class="mfp-row" onclick="mfpFly(9.5,44,5)"><div><div class="mfp-lbl">🇸🇴 Somaliland</div><div class="mfp-sub">De facto state since 1991; seeks UN recognition</div></div><div class="mfp-val"><span class="mfp-chip" style="background:rgba(96,165,250,.15);color:#60a5fa;">PENDING</span></div></div>
+          <div class="mfp-row" onclick="mfpFly(14,1,4)"><div><div class="mfp-lbl">🌍 Azawad (Mali North)</div><div class="mfp-sub">Tuareg MNLA; Sahel instability driver</div></div><div class="mfp-val"><span class="mfp-chip" style="background:rgba(239,68,68,.15);color:#ef4444;">ACTIVE</span></div></div>
+          <div class="mfp-row" onclick="mfpFly(45.5,-73.6,5)"><div><div class="mfp-lbl">🇨🇦 Quebec (Canada)</div><div class="mfp-sub">2 past referendums; Bloc Quebecois active</div></div><div class="mfp-val"><span class="mfp-chip" style="background:rgba(234,179,8,.15);color:#eab308;">LOW</span></div></div>
+          <div class="mfp-row" onclick="mfpFly(30.9,34.8,5)"><div><div class="mfp-lbl">🇵🇸 Palestine</div><div class="mfp-sub">Two-state solution contested; 140+ nations recognise</div></div><div class="mfp-val"><span class="mfp-chip" style="background:rgba(239,68,68,.15);color:#ef4444;">ACTIVE</span></div></div>
+        </div>
+        <!-- SECTION 2: Climate Vulnerability -->
+        <div class="mfp-sec">
+          <h4>🌊 Climate Vulnerability — Existential Zones</h4>
+          <div class="mfp-row" onclick="mfpFly(3.2,73,6)"><div><div class="mfp-lbl">🇲🇻 Maldives</div><div class="mfp-sub">80% land &lt;1m above sea level; 2050 uninhabitable risk</div></div><div class="mfp-val"><span class="mfp-chip" style="background:rgba(239,68,68,.15);color:#ef4444;">CRITICAL</span></div></div>
+          <div class="mfp-row" onclick="mfpFly(-8.5,179,6)"><div><div class="mfp-lbl">🇹🇻 Tuvalu</div><div class="mfp-sub">First nation building digital state pre-drowning</div></div><div class="mfp-val"><span class="mfp-chip" style="background:rgba(239,68,68,.15);color:#ef4444;">CRITICAL</span></div></div>
+          <div class="mfp-row" onclick="mfpFly(7.1,171.4,6)"><div><div class="mfp-lbl">🇲🇭 Marshall Islands</div><div class="mfp-sub">King tides flood capital; 2040 uninhabitable risk</div></div><div class="mfp-val"><span class="mfp-chip" style="background:rgba(239,68,68,.15);color:#ef4444;">HIGH</span></div></div>
+          <div class="mfp-row" onclick="mfpFly(23.7,90.4,5)"><div><div class="mfp-lbl">🇧🇩 Bangladesh</div><div class="mfp-sub">17% land at flood risk; 20M climate migrants by 2050</div></div><div class="mfp-val"><span class="mfp-chip" style="background:rgba(234,179,8,.15);color:#eab308;">SEVERE</span></div></div>
+          <div class="mfp-row" onclick="mfpFly(-6.2,106.8,6)"><div><div class="mfp-lbl">🇮🇩 Jakarta, Indonesia</div><div class="mfp-sub">Sinking 25cm/yr; capital moved to Nusantara</div></div><div class="mfp-val"><span class="mfp-chip" style="background:rgba(234,179,8,.15);color:#eab308;">SINKING</span></div></div>
+          <div class="mfp-row" onclick="mfpFly(14,10,4)"><div><div class="mfp-lbl">🌍 Sahel Belt</div><div class="mfp-sub">Chad/Mali/Niger/Sudan — desertification + famine</div></div><div class="mfp-val"><span class="mfp-chip" style="background:rgba(239,68,68,.15);color:#ef4444;">EXTREME</span></div></div>
+          <div class="mfp-row" onclick="mfpFly(31.2,29.9,6)"><div><div class="mfp-lbl">🇪🇬 Nile Delta</div><div class="mfp-sub">Salt intrusion; Alexandria coastline retreating</div></div><div class="mfp-val"><span class="mfp-chip" style="background:rgba(234,179,8,.15);color:#eab308;">HIGH</span></div></div>
+          <div class="mfp-row" onclick="mfpFly(74,10,3)"><div><div class="mfp-lbl">🧊 Arctic Opening</div><div class="mfp-sub">New shipping routes; Russia/Canada/Norway claims</div></div><div class="mfp-val"><span class="mfp-chip" style="background:rgba(96,165,250,.15);color:#60a5fa;">OPENING</span></div></div>
+        </div>
+        <!-- SECTION 3: Belt & Road Influence -->
+        <div class="mfp-sec">
+          <h4>🛣 Belt &amp; Road Initiative (BRI) — Key Partners</h4>
+          <div class="mfp-row" onclick="mfpFly(30,70,4)"><div><div class="mfp-lbl">🇵🇰 Pakistan (CPEC)</div><div class="mfp-sub">$62B China-Pakistan Economic Corridor</div></div><div class="mfp-val">$62B</div></div>
+          <div class="mfp-row" onclick="mfpFly(9,40,4)"><div><div class="mfp-lbl">🇪🇹 Ethiopia</div><div class="mfp-sub">Addis rail, industrial parks; $13B invested</div></div><div class="mfp-val">$13B</div></div>
+          <div class="mfp-row" onclick="mfpFly(-1.3,37,5)"><div><div class="mfp-lbl">🇰🇪 Kenya</div><div class="mfp-sub">SGR Nairobi-Mombasa railway; $9.8B debt</div></div><div class="mfp-val">$9.8B</div></div>
+          <div class="mfp-row" onclick="mfpFly(7.9,80.7,5)"><div><div class="mfp-lbl">🇱🇰 Sri Lanka</div><div class="mfp-sub">Hambantota port 99yr lease; debt-trap warning</div></div><div class="mfp-val">$8B</div></div>
+          <div class="mfp-row" onclick="mfpFly(18,102,5)"><div><div class="mfp-lbl">🇱🇦 Laos</div><div class="mfp-sub">Vientiane-Kunming railway; GDP debt ratio 65%</div></div><div class="mfp-val">$6B</div></div>
+          <div class="mfp-row" onclick="mfpFly(4,114,5)"><div><div class="mfp-lbl">🇲🇾 Malaysia</div><div class="mfp-sub">East Coast Rail Link; ASEAN BRI hub</div></div><div class="mfp-val">$5.5B</div></div>
+          <div class="mfp-row" onclick="mfpFly(26,30,4)"><div><div class="mfp-lbl">🇪🇬 Egypt</div><div class="mfp-sub">New Admin Capital; Suez Canal zone</div></div><div class="mfp-val">$5B</div></div>
+          <div class="mfp-row" onclick="mfpFly(3,25,3)"><div><div class="mfp-lbl">🌍 DRC / Central Africa</div><div class="mfp-sub">Cobalt &amp; lithium mining access deals</div></div><div class="mfp-val">$4B+</div></div>
+        </div>
+        <!-- SECTION 4: Emerging Economic Blocs -->
+        <div class="mfp-sec">
+          <h4>📈 Emerging Economic Blocs</h4>
+          <div class="mfp-row" onclick="mfpFly(5,20,3)"><div><div class="mfp-lbl">🌍 AfCFTA</div><div class="mfp-sub">54 African nations · $3.4T market · 1.3B people</div></div><div class="mfp-val"><span class="mfp-chip" style="background:rgba(16,185,129,.15);color:#10b981;">ACTIVE</span></div></div>
+          <div class="mfp-row" onclick="mfpFly(5,115,4)"><div><div class="mfp-lbl">🌏 ASEAN Economic Community</div><div class="mfp-sub">680M people · $3.6T GDP · 5th largest economy</div></div><div class="mfp-val"><span class="mfp-chip" style="background:rgba(16,185,129,.15);color:#10b981;">GROWING</span></div></div>
+          <div class="mfp-row" onclick="mfpFly(0,-30,2)"><div><div class="mfp-lbl">🌐 CPTPP</div><div class="mfp-sub">Trans-Pacific (11 nations); UK joined 2024</div></div><div class="mfp-val"><span class="mfp-chip" style="background:rgba(96,165,250,.15);color:#60a5fa;">EXPANDING</span></div></div>
+          <div class="mfp-row" onclick="mfpFly(24,45,4)"><div><div class="mfp-lbl">🏙 Gulf Vision 2030s</div><div class="mfp-sub">Saudi Vision 2030 · UAE Net Zero · Qatar NDS</div></div><div class="mfp-val"><span class="mfp-chip" style="background:rgba(234,179,8,.15);color:#eab308;">DIVERSIFYING</span></div></div>
+          <div class="mfp-row" onclick="mfpFly(20,40,3)"><div><div class="mfp-lbl">🧱 BRICS+ (9 Members)</div><div class="mfp-sub">Russia/China/India/SA/Brazil + Egypt/UAE/Iran/Ethiopia</div></div><div class="mfp-val"><span class="mfp-chip" style="background:rgba(139,92,246,.15);color:#a78bfa;">RISING</span></div></div>
+          <div class="mfp-row" onclick="mfpFly(-20,-60,3)"><div><div class="mfp-lbl">🌎 MERCOSUR–EU Deal</div><div class="mfp-sub">25yr negotiation; $19T market if ratified</div></div><div class="mfp-val"><span class="mfp-chip" style="background:rgba(234,179,8,.15);color:#eab308;">PENDING</span></div></div>
+        </div>
+        <!-- SECTION 5: Future Projections 2035-2050 -->
+        <div class="mfp-sec">
+          <h4>🔮 Key Geopolitical Projections 2035–2050</h4>
+          <div class="mfp-row" onclick="mfpFly(23.7,121,5)"><div><div class="mfp-lbl">🇹🇼 Taiwan Resolution</div><div class="mfp-sub">Scenarios: status quo / diplomatic / conflict. Most watched flashpoint.</div></div><div class="mfp-val"><span class="mfp-chip" style="background:rgba(239,68,68,.15);color:#ef4444;">2035?</span></div></div>
+          <div class="mfp-row" onclick="mfpFly(74,10,3)"><div><div class="mfp-lbl">🧊 Arctic Nation Stakes</div><div class="mfp-sub">Russia/Canada/Norway/Denmark competing for new Arctic routes</div></div><div class="mfp-val"><span class="mfp-chip" style="background:rgba(96,165,250,.15);color:#60a5fa;">2040</span></div></div>
+          <div class="mfp-row" onclick="mfpFly(7,20,3)"><div><div class="mfp-lbl">🌍 Africa — World Youth Hub</div><div class="mfp-sub">Africa = 40% of global youth by 2050; economic weight shifting</div></div><div class="mfp-val"><span class="mfp-chip" style="background:rgba(16,185,129,.15);color:#10b981;">2050</span></div></div>
+          <div class="mfp-row" onclick="mfpFly(28,30,4)"><div><div class="mfp-lbl">💧 Water Wars Risk</div><div class="mfp-sub">Nile (Egypt/Ethiopia), Indus (India/Pakistan), Mekong (China/ASEAN)</div></div><div class="mfp-val"><span class="mfp-chip" style="background:rgba(239,68,68,.15);color:#ef4444;">HIGH</span></div></div>
+          <div class="mfp-row" onclick="mfpFly(35,35,4)"><div><div class="mfp-lbl">🇺🇦 Ukraine Reconstruction</div><div class="mfp-sub">Post-conflict rebuild = largest since Marshall Plan; $500B+ needed</div></div><div class="mfp-val"><span class="mfp-chip" style="background:rgba(96,165,250,.15);color:#60a5fa;">POST-WAR</span></div></div>
+          <div class="mfp-row" onclick="mfpFly(25,55,4)"><div><div class="mfp-lbl">🤖 AI Power Shift</div><div class="mfp-sub">Nations with sovereign AI (US/China/EU/UAE) will lead 2040+ geopolitics</div></div><div class="mfp-val"><span class="mfp-chip" style="background:rgba(139,92,246,.15);color:#a78bfa;">TECH</span></div></div>
+          <div class="mfp-row" onclick="mfpFly(-8,178,4)"><div><div class="mfp-lbl">🌐 Digital Nations</div><div class="mfp-sub">Tuvalu/Nauru building cloud-based legal identity; new sovereignty model</div></div><div class="mfp-val"><span class="mfp-chip" style="background:rgba(16,185,129,.15);color:#10b981;">NOVEL</span></div></div>
+          <div class="mfp-row" onclick="mfpFly(20,80,4)"><div><div class="mfp-lbl">🇮🇳 India Superpower Window</div><div class="mfp-sub">2025–2045: peak demographic dividend; largest workforce on Earth</div></div><div class="mfp-val"><span class="mfp-chip" style="background:rgba(16,185,129,.15);color:#10b981;">2045</span></div></div>
+        </div>
+        <div style="padding:10px 13px;font-size:9px;color:var(--muted);line-height:1.5;">Sources: UN, World Bank, RAND Corp, CFR, Freedom House, IOM/UNHCR/OECD · Expert projections · No paid APIs · Muhammad Umer Lari v3.15</div>
+      </div>
     </div>
   </div>
 
@@ -1891,6 +1972,28 @@ function filterMapRegion(region,btn){
   } else if(region==='all'){
     leafMap.flyTo([25,15],3,{duration:.6});
   }
+}
+
+// v3.15: Future Geopolitics Panel toggle
+function toggleFuturePanel(){
+  const p=document.getElementById('map-future-panel');
+  if(!p)return;
+  const open=p.style.display==='block';
+  p.style.display=open?'none':'block';
+  const btn=document.getElementById('map-future-btn');
+  if(btn){
+    btn.style.background=open?'rgba(139,92,246,.12)':'rgba(139,92,246,.35)';
+    btn.style.color=open?'#a78bfa':'#fff';
+    btn.style.borderColor=open?'rgba(139,92,246,.5)':'#a78bfa';
+  }
+  if(!open&&typeof leafMap!=='undefined'&&leafMap){
+    setTimeout(()=>leafMap.invalidateSize(),300);
+  }
+}
+
+// v3.15: Fly map to lat/lng from Future Panel clicks
+function mfpFly(lat,lng,z){
+  if(typeof leafMap!=='undefined'&&leafMap) leafMap.flyTo([lat,lng],z||4,{duration:.8});
 }
 
 function _buildMapTopMovers(){
