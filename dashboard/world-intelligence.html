@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>World Intelligence Platform v3.18</title>
+<title>World Intelligence Platform v3.19</title>
 <!-- Leaflet -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css"/>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
@@ -135,18 +135,53 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:'Segoe 
 .news-card h4{font-size:13px;line-height:1.4;}
 .news-meta{font-size:11px;color:var(--muted);display:flex;gap:8px;align-items:center;}
 .nsrc{display:inline-block;padding:2px 6px;border-radius:4px;font-size:10px;font-weight:600;background:var(--surface);border:1px solid var(--border);}
-/* FORECAST */
+/* FORECAST v3.19 — Ultra-Advanced */
 #page-forecast{padding:16px;}
-.fc-sel-row{display:flex;gap:10px;align-items:center;margin-bottom:16px;flex-wrap:wrap;}
-.fcsel{background:var(--surface);border:1px solid var(--border);color:var(--text);padding:7px 12px;border-radius:6px;font-size:13px;cursor:pointer;min-width:150px;}
-.fc-card{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:16px;margin-bottom:12px;}
-.fc-card h3{font-size:14px;margin-bottom:12px;}
-#fc-canvas-wrap{height:300px;position:relative;}
-.fc-scenarios{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;}
-.fc-sc{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:14px;}
-.fc-sc h4{font-size:11px;color:var(--muted);margin-bottom:6px;text-transform:uppercase;}
-.fc-sc .big{font-size:22px;font-weight:700;margin-bottom:4px;}
-.fc-sc p{font-size:11px;color:var(--muted);line-height:1.5;}
+.fc-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;flex-wrap:wrap;gap:8px;}
+.fc-header h2{font-size:16px;font-weight:700;margin:0;}
+.fc-live-row{display:flex;align-items:center;gap:8px;}
+.fc-asset-tabs{display:flex;gap:6px;margin-bottom:12px;flex-wrap:wrap;}
+.fc-atab{padding:6px 14px;border-radius:20px;border:1px solid var(--border);background:var(--surface);color:var(--muted);font-size:12px;font-weight:600;cursor:pointer;transition:all .2s;white-space:nowrap;}
+.fc-atab.active{background:var(--accent);border-color:var(--accent);color:#fff;}
+.fc-atab:hover:not(.active){border-color:var(--accent);color:var(--accent);}
+.fc-kpi-row{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:8px;margin-bottom:12px;}
+.fc-kpi{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:10px 12px;}
+.fc-kpi-label{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.04em;margin-bottom:4px;}
+.fc-kpi-val{font-size:20px;font-weight:700;}
+.fc-kpi-sub{font-size:10px;color:var(--muted);margin-top:2px;}
+.fc-chart-card{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:16px;margin-bottom:12px;}
+.fc-chart-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;flex-wrap:wrap;gap:8px;}
+.fc-chart-title{font-size:14px;font-weight:700;}
+.fc-tf-btns{display:flex;gap:4px;}
+.fc-tf-btn{padding:4px 10px;border-radius:4px;border:1px solid var(--border);background:transparent;color:var(--muted);font-size:11px;cursor:pointer;font-weight:600;}
+.fc-tf-btn.active{background:var(--accent);border-color:var(--accent);color:#fff;}
+.fc-model-row{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:10px;}
+.fc-model-toggle{display:flex;align-items:center;gap:5px;font-size:11px;color:var(--muted);cursor:pointer;}
+.fc-model-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0;}
+#fc-canvas-wrap{height:340px;position:relative;}
+.fc-scenario-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:12px;}
+.fc-sc{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:12px;}
+.fc-sc-label{font-size:10px;color:var(--muted);text-transform:uppercase;margin-bottom:4px;}
+.fc-sc-val{font-size:20px;font-weight:700;margin-bottom:2px;}
+.fc-sc-pct{font-size:11px;font-weight:600;margin-bottom:4px;}
+.fc-sc-txt{font-size:10px;color:var(--muted);line-height:1.5;}
+.fc-bottom-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+@media(max-width:700px){.fc-scenario-grid{grid-template-columns:1fr 1fr;}.fc-bottom-row{grid-template-columns:1fr;}}
+.fc-tech-card,.fc-table-card{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:14px;}
+.fc-section-title{font-size:12px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;margin-bottom:10px;}
+.fc-ind-row{display:flex;justify-content:space-between;align-items:center;padding:5px 0;border-bottom:1px solid var(--border);}
+.fc-ind-row:last-child{border-bottom:none;}
+.fc-ind-name{font-size:11px;color:var(--muted);}
+.fc-ind-val{font-size:12px;font-weight:700;}
+.fc-sr-row{display:flex;justify-content:space-between;padding:4px 0;font-size:11px;}
+.fc-tbl-row{display:flex;justify-content:space-between;align-items:center;padding:5px 0;border-bottom:1px solid var(--border);}
+.fc-tbl-row:last-child{border-bottom:none;}
+.fc-tbl-hz{font-size:11px;color:var(--muted);}
+.fc-tbl-price{font-size:12px;font-weight:700;}
+.fc-tbl-chg{font-size:10px;font-weight:600;}
+.fc-confidence{display:flex;align-items:center;gap:8px;margin-top:10px;padding-top:10px;border-top:1px solid var(--border);}
+.fc-conf-bar-outer{flex:1;height:6px;border-radius:3px;background:var(--border);}
+.fc-conf-bar-inner{height:100%;border-radius:3px;background:linear-gradient(to right,var(--red),var(--yellow),var(--green));transition:width .5s;}
 /* SIGNALS */
 #page-signals{padding:16px;}
 .sig-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:12px;}
@@ -533,7 +568,7 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:'Segoe 
 <div id="topbar">
   <a href="index.html">← Dashboard</a>
   <span class="title">🌍 World Intelligence Platform</span>
-  <span class="badge">v3.18</span>
+  <span class="badge">v3.19</span>
   <div style="display:flex;align-items:center;gap:6px;margin-left:auto;margin-right:16px;">
     <div class="live-dot"></div><span style="font-size:11px;color:var(--muted);">Live</span>
   </div>
@@ -771,39 +806,138 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:'Segoe 
     <div id="news-metals"   class="news-region"><div class="spinner-wrap"><div class="spinner"></div>Loading…</div></div>
   </div>
 
-  <!-- FORECAST -->
+  <!-- FORECAST v3.19 Ultra-Advanced -->
   <div class="page" id="page-forecast">
-    <div class="fc-sel-row">
-      <h2 style="font-size:16px;">Price Forecasts</h2>
-      <select class="fcsel" id="fc-asset" onchange="renderFcPage()">
-        <option value="BTC">Bitcoin (BTC)</option>
-        <option value="ETH">Ethereum (ETH)</option>
-        <option value="GOLD">Gold (XAU)</option>
-        <option value="SILVER">Silver (XAG)</option>
-        <option value="WTI">WTI Crude Oil</option>
-        <option value="BRENT">Brent Crude</option>
-        <option value="EUR">EUR/USD</option>
-        <option value="GBP">GBP/USD</option>
-        <option value="SPX">S&amp;P 500</option>
-        <option value="DAX">DAX</option>
-      </select>
-      <select class="fcsel" id="fc-tf" onchange="renderFcPage()">
-        <option value="1D">1 Day</option>
-        <option value="1W">1 Week</option>
-        <option value="1M">1 Month</option>
-        <option value="1Y">1 Year</option>
-        <option value="5Y">5 Years</option>
-        <option value="10Y">10 Years</option>
-      </select>
+    <!-- Header -->
+    <div class="fc-header">
+      <h2>🔮 Price Forecast Intelligence</h2>
+      <div class="fc-live-row">
+        <span class="map-live-pulse" title="Auto-refreshes every 90s"></span>
+        <span style="font-size:10px;color:var(--muted);">Live · free APIs</span>
+        <span id="fc-refresh-badge" style="font-size:10px;color:var(--accent);">⏱ 90s</span>
+      </div>
     </div>
-    <div class="fc-card">
-      <h3 id="fc-title">Bitcoin — 1 Day Forecast</h3>
+    <!-- Asset tabs -->
+    <div class="fc-asset-tabs">
+      <div class="fc-atab active" onclick="switchFcAsset('BTC',this)">₿ BTC</div>
+      <div class="fc-atab" onclick="switchFcAsset('ETH',this)">Ξ ETH</div>
+      <div class="fc-atab" onclick="switchFcAsset('SOL',this)">◎ SOL</div>
+      <div class="fc-atab" onclick="switchFcAsset('XRP',this)">✦ XRP</div>
+      <div class="fc-atab" onclick="switchFcAsset('GOLD',this)">🥇 Gold</div>
+      <div class="fc-atab" onclick="switchFcAsset('SILVER',this)">🥈 Silver</div>
+      <div class="fc-atab" onclick="switchFcAsset('WTI',this)">🛢 WTI</div>
+      <div class="fc-atab" onclick="switchFcAsset('EUR',this)">€ EUR</div>
+      <div class="fc-atab" onclick="switchFcAsset('SPX',this)">📊 S&amp;P</div>
+      <div class="fc-atab" onclick="switchFcAsset('DAX',this)">🇩🇪 DAX</div>
+    </div>
+    <!-- KPI row -->
+    <div class="fc-kpi-row">
+      <div class="fc-kpi"><div class="fc-kpi-label">Live Price</div><div class="fc-kpi-val" id="fc-kpi-price">—</div><div class="fc-kpi-sub" id="fc-kpi-src">fetching…</div></div>
+      <div class="fc-kpi"><div class="fc-kpi-label">24h Change</div><div class="fc-kpi-val" id="fc-kpi-24h">—</div><div class="fc-kpi-sub">vs yesterday</div></div>
+      <div class="fc-kpi"><div class="fc-kpi-label">7D Change</div><div class="fc-kpi-val" id="fc-kpi-7d">—</div><div class="fc-kpi-sub">week performance</div></div>
+      <div class="fc-kpi"><div class="fc-kpi-label">RSI (14)</div><div class="fc-kpi-val" id="fc-kpi-rsi">—</div><div class="fc-kpi-sub" id="fc-kpi-rsi-lbl">—</div></div>
+      <div class="fc-kpi"><div class="fc-kpi-label">Signal</div><div class="fc-kpi-val" id="fc-kpi-sig">—</div><div class="fc-kpi-sub" id="fc-kpi-macd">MACD —</div></div>
+      <div class="fc-kpi"><div class="fc-kpi-label">Updated</div><div class="fc-kpi-val" style="font-size:13px;" id="fc-kpi-time">—</div><div class="fc-kpi-sub" id="fc-kpi-api">—</div></div>
+    </div>
+    <!-- Main chart -->
+    <div class="fc-chart-card">
+      <div class="fc-chart-header">
+        <div class="fc-chart-title" id="fc-chart-title">Bitcoin — 90 Day Forecast</div>
+        <div class="fc-tf-btns">
+          <button class="fc-tf-btn active" onclick="switchFcTf(7,this)">1W</button>
+          <button class="fc-tf-btn" onclick="switchFcTf(30,this)">1M</button>
+          <button class="fc-tf-btn" onclick="switchFcTf(90,this)">3M</button>
+          <button class="fc-tf-btn" onclick="switchFcTf(180,this)">6M</button>
+          <button class="fc-tf-btn" onclick="switchFcTf(365,this)">1Y</button>
+          <button class="fc-tf-btn" onclick="switchFcTf(1825,this)">5Y</button>
+        </div>
+      </div>
+      <div class="fc-model-row">
+        <label class="fc-model-toggle"><span class="fc-model-dot" style="background:#3b82f6"></span>Historical</label>
+        <label class="fc-model-toggle"><span class="fc-model-dot" style="background:#f59e0b"></span>LinReg</label>
+        <label class="fc-model-toggle"><span class="fc-model-dot" style="background:#10b981"></span>Exp.Smooth</label>
+        <label class="fc-model-toggle"><span class="fc-model-dot" style="background:#a78bfa"></span>Momentum</label>
+        <label class="fc-model-toggle"><span class="fc-model-dot" style="background:rgba(16,185,129,.3)"></span>Monte Carlo</label>
+        <label class="fc-model-toggle"><span class="fc-model-dot" style="background:#64748b"></span>Bollinger</label>
+      </div>
       <div id="fc-canvas-wrap"><canvas id="fc-canvas"></canvas></div>
     </div>
-    <div class="fc-scenarios">
-      <div class="fc-sc"><h4>🐂 Bull Case</h4><div class="big pos" id="fc-bull">—</div><p id="fc-bull-t"></p></div>
-      <div class="fc-sc"><h4>📊 Base Case</h4><div class="big" id="fc-base" style="color:var(--cyan)">—</div><p id="fc-base-t"></p></div>
-      <div class="fc-sc"><h4>🐻 Bear Case</h4><div class="big neg" id="fc-bear">—</div><p id="fc-bear-t"></p></div>
+    <!-- Scenario cards (4) -->
+    <div class="fc-scenario-grid">
+      <div class="fc-sc" style="border-color:rgba(16,185,129,.4)">
+        <div class="fc-sc-label">🐂 Bull Case</div>
+        <div class="fc-sc-val pos" id="fc-bull">—</div>
+        <div class="fc-sc-pct pos" id="fc-bull-pct">—</div>
+        <div class="fc-sc-txt" id="fc-bull-t">95th percentile path</div>
+      </div>
+      <div class="fc-sc" style="border-color:rgba(6,182,212,.4)">
+        <div class="fc-sc-label">📊 Base Case</div>
+        <div class="fc-sc-val" id="fc-base" style="color:var(--cyan)">—</div>
+        <div class="fc-sc-pct" id="fc-base-pct" style="color:var(--cyan)">—</div>
+        <div class="fc-sc-txt" id="fc-base-t">Linear regression path</div>
+      </div>
+      <div class="fc-sc" style="border-color:rgba(239,68,68,.4)">
+        <div class="fc-sc-label">🐻 Bear Case</div>
+        <div class="fc-sc-val neg" id="fc-bear">—</div>
+        <div class="fc-sc-pct neg" id="fc-bear-pct">—</div>
+        <div class="fc-sc-txt" id="fc-bear-t">5th percentile path</div>
+      </div>
+      <div class="fc-sc" style="border-color:rgba(167,139,250,.4)">
+        <div class="fc-sc-label">🎲 Monte Carlo</div>
+        <div class="fc-sc-val" id="fc-mc" style="color:var(--accent)">—</div>
+        <div class="fc-sc-pct" id="fc-mc-pct" style="color:var(--accent)">—</div>
+        <div class="fc-sc-txt" id="fc-mc-t">500-path median ± σ</div>
+      </div>
+    </div>
+    <!-- Bottom row -->
+    <div class="fc-bottom-row">
+      <!-- Technical Indicators -->
+      <div class="fc-tech-card">
+        <div class="fc-section-title">📐 Technical Indicators</div>
+        <div class="fc-ind-row"><span class="fc-ind-name">RSI (14)</span><span class="fc-ind-val" id="fci-rsi">—</span></div>
+        <div class="fc-ind-row"><span class="fc-ind-name">MACD</span><span class="fc-ind-val" id="fci-macd">—</span></div>
+        <div class="fc-ind-row"><span class="fc-ind-name">Signal Line</span><span class="fc-ind-val" id="fci-macd-sig">—</span></div>
+        <div class="fc-ind-row"><span class="fc-ind-name">Bollinger Upper</span><span class="fc-ind-val" id="fci-bb-up">—</span></div>
+        <div class="fc-ind-row"><span class="fc-ind-name">Bollinger Lower</span><span class="fc-ind-val" id="fci-bb-dn">—</span></div>
+        <div class="fc-ind-row"><span class="fc-ind-name">SMA 20</span><span class="fc-ind-val" id="fci-sma20">—</span></div>
+        <div class="fc-ind-row"><span class="fc-ind-name">SMA 50</span><span class="fc-ind-val" id="fci-sma50">—</span></div>
+        <div class="fc-ind-row"><span class="fc-ind-name">EMA 12</span><span class="fc-ind-val" id="fci-ema12">—</span></div>
+        <div class="fc-ind-row"><span class="fc-ind-name">ATR (14)</span><span class="fc-ind-val" id="fci-atr">—</span></div>
+        <div class="fc-ind-row"><span class="fc-ind-name">Trend Strength</span><span class="fc-ind-val" id="fci-trend">—</span></div>
+        <div style="margin-top:10px;">
+          <div class="fc-section-title">📍 Support &amp; Resistance</div>
+          <div class="fc-sr-row"><span style="color:var(--green)">Support 1</span><span id="fc-s1" style="font-weight:700;">—</span></div>
+          <div class="fc-sr-row"><span style="color:var(--green)">Support 2</span><span id="fc-s2" style="font-weight:700;">—</span></div>
+          <div class="fc-sr-row"><span style="color:var(--red)">Resistance 1</span><span id="fc-r1" style="font-weight:700;">—</span></div>
+          <div class="fc-sr-row"><span style="color:var(--red)">Resistance 2</span><span id="fc-r2" style="font-weight:700;">—</span></div>
+        </div>
+        <!-- Confidence score -->
+        <div class="fc-confidence">
+          <span style="font-size:10px;color:var(--muted);">Model Confidence</span>
+          <div class="fc-conf-bar-outer"><div class="fc-conf-bar-inner" id="fc-conf-bar" style="width:0%"></div></div>
+          <span style="font-size:11px;font-weight:700;" id="fc-conf-pct">—</span>
+        </div>
+      </div>
+      <!-- Forecast Table -->
+      <div class="fc-table-card">
+        <div class="fc-section-title">📅 Price Targets</div>
+        <div class="fc-tbl-row"><span class="fc-tbl-hz">1 Day</span><span class="fc-tbl-price" id="fct-1d">—</span><span class="fc-tbl-chg" id="fct-1d-c">—</span></div>
+        <div class="fc-tbl-row"><span class="fc-tbl-hz">1 Week</span><span class="fc-tbl-price" id="fct-1w">—</span><span class="fc-tbl-chg" id="fct-1w-c">—</span></div>
+        <div class="fc-tbl-row"><span class="fc-tbl-hz">1 Month</span><span class="fc-tbl-price" id="fct-1m">—</span><span class="fc-tbl-chg" id="fct-1m-c">—</span></div>
+        <div class="fc-tbl-row"><span class="fc-tbl-hz">3 Months</span><span class="fc-tbl-price" id="fct-3m">—</span><span class="fc-tbl-chg" id="fct-3m-c">—</span></div>
+        <div class="fc-tbl-row"><span class="fc-tbl-hz">6 Months</span><span class="fc-tbl-price" id="fct-6m">—</span><span class="fc-tbl-chg" id="fct-6m-c">—</span></div>
+        <div class="fc-tbl-row"><span class="fc-tbl-hz">1 Year</span><span class="fc-tbl-price" id="fct-1y">—</span><span class="fc-tbl-chg" id="fct-1y-c">—</span></div>
+        <div class="fc-tbl-row"><span class="fc-tbl-hz">3 Years</span><span class="fc-tbl-price" id="fct-3y">—</span><span class="fc-tbl-chg" id="fct-3y-c">—</span></div>
+        <div class="fc-tbl-row"><span class="fc-tbl-hz">5 Years</span><span class="fc-tbl-price" id="fct-5y">—</span><span class="fc-tbl-chg" id="fct-5y-c">—</span></div>
+        <div style="font-size:10px;color:var(--muted);margin-top:10px;padding-top:8px;border-top:1px solid var(--border);">
+          <span class="map-live-pulse" style="margin-right:4px;"></span>
+          <span id="fc-api-note">Live: CoinGecko API · Open ER API · Zero paid APIs</span>
+        </div>
+        <div style="margin-top:14px;">
+          <div class="fc-section-title">🔬 Model Agreement</div>
+          <div id="fc-model-agreement" style="font-size:11px;color:var(--muted);line-height:1.7;">—</div>
+        </div>
+      </div>
     </div>
   </div>
 
@@ -2979,42 +3113,335 @@ function _calcVolBands(hist,fc){
   };
 }
 
+// ════════════════════════════════════════
+// FORECAST v3.19 — Ultra-Advanced with Live APIs + Technical Indicators
+// ════════════════════════════════════════
+const FC_SYM_MAP={BTC:'bitcoin',ETH:'ethereum',SOL:'solana',XRP:'ripple',ADA:'cardano'};
+const FC_NAMES={BTC:'Bitcoin',ETH:'Ethereum',SOL:'Solana',XRP:'XRP',GOLD:'Gold (XAU)',SILVER:'Silver (XAG)',WTI:'WTI Crude Oil',EUR:'EUR/USD',SPX:'S&P 500',DAX:'DAX'};
+const FC_SEEDS={BTC:67000,ETH:3500,SOL:145,XRP:0.52,GOLD:2380,SILVER:28,WTI:78,EUR:1.085,SPX:5400,DAX:18800};
+const FC_VOL={BTC:.035,ETH:.04,SOL:.055,XRP:.05,GOLD:.008,SILVER:.015,WTI:.018,EUR:.004,SPX:.009,DAX:.01};
+let fcActiveSym='BTC',fcActiveDays=90,fcChart=null,fcHistCache={},fcLiveCache={};
+
+// ── Technical Indicators ──────────────────────────────────────────
+function calcSMA(arr,p){return arr.map((_,i)=>i<p-1?null:arr.slice(i-p+1,i+1).reduce((a,b)=>a+b,0)/p);}
+function calcEMA(arr,p){const k=2/(p+1);let em=arr[0];return arr.map(v=>{em=v*k+em*(1-k);return em;});}
+function calcMACD_full(arr){
+  const ema12=calcEMA(arr,12),ema26=calcEMA(arr,26);
+  const macd=arr.map((_,i)=>ema12[i]-ema26[i]);
+  const sig=calcEMA(macd,9);
+  const hist2=macd.map((v,i)=>v-sig[i]);
+  return{macd,sig,hist:hist2};
+}
+function calcBollinger(arr,p=20,mult=2){
+  return arr.map((_,i)=>{
+    if(i<p-1)return{mid:null,up:null,dn:null};
+    const sl=arr.slice(i-p+1,i+1);
+    const m=sl.reduce((a,b)=>a+b,0)/p;
+    const sd=Math.sqrt(sl.reduce((a,b)=>a+(b-m)**2,0)/p);
+    return{mid:m,up:m+mult*sd,dn:m-mult*sd};
+  });
+}
+function calcATR(arr,p=14){
+  const trs=arr.map((v,i)=>i===0?0:Math.abs(v-arr[i-1]));
+  return trs.slice(-p).reduce((a,b)=>a+b,0)/p;
+}
+function calcSR(arr){
+  const sorted=[...arr].sort((a,b)=>a-b);
+  const q1=sorted[Math.floor(sorted.length*.1)];
+  const q2=sorted[Math.floor(sorted.length*.25)];
+  const q3=sorted[Math.floor(sorted.length*.75)];
+  const q4=sorted[Math.floor(sorted.length*.9)];
+  return{s2:q1,s1:q2,r1:q3,r2:q4};
+}
+function monteCarlo(hist,steps,paths=500){
+  const returns=hist.map((v,i)=>i===0?0:Math.log(v/hist[i-1])).slice(1);
+  const mu=returns.reduce((a,b)=>a+b,0)/returns.length;
+  const sigma=Math.sqrt(returns.reduce((a,b)=>a+(b-mu)**2,0)/returns.length);
+  const last=hist[hist.length-1];
+  const endpoints=[];
+  for(let p=0;p<paths;p++){
+    let price=last;
+    for(let s=0;s<steps;s++){
+      const z=(Math.random()+Math.random()+Math.random()+Math.random()+Math.random()+Math.random()-3)/Math.sqrt(3);
+      price*=Math.exp(mu+sigma*z);
+    }
+    endpoints.push(price);
+  }
+  endpoints.sort((a,b)=>a-b);
+  return{
+    p5:endpoints[Math.floor(paths*.05)],
+    p25:endpoints[Math.floor(paths*.25)],
+    median:endpoints[Math.floor(paths*.5)],
+    p75:endpoints[Math.floor(paths*.75)],
+    p95:endpoints[Math.floor(paths*.95)]
+  };
+}
+function expSmoothing(hist,steps,alpha=0.3){
+  let s=hist[0];
+  hist.forEach(v=>{s=alpha*v+(1-alpha)*s;});
+  const fc=[];
+  for(let i=0;i<steps;i++){s=alpha*s+(1-alpha)*s;fc.push(s);}
+  return fc;
+}
+function momentumFc(hist,steps){
+  const recent=hist.slice(-20);
+  const momentum=(recent[recent.length-1]-recent[0])/recent.length;
+  const fc=[];let last=hist[hist.length-1];
+  for(let i=0;i<steps;i++){last+=momentum;fc.push(last);}
+  return fc;
+}
+
+// ── Live Data Fetch ───────────────────────────────────────────────
+async function fetchFcLivePrice(sym){
+  const cgId=FC_SYM_MAP[sym];
+  if(cgId){
+    try{
+      const r=await fetch(`https://api.coingecko.com/api/v3/simple/price?ids=${cgId}&vs_currencies=usd&include_24hr_change=true&include_7d_change=true`,{signal:AbortSignal.timeout(5000)});
+      if(r.ok){
+        const d=await r.json();
+        const coin=d[cgId];
+        if(coin)return{price:coin.usd,change24:coin.usd_24h_change||0,change7d:coin.usd_7d_change||0,src:'CoinGecko'};
+      }
+    }catch(e){}
+  }
+  if(sym==='EUR'||sym==='GBP'){
+    try{
+      const r=await fetch('https://open.er-api.com/v6/latest/USD',{signal:AbortSignal.timeout(5000)});
+      if(r.ok){
+        const d=await r.json();
+        const key=sym==='EUR'?'EUR':'GBP';
+        if(d.rates&&d.rates[key])return{price:1/d.rates[key],change24:0,change7d:0,src:'OpenER'};
+      }
+    }catch(e){}
+  }
+  // Fallback to mktData or seed
+  const md=mktData[sym];
+  if(md&&md.price)return{price:md.price,change24:md.change||0,change7d:0,src:'cached'};
+  const base=FC_SEEDS[sym]||1000;
+  return{price:base*(1+((Math.random()-.5)*.02)),change24:(Math.random()-.5)*4,change7d:(Math.random()-.5)*8,src:'simulated'};
+}
+
+async function fetchFcHistory(sym){
+  if(fcHistCache[sym]&&fcHistCache[sym].ts>Date.now()-300000)return fcHistCache[sym].data;
+  const cgId=FC_SYM_MAP[sym];
+  if(cgId){
+    try{
+      const r=await fetch(`https://api.coingecko.com/api/v3/coins/${cgId}/market_chart?vs_currency=usd&days=365&interval=daily`,{signal:AbortSignal.timeout(8000)});
+      if(r.ok){
+        const d=await r.json();
+        if(d.prices&&d.prices.length>30){
+          const prices=d.prices.map(p=>p[1]);
+          fcHistCache[sym]={data:prices,ts:Date.now()};
+          return prices;
+        }
+      }
+    }catch(e){}
+  }
+  // Fallback: use mktData history or generate
+  const md=mktData[sym];
+  if(md&&md.history&&md.history.length>30)return md.history;
+  const hist=genHistory(FC_SEEDS[sym]||1000,365,FC_VOL[sym]||.02);
+  fcHistCache[sym]={data:hist,ts:Date.now()};
+  return hist;
+}
+
+// ── Main Render ───────────────────────────────────────────────────
 function renderFcPage(){
-  const sym=document.getElementById('fc-asset').value;
-  const tf=document.getElementById('fc-tf').value;
-  const allA=[...ADEFS.metals,...ADEFS.crypto,...ADEFS.fx,...ADEFS.oil,...ADEFS.indices];
-  const def=allA.find(a=>a.sym===sym)||{sym,n:sym,b:1000,v:.02};
-  if(!mktData[sym]){mktData[sym]={price:def.b,change:0,history:genHistory(def.b,90,def.v)};const h=mktData[sym].history;mktData[sym].rsi=calcRsi(h);mktData[sym].sig=sigFromRsi(mktData[sym].rsi,0);}
-  const d=mktData[sym];
-  const isLive=!!(d._live&&d.history&&d.history.length>10);
-  const{s}=TFS[tf];
-  const hist=d.history.slice(-60);
-  const fc=forecast(hist,s);
-  // v3.11: volatility-derived bands instead of flat ±12%
-  const{bull:bullBand,bear:bearBand}=_calcVolBands(hist,fc);
-  const labels=[...hist.map((_,i)=>i-hist.length),...fc.map((_,i)=>i+1)];
-  document.getElementById('fc-title').textContent=`${def.n||sym} — ${tf} Forecast`;
+  // Compatibility: called by showPage('forecast')
+  initForecastFull(fcActiveSym);
+}
+
+function switchFcAsset(sym,el){
+  fcActiveSym=sym;
+  document.querySelectorAll('.fc-atab').forEach(t=>t.classList.remove('active'));
+  if(el)el.classList.add('active');
+  initForecastFull(sym);
+}
+
+function switchFcTf(days,el){
+  fcActiveDays=days;
+  document.querySelectorAll('.fc-tf-btn').forEach(b=>b.classList.remove('active'));
+  if(el)el.classList.add('active');
+  _renderFcChart(fcActiveSym);
+}
+
+async function initForecastFull(sym){
+  const name=FC_NAMES[sym]||sym;
+  document.getElementById('fc-chart-title').textContent=`${name} — Forecast`;
+  document.getElementById('fc-kpi-price').textContent='…';
+  // Fetch live price + history in parallel
+  const[liveData,hist]=await Promise.all([fetchFcLivePrice(sym),fetchFcHistory(sym)]);
+  // Store in fcLiveCache
+  fcLiveCache[sym]={...liveData,hist,ts:Date.now()};
+  // Update KPI row
+  const fmtP=v=>fmt(v,sym);
+  const live=liveData.price;
+  document.getElementById('fc-kpi-price').textContent=fmtP(live);
+  const c24=liveData.change24;
+  const el24=document.getElementById('fc-kpi-24h');
+  el24.textContent=(c24>=0?'+':'')+c24.toFixed(2)+'%';
+  el24.style.color=c24>=0?'var(--green)':'var(--red)';
+  const c7d=liveData.change7d||0;
+  const el7d=document.getElementById('fc-kpi-7d');
+  el7d.textContent=(c7d>=0?'+':'')+c7d.toFixed(2)+'%';
+  el7d.style.color=c7d>=0?'var(--green)':'var(--red)';
+  const rsi=calcRsi(hist.slice(-60));
+  const rsiEl=document.getElementById('fc-kpi-rsi');
+  rsiEl.textContent=rsi;
+  rsiEl.style.color=rsi<30?'var(--green)':rsi>70?'var(--red)':'var(--yellow)';
+  document.getElementById('fc-kpi-rsi-lbl').textContent=rsi<30?'Oversold':rsi>70?'Overbought':'Neutral';
+  const sig=sigFromRsi(rsi,c24);
+  const sigEl=document.getElementById('fc-kpi-sig');
+  sigEl.textContent=sig.l;
+  sigEl.style.color=sig.l.includes('BUY')?'var(--green)':sig.l.includes('SELL')||sig.l.includes('AVOID')?'var(--red)':'var(--yellow)';
+  const macdData=calcMACD_full(hist.slice(-60));
+  const lastMacd=macdData.macd[macdData.macd.length-1];
+  document.getElementById('fc-kpi-macd').textContent=`MACD ${lastMacd>=0?'+':''}${lastMacd.toFixed(2)}`;
+  document.getElementById('fc-kpi-time').textContent=new Date().toLocaleTimeString();
+  document.getElementById('fc-kpi-api').textContent=liveData.src;
+  document.getElementById('fc-kpi-src').textContent=liveData.src==='simulated'?'seed data':'live data ✓';
+  // Tech indicators panel
+  const h60=hist.slice(-60);
+  const sma20v=calcSMA(h60,20);const sma50v=calcSMA(h60.slice(-60),50);
+  const ema12v=calcEMA(h60,12);
+  const bbands=calcBollinger(h60);
+  const lastBb=bbands[bbands.length-1];
+  const atr=calcATR(h60);
+  const sr=calcSR(h60);
+  const macdFull=calcMACD_full(h60);
+  const lastMacdLine=macdFull.macd[macdFull.macd.length-1];
+  const lastSigLine=macdFull.sig[macdFull.sig.length-1];
+  const momentum_val=h60[h60.length-1]-h60[h60.length-10];
+  const trendStr=Math.abs(momentum_val)/h60[h60.length-1]*100;
+  document.getElementById('fci-rsi').textContent=rsi+' '+(rsi<30?'🟢':rsi>70?'🔴':'🟡');
+  document.getElementById('fci-macd').textContent=(lastMacdLine>=0?'+':'')+lastMacdLine.toFixed(4);
+  document.getElementById('fci-macd').style.color=lastMacdLine>=0?'var(--green)':'var(--red)';
+  document.getElementById('fci-macd-sig').textContent=(lastSigLine>=0?'+':'')+lastSigLine.toFixed(4);
+  document.getElementById('fci-bb-up').textContent=lastBb.up?fmtP(lastBb.up):'—';
+  document.getElementById('fci-bb-dn').textContent=lastBb.dn?fmtP(lastBb.dn):'—';
+  const sm20=sma20v.filter(v=>v!==null);
+  const sm50=sma50v?sma50v.filter(v=>v!==null):[];
+  document.getElementById('fci-sma20').textContent=sm20.length?fmtP(sm20[sm20.length-1]):'—';
+  document.getElementById('fci-sma50').textContent=sm50.length?fmtP(sm50[sm50.length-1]):'—';
+  document.getElementById('fci-ema12').textContent=fmtP(ema12v[ema12v.length-1]);
+  document.getElementById('fci-atr').textContent=fmtP(atr);
+  document.getElementById('fci-trend').textContent=trendStr.toFixed(1)+'% '+(momentum_val>=0?'↑ Bullish':'↓ Bearish');
+  document.getElementById('fci-trend').style.color=momentum_val>=0?'var(--green)':'var(--red)';
+  document.getElementById('fc-s1').textContent=fmtP(sr.s1);
+  document.getElementById('fc-s2').textContent=fmtP(sr.s2);
+  document.getElementById('fc-r1').textContent=fmtP(sr.r1);
+  document.getElementById('fc-r2').textContent=fmtP(sr.r2);
+  // Render chart + scenarios + table
+  _renderFcChart(sym);
+}
+
+function _renderFcChart(sym){
+  const name=FC_NAMES[sym]||sym;
+  const cache=fcLiveCache[sym];
+  if(!cache){initForecastFull(sym);return;}
+  const live=cache.price;const hist=cache.hist;
+  // Use last N days based on fcActiveDays for history display
+  const showDays=Math.min(fcActiveDays,hist.length);
+  const h=hist.slice(-showDays);
+  // Forecast steps = 20% of displayed history
+  const steps=Math.max(7,Math.floor(showDays*.2));
+  // LinReg forecast
+  const fcLR=forecast(h,steps);
+  // Exp smoothing
+  const fcES=expSmoothing(h,steps);
+  // Momentum
+  const fcMO=momentumFc(h,steps);
+  // Vol bands
+  const{bull:bullB,bear:bearB}=_calcVolBands(h,fcLR);
+  // Monte Carlo on shorter history
+  const mc=monteCarlo(h.slice(-60),steps);
+  // Labels
+  const labels=[...h.map((_,i)=>-(h.length-1-i)),...Array(steps).fill(null).map((_,i)=>i+1)];
+  const pivot=h.length-1;
   if(fcChart){fcChart.destroy();fcChart=null;}
   fcChart=new Chart(document.getElementById('fc-canvas'),{type:'line',
     data:{labels,datasets:[
-      {label:'Historical'+(isLive?' 🟢':''),data:[...hist,...Array(s).fill(null)],borderColor:'#3b82f6',borderWidth:2,fill:true,backgroundColor:'rgba(59,130,246,.08)',pointRadius:0,tension:.3},
-      {label:'Base (LinReg)',data:[...Array(hist.length-1).fill(null),hist[hist.length-1],...fc],borderColor:'#f59e0b',borderWidth:2,fill:false,pointRadius:0,tension:.3,borderDash:[6,3]},
-      {label:'Bull 95th%',data:[...Array(hist.length-1).fill(null),hist[hist.length-1],...bullBand],borderColor:'#10b981',borderWidth:1.5,fill:false,pointRadius:0,tension:.3,borderDash:[3,3]},
-      {label:'Bear 5th%',data:[...Array(hist.length-1).fill(null),hist[hist.length-1],...bearBand],borderColor:'#ef4444',borderWidth:1.5,fill:false,pointRadius:0,tension:.3,borderDash:[3,3]}
+      {label:'Historical',data:[...h,...Array(steps).fill(null)],borderColor:'#3b82f6',borderWidth:2,fill:true,backgroundColor:'rgba(59,130,246,.06)',pointRadius:0,tension:.3},
+      {label:'LinReg',data:[...Array(pivot).fill(null),h[pivot],...fcLR],borderColor:'#f59e0b',borderWidth:2,fill:false,pointRadius:0,tension:.3,borderDash:[6,3]},
+      {label:'Exp.Smooth',data:[...Array(pivot).fill(null),h[pivot],...fcES],borderColor:'#10b981',borderWidth:2,fill:false,pointRadius:0,tension:.3,borderDash:[4,2]},
+      {label:'Momentum',data:[...Array(pivot).fill(null),h[pivot],...fcMO],borderColor:'#a78bfa',borderWidth:2,fill:false,pointRadius:0,tension:.3,borderDash:[2,2]},
+      {label:'Bull 95th',data:[...Array(pivot).fill(null),h[pivot],...bullB],borderColor:'rgba(16,185,129,.5)',borderWidth:1,fill:false,pointRadius:0,tension:.3},
+      {label:'Bear 5th',data:[...Array(pivot).fill(null),h[pivot],...bearB],borderColor:'rgba(239,68,68,.5)',borderWidth:1,fill:'+4',backgroundColor:'rgba(239,68,68,.04)',pointRadius:0,tension:.3}
     ]},
-    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{labels:{color:'#94a3b8',font:{size:11}}},tooltip:{mode:'index',intersect:false,backgroundColor:'rgba(15,23,42,.9)',borderColor:'#334155',borderWidth:1}},scales:{x:{ticks:{color:'#64748b',maxTicksLimit:10},grid:{color:'rgba(51,65,85,.5)'}},y:{ticks:{color:'#64748b',callback:v=>fmt(v,sym)},grid:{color:'rgba(51,65,85,.5)'}}}}
+    options:{responsive:true,maintainAspectRatio:false,
+      plugins:{
+        legend:{labels:{color:'#94a3b8',font:{size:10},boxWidth:14,padding:10}},
+        tooltip:{mode:'index',intersect:false,backgroundColor:'rgba(15,23,42,.95)',borderColor:'#334155',borderWidth:1,callbacks:{label:ctx=>`${ctx.dataset.label}: ${ctx.raw!=null?fmt(ctx.raw,sym):'—'}`}}
+      },
+      scales:{
+        x:{ticks:{color:'#64748b',maxTicksLimit:10,font:{size:10}},grid:{color:'rgba(51,65,85,.4)'}},
+        y:{ticks:{color:'#64748b',callback:v=>fmt(v,sym),font:{size:10}},grid:{color:'rgba(51,65,85,.4)'}}
+      }
+    }
   });
-  const last=hist[hist.length-1];
-  const bullP=bullBand[bullBand.length-1],baseP=fc[fc.length-1],bearP=bearBand[bearBand.length-1];
-  document.getElementById('fc-bull').textContent=fmt(bullP,sym);
-  document.getElementById('fc-base').textContent=fmt(baseP,sym);
-  document.getElementById('fc-bear').textContent=fmt(bearP,sym);
-  const pb=(((bullP-last)/last)*100).toFixed(1),pba=(((baseP-last)/last)*100).toFixed(1),pbr=(((bearP-last)/last)*100).toFixed(1);
-  const src=isLive?'live market data':'simulated seed prices';
-  document.getElementById('fc-bull-t').textContent=`+${pb}% upside. 95th percentile (1.645σ×√t Brownian motion). Based on ${src}.`;
-  document.getElementById('fc-base-t').textContent=`${pba>=0?'+':''}${pba}% from current. Linear regression on ${hist.length}-day history.`;
-  document.getElementById('fc-bear-t').textContent=`${pbr}% downside. 5th percentile scenario. Volatility-scaled risk band.`;
+  // Scenarios
+  const last=h[h.length-1];
+  const bullP=bullB[bullB.length-1],baseP=fcLR[fcLR.length-1],bearP=bearB[bearB.length-1];
+  const mcMedian=mc.median;
+  const pct=(v,b)=>(((v-b)/b)*100).toFixed(1);
+  const setScen=(id,pctId,v)=>{
+    document.getElementById(id).textContent=fmt(v,sym);
+    const p=pct(v,last);
+    const el=document.getElementById(pctId);
+    el.textContent=(p>=0?'+':'')+p+'%';
+    el.style.color=p>=0?'var(--green)':'var(--red)';
+  };
+  setScen('fc-bull','fc-bull-pct',bullP);
+  setScen('fc-base','fc-base-pct',baseP);
+  setScen('fc-bear','fc-bear-pct',bearP);
+  setScen('fc-mc','fc-mc-pct',mcMedian);
+  document.getElementById('fc-bull-t').textContent=`95th%ile Brownian motion. ${steps}-period horizon.`;
+  document.getElementById('fc-base-t').textContent=`Linear regression on ${h.length}-day history.`;
+  document.getElementById('fc-bear-t').textContent=`5th%ile scenario. Volatility-scaled risk band.`;
+  document.getElementById('fc-mc-t').textContent=`500-path median. 10th-90th: ${fmt(mc.p10||mc.p5,sym)}–${fmt(mc.p90||mc.p95,sym)}`;
+  // Forecast table
+  const horizons=[[1,'1d'],[7,'1w'],[30,'1m'],[90,'3m'],[180,'6m'],[365,'1y'],[365*3,'3y'],[365*5,'5y']];
+  horizons.forEach(([days,id])=>{
+    const p_lr=forecast(h,days)[days-1];
+    const p_es=expSmoothing(h,days)[days-1];
+    const avg=(p_lr+p_es)/2;
+    document.getElementById(`fct-${id}`).textContent=fmt(avg,sym);
+    const pc=pct(avg,last);
+    const cEl=document.getElementById(`fct-${id}-c`);
+    cEl.textContent=(pc>=0?'+':'')+pc+'%';
+    cEl.style.color=pc>=0?'var(--green)':'var(--red)';
+  });
+  // Model agreement + confidence
+  const preds=[bullP,baseP,bearP,mcMedian];
+  const mn=Math.min(...preds),mx=Math.max(...preds);
+  const spread=(mx-mn)/last*100;
+  const conf=Math.max(20,Math.min(95,100-spread*3)).toFixed(0);
+  document.getElementById('fc-conf-bar').style.width=conf+'%';
+  document.getElementById('fc-conf-pct').textContent=conf+'%';
+  const upCount=preds.filter(p=>p>last).length;
+  document.getElementById('fc-model-agreement').textContent=
+    `${upCount}/4 models bullish · spread ${spread.toFixed(1)}% · `+
+    `LinReg ${pct(baseP,last)}% · ExpSmooth ${pct(fcES[fcES.length-1],last)}% · `+
+    `Momentum ${pct(fcMO[fcMO.length-1],last)}% · MC median ${pct(mcMedian,last)}%`;
 }
+
+// ── 90s Auto-Refresh for Forecast ────────────────────────────────
+(function _startFcAutoRefresh(){
+  let _cd=90;
+  const badge=document.getElementById('fc-refresh-badge');
+  setInterval(()=>{
+    _cd--;
+    if(badge)badge.textContent='⏱ '+_cd+'s';
+    if(_cd<=0){
+      _cd=90;
+      // Clear live cache for active asset to force re-fetch
+      delete fcLiveCache[fcActiveSym];
+      // Only refresh if forecast tab is visible
+      const pg=document.getElementById('page-forecast');
+      if(pg&&pg.classList.contains('active'))initForecastFull(fcActiveSym);
+    }
+  },1000);
+})();
 
 // ════════════════════════════════════════
 // SIGNALS PAGE
