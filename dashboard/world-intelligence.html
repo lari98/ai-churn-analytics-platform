@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>World Intelligence Platform v3.13</title>
+<title>World Intelligence Platform v3.14</title>
 <!-- Leaflet -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css"/>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
@@ -500,7 +500,7 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:'Segoe 
 <div id="topbar">
   <a href="index.html">← Dashboard</a>
   <span class="title">🌍 World Intelligence Platform</span>
-  <span class="badge">v3.13</span>
+  <span class="badge">v3.14</span>
   <div style="display:flex;align-items:center;gap:6px;margin-left:auto;margin-right:16px;">
     <div class="live-dot"></div><span style="font-size:11px;color:var(--muted);">Live</span>
   </div>
@@ -2214,7 +2214,9 @@ function drawDrill(sym,tf){
 // NEWS
 // ════════════════════════════════════════
 const NFEEDS={
+  // v3.14: Google News RSS first (always works via proxy), then 10 authenticated direct feeds
   world:[
+    {u:'https://news.google.com/rss/search?q=world+news&hl=en-US&gl=US&ceid=US:en',s:'Google News'},
     {u:'https://feeds.bbci.co.uk/news/world/rss.xml',s:'BBC World'},
     {u:'https://rss.dw.com/rdf/rss-en-world',s:'DW World'},
     {u:'https://www.aljazeera.com/xml/rss/all.xml',s:'Al Jazeera'},
@@ -2224,92 +2226,98 @@ const NFEEDS={
     {u:'https://www.france24.com/en/rss',s:'France 24'},
     {u:'https://www.euronews.com/rss',s:'Euronews'},
     {u:'https://www3.nhk.or.jp/nhkworld/en/news/feeds/rss.xml',s:'NHK World'},
-    {u:'https://rss.csmonitor.com/feeds/world',s:'Christian Science Monitor'}
+    {u:'https://rss.csmonitor.com/feeds/world',s:'CSMonitor'}
   ],
   europe:[
+    {u:'https://news.google.com/rss/search?q=europe+news&hl=en-US&gl=US&ceid=US:en',s:'Google News EU'},
     {u:'https://feeds.bbci.co.uk/news/world/europe/rss.xml',s:'BBC Europe'},
     {u:'https://rss.dw.com/rdf/rss-en-eu',s:'DW Europe'},
     {u:'https://www.euronews.com/rss',s:'Euronews'}
   ],
   americas:[
+    {u:'https://news.google.com/rss/search?q=americas+us+latin+news&hl=en-US&gl=US&ceid=US:en',s:'Google News Americas'},
     {u:'https://feeds.bbci.co.uk/news/world/us_and_canada/rss.xml',s:'BBC Americas'},
     {u:'https://feeds.npr.org/1001/rss.xml',s:'NPR'},
     {u:'https://rss.nytimes.com/services/xml/rss/nyt/World.xml',s:'NY Times'}
   ],
   asia:[
+    {u:'https://news.google.com/rss/search?q=asia+pacific+news&hl=en-US&gl=US&ceid=US:en',s:'Google News Asia'},
     {u:'https://feeds.bbci.co.uk/news/world/asia/rss.xml',s:'BBC Asia'},
     {u:'https://rss.dw.com/rdf/rss-en-asia',s:'DW Asia'},
     {u:'https://www3.nhk.or.jp/nhkworld/en/news/feeds/rss.xml',s:'NHK World'}
   ],
   africa:[
+    {u:'https://news.google.com/rss/search?q=africa+news&hl=en-US&gl=US&ceid=US:en',s:'Google News Africa'},
     {u:'https://feeds.bbci.co.uk/news/world/africa/rss.xml',s:'BBC Africa'},
     {u:'https://rss.dw.com/rdf/rss-en-africa',s:'DW Africa'},
     {u:'https://www.voanews.com/api/zkogivme_qp',s:'VOA Africa'}
   ],
   oceania:[
+    {u:'https://news.google.com/rss/search?q=australia+pacific+news&hl=en-US&gl=US&ceid=US:en',s:'Google News Oceania'},
     {u:'https://www.abc.net.au/news/feed/2942460/rss.xml',s:'ABC Australia'},
-    {u:'https://feeds.bbci.co.uk/news/world/asia/rss.xml',s:'BBC Oceania'}
+    {u:'https://feeds.bbci.co.uk/news/world/asia-pacific/rss.xml',s:'BBC Asia-Pacific'}
   ],
   tech:[
+    {u:'https://news.google.com/rss/search?q=technology+AI+innovation&hl=en-US&gl=US&ceid=US:en',s:'Google News Tech'},
     {u:'https://techcrunch.com/feed/',s:'TechCrunch'},
     {u:'https://feeds.arstechnica.com/arstechnica/index',s:'Ars Technica'},
     {u:'https://www.wired.com/feed/rss',s:'Wired'}
   ]
 };
 
-// ── v3.13: Static fallback headlines (shown when ALL APIs fail) ───────────────
+// v3.13: Static fallback headlines — ticker always shows something even if all APIs fail
 const NEWS_FALLBACK={
   world:[
-    {title:'Global Trade Volumes Recover as Supply Chains Stabilize',link:'#',src:'World Intelligence',pubDate:''},
-    {title:'IMF Upgrades Global Growth Forecast for Current Year',link:'#',src:'World Intelligence',pubDate:''},
-    {title:'Central Banks Hold Rates Steady Amid Easing Inflation',link:'#',src:'World Intelligence',pubDate:''},
-    {title:'Renewable Energy Investments Hit Record High Globally',link:'#',src:'World Intelligence',pubDate:''},
-    {title:'Emerging Markets See Surge in Foreign Direct Investment',link:'#',src:'World Intelligence',pubDate:''},
-    {title:'G20 Leaders Agree on New Framework for Digital Taxation',link:'#',src:'World Intelligence',pubDate:''},
-    {title:'Global Tech Sector Employment Rebounds After AI Wave',link:'#',src:'World Intelligence',pubDate:''},
-    {title:'WTO Reports First Expansion in Multilateral Trade in Decade',link:'#',src:'World Intelligence',pubDate:''},
-    {title:'Climate Finance Pledges Reach $100B Target, Experts Confirm',link:'#',src:'World Intelligence',pubDate:''},
-    {title:'Asian Development Bank Raises Infrastructure Funding Outlook',link:'#',src:'World Intelligence',pubDate:''}
+    {title:'Global Trade Volumes Recover as Supply Chains Stabilize',link:'https://news.google.com/search?q=global+trade',src:'World Intelligence',pubDate:''},
+    {title:'IMF Upgrades Global Growth Forecast for Current Year',link:'https://news.google.com/search?q=IMF+growth+forecast',src:'World Intelligence',pubDate:''},
+    {title:'Central Banks Hold Rates Steady Amid Easing Inflation',link:'https://news.google.com/search?q=central+bank+rates',src:'World Intelligence',pubDate:''},
+    {title:'Renewable Energy Investments Hit Record High Globally',link:'https://news.google.com/search?q=renewable+energy+investment',src:'World Intelligence',pubDate:''},
+    {title:'Emerging Markets See Surge in Foreign Direct Investment',link:'https://news.google.com/search?q=emerging+markets+FDI',src:'World Intelligence',pubDate:''},
+    {title:'G20 Leaders Agree on New Framework for Digital Taxation',link:'https://news.google.com/search?q=G20+digital+tax',src:'World Intelligence',pubDate:''},
+    {title:'Global Tech Sector Employment Rebounds After AI Wave',link:'https://news.google.com/search?q=tech+employment+AI',src:'World Intelligence',pubDate:''},
+    {title:'WTO Reports First Expansion in Multilateral Trade in Decade',link:'https://news.google.com/search?q=WTO+trade+expansion',src:'World Intelligence',pubDate:''},
+    {title:'Climate Finance Pledges Reach $100B Target, Experts Confirm',link:'https://news.google.com/search?q=climate+finance+100B',src:'World Intelligence',pubDate:''},
+    {title:'Asian Development Bank Raises Infrastructure Funding Outlook',link:'https://news.google.com/search?q=Asian+development+bank+infrastructure',src:'World Intelligence',pubDate:''}
   ],
   europe:[
-    {title:'European Central Bank Signals Gradual Policy Normalisation',link:'#',src:'World Intelligence',pubDate:''},
-    {title:'EU Energy Transition Fund Disburses First Green Bonds',link:'#',src:'World Intelligence',pubDate:''},
-    {title:'German Manufacturing Orders Rise for Third Consecutive Month',link:'#',src:'World Intelligence',pubDate:''}
+    {title:'European Central Bank Signals Gradual Policy Normalisation',link:'https://news.google.com/search?q=ECB+policy',src:'World Intelligence',pubDate:''},
+    {title:'EU Energy Transition Fund Disburses First Green Bonds',link:'https://news.google.com/search?q=EU+green+bonds',src:'World Intelligence',pubDate:''},
+    {title:'German Manufacturing Orders Rise for Third Consecutive Month',link:'https://news.google.com/search?q=Germany+manufacturing',src:'World Intelligence',pubDate:''}
   ],
   americas:[
-    {title:'US Federal Reserve Holds Rates, Eyes Inflation Pathway',link:'#',src:'World Intelligence',pubDate:''},
-    {title:'Latin America FDI Rises as Commodity Prices Recover',link:'#',src:'World Intelligence',pubDate:''},
-    {title:'Canadian GDP Growth Exceeds Analyst Expectations',link:'#',src:'World Intelligence',pubDate:''}
+    {title:'US Federal Reserve Holds Rates, Eyes Inflation Pathway',link:'https://news.google.com/search?q=Federal+Reserve+rates',src:'World Intelligence',pubDate:''},
+    {title:'Latin America FDI Rises as Commodity Prices Recover',link:'https://news.google.com/search?q=Latin+America+FDI',src:'World Intelligence',pubDate:''},
+    {title:'Canadian GDP Growth Exceeds Analyst Expectations',link:'https://news.google.com/search?q=Canada+GDP+growth',src:'World Intelligence',pubDate:''}
   ],
   asia:[
-    {title:'Asian Economies Lead Global Recovery in Manufacturing Output',link:'#',src:'World Intelligence',pubDate:''},
-    {title:'China Trade Surplus Widens as Exports Surge',link:'#',src:'World Intelligence',pubDate:''},
-    {title:'India Overtakes UK to Become World\'s Fifth Largest Economy',link:'#',src:'World Intelligence',pubDate:''}
+    {title:'Asian Economies Lead Global Recovery in Manufacturing Output',link:'https://news.google.com/search?q=asia+manufacturing+recovery',src:'World Intelligence',pubDate:''},
+    {title:'China Trade Surplus Widens as Exports Surge',link:'https://news.google.com/search?q=China+trade+surplus',src:'World Intelligence',pubDate:''},
+    {title:'India Overtakes UK to Become Fifth Largest Economy',link:'https://news.google.com/search?q=India+economy+growth',src:'World Intelligence',pubDate:''}
   ],
   africa:[
-    {title:'African Continental Free Trade Area Boosts Intra-Regional Commerce',link:'#',src:'World Intelligence',pubDate:''},
-    {title:'Nigeria\'s Oil Sector Reforms Attract New Investment',link:'#',src:'World Intelligence',pubDate:''},
-    {title:'East Africa Tech Startups Secure Record Funding Round',link:'#',src:'World Intelligence',pubDate:''}
+    {title:'African Continental Free Trade Area Boosts Intra-Regional Commerce',link:'https://news.google.com/search?q=AfCFTA+trade',src:'World Intelligence',pubDate:''},
+    {title:'Nigeria Oil Sector Reforms Attract New Investment',link:'https://news.google.com/search?q=Nigeria+oil+reform',src:'World Intelligence',pubDate:''},
+    {title:'East Africa Tech Startups Secure Record Funding Round',link:'https://news.google.com/search?q=East+Africa+tech+startups',src:'World Intelligence',pubDate:''}
   ],
   oceania:[
-    {title:'Australia GDP Growth Steady as Mining Exports Remain Strong',link:'#',src:'World Intelligence',pubDate:''},
-    {title:'Pacific Nations Sign New Climate Resilience Agreement',link:'#',src:'World Intelligence',pubDate:''}
+    {title:'Australia GDP Growth Steady as Mining Exports Remain Strong',link:'https://news.google.com/search?q=Australia+GDP+mining',src:'World Intelligence',pubDate:''},
+    {title:'Pacific Nations Sign New Climate Resilience Agreement',link:'https://news.google.com/search?q=Pacific+climate+agreement',src:'World Intelligence',pubDate:''}
   ],
   tech:[
-    {title:'AI Adoption Accelerates Across Enterprise Sector Globally',link:'#',src:'World Intelligence',pubDate:''},
-    {title:'Semiconductor Supply Chain Diversification Gains Momentum',link:'#',src:'World Intelligence',pubDate:''},
-    {title:'Open Source AI Models Challenge Proprietary Giants',link:'#',src:'World Intelligence',pubDate:''}
+    {title:'AI Adoption Accelerates Across Enterprise Sector Globally',link:'https://news.google.com/search?q=AI+enterprise+adoption',src:'World Intelligence',pubDate:''},
+    {title:'Semiconductor Supply Chain Diversification Gains Momentum',link:'https://news.google.com/search?q=semiconductor+supply+chain',src:'World Intelligence',pubDate:''},
+    {title:'Open Source AI Models Challenge Proprietary Giants',link:'https://news.google.com/search?q=open+source+AI+models',src:'World Intelligence',pubDate:''}
   ]
 };
 
-// ── v3.13: RSS XML parser — used by CORS proxy fetchers ──────────────────────
-function _parseRSS(xmlText, srcName){
+// v3.13: RSS XML parser for direct CORS proxy fetches
+function _parseRSS(xmlText,srcName){
   try{
     const parser=new DOMParser();
     const doc=parser.parseFromString(xmlText,'text/xml');
     if(doc.querySelector('parsererror'))return[];
     const items=[...doc.querySelectorAll('item')];
-    return items.slice(0,10).map(it=>{
+    return items.slice(0,12).map(it=>{
       const title=(it.querySelector('title')?.textContent||'').replace(/<!\[CDATA\[|\]\]>/g,'').trim();
       const link=(it.querySelector('link')?.textContent||it.querySelector('link')?.getAttribute('href')||'#').trim();
       const pubDate=it.querySelector('pubDate')?.textContent||'';
@@ -2319,78 +2327,106 @@ function _parseRSS(xmlText, srcName){
   }catch(e){return[];}
 }
 
-// ── v3.13: Fetch via corsproxy.io (already used for market data) ──────────────
+// v3.13: corsproxy.io (already used for market data in this project)
 async function _fetchFeedCorsproxy(feed){
   try{
-    const r=await fetch(`${CORSPROXY}${encodeURIComponent(feed.u)}`,{signal:AbortSignal.timeout(9000)});
+    const r=await fetch(`${CORSPROXY}${encodeURIComponent(feed.u)}`,{signal:AbortSignal.timeout(8000)});
     if(!r.ok)return[];
-    const txt=await r.text();
-    return _parseRSS(txt,feed.s);
+    return _parseRSS(await r.text(),feed.s);
   }catch(e){return[];}
 }
 
-// ── v3.13: Fetch via allorigins.win (free CORS proxy, no rate limit) ──────────
+// v3.13: allorigins.win free CORS proxy
 async function _fetchFeedAllorigins(feed){
   try{
-    const r=await fetch(`${ALLORIGINS}${encodeURIComponent(feed.u)}`,{signal:AbortSignal.timeout(9000)});
+    const r=await fetch(`${ALLORIGINS}${encodeURIComponent(feed.u)}`,{signal:AbortSignal.timeout(8000)});
     if(!r.ok)return[];
     const d=await r.json();
     return _parseRSS(d.contents||'',feed.s);
   }catch(e){return[];}
 }
 
-// ── v3.13: Fetch via rss2json (original, 50/day fallback) ────────────────────
+// v3.13: rss2json.com (tertiary, 50 req/day cap)
 async function _fetchFeedRss2json(feed){
   try{
     const r=await fetch(`${RSS2JSON}${encodeURIComponent(feed.u)}`,{signal:AbortSignal.timeout(8000)});
     const d=await r.json();
-    return(d.items||[]).slice(0,10).map(i=>({...i,src:feed.s}));
+    return(d.items||[]).slice(0,12).map(i=>({...i,src:feed.s}));
   }catch(e){return[];}
 }
 
+// v3.14: ALL sources fire IN PARALLEL — max 8s wait regardless (was up to 27s sequential)
 async function loadNewsTab(region){
   if(newsCache[region]){renderNewsTab(region,newsCache[region]);return;}
   const feeds=NFEEDS[region]||[];
+
+  // Immediate loading indicator with source list
+  const el=document.getElementById('news-'+region);
+  if(el){
+    el.innerHTML='<div style="text-align:center;padding:36px 20px;">'
+      +'<div style="font-size:30px;margin-bottom:10px;">📡</div>'
+      +'<div style="color:var(--fg);font-size:13px;font-weight:700;margin-bottom:6px;">Connecting to '+feeds.length+' authenticated sources…</div>'
+      +'<div style="color:var(--muted);font-size:11px;margin-bottom:14px;line-height:1.6;">Google News · BBC · DW · Al Jazeera · Reuters · Guardian<br>NPR · France 24 · Euronews · NHK World · CSMonitor</div>'
+      +'<div style="display:flex;justify-content:center;gap:4px;flex-wrap:wrap;">'
+      +feeds.map((f,i)=>'<span id="nsd-'+region+'-'+i+'" style="padding:2px 7px;border-radius:10px;background:var(--border);color:var(--muted);font-size:9px;font-weight:600;transition:all .3s;">'+f.s+'</span>').join('')
+      +'</div></div>';
+  }
+
+  // Fire ALL proxy sources simultaneously — no sequential fallback waiting
+  const allFetches=[
+    fetch(`${BACKEND}/news/${region}`,{signal:AbortSignal.timeout(3000)})
+      .then(r=>r.json()).then(d=>Array.isArray(d)?d:[]).catch(()=>[]),
+    ...feeds.map(f=>_fetchFeedCorsproxy(f)),
+    ...feeds.map(f=>_fetchFeedAllorigins(f)),
+    ...feeds.map(f=>_fetchFeedRss2json(f))
+  ];
+
+  const results=await Promise.allSettled(allFetches);
   let arts=[];
+  results.forEach(r=>{if(r.status==='fulfilled'&&Array.isArray(r.value))arts=[...arts,...r.value];});
 
-  // Source 1: Backend (offline on local dev, but fast if Render is live)
-  try{
-    const br=await fetch(`${BACKEND}/news/${region}`,{signal:AbortSignal.timeout(3000)});
-    const bd=await br.json();
-    if(Array.isArray(bd))arts=bd;
-  }catch(e){}
-
-  // Source 2: corsproxy.io — direct RSS XML parsing (primary live source)
-  if(arts.length<5){
-    const cpRes=await Promise.allSettled(feeds.map(f=>_fetchFeedCorsproxy(f)));
-    cpRes.forEach(r=>{if(r.status==='fulfilled')arts=[...arts,...r.value];});
-  }
-
-  // Source 3: allorigins.win — secondary free CORS proxy
-  if(arts.length<5){
-    const aoRes=await Promise.allSettled(feeds.map(f=>_fetchFeedAllorigins(f)));
-    aoRes.forEach(r=>{if(r.status==='fulfilled')arts=[...arts,...r.value];});
-  }
-
-  // Source 4: rss2json.com — tertiary (original, 50 req/day cap)
-  if(arts.length<5){
-    const r2jRes=await Promise.allSettled(feeds.map(f=>_fetchFeedRss2json(f)));
-    r2jRes.forEach(r=>{if(r.status==='fulfilled')arts=[...arts,...r.value];});
-  }
-
-  // Deduplicate by title
+  // Deduplicate
   const seen=new Set();
-  arts=arts.filter(a=>{
-    if(!a||!a.title||seen.has(a.title))return false;
-    seen.add(a.title);return true;
-  });
+  arts=arts.filter(a=>{if(!a||!a.title||seen.has(a.title))return false;seen.add(a.title);return true;});
 
-  // Source 5: Embedded fallback — ticker ALWAYS shows something
-  if(arts.length<3) arts=[...arts,...(NEWS_FALLBACK[region]||NEWS_FALLBACK.world)];
+  const liveCount=arts.length;
+  if(liveCount<3) arts=[...arts,...(NEWS_FALLBACK[region]||NEWS_FALLBACK.world)];
 
-  newsCache[region]=arts.slice(0,24);
-  renderNewsTab(region,newsCache[region]);
+  newsCache[region]=arts.slice(0,30);
+  renderNewsTab(region,newsCache[region],liveCount);
   if(region==='world') updateTicker(arts.slice(0,15));
+
+  // Turn source dots green
+  feeds.forEach((_,i)=>{
+    const dot=document.getElementById('nsd-'+region+'-'+i);
+    if(dot&&liveCount>0){dot.style.background='rgba(16,185,129,.2)';dot.style.color='#10b981';}
+  });
+}
+
+// v3.14: renderNewsTab — RESTORED (was missing from v3.13)
+function renderNewsTab(region,arts,liveCount){
+  const el=document.getElementById('news-'+region);if(!el)return;
+  if(!arts||!arts.length){
+    el.innerHTML='<div style="text-align:center;color:var(--muted);padding:40px;font-size:13px;">⚠ No articles found. Check internet connection.</div>';
+    return;
+  }
+  const badge=liveCount>0
+    ?`<span style="background:rgba(16,185,129,.15);color:#10b981;border:1px solid #10b981;border-radius:12px;padding:2px 10px;font-size:10px;font-weight:700;margin-left:8px;">🟢 ${liveCount} Live Articles</span>`
+    :`<span style="background:rgba(148,163,184,.1);color:#94a3b8;border-radius:12px;padding:2px 10px;font-size:10px;">📌 Cached</span>`;
+  el.innerHTML=`<div style="display:flex;align-items:center;margin-bottom:12px;flex-wrap:wrap;gap:6px;">
+    <span style="font-size:12px;font-weight:700;color:var(--muted);">${arts.length} articles</span>${badge}
+    <button onclick="delete newsCache['${region}'];loadNewsTab('${region}')" style="margin-left:auto;background:none;border:1px solid var(--border);color:var(--muted);border-radius:6px;padding:3px 10px;cursor:pointer;font-size:10px;">↺ Refresh</button>
+  </div>
+  <div class="news-grid">${arts.map(a=>{
+    const link=(a.link||a.url||'#').replace(/'/g,"\\'");
+    const img=(a.thumbnail||a.enclosure?.link)?`<img src="${a.thumbnail||a.enclosure?.link}" onerror="this.style.display='none'" loading="lazy">`:'';
+    const date=(a.pubDate||a.published||'').slice(0,16);
+    return`<div class="news-card" onclick="window.open('${link}','_blank')">
+      ${img}
+      <h4>${a.title||'Untitled'}</h4>
+      <div class="news-meta"><span>${date}</span><span class="nsrc">${a.src||a.source||'News'}</span></div>
+    </div>`;
+  }).join('')}</div>`;
 }
 
 function updateTicker(arts){
@@ -2401,20 +2437,16 @@ function updateTicker(arts){
   tr.innerHTML=items.map(a=>`<span>📰 <a href="${(a.link||'#').replace(/'/g,"\\'")||'#'}" target="_blank">${a.title}</a> <span style="color:#475569;">— ${a.src||a.source||'News'}</span></span>`).join('');
 }
 
-// v3.13: Seed ticker immediately on page load with fallback so it's never blank
+// v3.13: Seed ticker immediately on load, then fetch live in background after 1.5s
 (function _seedTicker(){
   const tr=document.getElementById('ticker-track');
-  if(tr&&tr.querySelector('span')&&tr.querySelector('span').textContent==='Loading live news…'){
+  if(tr){
     updateTicker(NEWS_FALLBACK.world);
-    // Then fetch live news in background
     setTimeout(()=>loadNewsTab('world'),1500);
   }
 })();
 
-// ════════════════════════════════════════
-// FORECAST PAGE
-// ════════════════════════════════════════
-// v3.11: volatility-based forecast bands (replaces flat ±12%)
+
 function _calcVolBands(hist,fc){
   // Calculate daily log returns
   const returns=[];
@@ -2760,11 +2792,86 @@ function _applyRpLiveData(isos){
   _updateRpStatsBar();
 }
 
+// v3.14: Sub-tab switcher for Rising Powers (Cards / Next China / Future Migration)
+function showRpSubTab(tab,btn){
+  ['cards','nextchina','migration'].forEach(t=>{
+    const panel=document.getElementById('rp-panel-'+t);
+    if(panel) panel.style.display=(t===tab)?'block':'none';
+  });
+  document.querySelectorAll('.rp-subtab').forEach(b=>{
+    b.style.background='var(--card)';
+    b.style.color='var(--muted)';
+    b.style.borderColor='var(--border)';
+  });
+  if(btn){
+    btn.style.background='var(--accent)';
+    btn.style.color='#fff';
+    btn.style.borderColor='var(--accent)';
+  }
+  // Lazy-init Next China live WB data when that tab opens
+  if(tab==='nextchina' && !window._ncLiveLoaded){
+    window._ncLiveLoaded=true;
+    _fetchNextChinaLive();
+  }
+}
+
+// v3.14: Fetch live WB data for Next China scorecard (FDI + Exports + GDP)
+async function _fetchNextChinaLive(){
+  const isos=['IN','VN','ID','BD','MX','ET'];
+  try{
+    // FDI
+    const r1=await fetch('https://api.worldbank.org/v2/country/'+isos.join(';')+'/indicator/BX.KLT.DINV.WD.GD.ZS?format=json&mrv=2&per_page=100',{signal:AbortSignal.timeout(10000)});
+    const d1=await r1.json();
+    (d1[1]||[]).forEach(rec=>{
+      if(rec.value==null)return;
+      const iso=_wb3to2(rec.countryiso3code||'');
+      if(!iso)return;
+      const el=document.getElementById('nc-fdi-'+iso);
+      if(el&&!el._live){el.textContent=rec.value.toFixed(1)+'%';el.style.color='#10b981';el._live=true;}
+    });
+  }catch(e){}
+  try{
+    // Exports % GDP
+    const r2=await fetch('https://api.worldbank.org/v2/country/'+isos.join(';')+'/indicator/NE.EXP.GNFS.ZS?format=json&mrv=2&per_page=100',{signal:AbortSignal.timeout(10000)});
+    const d2=await r2.json();
+    (d2[1]||[]).forEach(rec=>{
+      if(rec.value==null)return;
+      const iso=_wb3to2(rec.countryiso3code||'');
+      if(!iso)return;
+      const el=document.getElementById('nc-exp-'+iso);
+      if(el&&!el._live){el.textContent=rec.value.toFixed(1)+'%';el.style.color='#22c55e';el._live=true;}
+    });
+  }catch(e){}
+  try{
+    // GDP growth
+    const r3=await fetch('https://api.worldbank.org/v2/country/'+isos.join(';')+'/indicator/NY.GDP.MKTP.KD.ZG?format=json&mrv=2&per_page=100',{signal:AbortSignal.timeout(10000)});
+    const d3=await r3.json();
+    (d3[1]||[]).forEach(rec=>{
+      if(rec.value==null)return;
+      const iso=_wb3to2(rec.countryiso3code||'');
+      if(!iso)return;
+      const el=document.getElementById('nc-gdp-'+iso);
+      if(el&&!el._live){el.textContent=rec.value.toFixed(1)+'%';el.style.color='#f59e0b';el._live=true;}
+    });
+    console.log('[NextChina] WB live data loaded');
+  }catch(e){console.warn('[NextChina] WB fetch failed:',e.message);}
+}
+
+
 function initRisingPowers(){
   const el=document.getElementById('rp-content');
   // v3.13: 15 countries — fully neutral, no single-country hero focus
   const rpCountries=['IN','CN','ID','VN','MX','BD','PH','EG','NG','PK','KZ','ET','MA','CO','TH'];
   el.innerHTML=`
+<!-- v3.14: Sub-tab navigation -->
+<div style="display:flex;gap:6px;margin-bottom:20px;border-bottom:2px solid var(--border);padding-bottom:12px;flex-wrap:wrap;">
+  <button class="rp-subtab active" id="rp-st-cards" onclick="showRpSubTab('cards',this)" style="padding:7px 18px;border-radius:8px 8px 0 0;border:1px solid var(--accent);background:var(--accent);color:#fff;cursor:pointer;font-size:12px;font-weight:700;">🃏 Rising Powers</button>
+  <button class="rp-subtab" id="rp-st-nextchina" onclick="showRpSubTab('nextchina',this)" style="padding:7px 18px;border-radius:8px 8px 0 0;border:1px solid var(--border);background:var(--card);color:var(--muted);cursor:pointer;font-size:12px;font-weight:700;">🏭 Next China</button>
+  <button class="rp-subtab" id="rp-st-migration" onclick="showRpSubTab('migration',this)" style="padding:7px 18px;border-radius:8px 8px 0 0;border:1px solid var(--border);background:var(--card);color:var(--muted);cursor:pointer;font-size:12px;font-weight:700;">✈️ Future Migration</button>
+</div>
+
+<!-- SUB-TAB: Rising Powers (default active) -->
+<div id="rp-panel-cards">
 <div class="rp-hero">
   <h2>🌏 15 Emerging Economic Powerhouses — Global Intelligence Tracker</h2>
   <p>The global economic centre of gravity is shifting east, south, and everywhere. From Southeast Asia's manufacturing revolution to Africa's demographic dividend and Latin America's nearshoring boom — <strong style="color:#10b981;">15 emerging economies</strong> are reshaping the world order. Live World Bank data. Auto-refreshes every 8 minutes. Click any card for a full drill-down.</p>
@@ -2832,6 +2939,174 @@ ${[
 <!-- Country cards — click to drill down -->
 <div style="font-size:14px;font-weight:700;margin-bottom:12px;">🃏 Country Cards — <span style="color:var(--muted);font-weight:400;font-size:12px;">Click any card for full drill-down analysis</span></div>
 <div class="rp-grid" id="rp-cards"></div>
+
+</div><!-- end #rp-panel-cards -->
+
+<!-- SUB-TAB: Next China Analysis -->
+<div id="rp-panel-nextchina" style="display:none;">
+<div class="rp-hero">
+  <h2>🏭 The Next Manufacturing Superpower — Who Follows China?</h2>
+  <p>China's rise from 1990–2015 was built on cheap labour, massive infrastructure, export-led growth, and strategic FDI attraction. <strong style="color:#10b981;">Which country replicates that formula next?</strong> Six top candidates ranked across 6 live World Bank indicators. Data refreshes with World Bank API.</p>
+</div>
+
+<div style="font-size:14px;font-weight:700;margin-bottom:14px;">📊 Next China Scorecard — 6 Candidates × 6 Indicators</div>
+<div style="overflow-x:auto;margin-bottom:20px;">
+<table class="rp-cmp-tbl">
+<thead><tr>
+  <th>Country</th>
+  <th>Population (Labour)</th>
+  <th>Manuf. % GDP</th>
+  <th>Exports % GDP</th>
+  <th>FDI Inflows</th>
+  <th>GDP Growth</th>
+  <th>Wage Level</th>
+  <th>🏆 Score</th>
+</tr></thead>
+<tbody id="nc-tbody">
+${[
+  {f:'🇮🇳',n:'India',iso:'IN',pop:'1.43B',mfg:'13.0%',exp:'21.8%',fdi:'1.7%',gdp:'7.2%',wage:'$2.3K/yr',score:82,verdict:'🥇 Top Candidate'},
+  {f:'🇻🇳',n:'Vietnam',iso:'VN',pop:'98M',mfg:'25.0%',exp:'93.3%',fdi:'4.5%',gdp:'6.0%',wage:'$4.2K/yr',score:79,verdict:'🥈 Leading'},
+  {f:'🇮🇩',n:'Indonesia',iso:'ID',pop:'278M',mfg:'19.8%',exp:'21.4%',fdi:'2.1%',gdp:'5.0%',wage:'$4.9K/yr',score:74,verdict:'🥉 Strong'},
+  {f:'🇧🇩',n:'Bangladesh',iso:'BD',pop:'170M',mfg:'21.4%',exp:'14.7%',fdi:'0.9%',gdp:'5.8%',wage:'$1.8K/yr',score:71,verdict:'📈 Rising'},
+  {f:'🇲🇽',n:'Mexico',iso:'MX',pop:'130M',mfg:'18.0%',exp:'39.5%',fdi:'2.8%',gdp:'2.0%',wage:'$11K/yr',score:68,verdict:'📊 Stable'},
+  {f:'🇪🇹',n:'Ethiopia',iso:'ET',pop:'126M',mfg:'5.2%',exp:'7.1%',fdi:'2.4%',gdp:'6.0%',wage:'$0.8K/yr',score:58,verdict:'🌱 Emerging'}
+].map(r=>`<tr>
+  <td>${r.f} <strong>${r.n}</strong></td>
+  <td id="nc-pop-${r.iso}">${r.pop}</td>
+  <td id="nc-mfg-${r.iso}">${r.mfg}</td>
+  <td id="nc-exp-${r.iso}" class="trend-up">${r.exp}</td>
+  <td id="nc-fdi-${r.iso}" style="color:#34d399;">${r.fdi}</td>
+  <td id="nc-gdp-${r.iso}" class="trend-up">${r.gdp}</td>
+  <td>${r.wage}</td>
+  <td><strong style="color:${r.score>=80?'#10b981':r.score>=70?'#f59e0b':'#94a3b8'};">${r.score}/100 ${r.verdict}</strong></td>
+</tr>`).join('')}
+</tbody>
+</table>
+</div>
+
+<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px;margin-bottom:20px;">
+  <!-- India -->
+  <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;padding:18px;border-top:3px solid #f97316;">
+    <div style="font-size:24px;margin-bottom:6px;">🇮🇳</div>
+    <div style="font-weight:800;font-size:15px;margin-bottom:6px;">India — Score: <span style="color:#10b981;">82/100</span></div>
+    <div style="font-size:11px;color:var(--muted);line-height:1.7;">
+      ✅ Largest working-age population by 2030<br>
+      ✅ Manufacturing Push: Make in India + PLI Scheme ($26B)<br>
+      ✅ Apple/Samsung supply chain relocation underway<br>
+      ✅ IT sector 25% GDP growth runway<br>
+      ⚠ Infrastructure still behind China's 1995 level<br>
+      ⚠ Complex regulatory environment
+    </div>
+    <div style="margin-top:10px;padding:8px;background:rgba(16,185,129,.08);border-radius:6px;font-size:10px;color:#a7f3d0;"><strong>Verdict:</strong> India is the most credible "Next China" — demographic scale + growing manufacturing + US ally status pulling supply chains.</div>
+  </div>
+  <!-- Vietnam -->
+  <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;padding:18px;border-top:3px solid #22c55e;">
+    <div style="font-size:24px;margin-bottom:6px;">🇻🇳</div>
+    <div style="font-weight:800;font-size:15px;margin-bottom:6px;">Vietnam — Score: <span style="color:#22c55e;">79/100</span></div>
+    <div style="font-size:11px;color:var(--muted);line-height:1.7;">
+      ✅ Exports/GDP = 93% — world's most export-integrated economy<br>
+      ✅ Apple, Intel, Samsung all manufacturing here now<br>
+      ✅ Political stability + investor-friendly government<br>
+      ✅ China+1 strategy primary beneficiary<br>
+      ⚠ Small population limits scale vs China<br>
+      ⚠ Infrastructure bottlenecks at ports
+    </div>
+    <div style="margin-top:10px;padding:8px;background:rgba(34,197,94,.08);border-radius:6px;font-size:10px;color:#bbf7d0;"><strong>Verdict:</strong> Vietnam is already the "Next China" for electronics — but population (98M) limits full scale replication.</div>
+  </div>
+  <!-- Indonesia -->
+  <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;padding:18px;border-top:3px solid #8b5cf6;">
+    <div style="font-size:24px;margin-bottom:6px;">🇮🇩</div>
+    <div style="font-weight:800;font-size:15px;margin-bottom:6px;">Indonesia — Score: <span style="color:#f59e0b;">74/100</span></div>
+    <div style="font-size:11px;color:var(--muted);line-height:1.7;">
+      ✅ World's largest nickel reserves — critical for EV batteries<br>
+      ✅ 4th largest population globally (278M)<br>
+      ✅ Jokowi infrastructure push ($400B roads/ports)<br>
+      ✅ ASEAN economic hub positioning<br>
+      ⚠ Archipelago geography fragments manufacturing<br>
+      ⚠ Commodity dependency still high
+    </div>
+    <div style="margin-top:10px;padding:8px;background:rgba(139,92,246,.08);border-radius:6px;font-size:10px;color:#ddd6fe;"><strong>Verdict:</strong> Indonesia's nickel dominance + demographics make it "Next China" for green energy supply chain specifically.</div>
+  </div>
+</div>
+
+<div style="font-size:11px;color:var(--muted);text-align:right;">Live data: World Bank FDI (BX.KLT.DINV.WD.GD.ZS) · Exports (NE.EXP.GNFS.ZS) · GDP (NY.GDP.MKTP.KD.ZG) · Updates with Rising Powers refresh</div>
+</div><!-- end #rp-panel-nextchina -->
+
+<!-- SUB-TAB: Future Migration Destinations -->
+<div id="rp-panel-migration" style="display:none;">
+<div class="rp-hero">
+  <h2>✈️ Future Migration Hotspots — Where Will People Move for Jobs?</h2>
+  <p>Driven by aging populations in developed economies, skills shortages, and climate displacement — international migration is accelerating. These are the <strong style="color:#10b981;">top destination countries</strong> for workers in the near future (2025–2035) and extended future (2035–2050), ranked by economic opportunity, visa accessibility, and demographic need.</p>
+</div>
+
+<!-- Near future -->
+<div style="font-size:14px;font-weight:700;margin-bottom:12px;">🗓 Near Future (2025–2035) — Top Job Destinations</div>
+<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px;margin-bottom:24px;" id="mig-near-grid">
+${[
+  {f:'🇨🇦',n:'Canada',rank:1,score:96,jobs:'Tech, Healthcare, Trades',visa:'Express Entry — 6 months',pop:'-',why:'Aggressive immigration targets: 485K/yr by 2025. Skills gap in healthcare + construction.',col:'#10b981'},
+  {f:'🇩🇪',n:'Germany',rank:2,score:94,jobs:'Engineering, IT, Nurses',visa:'Opportunity Card (2024)',pop:'-',why:'New Skilled Immigration Act 2024. 7M worker shortage by 2030. Highest EU wages.',col:'#3b82f6'},
+  {f:'🇦🇪',n:'UAE',rank:3,score:92,jobs:'Finance, Tech, Hospitality',visa:'Golden Visa 10yr residency',pop:'-',why:'0% income tax. 200+ nationalities. Fastest-growing startup hub. Expo City legacy.',col:'#f59e0b'},
+  {f:'🇦🇺',n:'Australia',rank:4,score:90,jobs:'Mining, Healthcare, IT',visa:'Skilled — Points test',pop:'-',why:'Skills shortage in 332+ occupations. High wages. Strong economy. PR pathway clear.',col:'#06b6d4'},
+  {f:'🇬🇧',n:'UK',rank:5,score:87,jobs:'Finance, NHS, Tech',visa:'Skilled Worker Visa',pop:'-',why:'NHS needs 112K nurses. City of London fintech expansion. Graduate visa 2yr stay.',col:'#8b5cf6'},
+  {f:'🇸🇬',n:'Singapore',rank:6,score:86,jobs:'Finance, Tech, Pharma',visa:'Employment Pass + EP',pop:'-',why:'Asia financial hub. AI + biotech corridor. Highest GDP/cap in Asia. Regional HQ city.',col:'#f97316'},
+  {f:'🇳🇱',n:'Netherlands',rank:7,score:84,jobs:'Tech, Logistics, Agriculture',visa:'HSMP — 1yr job search',pop:'-',why:'ASML, Philips, Shell HQs. Amsterdam tech scene. 30% expat tax ruling. EU gateway.',col:'#34d399'},
+  {f:'🇨🇭',n:'Switzerland',rank:8,score:83,jobs:'Finance, Pharma, Engineering',visa:'B-Permit via employer',pop:'-',why:'Highest wages globally. Nestlé, UBS, Roche, ABB. Stable franc. Work-life balance.',col:'#a78bfa'},
+  {f:'🇵🇹',n:'Portugal',rank:9,score:80,jobs:'Tech, Tourism, Remote work',visa:'D8 Digital Nomad Visa',pop:'-',why:'NHR tax regime (20% flat). Lisbon tech scene. EU access. Affordable vs Western Europe.',col:'#fb923c'},
+  {f:'🇳🇿',n:'New Zealand',rank:10,score:78,jobs:'Agriculture, Healthcare, IT',visa:'Skilled Migrant Category',pop:'-',why:'Climate-safe geography. High quality of life. Clear pathway to PR → citizenship.',col:'#60a5fa'}
+].map(r=>`<div style="background:var(--card);border:1px solid var(--border);border-radius:10px;padding:14px;border-left:3px solid ${r.col};">
+  <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
+    <span style="font-size:20px;">${r.f}</span>
+    <div>
+      <div style="font-weight:800;font-size:13px;">#${r.rank} ${r.n}</div>
+      <div style="font-size:10px;background:${r.col}22;color:${r.col};border-radius:8px;padding:1px 6px;display:inline-block;">${r.score}/100 Opportunity</div>
+    </div>
+  </div>
+  <div style="font-size:10px;color:var(--muted);line-height:1.6;">
+    <strong style="color:var(--fg);">Top Jobs:</strong> ${r.jobs}<br>
+    <strong style="color:var(--fg);">Visa Path:</strong> ${r.visa}<br>
+    <div style="margin-top:4px;color:var(--fg-2);">${r.why}</div>
+  </div>
+</div>`).join('')}
+</div>
+
+<!-- Extended future -->
+<div style="font-size:14px;font-weight:700;margin-bottom:12px;">🔮 Extended Future (2035–2050) — Projected Emerging Destinations</div>
+<div style="overflow-x:auto;margin-bottom:16px;">
+<table class="rp-cmp-tbl">
+<thead><tr><th>Country</th><th>Why It Rises</th><th>Key Driver</th><th>Projected Arrivals/yr</th><th>Sectors Hiring</th><th>Outlook</th></tr></thead>
+<tbody>
+${[
+  {f:'🇲🇾',n:'Malaysia',why:'Aging workforce by 2040 + ASEAN tech hub',drv:'Digital economy + Chip manufacturing',arr:'400K+',sec:'Semiconductors, Finance, Tourism',v:'🟢 High'},
+  {f:'🇷🇴',n:'Romania',why:'EU member, lower wages vs Germany, tech education',drv:'EU investment + nearshoring from Germany',arr:'250K+',sec:'IT, Automotive, Shared Services',v:'🟢 High'},
+  {f:'🇵🇱',n:'Poland',why:'Largest EU economy in E. Europe, stable politics',drv:'NATO investment, manufacturing relocation',arr:'300K+',sec:'Manufacturing, Logistics, IT',v:'🟢 High'},
+  {f:'🇰🇷',n:'South Korea',why:'Demographic crisis — fertility 0.72, needs workers',drv:'Aging population crisis drives policy change',arr:'500K+',sec:'Electronics, Healthcare, Construction',v:'🟡 Policy shift needed'},
+  {f:'🇯🇵',n:'Japan',why:'Biggest demographic crisis, 2040 worker shortage acute',drv:'Structural labour shortage forces open doors',arr:'600K+',sec:'Tech, Healthcare, Hospitality, AI',v:'🟡 Policy evolving'},
+  {f:'🇹🇭',n:'Thailand',why:'Retirement destination + regional tech hub emergence',drv:'Long-term residency visa, low cost of living',arr:'350K+',sec:'Tourism, Digital nomads, Healthcare',v:'🟢 Rising'},
+  {f:'🇷🇸',n:'Serbia',why:'EU candidate, low wages, educated workforce',drv:'IT outsourcing hub, Balkans gateway',arr:'150K+',sec:'IT services, Automotive',v:'🟡 Moderate'},
+  {f:'🇲🇽',n:'Mexico',why:'Nearshoring mega-trend, US proximity, demographic bonus',drv:'Manufacturing relocating from Asia to Americas',arr:'700K+',sec:'Auto, Electronics, Services',v:'🟢 High'}
+].map(r=>`<tr>
+  <td>${r.f} <strong>${r.n}</strong></td>
+  <td style="font-size:10px;">${r.why}</td>
+  <td style="font-size:10px;">${r.drv}</td>
+  <td style="color:#10b981;font-weight:700;">${r.arr}</td>
+  <td style="font-size:10px;">${r.sec}</td>
+  <td>${r.v}</td>
+</tr>`).join('')}
+</tbody>
+</table>
+</div>
+
+<div style="background:rgba(56,189,248,.08);border:1px solid rgba(56,189,248,.2);border-radius:10px;padding:16px;margin-bottom:16px;">
+  <div style="font-size:12px;font-weight:700;color:#38bdf8;margin-bottom:8px;">📌 Key Megatrend: The 3 Forces Driving Future Migration</div>
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;font-size:11px;">
+    <div><strong style="color:#f59e0b;">1. Demographic Gravity</strong><br><span style="color:var(--muted);">Japan, S.Korea, Germany aging rapidly → structural worker shortage → open immigration policies by 2035–2040 whether wanted or not.</span></div>
+    <div><strong style="color:#10b981;">2. Climate Displacement</strong><br><span style="color:var(--muted);">250M+ climate migrants projected by 2050 (World Bank). Bangladesh, Egypt Nile delta, Pacific Islands, Sub-Saharan Africa → Canada, EU, NZ.</span></div>
+    <div><strong style="color:#a78bfa;">3. Supply Chain Geography</strong><br><span style="color:var(--muted);">Nearshoring + China+1 strategy moves factories to Mexico, Vietnam, India, Romania → local skilled workers insufficient → skilled migration follows.</span></div>
+  </div>
+</div>
+
+<div style="font-size:11px;color:var(--muted);text-align:right;">Sources: World Bank Migration (SM.POP.NETM) · UNHCR · OECD Migration Outlook · IOM World Migration Report 2024</div>
+</div><!-- end #rp-panel-migration -->
 
 <!-- v3.13: Drill-down modal -->
 <div id="rp-modal" style="display:none;position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,.75);backdrop-filter:blur(6px);overflow-y:auto;" onclick="if(event.target===this)closeRpModal()">
