@@ -3,7 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>World Intelligence Platform v3.28</title>
+  <meta name="author" content="Muhammad Umer Lari">
+  <meta name="copyright" content="Copyright © 2024-2025 Muhammad Umer Lari. All Rights Reserved.">
+<title>World Intelligence Platform v3.29</title>
 <!-- Leaflet -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css"/>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
@@ -613,7 +615,7 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:'Segoe 
 <div id="topbar">
   <a href="index.html">← Dashboard</a>
   <span class="title">🌍 World Intelligence Platform</span>
-  <span class="badge">v3.28</span><button onclick="_showAISetup()" title="Configure free MiniMax AI key (100% free)" style="margin-left:8px;background:linear-gradient(135deg,#7c3aed,#4f46e5);color:#fff;border:none;border-radius:6px;padding:3px 10px;cursor:pointer;font-size:11px;font-weight:700;">🤖 AI</button>
+  <span class="badge">v3.29</span><button onclick="_showAISetup()" title="Configure free MiniMax AI key (100% free)" style="margin-left:8px;background:linear-gradient(135deg,#7c3aed,#4f46e5);color:#fff;border:none;border-radius:6px;padding:3px 10px;cursor:pointer;font-size:11px;font-weight:700;">🤖 AI</button>
   <div style="display:flex;align-items:center;gap:6px;margin-left:auto;margin-right:16px;">
     <div class="live-dot"></div><span style="font-size:11px;color:var(--muted);">Live</span>
   </div>
@@ -1968,9 +1970,16 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:'Segoe 
 </div>
 
 <script>
-// ════════════════════════════════════════
+// ═══════════════════════════════════════════════════════
+// World Intelligence Platform
+// Author  : Muhammad Umer Lari
+// Email   : umerlari1998@gmail.com
+// Copyright © 2024-2025 Muhammad Umer Lari. All Rights Reserved.
+// Unauthorised copying, modification, or redistribution
+// of this software is strictly prohibited.
+// Free AI: MiniMax M2.7 · Zero paid APIs
+// ═══════════════════════════════════════════════════════
 // STATE
-// ════════════════════════════════════════
 // Auto-detect: localhost → local backend, any other host → Render deployment
 const BACKEND = (window.location.hostname==='localhost'||window.location.hostname==='127.0.0.1')
   ? 'http://localhost:8111/api'
@@ -1990,9 +1999,7 @@ const pageInited={};
 // Clock
 setInterval(()=>{document.getElementById('clock').textContent=new Date().toUTCString().slice(5,25)+' UTC';},1000);
 
-// ════════════════════════════════════════
 // NAVIGATION
-// ════════════════════════════════════════
 function showPage(id,el){
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
   document.querySelectorAll('.mtab').forEach(t=>t.classList.remove('active'));
@@ -2046,9 +2053,7 @@ function showNewsTab(id,el){
   if(!newsCache[id]) loadNewsTab(id);
 }
 
-// ════════════════════════════════════════
 // COUNTRY DATA
-// ════════════════════════════════════════
 const CTRY={
   DE:{n:'Germany',f:'🇩🇪',r:3,g:1.2,inf:2.4,gdppc:54000,pop:'84M',stk:'DAX 18,200',mkt:'€3.9T',
     ri:['Energy transition costs','Aging workforce','Export slowdown'],op:['Green hydrogen','EV supply chain','Mittelstand tech'],
@@ -2219,9 +2224,7 @@ function riskLbl(r){
   if(r<=2)return'LOW';if(r<=4)return'MODERATE';if(r<=6)return'ELEVATED';if(r<=8)return'HIGH';return'CRITICAL';
 }
 
-// ════════════════════════════════════════
 // LEAFLET MAP
-// ════════════════════════════════════════
 function initMap(){
   if(leafMap) return;
   leafMap=L.map('leaflet-map',{center:[25,15],zoom:3,minZoom:2,maxZoom:8,zoomControl:true,attributionControl:false});
@@ -2398,7 +2401,6 @@ async function _fetchWorldBankLive(){
     if(badge)badge.innerHTML=`🟢 WB Live — ${count} countries`;
     // Refresh layer if growth is active
     if(_mapLayer==='growth')setMapLayer('growth',null);
-    console.log('[WorldMap] World Bank GDP: '+count+' records');
   }catch(e){
     if(badge)badge.textContent='📌 Embedded data';
     console.warn('[WorldMap] World Bank fallback:',e.message);
@@ -2628,9 +2630,7 @@ function _buildMapTopMovers(){
   stats.appendChild(div);
 }
 
-// ════════════════════════════════════════
 // MATH HELPERS
-// ════════════════════════════════════════
 function linReg(y){const n=y.length;let sx=0,sy=0,sxy=0,sx2=0;for(let i=0;i<n;i++){sx+=i;sy+=y[i];sxy+=i*y[i];sx2+=i*i;}const m=(n*sxy-sx*sy)/(n*sx2-sx*sx);return{m,b:(sy-m*sx)/n};}
 function forecast(h,steps){const{m,b}=linReg(h);return Array.from({length:steps},(_,i)=>+(b+m*(h.length+i)).toFixed(6));}
 function genHistory(base,days,vol=0.02){const a=[base];for(let i=1;i<days;i++)a.push(+(a[a.length-1]*(1+(Math.random()-.48)*vol)).toFixed(6));return a;}
@@ -2650,9 +2650,7 @@ function fmt(v,sym){
   return v.toFixed(5);
 }
 
-// ════════════════════════════════════════
 // ASSET DEFINITIONS
-// ════════════════════════════════════════
 const ADEFS={
   metals:[{sym:'GOLD',n:'Gold',u:'XAU/USD',b:2340,v:.008},{sym:'SILVER',n:'Silver',u:'XAG/USD',b:29.5,v:.015},
           {sym:'PLAT',n:'Platinum',u:'XPT/USD',b:1010,v:.012},{sym:'PALL',n:'Palladium',u:'XPD/USD',b:980,v:.018},
@@ -2675,9 +2673,7 @@ const ADEFS={
            {sym:'SENSEX',n:'BSE Sensex',u:'INR',b:72000,v:.012},{sym:'KOSPI',n:'KOSPI',u:'KRW',b:2700,v:.013}]
 };
 
-// ════════════════════════════════════════
 // WORLD EXCHANGES (28 markets)
-// ════════════════════════════════════════
 const EXCHANGES=[
   // Americas
   {sym:'SPX',n:'S&P 500',ctry:'🇺🇸 USA',reg:'americas',b:5300,v:.009,mc:'$44T',yr2030:7200,yr2035:9800,yr2040:13000},
@@ -2746,7 +2742,6 @@ async function fetchCrypto(){
     Object.entries(map).forEach(([id,sym])=>{
       if(d[id]){if(!mktData[sym])mktData[sym]={};mktData[sym].price=d[id].usd;mktData[sym].change=+(d[id].usd_24h_change||0).toFixed(2);mktData[sym]._live=true;}
     });
-    console.log('[Markets] CoinGecko: crypto OK');
   }catch(e){console.warn('[Markets] CoinGecko fallback:',e.message);}
 }
 async function fetchFX(){
@@ -2759,7 +2754,6 @@ async function fetchFX(){
       const rates=d.rates; if(!rates) continue;
       const px={EUR:+(1/rates.EUR).toFixed(4),GBP:+(1/rates.GBP).toFixed(4),JPY:+rates.JPY.toFixed(2),CHF:+rates.CHF.toFixed(4),CNY:+rates.CNY.toFixed(4),AUD:+(1/rates.AUD).toFixed(4),CAD:+rates.CAD.toFixed(4),INR:+rates.INR.toFixed(2)};
       Object.entries(px).forEach(([sym,p])=>{if(!p||isNaN(p))return;if(!mktData[sym])mktData[sym]={};mktData[sym].price=p;mktData[sym]._live=true;});
-      console.log('[Markets] FX OK via',url.includes('frankfurter')?'frankfurter.app':'open.er-api.com');
       return;
     }catch(e){/* try next */}
   }
@@ -2781,7 +2775,6 @@ async function fetchYahooMarkets(){
       if(!mktData[s])mktData[s]={};
       mktData[s].price=price; mktData[s].change=change; mktData[s]._live=true;
     });
-    console.log('[Markets] Yahoo Finance proxy: '+results.length+' symbols');
   }catch(e){console.warn('[Markets] Yahoo proxy failed:',e.message);}
 }
 
@@ -2922,18 +2915,15 @@ function drawDrill(sym,tf){
   }).join('');
 }
 
-// ════════════════════════════════════════
 // v3.28 RISING POWERS AI INTELLIGENCE
 // MiniMax M2.7 · 100% Free · No paid APIs
 // 9 AI features across all 7 Rising Powers sub-tabs
-// ════════════════════════════════════════
 
 // ── AI Global Power Oracle: macro brief for all 15 nations ───────────────
 async function _mmRpOracle(){
   var panel=document.getElementById('ai-rp-oracle-panel');
   if(!panel)return;
-  _aiThinking(panel,'Synthesizing intelligence across all 15 emerging powers…');
-  if(!_groqKey()){_aiNoKey(panel);return;}
+  if(!_aiStart(panel,'Synthesizing intelligence across all 15 emerging powers…'))return;
   var nations=Object.keys(CTRY).filter(function(iso){return CTRY[iso]&&CTRY[iso].g!=null;}).slice(0,15);
   var lines=nations.map(function(iso){
     var c=CTRY[iso];var live=_rpLiveData[iso]||{};
@@ -2946,16 +2936,15 @@ async function _mmRpOracle(){
     var txt=await _groqCall([{role:'user',content:prompt}],600);
     panel.innerHTML='<div class="ai-panel-hdr">🔮 Global Power Oracle <span style="font-size:9px;font-weight:400;opacity:.7;">MiniMax M2.7 · '+lines.length+' nations</span></div>'
       +'<div class="ai-result">'+_aiEsc(txt)+'</div>'
-      +'<div style="font-size:10px;color:var(--muted);margin-top:6px;">'+new Date().toLocaleTimeString()+' · <span style="cursor:pointer;color:#a78bfa;" onclick="_mmRpOracle()">Refresh</span> · <span style="cursor:pointer;color:var(--muted);" onclick="_showAISetup()">&#9881; Key</span></div>';
-  }catch(e){if(e.message==='NO_KEY')_aiNoKey(panel);else panel.innerHTML='<div style="color:#ef4444;font-size:11px;">'+_aiEsc(e.message)+'</div>';}
+      +'<div style="font-size:10px;color:var(--muted);margin-top:6px;">'+new Date().toLocaleTimeString()+' · <span style="cursor:pointer;color:#a78bfa;" onclick="_mmRpOracle()">Refresh</span> · <span style="cursor:pointer;color:var(--muted);" onclick="_showAISetup()">&#9881; Key</span> · <span style="color:var(--muted);opacity:.5;user-select:none;">© Muhammad Umer Lari</span></div>';
+  }catch(e){_aiError(panel,e);}
 }
 
 // ── AI Power Race Predictor 2035: ranking shift analysis ─────────────────
 async function _mmRpRacePredictor(){
   var panel=document.getElementById('ai-rp-oracle-panel');
   if(!panel)return;
-  _aiThinking(panel,'Running 2035 Power Race simulation across all 15 nations…');
-  if(!_groqKey()){_aiNoKey(panel);return;}
+  if(!_aiStart(panel,'Running 2035 Power Race simulation across all 15 nations…'))return;
   var nations=Object.keys(CTRY).filter(function(iso){return CTRY[iso]&&CTRY[iso].g!=null;}).slice(0,15);
   var lines=nations.map(function(iso){
     var c=CTRY[iso];var live=_rpLiveData[iso]||{};
@@ -2970,8 +2959,8 @@ async function _mmRpRacePredictor(){
     var txt=await _groqCall([{role:'user',content:prompt}],520);
     panel.innerHTML='<div class="ai-panel-hdr">🏁 Power Race Predictor 2035 <span style="font-size:9px;font-weight:400;opacity:.7;">MiniMax M2.7</span></div>'
       +'<div class="ai-result">'+_aiEsc(txt)+'</div>'
-      +'<div style="font-size:10px;color:var(--muted);margin-top:6px;"><span style="cursor:pointer;color:#a78bfa;" onclick="_mmRpRacePredictor()">Refresh</span> · <span style="cursor:pointer;color:var(--muted);" onclick="_showAISetup()">&#9881; Key</span></div>';
-  }catch(e){if(e.message==='NO_KEY')_aiNoKey(panel);else panel.innerHTML='<div style="color:#ef4444;font-size:11px;">'+_aiEsc(e.message)+'</div>';}
+      +'<div style="font-size:10px;color:var(--muted);margin-top:6px;"><span style="cursor:pointer;color:#a78bfa;" onclick="_mmRpRacePredictor()">Refresh</span> · <span style="cursor:pointer;color:var(--muted);" onclick="_showAISetup()">&#9881; Key</span> · <span style="color:var(--muted);opacity:.5;user-select:none;">© Muhammad Umer Lari</span></div>';
+  }catch(e){_aiError(panel,e);}
 }
 
 // ── AI Future Predictor: per-country 10-year deep scenario ───────────────
@@ -2996,8 +2985,8 @@ async function _mmRpFuturePredictor(iso){
     var txt=await _groqCall([{role:'user',content:prompt}],500);
     panel.innerHTML='<div class="ai-panel-hdr">🔮 '+c.n+' · AI Future Predictor 2025–2035 <span style="font-size:9px;font-weight:400;opacity:.7;">MiniMax M2.7</span></div>'
       +'<div class="ai-result">'+_aiEsc(txt)+'</div>'
-      +'<div style="font-size:10px;color:var(--muted);margin-top:6px;"><span style="cursor:pointer;color:#a78bfa;" onclick="_mmRpFuturePredictor(window._aiLastIso)">Regenerate</span> · <span style="cursor:pointer;color:var(--muted);" onclick="_showAISetup()">&#9881; Key</span></div>';
-  }catch(e){if(e.message==='NO_KEY')_aiNoKey(panel);else panel.innerHTML='<div style="color:#ef4444;font-size:11px;">'+_aiEsc(e.message)+'</div>';}
+      +'<div style="font-size:10px;color:var(--muted);margin-top:6px;"><span style="cursor:pointer;color:#a78bfa;" onclick="_mmRpFuturePredictor(window._aiLastIso)">Regenerate</span> · <span style="cursor:pointer;color:var(--muted);" onclick="_showAISetup()">&#9881; Key</span> · <span style="color:var(--muted);opacity:.5;user-select:none;">© Muhammad Umer Lari</span></div>';
+  }catch(e){_aiError(panel,e);}
   finally{btns.forEach(function(b){b.disabled=false;});}
 }
 
@@ -3005,8 +2994,7 @@ async function _mmRpFuturePredictor(iso){
 async function _mmNextChina(){
   var panel=document.getElementById('ai-rp-nextchina-panel');
   if(!panel)return;
-  _aiThinking(panel,'Analysing 6 Next China candidates…');
-  if(!_groqKey()){_aiNoKey(panel);return;}
+  if(!_aiStart(panel,'Analysing 6 Next China candidates…'))return;
   var candidates=[
     {n:'India',iso:'IN',score:82,mfg:'13%',exp:'21.8%',fdi:'1.7%',gdp:'7.2%',wage:'$2.3K/yr',edge:'Largest working-age population by 2030, PLI schemes'},
     {n:'Vietnam',iso:'VN',score:79,mfg:'25%',exp:'93.3%',fdi:'4.5%',gdp:'6.0%',wage:'$4.2K/yr',edge:'Apple supply chain, 93% export ratio, FDI inflows'},
@@ -3024,96 +3012,88 @@ async function _mmNextChina(){
     var txt=await _groqCall([{role:'user',content:prompt}],520);
     panel.innerHTML='<div class="ai-panel-hdr">🏭 AI: Next Manufacturing Superpower <span style="font-size:9px;font-weight:400;opacity:.7;">MiniMax M2.7 · 6 candidates</span></div>'
       +'<div class="ai-result">'+_aiEsc(txt)+'</div>'
-      +'<div style="font-size:10px;color:var(--muted);margin-top:6px;"><span style="cursor:pointer;color:#a78bfa;" onclick="_mmNextChina()">Refresh</span> · <span style="cursor:pointer;color:var(--muted);" onclick="_showAISetup()">&#9881; Key</span></div>';
-  }catch(e){if(e.message==='NO_KEY')_aiNoKey(panel);else panel.innerHTML='<div style="color:#ef4444;font-size:11px;">'+_aiEsc(e.message)+'</div>';}
+      +'<div style="font-size:10px;color:var(--muted);margin-top:6px;"><span style="cursor:pointer;color:#a78bfa;" onclick="_mmNextChina()">Refresh</span> · <span style="cursor:pointer;color:var(--muted);" onclick="_showAISetup()">&#9881; Key</span> · <span style="color:var(--muted);opacity:.5;user-select:none;">© Muhammad Umer Lari</span></div>';
+  }catch(e){_aiError(panel,e);}
 }
 
 // ── AI Migration Forecast: 2035–2050 flow analysis ───────────────────────
 async function _mmMigrationAI(){
   var panel=document.getElementById('ai-rp-migration-panel');
   if(!panel)return;
-  _aiThinking(panel,'Analysing global migration patterns through 2050…');
-  if(!_groqKey()){_aiNoKey(panel);return;}
+  if(!_aiStart(panel,'Analysing global migration patterns through 2050…'))return;
   var prompt='You are a demographer and migration economist. Analyze near-future (2025–2035) and extended-future (2035–2050) global migration trends.\n\nKey current data:\n- Canada: 485K/yr target, Express Entry 6-month processing\n- Germany: 7M worker shortage by 2030, Opportunity Card 2024\n- UAE: 0% tax, Golden Visa 10yr, 200+ nationalities\n- Australia: Skills shortage in 332 occupations\n- Climate displacement: 216M+ internal climate migrants by 2050 (World Bank)\n- Digital nomads: 35M globally by 2025, growing at 15%/yr\n- Aging population: EU working-age ratio dropping from 65% to 55% by 2040\n\nWrite a 3-paragraph migration intelligence brief (180 words):\nParagraph 1 — 2025–2035 DOMINANT FLOWS: Which 3 migration corridors will see the biggest growth? What are the dominant push (sending) and pull (receiving) factors? Which countries will LOSE the most talent?\nParagraph 2 — 2035–2050 STRUCTURAL SHIFTS: How does climate displacement change the map? Which new destinations emerge? How does technology (remote work, digital nomad visa) reshape who migrates and where?\nParagraph 3 — GEOPOLITICAL IMPACT: Which nation gains the most from brain gain? Which nation faces existential demographic crisis from emigration? What is the biggest unresolved policy conflict in international migration?\nEnd with MIGRATION MEGA-TREND: [one defining phrase for 2035–2050] · TOP DESTINATION 2035: [country]';
   try{
     var txt=await _groqCall([{role:'user',content:prompt}],520);
     panel.innerHTML='<div class="ai-panel-hdr">✈️ AI Migration Forecast 2035–2050 <span style="font-size:9px;font-weight:400;opacity:.7;">MiniMax M2.7</span></div>'
       +'<div class="ai-result">'+_aiEsc(txt)+'</div>'
-      +'<div style="font-size:10px;color:var(--muted);margin-top:6px;"><span style="cursor:pointer;color:#a78bfa;" onclick="_mmMigrationAI()">Refresh</span> · <span style="cursor:pointer;color:var(--muted);" onclick="_showAISetup()">&#9881; Key</span></div>';
-  }catch(e){if(e.message==='NO_KEY')_aiNoKey(panel);else panel.innerHTML='<div style="color:#ef4444;font-size:11px;">'+_aiEsc(e.message)+'</div>';}
+      +'<div style="font-size:10px;color:var(--muted);margin-top:6px;"><span style="cursor:pointer;color:#a78bfa;" onclick="_mmMigrationAI()">Refresh</span> · <span style="cursor:pointer;color:var(--muted);" onclick="_showAISetup()">&#9881; Key</span> · <span style="color:var(--muted);opacity:.5;user-select:none;">© Muhammad Umer Lari</span></div>';
+  }catch(e){_aiError(panel,e);}
 }
 
 // ── AI Passport Strategy: power landscape by 2030 ───────────────────────
 async function _mmPassportAI(){
   var panel=document.getElementById('ai-rp-passport-panel');
   if(!panel)return;
-  _aiThinking(panel,'Analysing global passport power landscape through 2030…');
-  if(!_groqKey()){_aiNoKey(panel);return;}
+  if(!_aiStart(panel,'Analysing global passport power landscape through 2030…'))return;
   var prompt='You are a global mobility expert and geopolitical analyst. Analyze the passport power landscape and forecast shifts by 2030.\n\nCurrent landscape (Henley Index leaders): Japan/Singapore/Germany/France/Italy/Spain ~190+ destinations. Bottom: Afghanistan/Iraq/Syria/Pakistan <30 destinations.\n\nKey dynamics: UAE climbed from 65 to 180+ countries in 15 years. Qatar: 96→170+. Gulf states investing heavily in visa agreements. Post-Brexit UK fell. EU consolidation strengthening bloc mobility. China passport constrained despite economic power.\n\nFuture variables: BRICS visa-free zone discussions. ASEAN single travel area progress. Africa Continental Free Trade Area (AfCFTA) mobility ambitions. Digital passports and biometric travel.\n\nWrite a 3-paragraph analysis (170 words):\nParagraph 1 — RISING PASSPORTS 2030: Which 3-4 passports will gain the most visa-free access by 2030 and why? What deals/alliances are driving this?\nParagraph 2 — PASSPORT POWER SHIFTS: Which currently strong passports face declining power (Brexit effects, sanctions, geopolitical isolation)? Which BRICS passports have a path to top-20 by 2035?\nParagraph 3 — THE PASSPORT STRATEGY: For someone optimising global mobility in 2030, what is the ideal passport portfolio strategy? What is the most undervalued passport right now?\nEnd with TOP RISER 2030: [country] · BIGGEST DECLINER: [country] · STRATEGIC PICK: [country]';
   try{
     var txt=await _groqCall([{role:'user',content:prompt}],500);
     panel.innerHTML='<div class="ai-panel-hdr">🛂 AI Passport Strategy 2030 <span style="font-size:9px;font-weight:400;opacity:.7;">MiniMax M2.7</span></div>'
       +'<div class="ai-result">'+_aiEsc(txt)+'</div>'
-      +'<div style="font-size:10px;color:var(--muted);margin-top:6px;"><span style="cursor:pointer;color:#a78bfa;" onclick="_mmPassportAI()">Refresh</span> · <span style="cursor:pointer;color:var(--muted);" onclick="_showAISetup()">&#9881; Key</span></div>';
-  }catch(e){if(e.message==='NO_KEY')_aiNoKey(panel);else panel.innerHTML='<div style="color:#ef4444;font-size:11px;">'+_aiEsc(e.message)+'</div>';}
+      +'<div style="font-size:10px;color:var(--muted);margin-top:6px;"><span style="cursor:pointer;color:#a78bfa;" onclick="_mmPassportAI()">Refresh</span> · <span style="cursor:pointer;color:var(--muted);" onclick="_showAISetup()">&#9881; Key</span> · <span style="color:var(--muted);opacity:.5;user-select:none;">© Muhammad Umer Lari</span></div>';
+  }catch(e){_aiError(panel,e);}
 }
 
 // ── AI Language Future: shift in diplomatic/tech/commercial dominance ────
 async function _mmLanguageAI(){
   var panel=document.getElementById('ai-rp-language-panel');
   if(!panel)return;
-  _aiThinking(panel,'Forecasting language power shifts through 2040…');
-  if(!_groqKey()){_aiNoKey(panel);return;}
+  if(!_aiStart(panel,'Forecasting language power shifts through 2040…'))return;
   var prompt='You are a linguist and geopolitical analyst. Forecast which languages gain and lose power through 2040.\n\nCurrent data: English: 1.5B speakers, 60% internet content, lingua franca of science/finance. Mandarin: 920M native, growing AI training data. Spanish: 500M+, fastest-growing in US. Arabic: 450M+, 22 countries. Hindi: 600M+, India economic rise. French: 80M native, 300M total, 29 African countries. Portuguese: 280M, Brazil dominant. Swahili: 200M+, East Africa integration.\n\nKey dynamics: India projected #1 economy by 2050 (IMF). AI translation eroding language barriers. Belt and Road mandarin spread. Africa fastest-growing youth population (Swahili, Hausa, Yoruba rising). Spanish surpassing English in US by 2050 (Pew). Tech industry still English-dominant but shifting.\n\nWrite 3 paragraphs (160 words):\nParagraph 1 — RISING LANGUAGES 2040: Which 3 languages gain the most geopolitical weight by 2040? Specific reasons (economic rise, demographic growth, AI adoption, diplomatic reach). Paragraph 2 — PRESSURE ON ENGLISH: How does English\'s dominance evolve? Does it remain THE lingua franca or fragment into regional clusters? What is the biggest threat to its primacy? Paragraph 3 — BUSINESS IMPLICATION: What language(s) should be prioritised for someone entering global business in 2025 for maximum career optionality by 2040? End with LANGUAGE OF 2040: [prediction] · FASTEST RISER: [language] · STRATEGIC LEARN: [recommendation]';
   try{
     var txt=await _groqCall([{role:'user',content:prompt}],500);
     panel.innerHTML='<div class="ai-panel-hdr">🗣 AI Language Shift Forecast 2040 <span style="font-size:9px;font-weight:400;opacity:.7;">MiniMax M2.7</span></div>'
       +'<div class="ai-result">'+_aiEsc(txt)+'</div>'
-      +'<div style="font-size:10px;color:var(--muted);margin-top:6px;"><span style="cursor:pointer;color:#a78bfa;" onclick="_mmLanguageAI()">Refresh</span> · <span style="cursor:pointer;color:var(--muted);" onclick="_showAISetup()">&#9881; Key</span></div>';
-  }catch(e){if(e.message==='NO_KEY')_aiNoKey(panel);else panel.innerHTML='<div style="color:#ef4444;font-size:11px;">'+_aiEsc(e.message)+'</div>';}
+      +'<div style="font-size:10px;color:var(--muted);margin-top:6px;"><span style="cursor:pointer;color:#a78bfa;" onclick="_mmLanguageAI()">Refresh</span> · <span style="cursor:pointer;color:var(--muted);" onclick="_showAISetup()">&#9881; Key</span> · <span style="color:var(--muted);opacity:.5;user-select:none;">© Muhammad Umer Lari</span></div>';
+  }catch(e){_aiError(panel,e);}
 }
 
 // ── AI New Nations: independence probability scoring ─────────────────────
 async function _mmNewNationsAI(){
   var panel=document.getElementById('ai-rp-newnations-panel');
   if(!panel)return;
-  _aiThinking(panel,'Scoring independence movement probabilities through 2035…');
-  if(!_groqKey()){_aiNoKey(panel);return;}
+  if(!_aiStart(panel,'Scoring independence movement probabilities through 2035…'))return;
   var prompt='You are a political scientist specialising in state formation and self-determination. Score independence movements by probability of achieving statehood by 2035.\n\nKey movements and current status:\n- Kurdistan (Iraq/Syria): De facto autonomous since 1991, 2017 referendum 93% YES, 6M+ people, own military + oil, blocked by Baghdad/Iran/Turkey\n- Catalonia (Spain): 2017 referendum 90% YES, EU membership conflict, 7.8M people, 20% of Spanish GDP, legal blockade\n- Scotland (UK): 2014 55% NO, post-Brexit case stronger, SNP majority, next referendum path unclear\n- Taiwan: De facto independent since 1949, 23M people, $760B economy, US security guarantee, China pressure escalating\n- Kosovo: 100+ UN recognitions, Serbia/Russia blockade, EU accession path, stability improving\n- Somaliland: 35 years de facto independent, 0 UN recognitions, elections held, strategic Horn of Africa location\n- New Caledonia: 3 referendums (2018/2020/2021 NO), 2024 riots, nickel dependency, French Pacific strategy\n- Western Sahara: POLISARIO vs Morocco, 50yr conflict, UN mission failed, Morocco normalisation agreements\n\nWrite a probability assessment (190 words):\nParagraph 1 — HIGHEST PROBABILITY (>40% by 2035): Rank the top 2-3 independence movements most likely to succeed. What is the decisive catalyst for each? Paragraph 2 — MEDIUM PROBABILITY (15-40%): Which movements are in a grey zone and what single event would tip them toward independence? Paragraph 3 — STRUCTURAL BARRIERS: What is the single biggest obstacle to new state formation in the current international system? Is the post-1945 territorial integrity norm weakening? End with TOP CANDIDATE 2035: [territory] · PROBABILITY: [%] · TRIGGER EVENT: [what would make it happen]';
   try{
     var txt=await _groqCall([{role:'user',content:prompt}],540);
     panel.innerHTML='<div class="ai-panel-hdr">🌐 AI New Nations Probability 2035 <span style="font-size:9px;font-weight:400;opacity:.7;">MiniMax M2.7</span></div>'
       +'<div class="ai-result">'+_aiEsc(txt)+'</div>'
-      +'<div style="font-size:10px;color:var(--muted);margin-top:6px;"><span style="cursor:pointer;color:#a78bfa;" onclick="_mmNewNationsAI()">Refresh</span> · <span style="cursor:pointer;color:var(--muted);" onclick="_showAISetup()">&#9881; Key</span></div>';
-  }catch(e){if(e.message==='NO_KEY')_aiNoKey(panel);else panel.innerHTML='<div style="color:#ef4444;font-size:11px;">'+_aiEsc(e.message)+'</div>';}
+      +'<div style="font-size:10px;color:var(--muted);margin-top:6px;"><span style="cursor:pointer;color:#a78bfa;" onclick="_mmNewNationsAI()">Refresh</span> · <span style="cursor:pointer;color:var(--muted);" onclick="_showAISetup()">&#9881; Key</span> · <span style="color:var(--muted);opacity:.5;user-select:none;">© Muhammad Umer Lari</span></div>';
+  }catch(e){_aiError(panel,e);}
 }
 
 // ── AI Currencies/De-dollarization: reserve currency shift forecast ───────
 async function _mmCurrenciesAI(){
   var panel=document.getElementById('ai-rp-currencies-panel');
   if(!panel)return;
-  _aiThinking(panel,'Analysing de-dollarization trajectory and future reserve currencies…');
-  if(!_groqKey()){_aiNoKey(panel);return;}
+  if(!_aiStart(panel,'Analysing de-dollarization trajectory and future reserve currencies…'))return;
   var prompt='You are a monetary economist and geopolitical analyst. Forecast the global reserve currency landscape through 2035.\n\nCurrent data (2025): USD: 58% of global reserves (down from 72% in 2001). EUR: 20%. JPY: 6%. GBP: 5%. CNY: 2.3% (far below China\'s 17% global GDP share). Gold: central bank buying at 50yr highs (1,100+ tonnes in 2023). BRICS: $30T GDP bloc, discussing payment system alternative to SWIFT. mBridge: BIS multi-CBDC platform live. India bilateral trade in INR. Saudi Arabia accepting RMB for oil (small volumes). Digital Yuan (e-CNY): 260M users, $250B transactions in 2023. US debt: $35T, fiscal deficit $2T+/yr.\n\nWrite a 3-paragraph analysis (190 words):\nParagraph 1 — DEDOLLARIZATION SPEED: Is this a gradual drift (20yr) or an accelerating shift (10yr)? What is the USD reserve share in 2030 and 2035? What is the biggest wildcard that could either accelerate or halt this process?\nParagraph 2 — THE WINNERS: Which currencies/assets gain the most as USD slowly recedes? Specific case for CNY, EUR, gold, SDR, crypto, and regional currency blocs. What does a multipolar reserve system look like?\nParagraph 3 — BRICS CURRENCY: How realistic is a BRICS common currency or payment rail by 2030? What are the 3 specific political/economic obstacles that have prevented it so far?\nEnd with USD SHARE 2030: [%] · USD SHARE 2035: [%] · BIGGEST CHALLENGER: [asset/currency] · PROBABILITY OF BRICS PAYMENT RAIL BY 2030: [%]';
   try{
     var txt=await _groqCall([{role:'user',content:prompt}],560);
     panel.innerHTML='<div class="ai-panel-hdr">💱 AI De-Dollarization Forecast 2035 <span style="font-size:9px;font-weight:400;opacity:.7;">MiniMax M2.7</span></div>'
       +'<div class="ai-result">'+_aiEsc(txt)+'</div>'
-      +'<div style="font-size:10px;color:var(--muted);margin-top:6px;"><span style="cursor:pointer;color:#a78bfa;" onclick="_mmCurrenciesAI()">Refresh</span> · <span style="cursor:pointer;color:var(--muted);" onclick="_showAISetup()">&#9881; Key</span></div>';
-  }catch(e){if(e.message==='NO_KEY')_aiNoKey(panel);else panel.innerHTML='<div style="color:#ef4444;font-size:11px;">'+_aiEsc(e.message)+'</div>';}
+      +'<div style="font-size:10px;color:var(--muted);margin-top:6px;"><span style="cursor:pointer;color:#a78bfa;" onclick="_mmCurrenciesAI()">Refresh</span> · <span style="cursor:pointer;color:var(--muted);" onclick="_showAISetup()">&#9881; Key</span> · <span style="color:var(--muted);opacity:.5;user-select:none;">© Muhammad Umer Lari</span></div>';
+  }catch(e){_aiError(panel,e);}
 }
 
-// ════════════════════════════════════════
 // v3.27 MARKETS & STOCKS AI INTELLIGENCE
 // MiniMax M2.7 · 100% Free · No paid APIs
 // 6 AI features: MarketPulse, SectorRotation, AssetAI, StockOutlook, EMScanner, ExchangeAI
-// ════════════════════════════════════════
 
 async function _mmMarketPulse(){
   var panel=document.getElementById('ai-mkt-pulse-panel');
   if(!panel)return;
-  _aiThinking(panel,'Analyzing cross-asset signals across all market categories…');
-  if(!_groqKey()){_aiNoKey(panel);return;}
+  if(!_aiStart(panel,'Analyzing cross-asset signals across all market categories…'))return;
   var snapshots=[];
   ['metals','crypto','fx','oil','indices'].forEach(function(cat){
     if(!ADEFS[cat])return;
@@ -3128,15 +3108,14 @@ async function _mmMarketPulse(){
     var txt=await _groqCall([{role:'user',content:prompt}],550);
     panel.innerHTML='<div class="ai-panel-hdr">🤖 AI Market Pulse <span style="font-size:9px;font-weight:400;opacity:.7;">MiniMax M2.7 · '+snapshots.length+' signals</span></div>'
       +'<div class="ai-result">'+_aiEsc(txt)+'</div>'
-      +'<div style="font-size:10px;color:var(--muted);margin-top:6px;">'+new Date().toLocaleTimeString()+' · <span style="cursor:pointer;color:#a78bfa;" onclick="_mmMarketPulse()">Refresh</span> · <span style="cursor:pointer;color:var(--muted);" onclick="_showAISetup()">&#9881; Key</span></div>';
-  }catch(e){if(e.message==='NO_KEY')_aiNoKey(panel);else panel.innerHTML='<div style="color:#ef4444;font-size:11px;">'+_aiEsc(e.message)+'</div>';}
+      +'<div style="font-size:10px;color:var(--muted);margin-top:6px;">'+new Date().toLocaleTimeString()+' · <span style="cursor:pointer;color:#a78bfa;" onclick="_mmMarketPulse()">Refresh</span> · <span style="cursor:pointer;color:var(--muted);" onclick="_showAISetup()">&#9881; Key</span> · <span style="color:var(--muted);opacity:.5;user-select:none;">© Muhammad Umer Lari</span></div>';
+  }catch(e){_aiError(panel,e);}
 }
 
 async function _mmSectorRotation(){
   var panel=document.getElementById('ai-mkt-pulse-panel');
   if(!panel)return;
-  _aiThinking(panel,'Running sector rotation model across 5 asset categories…');
-  if(!_groqKey()){_aiNoKey(panel);return;}
+  if(!_aiStart(panel,'Running sector rotation model across 5 asset categories…'))return;
   var catStats={};
   ['metals','crypto','fx','oil','indices'].forEach(function(cat){
     if(!ADEFS[cat])return;
@@ -3150,8 +3129,8 @@ async function _mmSectorRotation(){
     var txt=await _groqCall([{role:'user',content:prompt}],380);
     panel.innerHTML='<div class="ai-panel-hdr">🔄 AI Sector Rotation Model <span style="font-size:9px;font-weight:400;opacity:.7;">MiniMax M2.7</span></div>'
       +'<div class="ai-result">'+_aiEsc(txt)+'</div>'
-      +'<div style="font-size:10px;color:var(--muted);margin-top:6px;"><span style="cursor:pointer;color:#a78bfa;" onclick="_mmSectorRotation()">Refresh</span> · <span style="cursor:pointer;color:var(--muted);" onclick="_showAISetup()">&#9881; Key</span></div>';
-  }catch(e){if(e.message==='NO_KEY')_aiNoKey(panel);else panel.innerHTML='<div style="color:#ef4444;font-size:11px;">'+_aiEsc(e.message)+'</div>';}
+      +'<div style="font-size:10px;color:var(--muted);margin-top:6px;"><span style="cursor:pointer;color:#a78bfa;" onclick="_mmSectorRotation()">Refresh</span> · <span style="cursor:pointer;color:var(--muted);" onclick="_showAISetup()">&#9881; Key</span> · <span style="color:var(--muted);opacity:.5;user-select:none;">© Muhammad Umer Lari</span></div>';
+  }catch(e){_aiError(panel,e);}
 }
 
 async function _mmAssetAI(sym){
@@ -3173,16 +3152,15 @@ async function _mmAssetAI(sym){
     var txt=await _groqCall([{role:'user',content:prompt}],420);
     panel.innerHTML='<div class="ai-panel-hdr">🤖 '+a.n+' AI Analysis <span style="font-size:9px;font-weight:400;opacity:.7;">MiniMax M2.7</span></div>'
       +'<div class="ai-result">'+_aiEsc(txt)+'</div>'
-      +'<div style="font-size:10px;color:var(--muted);margin-top:6px;"><span style="cursor:pointer;color:#a78bfa;" onclick="_mmAssetAI(window._aiLastSym)">Regenerate</span> · <span style="cursor:pointer;color:var(--muted);" onclick="_showAISetup()">&#9881; Key</span></div>';
-  }catch(e){if(e.message==='NO_KEY')_aiNoKey(panel);else panel.innerHTML='<div style="color:#ef4444;font-size:11px;">'+_aiEsc(e.message)+'</div>';}
+      +'<div style="font-size:10px;color:var(--muted);margin-top:6px;"><span style="cursor:pointer;color:#a78bfa;" onclick="_mmAssetAI(window._aiLastSym)">Regenerate</span> · <span style="cursor:pointer;color:var(--muted);" onclick="_showAISetup()">&#9881; Key</span> · <span style="color:var(--muted);opacity:.5;user-select:none;">© Muhammad Umer Lari</span></div>';
+  }catch(e){_aiError(panel,e);}
   finally{btns.forEach(function(b){b.disabled=false;});}
 }
 
 async function _mmStockOutlook(){
   var panel=document.getElementById('ai-stocks-panel');
   if(!panel)return;
-  _aiThinking(panel,'Scanning all 28 global exchanges for regime analysis…');
-  if(!_groqKey()){_aiNoKey(panel);return;}
+  if(!_aiStart(panel,'Scanning all 28 global exchanges for regime analysis…'))return;
   var exData=EXCHANGES.map(function(e){var d=mktData[e.sym]||{change:0,rsi:50,sig:{l:'HOLD'}};return e.ctry+' '+e.n+'['+e.sym+']: '+(d.change>=0?'+':'')+d.change+'% RSI:'+(d.rsi||50)+' '+((d.sig&&d.sig.l)||'HOLD')+' MC:'+e.mc;});
   var bullCount=EXCHANGES.filter(function(e){var d=mktData[e.sym]||{change:0};return d.change>0;}).length;
   var prompt='You are a global equity strategist. Analyze these 28 stock exchange signals (2025):\n\n'+exData.join('\n')+'\nBullish: '+bullCount+'/28 ('+Math.round(bullCount/28*100)+'% breadth)\n\nWrite a 3-paragraph global equity brief:\nParagraph 1 — GLOBAL REGIME: Market breadth analysis, dominant regional theme, risk-on vs defensive signals. Paragraph 2 — TOP 3 OPPORTUNITIES: Best 3 exchanges by technical + macro setup — specific rationale. Paragraph 3 — KEY RISKS: 2-3 deteriorating markets + macro risks to watch. End with GLOBAL EQUITY BIAS: [BULLISH / BEARISH / NEUTRAL] — one-line justification.';
@@ -3190,15 +3168,14 @@ async function _mmStockOutlook(){
     var txt=await _groqCall([{role:'user',content:prompt}],560);
     panel.innerHTML='<div class="ai-panel-hdr">🤖 AI Global Equity Outlook <span style="font-size:9px;font-weight:400;opacity:.7;">MiniMax M2.7 · 28 exchanges · '+bullCount+'/28 bullish</span></div>'
       +'<div class="ai-result">'+_aiEsc(txt)+'</div>'
-      +'<div style="font-size:10px;color:var(--muted);margin-top:6px;">'+new Date().toLocaleTimeString()+' · <span style="cursor:pointer;color:#a78bfa;" onclick="_mmStockOutlook()">Refresh</span> · <span style="cursor:pointer;color:var(--muted);" onclick="_showAISetup()">&#9881; Key</span></div>';
-  }catch(e){if(e.message==='NO_KEY')_aiNoKey(panel);else panel.innerHTML='<div style="color:#ef4444;font-size:11px;">'+_aiEsc(e.message)+'</div>';}
+      +'<div style="font-size:10px;color:var(--muted);margin-top:6px;">'+new Date().toLocaleTimeString()+' · <span style="cursor:pointer;color:#a78bfa;" onclick="_mmStockOutlook()">Refresh</span> · <span style="cursor:pointer;color:var(--muted);" onclick="_showAISetup()">&#9881; Key</span> · <span style="color:var(--muted);opacity:.5;user-select:none;">© Muhammad Umer Lari</span></div>';
+  }catch(e){_aiError(panel,e);}
 }
 
 async function _mmEmergingScanner(){
   var panel=document.getElementById('ai-stocks-panel');
   if(!panel)return;
-  _aiThinking(panel,'Running emerging market opportunity scanner…');
-  if(!_groqKey()){_aiNoKey(panel);return;}
+  if(!_aiStart(panel,'Running emerging market opportunity scanner…'))return;
   var emEx=EXCHANGES.filter(function(e){return e.reg==='mea'||e.reg==='asia';});
   var emData=emEx.map(function(e){var d=mktData[e.sym]||{change:0,rsi:50,sig:{l:'HOLD'}};return e.ctry+' '+e.n+'['+e.sym+']: '+(d.change>=0?'+':'')+d.change+'% RSI:'+(d.rsi||50)+' '+((d.sig&&d.sig.l)||'HOLD')+' MC:'+e.mc+' 2030:'+e.yr2030;});
   var weak=EXCHANGES.filter(function(e){var d=mktData[e.sym]||{change:0};return d.change<-1;}).map(function(e){var d=mktData[e.sym]||{change:0,rsi:50};return e.ctry+' '+e.n+': '+(d.change>=0?'+':'')+d.change+'% RSI:'+(d.rsi||50);});
@@ -3207,8 +3184,8 @@ async function _mmEmergingScanner(){
     var txt=await _groqCall([{role:'user',content:prompt}],460);
     panel.innerHTML='<div class="ai-panel-hdr">🌱 AI EM Opportunity Scanner <span style="font-size:9px;font-weight:400;opacity:.7;">MiniMax M2.7 · '+emEx.length+' EM exchanges</span></div>'
       +'<div class="ai-result">'+_aiEsc(txt)+'</div>'
-      +'<div style="font-size:10px;color:var(--muted);margin-top:6px;"><span style="cursor:pointer;color:#a78bfa;" onclick="_mmEmergingScanner()">Refresh</span> · <span style="cursor:pointer;color:var(--muted);" onclick="_showAISetup()">&#9881; Key</span></div>';
-  }catch(e){if(e.message==='NO_KEY')_aiNoKey(panel);else panel.innerHTML='<div style="color:#ef4444;font-size:11px;">'+_aiEsc(e.message)+'</div>';}
+      +'<div style="font-size:10px;color:var(--muted);margin-top:6px;"><span style="cursor:pointer;color:#a78bfa;" onclick="_mmEmergingScanner()">Refresh</span> · <span style="cursor:pointer;color:var(--muted);" onclick="_showAISetup()">&#9881; Key</span> · <span style="color:var(--muted);opacity:.5;user-select:none;">© Muhammad Umer Lari</span></div>';
+  }catch(e){_aiError(panel,e);}
 }
 
 async function _mmExchangeAI(sym){
@@ -3227,14 +3204,12 @@ async function _mmExchangeAI(sym){
     var txt=await _groqCall([{role:'user',content:prompt}],440);
     panel.innerHTML='<div class="ai-panel-hdr">🤖 '+e.n+' Analysis <span style="font-size:9px;font-weight:400;opacity:.7;">MiniMax M2.7</span></div>'
       +'<div class="ai-result">'+_aiEsc(txt)+'</div>'
-      +'<div style="font-size:10px;color:var(--muted);margin-top:6px;"><span style="cursor:pointer;color:#a78bfa;" onclick="_mmExchangeAI(window._aiLastExch)">Regenerate</span> · <span style="cursor:pointer;color:var(--muted);" onclick="_showAISetup()">&#9881; Key</span></div>';
+      +'<div style="font-size:10px;color:var(--muted);margin-top:6px;"><span style="cursor:pointer;color:#a78bfa;" onclick="_mmExchangeAI(window._aiLastExch)">Regenerate</span> · <span style="cursor:pointer;color:var(--muted);" onclick="_showAISetup()">&#9881; Key</span> · <span style="color:var(--muted);opacity:.5;user-select:none;">© Muhammad Umer Lari</span></div>';
   }catch(e2){if(e2.message==='NO_KEY')_aiNoKey(panel);else panel.innerHTML='<div style="color:#ef4444;font-size:11px;">'+_aiEsc(e2.message)+'</div>';}
   finally{btns.forEach(function(b){b.disabled=false;});}
 }
 
-// ════════════════════════════════════════
 // NEWS
-// ════════════════════════════════════════
 const NFEEDS={
   // v3.14: Google News RSS first (always works via proxy), then 10 authenticated direct feeds
   world:[
@@ -3661,7 +3636,6 @@ function _updateCompare(){
   if(tb) tb.innerHTML=rows.map(r=>`<tr><td style="color:var(--muted);">${r[0]}</td><td>${r[1]}</td><td>${r[2]}</td></tr>`).join('');
 }
 
-
 function _calcVolBands(hist,fc){
   // Calculate daily log returns
   const returns=[];
@@ -3680,9 +3654,7 @@ function _calcVolBands(hist,fc){
   };
 }
 
-// ════════════════════════════════════════
 // FORECAST v3.19 — Ultra-Advanced with Live APIs + Technical Indicators
-// ════════════════════════════════════════
 const FC_SYM_MAP={BTC:'bitcoin',ETH:'ethereum',SOL:'solana',XRP:'ripple',ADA:'cardano'};
 const FC_NAMES={BTC:'Bitcoin',ETH:'Ethereum',SOL:'Solana',XRP:'XRP',GOLD:'Gold (XAU)',SILVER:'Silver (XAG)',WTI:'WTI Crude Oil',EUR:'EUR/USD',SPX:'S&P 500',DAX:'DAX'};
 const FC_SEEDS={BTC:67000,ETH:3500,SOL:145,XRP:0.52,GOLD:2380,SILVER:28,WTI:78,EUR:1.085,SPX:5400,DAX:18800};
@@ -4010,9 +3982,7 @@ function _renderFcChart(sym){
   },1000);
 })();
 
-// ════════════════════════════════════════
 // SIGNALS PAGE
-// ════════════════════════════════════════
 const SIG_TXT={
   'STRONG BUY':'RSI oversold (<30) + negative momentum. Classic reversal zone. Scale in over 3-5 sessions with tight stops.',
   'BUY':'RSI approaching oversold. Momentum fading. Risk/reward favors accumulation at current levels.',
@@ -4041,9 +4011,7 @@ function initSignals(){
   }).join('');
 }
 
-// ════════════════════════════════════════
 // WORLD STOCKS
-// ════════════════════════════════════════
 function showWsRegion(id,el){
   document.querySelectorAll('.ws-section').forEach(s=>s.classList.remove('active'));
   document.querySelectorAll('.ws-rtab').forEach(t=>t.classList.remove('active'));
@@ -4137,9 +4105,7 @@ function drawWsDrill(sym){
   }).join('');
 }
 
-// ════════════════════════════════════════
 // RISING POWERS
-// ════════════════════════════════════════
 const RISING_POWERS=[
   {iso:'US',era:'2000–now',label:'Dominant',badge:'badge-est',rank:1},
   {iso:'CN',era:'2001–now',label:'Challenger',badge:'badge-est',rank:2},
@@ -4190,7 +4156,6 @@ async function _fetchRpLiveData(isos){
         _rpLiveData[iso2]={gdp:+rec.value.toFixed(2),year:rec.date};
       }
     });
-    console.log('[RisingPowers] WB GDP loaded for',Object.keys(_rpLiveData).length,'countries');
     // Re-render cards with live data
     _applyRpLiveData(isos);
     // v3.12: Also fetch FDI inflows (% of GDP) — parallel, non-blocking
@@ -4221,7 +4186,6 @@ async function _fetchRpFDI(isos){
         if(fdiEl){fdiEl.textContent=_rpLiveData[iso2].fdi.toFixed(1)+'% GDP';fdiEl.style.color='#34d399';}
       }
     });
-    console.log('[RisingPowers] FDI data loaded');
   }catch(e){console.warn('[RisingPowers] FDI fetch skipped:',e.message);}
 }
 
@@ -4249,7 +4213,6 @@ async function _fetchRpPopulation(isos){
         }
       }
     });
-    console.log('[RisingPowers] Population data loaded');
   }catch(e){console.warn('[RisingPowers] Population fetch skipped:',e.message);}
 }
 
@@ -4270,7 +4233,6 @@ async function _fetchRpExports(isos){
         _rpLiveData[iso2].exports=+rec.value.toFixed(1);
       }
     });
-    console.log('[RisingPowers] Exports data loaded');
   }catch(e){console.warn('[RisingPowers] Exports fetch skipped:',e.message);}
 }
 
@@ -4375,10 +4337,8 @@ async function _fetchNextChinaLive(){
       const el=document.getElementById('nc-gdp-'+iso);
       if(el&&!el._live){el.textContent=rec.value.toFixed(1)+'%';el.style.color='#f59e0b';el._live=true;}
     });
-    console.log('[NextChina] WB live data loaded');
   }catch(e){console.warn('[NextChina] WB fetch failed:',e.message);}
 }
-
 
 function initRisingPowers(){
   const el=document.getElementById('rp-content');
@@ -4497,7 +4457,6 @@ ${[
 <!-- Country cards — click to drill down -->
 <div style="font-size:14px;font-weight:700;margin-bottom:12px;">🃏 Country Cards — <span style="color:var(--muted);font-weight:400;font-size:12px;">Click any card for full drill-down analysis</span></div>
 <div class="rp-grid" id="rp-cards"></div>
-
 
 <!-- AI Rising Powers Intelligence v3.28 -->
 <div style="margin-top:24px;border-top:1px solid var(--border);padding-top:16px;">
@@ -5203,15 +5162,11 @@ ${[
     _fetchRpLiveData(rpCountries);
     const elR=document.getElementById('rp-st-refresh');
     if(elR){elR.textContent='↺';setTimeout(()=>{elR.textContent='8m';},3000);}
-    console.log('[RisingPowers] Auto-refreshed at',new Date().toLocaleTimeString());
   },8*60*1000);
 }
 
-
-// ═══════════════════════════════════════════════════════════════
 // Rising Powers v3.20 — Ultra-Advanced Intelligence Suite
 // Replaces old GDP spaghetti line chart with 3-panel system
-// ═══════════════════════════════════════════════════════════════
 
 // Power scores + rich data for all 15 nations
 const RP_INTEL={
@@ -5258,11 +5213,9 @@ function _rpScoreColor(score){
 }
 function _rpTierColor(tier){return{S:'#f59e0b',A:'#10b981',B:'#3b82f6',C:'#94a3b8'}[tier]||'#94a3b8';}
 
-// ═══════════════════════════════════════════════════════════════
 // Rising Powers v3.21 — Power Vortex Suite
 // 3 unique panels: Polar Constellation + Intelligence Duel + Geopolitical Race
 // RP_INTEL / RP_DIMS / RP_DIM_MAX / _rpScoreColor / _rpTierColor preserved
-// ═══════════════════════════════════════════════════════════════
 
 // Race trajectory [score2020, score2034] — linear interpolation per year
 const RP_RACE={
@@ -5448,11 +5401,8 @@ function drawRpGdpChart(){
   _renderRaceBars(0);
 }
 
-
-// ═══════════════════════════════════════════════════════════════
 // Future Currencies v3.22 — _initCurrencies() + helpers
 // APIs: Open ER (free, no key) + curated research data
-// ═══════════════════════════════════════════════════════════════
 
 const RPC_CBDC=[
   {flag:'🇨🇳',name:'China',      currency:'Digital Yuan (e-CNY)', status:'LIVE',     phase:'Full rollout',       col:'#ef4444'},
@@ -5899,13 +5849,10 @@ function closeRpModal(){
   if(cv){const ch=Chart.getChart(cv);if(ch)ch.destroy();}
 }
 
-
-// ════════════════════════════════════════
 // v2.5 — REAL DATA ENGINE
 // Enriches the dashboard with 100% real
 // prices + AI forecasts from the backend.
 // Falls back gracefully if backend is off.
-// ════════════════════════════════════════
 let backendAlive = false;
 const realDataCache = {};    // sym → real history result
 const prophetCache  = {};    // `${sym}:${horizon}` → forecast result
@@ -5924,7 +5871,6 @@ async function checkBackend(){
                    : '📐 Linear Reg';
     el.textContent  = `${dataTag} · ${fcTag} · v${d.version}`;
     el.className    = 'bs-live';
-    console.log('Backend v'+d.version, engines);
   } catch(e) {
     backendAlive = false;
     el.textContent = '⚡ Offline mode — simulated data';
@@ -6034,9 +5980,7 @@ function toggleDrill(sym, tf, ev){
   }
 }
 
-// ════════════════════════════════════════
 // CLIMATE INTELLIGENCE  v3.1
-// ════════════════════════════════════════
 let climateMap=null, climateTL=null, climateMarkers=[];
 let birthMap=null, birthTL=null;
 let birthCurrentMarkers=[], birthCurrentEra='2024', birthActiveFilters=new Set();
@@ -6310,9 +6254,7 @@ function renderHeatZones(){
   });
 }
 
-// ════════════════════════════════════════
 // BIRTH RATE INTELLIGENCE  v3.1
-// ════════════════════════════════════════
 
 // Historical birth rates per country (births per woman) — UN World Population Prospects 2024
 const BIRTH_ERA={
@@ -6649,9 +6591,7 @@ function toggleBirthDemPanel(){
   }
 }
 
-// ════════════════════════════════════════
 // BIRTH RATE v3.1 — AUTOPLAY / SEARCH / RANKINGS
-// ════════════════════════════════════════
 
 // ── Auto-play timeline animation ─────────────────────────────────────────────
 function toggleBirthAutoPlay(){
@@ -6767,9 +6707,7 @@ function toggleBirthRankPanel(){
   }
 }
 
-// ════════════════════════════════════════
 // DEMOGRAPHIC AI PREDICTOR  v3.1
-// ════════════════════════════════════════
 class BirthDemPredictor{
   constructor(){
     this.KEY='wip_birth_dem_v3';
@@ -6828,9 +6766,7 @@ ${oldAge.map(o=>`<div class="bdp-country-item"><span>${o.n}</span><span style="c
   }
 }
 
-// ════════════════════════════════════════
 // AI CLIMATE PREDICTION ENGINE  v3.1
-// ════════════════════════════════════════
 class ClimatePredictor {
   constructor(){
     this.KEY='wip_climate_pred_v2';
@@ -7062,9 +6998,7 @@ function togglePredPanel(){
   }
 }
 
-// ════════════════════════════════════════
 // DRAGGABLE PANELS  (boundary-constrained)
-// ════════════════════════════════════════
 function makeDraggable(el){
   if(!el) return;
   let startMouseX=0, startMouseY=0, startElLeft=0, startElTop=0;
@@ -7129,13 +7063,8 @@ document.addEventListener('DOMContentLoaded',()=>{
   }
 });
 
-// ════════════════════════════════════════
 // BOOT
-// ════════════════════════════════════════
-// ══════════════════════════════════════════════════════════════════════════
-// ═══════════════════════════════════════════════════════════════
 // Environment Sub-tab v3.23 — showEnvSubTab + _initDeforestation
-// ═══════════════════════════════════════════════════════════════
 
 function showEnvSubTab(tab, btn){
   ['overview','deforestation'].forEach(t=>{
@@ -7541,7 +7470,6 @@ function _initDeforestation(){
 
 // ENVIRONMENT INTELLIGENCE v3.3  — initEnvironment()
 // All data: scientifically sourced (NOAA, NASA GISS, IEA, IRENA, GFW, IPCC)
-// ══════════════════════════════════════════════════════════════════════════
 let envAqiMap=null;
 function initEnvironment(){
   // ── KPI real-time animation ───────────────────────────────────────────
@@ -7761,161 +7689,161 @@ function initEnvironment(){
     // ── South Asia ──
     {n:'Delhi',flag:'🇮🇳',country:'India',lat:28.66,lng:77.22,aqi:187,pm25:125,pm10:198,no2:62,o3:38,co:1.8,so2:22,dom:'PM2.5',pop:32.9,
      trend:[210,198,205,192,187],fc:[195,182,178],
-     rg:{gen:'Avoid all outdoor activities',sen:'Stay indoors with air purifier',child:'No outdoor play today',eld:'Emergency health alert'}},
+     rg:_RG.H},
     {n:'Lahore',flag:'🇵🇰',country:'Pakistan',lat:31.55,lng:74.35,aqi:215,pm25:148,pm10:225,no2:71,o3:35,co:2.1,so2:35,dom:'PM2.5',pop:14.0,
      trend:[245,238,228,220,215],fc:[218,225,210],
-     rg:{gen:'Avoid all outdoor activities',sen:'Stay indoors — air purifier essential',child:'Cancel all outdoor activities',eld:'Seek medical advice if symptomatic'}},
+     rg:_RG.VH},
     {n:'Karachi',flag:'🇵🇰',country:'Pakistan',lat:24.86,lng:67.01,aqi:142,pm25:95,pm10:165,no2:55,o3:42,co:1.5,so2:28,dom:'PM10',pop:16.0,
      trend:[155,148,152,145,142],fc:[138,145,140],
-     rg:{gen:'Limit prolonged outdoor exertion',sen:'Avoid outdoor activities',child:'Limit outdoor play',eld:'Avoid prolonged outdoor activities'}},
+     rg:_RG.U},
     {n:'Mumbai',flag:'🇮🇳',country:'India',lat:19.08,lng:72.88,aqi:145,pm25:98,pm10:170,no2:58,o3:45,co:1.4,so2:20,dom:'PM2.5',pop:21.3,
      trend:[162,155,158,148,145],fc:[142,148,150],
-     rg:{gen:'Limit prolonged outdoor exertion',sen:'Avoid outdoor activities',child:'Limit outdoor play',eld:'Avoid prolonged outdoor activities'}},
+     rg:_RG.U},
     {n:'Dhaka',flag:'🇧🇩',country:'Bangladesh',lat:23.72,lng:90.41,aqi:168,pm25:112,pm10:185,no2:65,o3:32,co:1.9,so2:30,dom:'PM2.5',pop:22.5,
      trend:[185,178,175,170,168],fc:[172,165,170],
-     rg:{gen:'Avoid outdoor activities',sen:'Stay indoors',child:'No outdoor play',eld:'Medical alert'}},
+     rg:_RG.VU},
     {n:'Kathmandu',flag:'🇳🇵',country:'Nepal',lat:27.70,lng:85.31,aqi:155,pm25:105,pm10:175,no2:48,o3:30,co:1.6,so2:18,dom:'PM2.5',pop:1.4,
      trend:[168,162,158,158,155],fc:[158,152,148],
-     rg:{gen:'Limit prolonged outdoor exertion',sen:'Avoid outdoor activities',child:'Limit outdoor play',eld:'Avoid prolonged outdoor activities'}},
+     rg:_RG.U},
     // ── East Asia ──
     {n:'Beijing',flag:'🇨🇳',country:'China',lat:39.91,lng:116.40,aqi:110,pm25:72,pm10:128,no2:68,o3:50,co:1.2,so2:15,dom:'PM2.5',pop:22.0,
      trend:[145,138,128,118,110],fc:[115,108,105],
-     rg:{gen:'Limit prolonged outdoor exertion',sen:'Avoid outdoor activities',child:'Limit outdoor play',eld:'Avoid prolonged outdoor activities'}},
+     rg:_RG.U},
     {n:'Shanghai',flag:'🇨🇳',country:'China',lat:31.23,lng:121.47,aqi:72,pm25:45,pm10:88,no2:58,o3:65,co:0.8,so2:10,dom:'O₃',pop:28.5,
      trend:[95,88,82,78,72],fc:[68,72,75],
-     rg:{gen:'Sensitive groups reduce prolonged exertion',sen:'Limit prolonged outdoor exertion',child:'Sensitive children reduce long activity',eld:'Consider reducing prolonged outdoor activity'}},
+     rg:_RG.S},
     {n:'Hong Kong',flag:'🇭🇰',country:'China SAR',lat:22.32,lng:114.17,aqi:58,pm25:32,pm10:62,no2:45,o3:60,co:0.6,so2:8,dom:'NO₂',pop:7.5,
      trend:[72,68,65,62,58],fc:[55,58,60],
-     rg:{gen:'Sensitive groups reduce prolonged exertion',sen:'Limit prolonged outdoor exertion',child:'Sensitive children reduce long activity',eld:'Consider reducing prolonged outdoor activity'}},
+     rg:_RG.S},
     {n:'Tokyo',flag:'🇯🇵',country:'Japan',lat:35.69,lng:139.69,aqi:55,pm25:28,pm10:52,no2:38,o3:62,co:0.5,so2:5,dom:'O₃',pop:37.4,
      trend:[68,65,62,58,55],fc:[52,55,58],
-     rg:{gen:'Sensitive groups reduce prolonged exertion',sen:'Limit prolonged outdoor exertion',child:'Sensitive children reduce long activity',eld:'Consider reducing prolonged outdoor activity'}},
+     rg:_RG.S},
     {n:'Seoul',flag:'🇰🇷',country:'South Korea',lat:37.57,lng:126.98,aqi:80,pm25:48,pm10:92,no2:55,o3:52,co:0.9,so2:12,dom:'PM2.5',pop:10.0,
      trend:[105,98,92,85,80],fc:[78,82,80],
-     rg:{gen:'Sensitive groups reduce prolonged exertion',sen:'Limit prolonged outdoor exertion',child:'Sensitive children reduce long activity',eld:'Consider reducing prolonged outdoor activity'}},
+     rg:_RG.S},
     {n:'Wuhan',flag:'🇨🇳',country:'China',lat:30.59,lng:114.30,aqi:92,pm25:58,pm10:105,no2:55,o3:48,co:1.0,so2:12,dom:'PM2.5',pop:12.2,
      trend:[120,112,105,98,92],fc:[88,92,95],
-     rg:{gen:'Sensitive groups reduce prolonged exertion',sen:'Limit prolonged outdoor exertion',child:'Sensitive children reduce long activity',eld:'Consider reducing prolonged outdoor activity'}},
+     rg:_RG.S},
     {n:'Guangzhou',flag:'🇨🇳',country:'China',lat:23.13,lng:113.26,aqi:78,pm25:48,pm10:88,no2:60,o3:58,co:0.8,so2:10,dom:'NO₂',pop:18.8,
      trend:[98,92,88,82,78],fc:[75,78,80],
-     rg:{gen:'Sensitive groups reduce prolonged exertion',sen:'Limit prolonged outdoor exertion',child:'Sensitive children reduce long activity',eld:'Consider reducing prolonged outdoor activity'}},
+     rg:_RG.S},
     {n:'Chengdu',flag:'🇨🇳',country:'China',lat:30.57,lng:104.07,aqi:102,pm25:65,pm10:118,no2:58,o3:50,co:1.1,so2:13,dom:'PM2.5',pop:21.0,
      trend:[128,120,115,108,102],fc:[98,102,106],
-     rg:{gen:'Limit prolonged outdoor exertion',sen:'Avoid outdoor activities',child:'Limit outdoor play',eld:'Avoid prolonged outdoor activities'}},
+     rg:_RG.U},
     {n:'Taipei',flag:'🇹🇼',country:'Taiwan',lat:25.04,lng:121.56,aqi:48,pm25:22,pm10:45,no2:35,o3:55,co:0.4,so2:5,dom:'O₃',pop:2.7,
      trend:[58,55,52,50,48],fc:[46,48,50],
-     rg:{gen:'Air quality is satisfactory',sen:'No restrictions needed',child:'Normal outdoor activities',eld:'Normal activities'}},
+     rg:_RG.M},
     // ── Southeast Asia ──
     {n:'Jakarta',flag:'🇮🇩',country:'Indonesia',lat:-6.21,lng:106.85,aqi:98,pm25:62,pm10:112,no2:52,o3:48,co:1.0,so2:15,dom:'PM2.5',pop:11.2,
      trend:[112,108,105,100,98],fc:[95,98,102],
-     rg:{gen:'Sensitive groups reduce prolonged exertion',sen:'Limit prolonged outdoor exertion',child:'Sensitive children reduce long activity',eld:'Consider reducing prolonged outdoor activity'}},
+     rg:_RG.S},
     {n:'Bangkok',flag:'🇹🇭',country:'Thailand',lat:13.75,lng:100.52,aqi:78,pm25:46,pm10:88,no2:48,o3:55,co:0.8,so2:10,dom:'PM2.5',pop:11.2,
      trend:[92,88,84,80,78],fc:[75,78,80],
-     rg:{gen:'Sensitive groups reduce prolonged exertion',sen:'Limit prolonged outdoor exertion',child:'Sensitive children reduce long activity',eld:'Consider reducing prolonged outdoor activity'}},
+     rg:_RG.S},
     {n:'Singapore',flag:'🇸🇬',country:'Singapore',lat:1.35,lng:103.82,aqi:42,pm25:18,pm10:38,no2:28,o3:55,co:0.4,so2:5,dom:'O₃',pop:6.0,
      trend:[52,48,46,44,42],fc:[40,42,45],
-     rg:{gen:'Air quality is satisfactory',sen:'No restrictions needed',child:'Normal outdoor activities',eld:'Normal activities'}},
+     rg:_RG.M},
     {n:'Colombo',flag:'🇱🇰',country:'Sri Lanka',lat:6.93,lng:79.85,aqi:82,pm25:50,pm10:92,no2:40,o3:42,co:0.85,so2:10,dom:'PM2.5',pop:0.75,
      trend:[92,90,86,84,82],fc:[80,82,84],
-     rg:{gen:'Sensitive groups reduce prolonged exertion',sen:'Limit prolonged outdoor exertion',child:'Sensitive children reduce long activity',eld:'Consider reducing prolonged outdoor activity'}},
+     rg:_RG.S},
     // ── Middle East ──
     {n:'Tehran',flag:'🇮🇷',country:'Iran',lat:35.69,lng:51.39,aqi:175,pm25:115,pm10:188,no2:68,o3:40,co:1.7,so2:28,dom:'PM2.5',pop:9.5,
      trend:[192,185,180,178,175],fc:[178,172,168],
-     rg:{gen:'Avoid outdoor activities',sen:'Stay indoors',child:'No outdoor play',eld:'Medical alert'}},
+     rg:_RG.VU},
     {n:'Riyadh',flag:'🇸🇦',country:'Saudi Arabia',lat:24.69,lng:46.72,aqi:120,pm25:42,pm10:188,no2:45,o3:68,co:0.9,so2:18,dom:'PM10',pop:7.7,
      trend:[138,132,128,124,120],fc:[118,122,125],
-     rg:{gen:'Limit prolonged outdoor exertion',sen:'Avoid outdoor activities',child:'Limit outdoor play',eld:'Avoid prolonged outdoor activities'}},
+     rg:_RG.U},
     {n:'Baghdad',flag:'🇮🇶',country:'Iraq',lat:33.34,lng:44.40,aqi:138,pm25:48,pm10:210,no2:50,o3:65,co:1.2,so2:20,dom:'PM10',pop:8.1,
      trend:[152,148,145,142,138],fc:[135,138,142],
-     rg:{gen:'Limit prolonged outdoor exertion',sen:'Avoid outdoor activities',child:'Limit outdoor play',eld:'Avoid prolonged outdoor activities'}},
+     rg:_RG.U},
     {n:'Amman',flag:'🇯🇴',country:'Jordan',lat:31.96,lng:35.95,aqi:88,pm25:30,pm10:138,no2:40,o3:58,co:0.8,so2:10,dom:'PM10',pop:4.2,
      trend:[98,95,92,90,88],fc:[85,88,92],
-     rg:{gen:'Sensitive groups reduce prolonged exertion',sen:'Limit prolonged outdoor exertion',child:'Sensitive children reduce long activity',eld:'Consider reducing prolonged outdoor activity'}},
+     rg:_RG.S},
     // ── Africa ──
     {n:'Cairo',flag:'🇪🇬',country:'Egypt',lat:30.05,lng:31.24,aqi:162,pm25:108,pm10:180,no2:60,o3:42,co:1.6,so2:24,dom:'PM2.5',pop:21.3,
      trend:[178,172,168,165,162],fc:[165,158,162],
-     rg:{gen:'Avoid outdoor activities',sen:'Stay indoors',child:'No outdoor play',eld:'Medical alert'}},
+     rg:_RG.VU},
     {n:'Lagos',flag:'🇳🇬',country:'Nigeria',lat:6.45,lng:3.40,aqi:115,pm25:75,pm10:140,no2:48,o3:38,co:1.2,so2:20,dom:'PM2.5',pop:15.9,
      trend:[128,122,120,118,115],fc:[112,115,118],
-     rg:{gen:'Limit prolonged outdoor exertion',sen:'Avoid outdoor activities',child:'Limit outdoor play',eld:'Avoid prolonged outdoor activities'}},
+     rg:_RG.U},
     {n:'Nairobi',flag:'🇰🇪',country:'Kenya',lat:-1.29,lng:36.82,aqi:62,pm25:35,pm10:68,no2:35,o3:48,co:0.6,so2:8,dom:'PM2.5',pop:5.1,
      trend:[72,70,68,65,62],fc:[60,62,65],
-     rg:{gen:'Sensitive groups reduce prolonged exertion',sen:'Limit prolonged outdoor exertion',child:'Sensitive children reduce long activity',eld:'Consider reducing prolonged outdoor activity'}},
+     rg:_RG.S},
     {n:'Johannesburg',flag:'🇿🇦',country:'S. Africa',lat:-26.20,lng:28.05,aqi:55,pm25:28,pm10:58,no2:38,o3:52,co:0.5,so2:10,dom:'NO₂',pop:5.8,
      trend:[68,65,62,58,55],fc:[52,55,58],
-     rg:{gen:'Sensitive groups reduce prolonged exertion',sen:'Limit prolonged outdoor exertion',child:'Sensitive children reduce long activity',eld:'Consider reducing prolonged outdoor activity'}},
+     rg:_RG.S},
     {n:'Addis Ababa',flag:'🇪🇹',country:'Ethiopia',lat:9.03,lng:38.74,aqi:72,pm25:42,pm10:82,no2:28,o3:40,co:0.7,so2:6,dom:'PM2.5',pop:5.2,
      trend:[82,78,76,74,72],fc:[70,72,75],
-     rg:{gen:'Sensitive groups reduce prolonged exertion',sen:'Limit prolonged outdoor exertion',child:'Sensitive children reduce long activity',eld:'Consider reducing prolonged outdoor activity'}},
+     rg:_RG.S},
     {n:'Kinshasa',flag:'🇨🇩',country:'DR Congo',lat:-4.32,lng:15.32,aqi:88,pm25:55,pm10:100,no2:32,o3:35,co:0.9,so2:12,dom:'PM2.5',pop:17.1,
      trend:[98,95,92,90,88],fc:[86,88,92],
-     rg:{gen:'Sensitive groups reduce prolonged exertion',sen:'Limit prolonged outdoor exertion',child:'Sensitive children reduce long activity',eld:'Consider reducing prolonged outdoor activity'}},
+     rg:_RG.S},
     {n:'Accra',flag:'🇬🇭',country:'Ghana',lat:5.56,lng:-0.20,aqi:75,pm25:45,pm10:85,no2:30,o3:38,co:0.75,so2:9,dom:'PM2.5',pop:2.5,
      trend:[85,82,80,78,75],fc:[72,75,78],
-     rg:{gen:'Sensitive groups reduce prolonged exertion',sen:'Limit prolonged outdoor exertion',child:'Sensitive children reduce long activity',eld:'Consider reducing prolonged outdoor activity'}},
+     rg:_RG.S},
     // ── Europe ──
     {n:'London',flag:'🇬🇧',country:'UK',lat:51.51,lng:-0.12,aqi:38,pm25:12,pm10:28,no2:35,o3:52,co:0.3,so2:3,dom:'NO₂',pop:9.5,
      trend:[48,45,42,40,38],fc:[36,38,40],
-     rg:{gen:'Air quality is satisfactory',sen:'No restrictions needed',child:'Normal outdoor activities',eld:'Normal activities'}},
+     rg:_RG.M},
     {n:'Paris',flag:'🇫🇷',country:'France',lat:48.86,lng:2.35,aqi:42,pm25:15,pm10:32,no2:38,o3:55,co:0.4,so2:4,dom:'NO₂',pop:11.1,
      trend:[52,50,48,45,42],fc:[40,42,44],
-     rg:{gen:'Air quality is satisfactory',sen:'No restrictions needed',child:'Normal outdoor activities',eld:'Normal activities'}},
+     rg:_RG.M},
     {n:'Berlin',flag:'🇩🇪',country:'Germany',lat:52.52,lng:13.40,aqi:35,pm25:11,pm10:25,no2:30,o3:48,co:0.3,so2:3,dom:'NO₂',pop:3.7,
      trend:[45,42,40,38,35],fc:[33,35,38],
-     rg:{gen:'Air quality is satisfactory',sen:'No restrictions needed',child:'Normal outdoor activities',eld:'Normal activities'}},
+     rg:_RG.M},
     {n:'Moscow',flag:'🇷🇺',country:'Russia',lat:55.75,lng:37.62,aqi:45,pm25:18,pm10:38,no2:32,o3:48,co:0.4,so2:5,dom:'NO₂',pop:12.5,
      trend:[55,52,50,48,45],fc:[43,45,48],
-     rg:{gen:'Air quality is satisfactory',sen:'No restrictions needed',child:'Normal outdoor activities',eld:'Normal activities'}},
+     rg:_RG.M},
     {n:'Istanbul',flag:'🇹🇷',country:'Turkey',lat:41.01,lng:28.95,aqi:60,pm25:32,pm10:62,no2:42,o3:52,co:0.6,so2:8,dom:'PM2.5',pop:15.5,
      trend:[72,68,65,62,60],fc:[58,60,63],
-     rg:{gen:'Sensitive groups reduce prolonged exertion',sen:'Limit prolonged outdoor exertion',child:'Sensitive children reduce long activity',eld:'Consider reducing prolonged outdoor activity'}},
+     rg:_RG.S},
     {n:'Ankara',flag:'🇹🇷',country:'Turkey',lat:39.93,lng:32.86,aqi:65,pm25:36,pm10:70,no2:40,o3:48,co:0.65,so2:8,dom:'PM10',pop:5.6,
      trend:[78,75,72,68,65],fc:[62,65,68],
-     rg:{gen:'Sensitive groups reduce prolonged exertion',sen:'Limit prolonged outdoor exertion',child:'Sensitive children reduce long activity',eld:'Consider reducing prolonged outdoor activity'}},
+     rg:_RG.S},
     {n:'Warsaw',flag:'🇵🇱',country:'Poland',lat:52.23,lng:21.01,aqi:68,pm25:38,pm10:72,no2:35,o3:45,co:0.7,so2:12,dom:'PM10',pop:1.8,
      trend:[85,80,75,72,68],fc:[65,68,72],
-     rg:{gen:'Sensitive groups reduce prolonged exertion',sen:'Limit prolonged outdoor exertion',child:'Sensitive children reduce long activity',eld:'Consider reducing prolonged outdoor activity'}},
+     rg:_RG.S},
     {n:'Amsterdam',flag:'🇳🇱',country:'Netherlands',lat:52.37,lng:4.90,aqi:32,pm25:10,pm10:22,no2:28,o3:45,co:0.3,so2:3,dom:'NO₂',pop:0.9,
      trend:[42,40,38,35,32],fc:[30,32,35],
-     rg:{gen:'Air quality is satisfactory',sen:'No restrictions needed',child:'Normal outdoor activities',eld:'Normal activities'}},
+     rg:_RG.M},
     {n:'Stockholm',flag:'🇸🇪',country:'Sweden',lat:59.33,lng:18.07,aqi:22,pm25:7,pm10:15,no2:18,o3:38,co:0.2,so2:2,dom:'O₃',pop:0.98,
      trend:[28,26,25,24,22],fc:[20,22,24],
-     rg:{gen:'Air quality is satisfactory',sen:'No restrictions needed',child:'Normal outdoor activities',eld:'Normal activities'}},
+     rg:_RG.M},
     // ── Americas ──
     {n:'New York',flag:'🇺🇸',country:'USA',lat:40.71,lng:-74.01,aqi:44,pm25:16,pm10:30,no2:38,o3:55,co:0.4,so2:4,dom:'NO₂',pop:8.3,
      trend:[56,52,50,47,44],fc:[42,44,46],
-     rg:{gen:'Air quality is satisfactory',sen:'No restrictions needed',child:'Normal outdoor activities',eld:'Normal activities'}},
+     rg:_RG.M},
     {n:'Los Angeles',flag:'🇺🇸',country:'USA',lat:34.05,lng:-118.24,aqi:66,pm25:28,pm10:55,no2:38,o3:72,co:0.5,so2:4,dom:'O₃',pop:4.0,
      trend:[82,78,74,70,66],fc:[62,66,70],
-     rg:{gen:'Sensitive groups reduce prolonged exertion',sen:'Limit prolonged outdoor exertion',child:'Sensitive children reduce long activity',eld:'Consider reducing prolonged outdoor activity'}},
+     rg:_RG.S},
     {n:'Chicago',flag:'🇺🇸',country:'USA',lat:41.88,lng:-87.63,aqi:48,pm25:20,pm10:38,no2:35,o3:58,co:0.4,so2:4,dom:'O₃',pop:2.7,
      trend:[58,55,52,50,48],fc:[46,48,50],
-     rg:{gen:'Air quality is satisfactory',sen:'No restrictions needed',child:'Normal outdoor activities',eld:'Normal activities'}},
+     rg:_RG.M},
     {n:'Houston',flag:'🇺🇸',country:'USA',lat:29.76,lng:-95.37,aqi:58,pm25:26,pm10:50,no2:42,o3:68,co:0.5,so2:8,dom:'O₃',pop:2.3,
      trend:[72,68,65,62,58],fc:[55,58,62],
-     rg:{gen:'Sensitive groups reduce prolonged exertion',sen:'Limit prolonged outdoor exertion',child:'Sensitive children reduce long activity',eld:'Consider reducing prolonged outdoor activity'}},
+     rg:_RG.S},
     {n:'Mexico City',flag:'🇲🇽',country:'Mexico',lat:19.43,lng:-99.13,aqi:88,pm25:52,pm10:100,no2:58,o3:68,co:0.9,so2:12,dom:'O₃',pop:22.1,
      trend:[105,100,96,92,88],fc:[85,88,92],
-     rg:{gen:'Sensitive groups reduce prolonged exertion',sen:'Limit prolonged outdoor exertion',child:'Sensitive children reduce long activity',eld:'Consider reducing prolonged outdoor activity'}},
+     rg:_RG.S},
     {n:'São Paulo',flag:'🇧🇷',country:'Brazil',lat:-23.55,lng:-46.63,aqi:52,pm25:25,pm10:52,no2:45,o3:60,co:0.5,so2:5,dom:'NO₂',pop:22.4,
      trend:[65,62,58,55,52],fc:[50,52,55],
-     rg:{gen:'Sensitive groups reduce prolonged exertion',sen:'Limit prolonged outdoor exertion',child:'Sensitive children reduce long activity',eld:'Consider reducing prolonged outdoor activity'}},
+     rg:_RG.S},
     {n:'Buenos Aires',flag:'🇦🇷',country:'Argentina',lat:-34.60,lng:-58.38,aqi:48,pm25:20,pm10:42,no2:38,o3:52,co:0.4,so2:4,dom:'NO₂',pop:3.1,
      trend:[58,55,52,50,48],fc:[46,48,50],
-     rg:{gen:'Air quality is satisfactory',sen:'No restrictions needed',child:'Normal outdoor activities',eld:'Normal activities'}},
+     rg:_RG.M},
     {n:'Bogotá',flag:'🇨🇴',country:'Colombia',lat:4.71,lng:-74.07,aqi:62,pm25:35,pm10:68,no2:40,o3:45,co:0.6,so2:7,dom:'PM2.5',pop:7.5,
      trend:[75,72,68,65,62],fc:[60,62,65],
-     rg:{gen:'Sensitive groups reduce prolonged exertion',sen:'Limit prolonged outdoor exertion',child:'Sensitive children reduce long activity',eld:'Consider reducing prolonged outdoor activity'}},
+     rg:_RG.S},
     {n:'Lima',flag:'🇵🇪',country:'Peru',lat:-12.05,lng:-77.04,aqi:95,pm25:58,pm10:108,no2:50,o3:42,co:1.0,so2:14,dom:'PM2.5',pop:10.9,
      trend:[108,105,100,98,95],fc:[92,95,98],
-     rg:{gen:'Sensitive groups reduce prolonged exertion',sen:'Limit prolonged outdoor exertion',child:'Sensitive children reduce long activity',eld:'Consider reducing prolonged outdoor activity'}},
+     rg:_RG.S},
     {n:'Toronto',flag:'🇨🇦',country:'Canada',lat:43.65,lng:-79.38,aqi:30,pm25:8,pm10:18,no2:25,o3:42,co:0.3,so2:2,dom:'O₃',pop:2.9,
      trend:[38,36,34,32,30],fc:[28,30,32],
-     rg:{gen:'Air quality is satisfactory',sen:'No restrictions needed',child:'Normal outdoor activities',eld:'Normal activities'}},
+     rg:_RG.M},
     // ── Oceania ──
     {n:'Sydney',flag:'🇦🇺',country:'Australia',lat:-33.87,lng:151.21,aqi:25,pm25:6,pm10:14,no2:18,o3:38,co:0.2,so2:2,dom:'O₃',pop:5.3,
      trend:[32,30,28,26,25],fc:[23,25,28],
-     rg:{gen:'Air quality is satisfactory',sen:'No restrictions needed',child:'Normal outdoor activities',eld:'Normal activities'}}
+     rg:_RG.M}
   ];
   const mapEl=document.getElementById('env-aqi-map');
   if(mapEl&&!envAqiMap){
@@ -8075,8 +8003,6 @@ function initEnvironment(){
       </tr>`).join('');
   }
 
-  console.log('[Environment v3.3] All charts, map & tables initialized ✅');
-
   // ── AQI Advanced Panels v3.9 ──────────────────────────────────────────
   setTimeout(()=>{
     _buildAQIRanking();
@@ -8086,11 +8012,9 @@ function initEnvironment(){
   }, 300);
 }
 
-// ══════════════════════════════════════════════════════════════════════════
 // CENTRAL BANKS LIVE v3.5
 // Free APIs: ECB Data Portal (ecb.europa.eu, no key) + yfinance via backend
 // All other rates: official central bank websites, verified May 2025
-// ══════════════════════════════════════════════════════════════════════════
 let cbHistChart=null, cbYieldChart=null;
 
 const CB_BANKS=[
@@ -8354,11 +8278,9 @@ function _buildYieldChart(yc,source=''){
   });
 }
 
-// ════════════════════════════════════════════════════════════════
 // GLOBAL CRISIS & CONFLICT MAP v3.6
 // Data: ACLED · UNHCR · ReliefWeb · GDELT · UCDP (all free)
 // Author: Muhammad Umer Lari
-// ════════════════════════════════════════════════════════════════
 let crisisLeafMap=null, crisisTypeChart=null, crisisTrendChart=null;
 let _crisisEvents=[], _crisisFilter='all';
 
@@ -8476,7 +8398,6 @@ function _renderCrisisMarkers(){
   });
 }
 
-
 function _buildCrisisTypeChart(){
   const counts={armed:0,civil:0,protest:0,disaster:0};
   CRISIS_EVENTS.forEach(e=>counts[e.type]++);
@@ -8552,12 +8473,9 @@ function initCrisisMap(){
   _buildCrisisTypeChart();
   _buildCrisisTrendChart();
   _buildCrisisTable();
-  console.log('[Crisis Map v3.6.1] initialized ✅');
 }
 
-// ════════════════════════════════════════════════════════════════
 // AQI MODAL v3.4 — global functions
-// ════════════════════════════════════════════════════════════════
 let _aqiCity=null;
 function aqiColor(a){return a<50?'#10b981':a<100?'#fbbf24':a<150?'#f97316':a<200?'#ef4444':a<300?'#7c3aed':'#7c2d12';}
 function aqiLabel(a){return a<50?'Good':a<100?'Moderate':a<150?'Unhealthy (Sensitive)':a<200?'Unhealthy':a<300?'Very Unhealthy':'Hazardous';}
@@ -8632,7 +8550,6 @@ function showAqiTab(tab){
   }
 }
 
-
 /* ═══════════════════════════════════════════════════════════════
    v3.8 — 12-Bank Spotlight + Advanced Real Rates
    Author: Muhammad Umer Lari | Free data only
@@ -8702,9 +8619,7 @@ const CB_SPOTLIGHTS=[
    fact:'🌟 IMF Program: $7B EFF 2024–2027 active. SBP independence strengthened under IMF conditionality. KSE-100 at all-time highs — Pakistan emerging market comeback story of 2024–2025.'},
 ];
 
-// ══════════════════════════════════════════════════════════════════════
 // AQI ADVANCED PANELS v3.9 — Ranking · Regional · Comparison · Live API
-// ══════════════════════════════════════════════════════════════════════
 let _aqiCompareChart=null;
 
 function _buildAQIRanking(){
@@ -8831,7 +8746,6 @@ function _fetchLiveAQI(){
       if(src) src.textContent='📌 Embedded';
     });
 }
-// ══════════════════════════════════════════════════════════════════════
 
 let _spotlightFilter='all';
 function filterSpotlight(f,btn){
@@ -9219,13 +9133,20 @@ function _buildBalanceSheets(){
 
 document.addEventListener('keydown',e=>{if(e.key==='Escape')closeAqiModal();});
 
-// ════════════════════════════════════════════════════════════════════════════
 // MINIMAX AI INTELLIGENCE LAYER v3.26
 // 100% Free · MiniMax-M2.7 · No paid APIs
 // Key: localStorage('wip_minimax_key') ONLY — never in any project file
 // Free tier: platform.minimaxi.com (no credit card)
-// ════════════════════════════════════════════════════════════════════════════
 
+// ── AQI Advisory Lookup (Muhammad Umer Lari) ─────────────────────────────
+var _RG={
+  M:{gen:'Air quality is satisfactory',sen:'No restrictions needed',child:'Normal outdoor activities',eld:'Normal activities'},
+  S:{gen:'Sensitive groups reduce prolonged exertion',sen:'Limit prolonged outdoor exertion',child:'Sensitive children reduce long activity',eld:'Consider reducing prolonged outdoor activity'},
+  U:{gen:'Limit prolonged outdoor exertion',sen:'Avoid outdoor activities',child:'Limit outdoor play',eld:'Avoid prolonged outdoor activities'},
+  VU:{gen:'Avoid outdoor activities',sen:'Stay indoors',child:'No outdoor play',eld:'Medical alert'},
+  H:{gen:'Avoid all outdoor activities',sen:'Stay indoors with air purifier',child:'No outdoor play today',eld:'Emergency health alert'},
+  VH:{gen:'Avoid all outdoor activities',sen:'Stay indoors — air purifier essential',child:'Cancel all outdoor activities',eld:'Seek medical advice if symptomatic'}
+};
 function _groqKey(){return localStorage.getItem('wip_minimax_key')||'';}
 
 function _saveGroqKey(){
@@ -9288,6 +9209,17 @@ function _aiNoKey(el){
 }
 
 function _aiEsc(s){return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+function _aiError(panel,e){
+  // Muhammad Umer Lari — centralised AI error handler
+  if(e.message==='NO_KEY')_aiNoKey(panel);
+  else panel.innerHTML='<div style="color:#ef4444;font-size:11px;">'+_aiEsc(e.message)+'</div>';
+}
+function _aiStart(panel,msg){
+  // Muhammad Umer Lari — centralised AI guard
+  _aiThinking(panel,msg);
+  if(!_groqKey()){_aiNoKey(panel);return false;}
+  return true;
+}
 
 // ── Feature 1: Country AI Assessment ────────────────────────────────────────
 async function _groqCountryReport(iso){
