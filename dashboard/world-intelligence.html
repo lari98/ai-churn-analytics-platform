@@ -10274,6 +10274,20 @@ function _callMiniMax(prompt, onSuccess, onError) {
   .catch(function(e){ onError(e.message || 'Network error'); });
 }
 
+
+// ── Crisis + Recession sub-tab switcher ──────────────────────────────────
+function showCrisisSub(id, el) {
+  document.querySelectorAll('.crisis-sub').forEach(function(d){ d.style.display = 'none'; });
+  document.querySelectorAll('.crb-btn').forEach(function(b){ b.classList.remove('crb-active'); });
+  var sub = document.getElementById('crisis-sub-' + id);
+  if (sub) sub.style.display = 'block';
+  if (el) el.classList.add('crb-active');
+  if (id === 'recession' && !pageInited['recession']) {
+    pageInited['recession'] = true;
+    if (typeof initRecession === 'function') initRecession();
+  }
+}
+
 </script>
 
 <!-- MiniMax AI Setup Modal v3.26 — 100% free, no credit card -->
