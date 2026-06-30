@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="author" content="Muhammad Umer Lari">
   <meta name="copyright" content="Copyright © 2024-2025 Muhammad Umer Lari. All Rights Reserved.">
-<title>World Intelligence Platform v3.31</title>
+<title>World Intelligence Platform v3.32</title>
 <!-- Leaflet -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css"/>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
@@ -9729,6 +9729,8 @@ function initRecession() {
   recFetchNews('future');
   // Hourly refresh
   setInterval(() => { recFetchNews('present'); recFetchNews('future'); }, 3600000);
+  // Activate first panel by default
+  setTimeout(function(){ showRecTab('historical', document.querySelector('.rec-stab')); }, 100);
 }
 
 // ── Historical Era Data ──────────────────────────────────────────
