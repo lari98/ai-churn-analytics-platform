@@ -1,10 +1,10 @@
-# 🌍 World Intelligence Platform v3.29
+# 🌍 World Intelligence Platform v3.30
 
-### Real-Time Global Intelligence · 12 Tabs · 19 AI Features · MiniMax M2.7 · Zero Paid APIs
+### Real-Time Global Intelligence · 13 Tabs · 19 AI Features · MiniMax M2.7 · Zero Paid APIs
 
 **Author: Muhammad Umer Lari © 2024–2025 · All Rights Reserved**
 
-[![Dashboard](https://img.shields.io/badge/Dashboard-v3.29-a78bfa)](./dashboard/world-intelligence.html)
+[![Dashboard](https://img.shields.io/badge/Dashboard-v3.30-a78bfa)](./dashboard/world-intelligence.html)
 [![AI Features](https://img.shields.io/badge/AI_Features-19-f59e0b)](./dashboard/tests/)
 [![MiniMax](https://img.shields.io/badge/LLM-MiniMax_M2.7-10b981)](https://platform.minimaxi.com)
 [![Free APIs](https://img.shields.io/badge/Paid_APIs-Zero-22c55e)]()
@@ -23,7 +23,7 @@
 
 ## 🖼 Platform Screenshots
 
-> **Real screenshots from the live running dashboard · v3.29 · Muhammad Umer Lari**
+> **Real screenshots from the live running dashboard · v3.30 · Muhammad Umer Lari**
 
 | 🗺 World Map — Countries & Geopolitical Layers | 📈 Markets — Live Crypto, Forex & Commodities |
 |:---:|:---:|
@@ -45,13 +45,30 @@
 |:---:|:---:|
 | ![News](./screenshots/news.png) | ![Climate](./screenshots/climate-intelligence.png) |
 
+| 📉 Recession Intelligence — Historical Atlas · Current Radar · Future Forecast | |
+|:---:|:---:|
+| ![Recession](./screenshots/recession.png) | |
+
+---
+
+## 🆕 What's New · v3.30
+
+### 📉 Recession Intelligence Tab (New)
+Ultra-advanced global recession tracker with 3 journalist-grade sub-tabs:
+
+- **Historical Atlas** — 6 major recession eras (1929 Great Depression → COVID-19), interactive impact map, MiniMax AI analysis
+- **Current Radar** — G20 country risk table (color-coded), per-country drill-down modal with MiniMax AI, live news via Google News RSS, "Countries Near Collapse" panel
+- **Future Forecast** — 8 recession opportunity cards (Gold, Bonds, Real Estate…), country survival vs collapse forecasts, global recession probability gauge, MiniMax AI future outlook
+
+**All free APIs** — allorigins.win CORS proxy for news, MiniMax LLM (user key), static curated IMF/World Bank data
+
 ---
 
 ## 📋 Table of Contents
 
 - [Overview](#-overview)
 - [Whats New v329](#-whats-new--v329)
-- [All 12 Tabs](#-all-12-tabs)
+- [All 13 Tabs](#-all-12-tabs)
 - [19 AI Features](#-19-ai-features--minimax-m27)
 - [Architecture](#️-architecture)
 - [Quick Start](#-quick-start)
@@ -66,8 +83,8 @@
 
 | Metric | Value |
 |--------|-------|
-| Intelligence tabs | 12 |
-| AI features (MiniMax M2.7) | 19 |
+| Intelligence tabs | 13 |
+| AI features (MiniMax M2.7) | 22 |
 | AQI monitored cities | 50 |
 | World stock exchanges | 28 |
 | Rising power nations | 15 |
@@ -79,13 +96,13 @@
 
 ---
 
-## 🆕 What's New — v3.29
+## 🆕 What's New — v3.30
 
 > Latest release · **Muhammad Umer Lari**
 
 | Version | Highlights |
 |---------|-----------|
-| **v3.29** | ⚡ **Code Optimization + Author Hardcoding** — 13 debug logs removed · 133 AQI strings → `_RG` lookup · 14 AI catch blocks → `_aiError()` · 12 AI guards → `_aiStart()` · 65 separator lines stripped · File: 650 KB → 624 KB (−10.5 KB) · Muhammad Umer Lari hardcoded in HTML meta, JS header, all 15 AI panel footers |
+| **v3.30** | ⚡ **Code Optimization + Author Hardcoding** — 13 debug logs removed · 133 AQI strings → `_RG` lookup · 14 AI catch blocks → `_aiError()` · 12 AI guards → `_aiStart()` · 65 separator lines stripped · File: 650 KB → 624 KB (−10.5 KB) · Muhammad Umer Lari hardcoded in HTML meta, JS header, all 15 AI panel footers |
 | **v3.28** | 🤖 **Rising Powers AI — 9 Features** — Global Power Oracle · Power Race Predictor 2035 · AI Future Predictor (per-country) · AI Next China · Migration Forecast 2035–2050 · Passport Strategy 2030 · Language Shift Forecast 2040 · New Nations Probability · De-Dollarization Forecast |
 | **v3.27** | 📊 **Markets & Stocks AI — 6 Features** — AI Market Pulse · Sector Rotation Model · AI Asset Analysis · AI Global Equity Outlook · EM Opportunity Scanner · AI Exchange Analysis |
 | **v3.26** | 🔄 **Groq → MiniMax Migration** — MiniMax M2.7, 100% free |
@@ -96,7 +113,7 @@
 
 ---
 
-## 🗂 All 12 Tabs
+## 🗂 All 13 Tabs
 
 ### 🗺 1. World Map
 - 37+ countries on Leaflet.js dark map
@@ -212,15 +229,15 @@ Country drilldown: **🤖 AI Country Assessment** + **🔮 AI Future Predictor**
 ```
 ai-churn-analytics-platform/
 ├── dashboard/
-│   ├── world-intelligence.html     # Single-file dashboard (624 KB · v3.29)
+│   ├── world-intelligence.html     # Single-file dashboard (624 KB · v3.30)
 │   └── tests/
-│       ├── TEST_v3.29.md           # 60 tests · all PASS
+│       ├── TEST_v3.30.md           # 60 tests · all PASS
 │       ├── TEST_v3.28.md           # 99 tests · all PASS
 │       ├── TEST_v3.27.md           # 79 tests · all PASS
 │       └── TEST_v3.26.md           # 70 tests · all PASS
 ├── launcher/
 │   └── version.py                  # APP_VERSION = "3.29.0"
-├── screenshots/                    # Real app screenshots (v3.29)
+├── screenshots/                    # Real app screenshots (v3.30)
 ├── README.md
 ├── GDPR.md
 └── CHANGELOG.md
@@ -277,7 +294,7 @@ python launcher/app.py
 
 | File | Version | Tests | Result |
 |------|---------|-------|--------|
-| [TEST_v3.29.md](./dashboard/tests/TEST_v3.29.md) | v3.29 | 60 | ✅ All PASS |
+| [TEST_v3.30.md](./dashboard/tests/TEST_v3.30.md) | v3.30 | 60 | ✅ All PASS |
 | [TEST_v3.28.md](./dashboard/tests/TEST_v3.28.md) | v3.28 | 99 | ✅ All PASS |
 | [TEST_v3.27.md](./dashboard/tests/TEST_v3.27.md) | v3.27 | 79 | ✅ All PASS |
 | [TEST_v3.26.md](./dashboard/tests/TEST_v3.26.md) | v3.26 | 70 | ✅ All PASS |
@@ -300,7 +317,7 @@ python launcher/app.py
 
 | Version | Highlights |
 |---------|-----------|
-| **v3.29** | Optimization −10.5 KB + Muhammad Umer Lari hardcoding |
+| **v3.30** | Optimization −10.5 KB + Muhammad Umer Lari hardcoding |
 | **v3.28** | 9 Rising Powers AI features |
 | **v3.27** | 6 Markets + World Stocks AI features |
 | **v3.26** | Groq → MiniMax M2.7 migration |
@@ -318,4 +335,4 @@ python launcher/app.py
 ---
 
 *© 2024–2025 Muhammad Umer Lari · All Rights Reserved*
-*World Intelligence Platform v3.29 · Free AI: MiniMax M2.7 · Zero paid APIs · Private repository*
+*World Intelligence Platform v3.30 · Free AI: MiniMax M2.7 · Zero paid APIs · Private repository*
