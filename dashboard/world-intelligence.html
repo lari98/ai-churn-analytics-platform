@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="author" content="Muhammad Umer Lari">
   <meta name="copyright" content="Copyright © 2024-2025 Muhammad Umer Lari. All Rights Reserved.">
-<title>World Intelligence Platform v3.30</title>
+<title>World Intelligence Platform v3.31</title>
 <!-- Leaflet -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css"/>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
@@ -685,6 +685,22 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:'Segoe 
 .rfc-item{font-size:11px;color:var(--muted);padding:3px 0;border-bottom:1px solid rgba(255,255,255,.04);}
 .rfc-item strong{color:var(--fg-2);}
 
+
+/* ── Crisis + Recession sub-tab bar ──────────────────── */
+.crisis-rec-bar {
+  display: flex; gap: 8px; padding: 12px 16px 0;
+  border-bottom: 1px solid rgba(99,102,241,.3);
+  margin-bottom: 16px;
+}
+.crb-btn {
+  padding: 8px 20px; border-radius: 8px 8px 0 0; border: none; cursor: pointer;
+  font-size: 13px; font-weight: 600; letter-spacing: .3px;
+  background: rgba(99,102,241,.1); color: #94a3b8;
+  transition: all .2s;
+}
+.crb-btn:hover { background: rgba(99,102,241,.2); color: #c7d2fe; }
+.crb-btn.crb-active { background: rgba(99,102,241,.35); color: #e0e7ff; border-bottom: 2px solid #818cf8; }
+.crisis-sub { width: 100%; }
 </style>
 </head>
 <body>
@@ -712,7 +728,7 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:'Segoe 
   <div class="mtab" onclick="showPage('environment',this)">🌱 Environment</div>
   <div class="mtab" onclick="showPage('centralbanks',this)">🏦 Central Banks</div>
   <div class="mtab" onclick="showPage('crisis',this)">⚔️ Crisis Map</div>
-  <div class="mtab" onclick="showPage('recession',this)">📉 Recession</div>
+
 </div>
 
 <div id="pages">
@@ -1870,6 +1886,15 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:'Segoe 
 
   <!-- ══════════════ GLOBAL CRISIS & CONFLICT MAP v3.6 ══════════════ -->
   <div class="page" id="page-crisis">
+  <!-- Crisis & Recession sub-tab bar -->
+  <div class="crisis-rec-bar">
+    <button id="crb-crisis" class="crb-btn crb-active" onclick="showCrisisSub('crisis',this)">⚔️ Crisis Map</button>
+    <button id="crb-recession" class="crb-btn" onclick="showCrisisSub('recession',this)">📉 Recession Intelligence</button>
+  </div>
+
+  <!-- Sub: Crisis Map -->
+  <div id="crisis-sub-crisis" class="crisis-sub" style="display:block">
+
 
     <!-- KPI Row -->
     <div class="crisis-kpi-row">
@@ -2045,6 +2070,252 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:'Segoe 
 <div id="ticker">
   <div class="ticker-lbl">LIVE</div>
   <div id="ticker-track"><span>Loading live news…</span></div>
+
+  </div><!-- /crisis-sub-crisis -->
+
+  <!-- Sub: Recession Intelligence (merged from standalone recession tab) -->
+  <div id="crisis-sub-recession" class="crisis-sub" style="display:none">
+
+
+    <!-- Sub-tab nav -->
+    <div class="rec-stab-row">
+      <button class="rec-stab active" onclick="showRecTab('historical',this)">📜 The Wound That Wouldn't Heal — Historical Recession Atlas</button>
+      <button class="rec-stab" onclick="showRecTab('present',this)">🚨 Warning Lights — Global Recession Radar 2025</button>
+      <button class="rec-stab" onclick="showRecTab('future',this)">🔮 The Coming Storm — Recession Forecast 2025–2040</button>
+    </div>
+
+    <!-- ── PANEL 1: HISTORICAL ── -->
+    <div class="rec-panel active" id="rec-historical">
+      <div class="rec-section">
+        <div class="rec-section-title">📜 Select a Recession Era</div>
+        <div class="rec-era-row">
+          <button class="rec-era-btn active" onclick="recLoadEra('1929',this)">1929 Great Depression</button>
+          <button class="rec-era-btn" onclick="recLoadEra('1973',this)">1973 Oil Shock</button>
+          <button class="rec-era-btn" onclick="recLoadEra('1980',this)">1980–82 S&L Crisis</button>
+          <button class="rec-era-btn" onclick="recLoadEra('1990',this)">1990–91 Gulf War</button>
+          <button class="rec-era-btn" onclick="recLoadEra('2001',this)">2001 Dot-com Bust</button>
+          <button class="rec-era-btn" onclick="recLoadEra('2008',this)">2008–09 Great Recession</button>
+          <button class="rec-era-btn" onclick="recLoadEra('2020',this)">2020 COVID Crash</button>
+          <button class="rec-era-btn" onclick="recLoadEra('2022',this)">2022–23 Inflation Shock</button>
+        </div>
+        <div id="rec-era-detail"></div>
+      </div>
+
+      <div class="rec-2col">
+        <div class="rec-section">
+          <div class="rec-section-title">✅ Countries That Recovered</div>
+          <table class="rec-tbl" id="rec-recovered-tbl">
+            <thead><tr><th>Country</th><th>Recovery Year</th><th>Driver</th></tr></thead>
+            <tbody id="rec-recovered-body"></tbody>
+          </table>
+        </div>
+        <div class="rec-section">
+          <div class="rec-section-title">⚠️ Countries Still Struggling / Collapsed</div>
+          <table class="rec-tbl" id="rec-struggling-tbl">
+            <thead><tr><th>Country</th><th>Status</th><th>Reason</th></tr></thead>
+            <tbody id="rec-struggling-body"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="rec-section">
+        <div class="rec-section-title">📖 What History Teaches — Key Lessons</div>
+        <div id="rec-lessons" style="font-size:12px;color:var(--muted);line-height:1.8;"></div>
+      </div>
+
+      <div class="rec-ai-box">
+        <div style="font-size:12px;font-weight:700;color:#f87171;margin-bottom:8px;">🤖 AI Historical Analysis — MiniMax M2.7</div>
+        <button class="rec-ai-btn" onclick="recAI('historical')">⚡ Analyze This Era with AI</button>
+        <div class="rec-ai-output" id="rec-ai-historical"></div>
+      </div>
+    </div>
+
+    <!-- ── PANEL 2: PRESENT / WARNING LIGHTS ── -->
+    <div class="rec-panel" id="rec-present">
+
+      <!-- KPI Row -->
+      <div class="rec-kpi-row">
+        <div class="rec-kpi" style="--rec-accent:#ef4444;">
+          <div class="rec-kpi-val" id="rec-prob">62%</div>
+          <div class="rec-kpi-lbl">Recession Probability</div>
+          <div class="rec-kpi-sub">12-month forecast</div>
+        </div>
+        <div class="rec-kpi" style="--rec-accent:#f97316;">
+          <div class="rec-kpi-val" id="rec-yield">-0.42%</div>
+          <div class="rec-kpi-lbl">Yield Curve (2Y-10Y)</div>
+          <div class="rec-kpi-sub">Inverted = warning</div>
+        </div>
+        <div class="rec-kpi" style="--rec-accent:#eab308;">
+          <div class="rec-kpi-val" id="rec-pmi">48.7</div>
+          <div class="rec-kpi-lbl">Global PMI</div>
+          <div class="rec-kpi-sub">Below 50 = contraction</div>
+        </div>
+        <div class="rec-kpi" style="--rec-accent:#22c55e;">
+          <div class="rec-kpi-val" id="rec-unemp">6.1%</div>
+          <div class="rec-kpi-lbl">G7 Unemployment</div>
+          <div class="rec-kpi-sub">Avg across G7</div>
+        </div>
+        <div class="rec-kpi" style="--rec-accent:#8b5cf6;">
+          <div class="rec-kpi-val" id="rec-inflation">3.8%</div>
+          <div class="rec-kpi-lbl">Global Inflation</div>
+          <div class="rec-kpi-sub">CPI YoY avg</div>
+        </div>
+        <div class="rec-kpi" style="--rec-accent:#06b6d4;">
+          <div class="rec-kpi-val" id="rec-buffett">185%</div>
+          <div class="rec-kpi-lbl">Buffett Indicator</div>
+          <div class="rec-kpi-sub">Mkt Cap / US GDP</div>
+        </div>
+      </div>
+
+      <!-- Recession Risk Map -->
+      <div class="rec-section">
+        <div class="rec-section-title">🌍 Global Recession Risk Map — Live 2025</div>
+        <div class="rec-map-wrap" style="position:relative;">
+          <div id="rec-leaflet-map" style="height:300px;width:100%;border-radius:8px;"></div>
+          <div class="rec-map-legend">
+            <div><span style="background:#dc2626;"></span> In Recession (GDP &lt; 0%)</div>
+            <div><span style="background:#ea580c;"></span> At Risk (GDP 0–1%)</div>
+            <div><span style="background:#ca8a04;"></span> Slowing (GDP 1–2%)</div>
+            <div><span style="background:#16a34a;"></span> Stable (GDP &gt; 2%)</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Country Risk Table -->
+      <div class="rec-section">
+        <div class="rec-section-title">🏴 Country-by-Country Recession Risk — G20 + Emerging Markets</div>
+        <div style="overflow-x:auto;">
+        <table class="rec-tbl">
+          <thead><tr>
+            <th>Country</th><th>GDP Growth</th><th>Debt/GDP</th><th>Unemployment</th><th>Inflation</th><th>Status</th><th>Risk Score</th>
+          </tr></thead>
+          <tbody id="rec-country-body"></tbody>
+        </table>
+        </div>
+      </div>
+
+      <!-- Live News Feed -->
+      <div class="rec-section">
+        <div class="rec-section-title">📰 Live Recession News — BBC · Reuters · Al Jazeera · DW · Forbes <span id="rec-news-refresh" style="font-size:9px;color:var(--muted);margin-left:auto;font-weight:400;">Refreshing every 60 min</span></div>
+        <div id="rec-news-feed">
+          <div style="color:var(--muted);font-size:12px;padding:10px;">⏳ Loading recession news from global sources...</div>
+        </div>
+      </div>
+
+      <div class="rec-ai-box">
+        <div style="font-size:12px;font-weight:700;color:#f87171;margin-bottom:8px;">🤖 AI Current Analysis — MiniMax M2.7</div>
+        <button class="rec-ai-btn" onclick="recAI('present')">⚡ Analyze Current Recession Risk</button>
+        <div class="rec-ai-output" id="rec-ai-present"></div>
+      </div>
+    </div>
+
+    <!-- ── PANEL 3: FUTURE / COMING STORM ── -->
+    <div class="rec-panel" id="rec-future">
+
+      <!-- Forecast KPIs -->
+      <div class="rec-kpi-row">
+        <div class="rec-kpi" style="--rec-accent:#f87171;">
+          <div class="rec-kpi-val">2026–2027</div>
+          <div class="rec-kpi-lbl">Next Recession Window</div>
+          <div class="rec-kpi-sub">Most likely timing</div>
+        </div>
+        <div class="rec-kpi" style="--rec-accent:#fb923c;">
+          <div class="rec-kpi-val">67%</div>
+          <div class="rec-kpi-lbl">Probability by 2027</div>
+          <div class="rec-kpi-sub">Consensus forecast</div>
+        </div>
+        <div class="rec-kpi" style="--rec-accent:#fbbf24;">
+          <div class="rec-kpi-val">14–22 mo</div>
+          <div class="rec-kpi-lbl">Estimated Duration</div>
+          <div class="rec-kpi-sub">If triggered</div>
+        </div>
+        <div class="rec-kpi" style="--rec-accent:#ef4444;">
+          <div class="rec-kpi-val">23</div>
+          <div class="rec-kpi-lbl">Countries at Collapse Risk</div>
+          <div class="rec-kpi-sub">By 2030</div>
+        </div>
+      </div>
+
+      <!-- Country Forecast Grid -->
+      <div class="rec-forecast-grid">
+        <div class="rec-forecast-card survive">
+          <div class="rfc-title">✅ Will Survive & Recover</div>
+          <div id="rec-survive-list"></div>
+        </div>
+        <div class="rec-forecast-card risk">
+          <div class="rfc-title">⚠️ At Serious Risk</div>
+          <div id="rec-risk-list"></div>
+        </div>
+        <div class="rec-forecast-card collapse">
+          <div class="rfc-title">💀 Collapse Scenario</div>
+          <div id="rec-collapse-list"></div>
+        </div>
+      </div>
+
+      <!-- Opportunities in Recession -->
+      <div class="rec-section">
+        <div class="rec-section-title">💡 Will Recession Bring Opportunities? — What Smart Money Does</div>
+        <div class="rec-opp-grid" id="rec-opp-grid"></div>
+      </div>
+
+      <!-- What Happens Globally -->
+      <div class="rec-section">
+        <div class="rec-section-title">🌐 What Happens to the World in a Deep Recession?</div>
+        <table class="rec-tbl">
+          <thead><tr><th>Domain</th><th>Short-Term (0–2 yr)</th><th>Medium-Term (2–5 yr)</th><th>Long-Term (5+ yr)</th></tr></thead>
+          <tbody>
+            <tr><td><strong>🏦 Finance</strong></td><td>Credit crunch, bank stress</td><td>Central bank stimulus, ZIRP</td><td>New financial architecture</td></tr>
+            <tr><td><strong>💼 Jobs</strong></td><td>Mass unemployment</td><td>Structural shift (remote, AI)</td><td>New job categories emerge</td></tr>
+            <tr><td><strong>🏠 Real Estate</strong></td><td>Price crash 20-40%</td><td>Bargain buying phase</td><td>Recovery in prime markets</td></tr>
+            <tr><td><strong>🌍 Geopolitics</strong></td><td>Populism rises, trade wars</td><td>Realignment of alliances</td><td>New world order</td></tr>
+            <tr><td><strong>🏭 Industry</strong></td><td>Layoffs, bankruptcies</td><td>Consolidation, M&amp;A wave</td><td>Stronger survivors</td></tr>
+            <tr><td><strong>💡 Innovation</strong></td><td>VC funding dries up</td><td>Survival innovations</td><td>Next tech wave born</td></tr>
+            <tr><td><strong>🛢 Energy</strong></td><td>Demand crash, oil price fall</td><td>Green energy acceleration</td><td>Energy transition deepens</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Countries likely to die economically -->
+      <div class="rec-section">
+        <div class="rec-section-title">💀 Which Countries Could Economically Collapse in a Future Recession?</div>
+        <div style="font-size:11px;color:var(--muted);margin-bottom:10px;">Ranked by composite fragility score: debt-to-GDP + FX reserves + political stability + IMF bailout status</div>
+        <table class="rec-tbl">
+          <thead><tr><th>#</th><th>Country</th><th>Debt/GDP</th><th>FX Reserves</th><th>IMF Status</th><th>Fragility Score</th><th>Risk</th></tr></thead>
+          <tbody id="rec-collapse-tbl"></tbody>
+        </table>
+      </div>
+
+      <!-- Future Recession News -->
+      <div class="rec-section">
+        <div class="rec-section-title">📰 Forecasts & Economic Intelligence — Live Sources</div>
+        <div id="rec-future-news">
+          <div style="color:var(--muted);font-size:12px;padding:10px;">⏳ Loading economic forecasts...</div>
+        </div>
+      </div>
+
+      <div class="rec-ai-box">
+        <div style="font-size:12px;font-weight:700;color:#f87171;margin-bottom:8px;">🤖 AI Future Recession Forecast — MiniMax M2.7</div>
+        <button class="rec-ai-btn" onclick="recAI('future')">⚡ Generate Recession Forecast 2025–2040</button>
+        <div class="rec-ai-output" id="rec-ai-future"></div>
+      </div>
+    </div>
+
+    <!-- Source Footer -->
+    <div class="rec-source-footer">
+      📡 <strong>Data Sources:</strong>
+      World Bank Open Data API (GDP, Unemployment, Inflation) ·
+      IMF World Economic Outlook (WEO) Database ·
+      FRED – Federal Reserve Bank of St. Louis (Yield Curve, US indicators) ·
+      BIS Statistics (Debt-to-GDP) ·
+      OECD Economic Outlook ·
+      BBC Business News RSS · Reuters Business RSS · Al Jazeera Economy RSS · DW Economy RSS ·
+      Google News RSS (recession, economic forecast, market outlook) ·
+      Buffett Indicator (Wilshire 5000 / US GDP) · Warren Buffett Annual Letters (Berkshire Hathaway) ·
+      JP Morgan Guide to the Markets · Goldman Sachs Global Investment Research (public statements) ·
+      MiniMax M2.7 AI Analysis · Auto-refreshes every 60 minutes
+    </div>
+  
+  </div><!-- /crisis-sub-recession -->
 </div>
 
 <script>
@@ -2079,6 +2350,12 @@ setInterval(()=>{document.getElementById('clock').textContent=new Date().toUTCSt
 
 // NAVIGATION
 function showPage(id,el){
+  // Recession is now a sub-tab of Crisis Map
+  if(id==='recession'){
+    showPage('crisis', document.querySelector('.mtab[onclick*="crisis"]'));
+    setTimeout(function(){ showCrisisSub('recession', document.getElementById('crb-recession')); }, 50);
+    return;
+  }
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
   document.querySelectorAll('.mtab').forEach(t=>t.classList.remove('active'));
   document.getElementById('page-'+id).classList.add('active');
@@ -10046,246 +10323,7 @@ function _callMiniMax(prompt, onSuccess, onError) {
 </div>
 
   <!-- ═══════════ RECESSION TAB v3.30 ═══════════ -->
-  <div class="page" id="page-recession">
-
-    <!-- Sub-tab nav -->
-    <div class="rec-stab-row">
-      <button class="rec-stab active" onclick="showRecTab('historical',this)">📜 The Wound That Wouldn't Heal — Historical Recession Atlas</button>
-      <button class="rec-stab" onclick="showRecTab('present',this)">🚨 Warning Lights — Global Recession Radar 2025</button>
-      <button class="rec-stab" onclick="showRecTab('future',this)">🔮 The Coming Storm — Recession Forecast 2025–2040</button>
-    </div>
-
-    <!-- ── PANEL 1: HISTORICAL ── -->
-    <div class="rec-panel active" id="rec-historical">
-      <div class="rec-section">
-        <div class="rec-section-title">📜 Select a Recession Era</div>
-        <div class="rec-era-row">
-          <button class="rec-era-btn active" onclick="recLoadEra('1929',this)">1929 Great Depression</button>
-          <button class="rec-era-btn" onclick="recLoadEra('1973',this)">1973 Oil Shock</button>
-          <button class="rec-era-btn" onclick="recLoadEra('1980',this)">1980–82 S&L Crisis</button>
-          <button class="rec-era-btn" onclick="recLoadEra('1990',this)">1990–91 Gulf War</button>
-          <button class="rec-era-btn" onclick="recLoadEra('2001',this)">2001 Dot-com Bust</button>
-          <button class="rec-era-btn" onclick="recLoadEra('2008',this)">2008–09 Great Recession</button>
-          <button class="rec-era-btn" onclick="recLoadEra('2020',this)">2020 COVID Crash</button>
-          <button class="rec-era-btn" onclick="recLoadEra('2022',this)">2022–23 Inflation Shock</button>
-        </div>
-        <div id="rec-era-detail"></div>
-      </div>
-
-      <div class="rec-2col">
-        <div class="rec-section">
-          <div class="rec-section-title">✅ Countries That Recovered</div>
-          <table class="rec-tbl" id="rec-recovered-tbl">
-            <thead><tr><th>Country</th><th>Recovery Year</th><th>Driver</th></tr></thead>
-            <tbody id="rec-recovered-body"></tbody>
-          </table>
-        </div>
-        <div class="rec-section">
-          <div class="rec-section-title">⚠️ Countries Still Struggling / Collapsed</div>
-          <table class="rec-tbl" id="rec-struggling-tbl">
-            <thead><tr><th>Country</th><th>Status</th><th>Reason</th></tr></thead>
-            <tbody id="rec-struggling-body"></tbody>
-          </table>
-        </div>
-      </div>
-
-      <div class="rec-section">
-        <div class="rec-section-title">📖 What History Teaches — Key Lessons</div>
-        <div id="rec-lessons" style="font-size:12px;color:var(--muted);line-height:1.8;"></div>
-      </div>
-
-      <div class="rec-ai-box">
-        <div style="font-size:12px;font-weight:700;color:#f87171;margin-bottom:8px;">🤖 AI Historical Analysis — MiniMax M2.7</div>
-        <button class="rec-ai-btn" onclick="recAI('historical')">⚡ Analyze This Era with AI</button>
-        <div class="rec-ai-output" id="rec-ai-historical"></div>
-      </div>
-    </div>
-
-    <!-- ── PANEL 2: PRESENT / WARNING LIGHTS ── -->
-    <div class="rec-panel" id="rec-present">
-
-      <!-- KPI Row -->
-      <div class="rec-kpi-row">
-        <div class="rec-kpi" style="--rec-accent:#ef4444;">
-          <div class="rec-kpi-val" id="rec-prob">62%</div>
-          <div class="rec-kpi-lbl">Recession Probability</div>
-          <div class="rec-kpi-sub">12-month forecast</div>
-        </div>
-        <div class="rec-kpi" style="--rec-accent:#f97316;">
-          <div class="rec-kpi-val" id="rec-yield">-0.42%</div>
-          <div class="rec-kpi-lbl">Yield Curve (2Y-10Y)</div>
-          <div class="rec-kpi-sub">Inverted = warning</div>
-        </div>
-        <div class="rec-kpi" style="--rec-accent:#eab308;">
-          <div class="rec-kpi-val" id="rec-pmi">48.7</div>
-          <div class="rec-kpi-lbl">Global PMI</div>
-          <div class="rec-kpi-sub">Below 50 = contraction</div>
-        </div>
-        <div class="rec-kpi" style="--rec-accent:#22c55e;">
-          <div class="rec-kpi-val" id="rec-unemp">6.1%</div>
-          <div class="rec-kpi-lbl">G7 Unemployment</div>
-          <div class="rec-kpi-sub">Avg across G7</div>
-        </div>
-        <div class="rec-kpi" style="--rec-accent:#8b5cf6;">
-          <div class="rec-kpi-val" id="rec-inflation">3.8%</div>
-          <div class="rec-kpi-lbl">Global Inflation</div>
-          <div class="rec-kpi-sub">CPI YoY avg</div>
-        </div>
-        <div class="rec-kpi" style="--rec-accent:#06b6d4;">
-          <div class="rec-kpi-val" id="rec-buffett">185%</div>
-          <div class="rec-kpi-lbl">Buffett Indicator</div>
-          <div class="rec-kpi-sub">Mkt Cap / US GDP</div>
-        </div>
-      </div>
-
-      <!-- Recession Risk Map -->
-      <div class="rec-section">
-        <div class="rec-section-title">🌍 Global Recession Risk Map — Live 2025</div>
-        <div class="rec-map-wrap" style="position:relative;">
-          <div id="rec-leaflet-map" style="height:300px;width:100%;border-radius:8px;"></div>
-          <div class="rec-map-legend">
-            <div><span style="background:#dc2626;"></span> In Recession (GDP &lt; 0%)</div>
-            <div><span style="background:#ea580c;"></span> At Risk (GDP 0–1%)</div>
-            <div><span style="background:#ca8a04;"></span> Slowing (GDP 1–2%)</div>
-            <div><span style="background:#16a34a;"></span> Stable (GDP &gt; 2%)</div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Country Risk Table -->
-      <div class="rec-section">
-        <div class="rec-section-title">🏴 Country-by-Country Recession Risk — G20 + Emerging Markets</div>
-        <div style="overflow-x:auto;">
-        <table class="rec-tbl">
-          <thead><tr>
-            <th>Country</th><th>GDP Growth</th><th>Debt/GDP</th><th>Unemployment</th><th>Inflation</th><th>Status</th><th>Risk Score</th>
-          </tr></thead>
-          <tbody id="rec-country-body"></tbody>
-        </table>
-        </div>
-      </div>
-
-      <!-- Live News Feed -->
-      <div class="rec-section">
-        <div class="rec-section-title">📰 Live Recession News — BBC · Reuters · Al Jazeera · DW · Forbes <span id="rec-news-refresh" style="font-size:9px;color:var(--muted);margin-left:auto;font-weight:400;">Refreshing every 60 min</span></div>
-        <div id="rec-news-feed">
-          <div style="color:var(--muted);font-size:12px;padding:10px;">⏳ Loading recession news from global sources...</div>
-        </div>
-      </div>
-
-      <div class="rec-ai-box">
-        <div style="font-size:12px;font-weight:700;color:#f87171;margin-bottom:8px;">🤖 AI Current Analysis — MiniMax M2.7</div>
-        <button class="rec-ai-btn" onclick="recAI('present')">⚡ Analyze Current Recession Risk</button>
-        <div class="rec-ai-output" id="rec-ai-present"></div>
-      </div>
-    </div>
-
-    <!-- ── PANEL 3: FUTURE / COMING STORM ── -->
-    <div class="rec-panel" id="rec-future">
-
-      <!-- Forecast KPIs -->
-      <div class="rec-kpi-row">
-        <div class="rec-kpi" style="--rec-accent:#f87171;">
-          <div class="rec-kpi-val">2026–2027</div>
-          <div class="rec-kpi-lbl">Next Recession Window</div>
-          <div class="rec-kpi-sub">Most likely timing</div>
-        </div>
-        <div class="rec-kpi" style="--rec-accent:#fb923c;">
-          <div class="rec-kpi-val">67%</div>
-          <div class="rec-kpi-lbl">Probability by 2027</div>
-          <div class="rec-kpi-sub">Consensus forecast</div>
-        </div>
-        <div class="rec-kpi" style="--rec-accent:#fbbf24;">
-          <div class="rec-kpi-val">14–22 mo</div>
-          <div class="rec-kpi-lbl">Estimated Duration</div>
-          <div class="rec-kpi-sub">If triggered</div>
-        </div>
-        <div class="rec-kpi" style="--rec-accent:#ef4444;">
-          <div class="rec-kpi-val">23</div>
-          <div class="rec-kpi-lbl">Countries at Collapse Risk</div>
-          <div class="rec-kpi-sub">By 2030</div>
-        </div>
-      </div>
-
-      <!-- Country Forecast Grid -->
-      <div class="rec-forecast-grid">
-        <div class="rec-forecast-card survive">
-          <div class="rfc-title">✅ Will Survive & Recover</div>
-          <div id="rec-survive-list"></div>
-        </div>
-        <div class="rec-forecast-card risk">
-          <div class="rfc-title">⚠️ At Serious Risk</div>
-          <div id="rec-risk-list"></div>
-        </div>
-        <div class="rec-forecast-card collapse">
-          <div class="rfc-title">💀 Collapse Scenario</div>
-          <div id="rec-collapse-list"></div>
-        </div>
-      </div>
-
-      <!-- Opportunities in Recession -->
-      <div class="rec-section">
-        <div class="rec-section-title">💡 Will Recession Bring Opportunities? — What Smart Money Does</div>
-        <div class="rec-opp-grid" id="rec-opp-grid"></div>
-      </div>
-
-      <!-- What Happens Globally -->
-      <div class="rec-section">
-        <div class="rec-section-title">🌐 What Happens to the World in a Deep Recession?</div>
-        <table class="rec-tbl">
-          <thead><tr><th>Domain</th><th>Short-Term (0–2 yr)</th><th>Medium-Term (2–5 yr)</th><th>Long-Term (5+ yr)</th></tr></thead>
-          <tbody>
-            <tr><td><strong>🏦 Finance</strong></td><td>Credit crunch, bank stress</td><td>Central bank stimulus, ZIRP</td><td>New financial architecture</td></tr>
-            <tr><td><strong>💼 Jobs</strong></td><td>Mass unemployment</td><td>Structural shift (remote, AI)</td><td>New job categories emerge</td></tr>
-            <tr><td><strong>🏠 Real Estate</strong></td><td>Price crash 20-40%</td><td>Bargain buying phase</td><td>Recovery in prime markets</td></tr>
-            <tr><td><strong>🌍 Geopolitics</strong></td><td>Populism rises, trade wars</td><td>Realignment of alliances</td><td>New world order</td></tr>
-            <tr><td><strong>🏭 Industry</strong></td><td>Layoffs, bankruptcies</td><td>Consolidation, M&amp;A wave</td><td>Stronger survivors</td></tr>
-            <tr><td><strong>💡 Innovation</strong></td><td>VC funding dries up</td><td>Survival innovations</td><td>Next tech wave born</td></tr>
-            <tr><td><strong>🛢 Energy</strong></td><td>Demand crash, oil price fall</td><td>Green energy acceleration</td><td>Energy transition deepens</td></tr>
-          </tbody>
-        </table>
-      </div>
-
-      <!-- Countries likely to die economically -->
-      <div class="rec-section">
-        <div class="rec-section-title">💀 Which Countries Could Economically Collapse in a Future Recession?</div>
-        <div style="font-size:11px;color:var(--muted);margin-bottom:10px;">Ranked by composite fragility score: debt-to-GDP + FX reserves + political stability + IMF bailout status</div>
-        <table class="rec-tbl">
-          <thead><tr><th>#</th><th>Country</th><th>Debt/GDP</th><th>FX Reserves</th><th>IMF Status</th><th>Fragility Score</th><th>Risk</th></tr></thead>
-          <tbody id="rec-collapse-tbl"></tbody>
-        </table>
-      </div>
-
-      <!-- Future Recession News -->
-      <div class="rec-section">
-        <div class="rec-section-title">📰 Forecasts & Economic Intelligence — Live Sources</div>
-        <div id="rec-future-news">
-          <div style="color:var(--muted);font-size:12px;padding:10px;">⏳ Loading economic forecasts...</div>
-        </div>
-      </div>
-
-      <div class="rec-ai-box">
-        <div style="font-size:12px;font-weight:700;color:#f87171;margin-bottom:8px;">🤖 AI Future Recession Forecast — MiniMax M2.7</div>
-        <button class="rec-ai-btn" onclick="recAI('future')">⚡ Generate Recession Forecast 2025–2040</button>
-        <div class="rec-ai-output" id="rec-ai-future"></div>
-      </div>
-    </div>
-
-    <!-- Source Footer -->
-    <div class="rec-source-footer">
-      📡 <strong>Data Sources:</strong>
-      World Bank Open Data API (GDP, Unemployment, Inflation) ·
-      IMF World Economic Outlook (WEO) Database ·
-      FRED – Federal Reserve Bank of St. Louis (Yield Curve, US indicators) ·
-      BIS Statistics (Debt-to-GDP) ·
-      OECD Economic Outlook ·
-      BBC Business News RSS · Reuters Business RSS · Al Jazeera Economy RSS · DW Economy RSS ·
-      Google News RSS (recession, economic forecast, market outlook) ·
-      Buffett Indicator (Wilshire 5000 / US GDP) · Warren Buffett Annual Letters (Berkshire Hathaway) ·
-      JP Morgan Guide to the Markets · Goldman Sachs Global Investment Research (public statements) ·
-      MiniMax M2.7 AI Analysis · Auto-refreshes every 60 minutes
-    </div>
-  </div><!-- end page-recession -->
+  <!-- end page-recession -->
 
 </body>
 </html>
