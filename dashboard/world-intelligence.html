@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="author" content="Muhammad Umer Lari">
   <meta name="copyright" content="Copyright © 2024-2025 Muhammad Umer Lari. All Rights Reserved.">
-<title>World Intelligence Platform v3.32</title>
+<title>World Intelligence Platform v3.33</title>
 <!-- Leaflet -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css"/>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
@@ -708,7 +708,7 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:'Segoe 
 <div id="topbar">
   <a href="index.html">← Dashboard</a>
   <span class="title">🌍 World Intelligence Platform</span>
-  <span class="badge">v3.32</span><button onclick="_showAISetup()" title="Configure free MiniMax AI key (100% free)" style="margin-left:8px;background:linear-gradient(135deg,#7c3aed,#4f46e5);color:#fff;border:none;border-radius:6px;padding:3px 10px;cursor:pointer;font-size:11px;font-weight:700;">🤖 AI</button>
+  <span class="badge">v3.33</span><button onclick="_showAISetup()" title="Configure free MiniMax AI key (100% free)" style="margin-left:8px;background:linear-gradient(135deg,#7c3aed,#4f46e5);color:#fff;border:none;border-radius:6px;padding:3px 10px;cursor:pointer;font-size:11px;font-weight:700;">🤖 AI</button>
   <div style="display:flex;align-items:center;gap:6px;margin-left:auto;margin-right:16px;">
     <div class="live-dot"></div><span style="font-size:11px;color:var(--muted);">Live</span>
   </div>
@@ -1980,100 +1980,9 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:'Segoe 
     <div class="crisis-src" id="crisis-src-footer">
       Sources: ACLED (Armed Conflict Location &amp; Event Data) · UNHCR Displacement Tracker · ReliefWeb (UN OCHA) · GDELT Project · Uppsala Conflict Data Program (UCDP) — All free, no paid APIs
     </div>
-  </div>
-  <!-- ══════════════ END CRISIS MAP ══════════════ -->
-
-</div><!-- /#pages -->
-
-<!-- ══ AQI CITY DETAIL MODAL v3.4 ══ -->
-<div id="aqi-modal" onclick="if(event.target===this)closeAqiModal()">
-  <div id="aqi-modal-box">
-    <!-- Header -->
-    <div class="aqi-mhdr">
-      <div>
-        <div class="aqi-city-name" id="aqi-m-city">—</div>
-        <div class="aqi-city-sub" id="aqi-m-sub">—</div>
-      </div>
-      <div class="aqi-badge-big" id="aqi-m-badge">—</div>
-      <button class="aqi-close" onclick="closeAqiModal()" title="Close">✕</button>
-    </div>
-    <!-- Tabs -->
-    <div class="aqi-tabs-row">
-      <button class="aqi-tab-btn active" id="aqi-t-overview"  onclick="showAqiTab('overview')">🌐 Overview</button>
-      <button class="aqi-tab-btn"        id="aqi-t-pollutants" onclick="showAqiTab('pollutants')">🧪 Pollutants</button>
-      <button class="aqi-tab-btn"        id="aqi-t-trends"    onclick="showAqiTab('trends')">📈 Trends</button>
-      <button class="aqi-tab-btn"        id="aqi-t-health"    onclick="showAqiTab('health')">🏥 Health & Risk</button>
-    </div>
-    <!-- Body -->
-    <div class="aqi-tab-body">
-
-      <!-- OVERVIEW TAB -->
-      <div class="aqi-tab-section active" id="aqi-sec-overview">
-        <div class="aqi-overview-grid">
-          <div class="aqi-stat-card"><div class="aqi-stat-lbl">AQI Category</div><div class="aqi-stat-val" id="aqi-ov-cat">—</div><div class="aqi-stat-sub">US EPA Standard</div></div>
-          <div class="aqi-stat-card"><div class="aqi-stat-lbl">Dominant Pollutant</div><div class="aqi-stat-val" id="aqi-ov-dom">—</div><div class="aqi-stat-sub">Primary contributor</div></div>
-          <div class="aqi-stat-card"><div class="aqi-stat-lbl">Population Exposed</div><div class="aqi-stat-val" id="aqi-ov-pop">—</div><div class="aqi-stat-sub">City metro area</div></div>
-          <div class="aqi-stat-card"><div class="aqi-stat-lbl">5-Year Trend</div><div class="aqi-stat-val" id="aqi-ov-trend">—</div><div class="aqi-stat-sub">vs 2020 baseline</div></div>
-        </div>
-        <div style="font-size:12px;font-weight:700;color:#94a3b8;margin-bottom:8px;text-transform:uppercase;letter-spacing:.5px;">3-Day Forecast</div>
-        <div class="fc-row" id="aqi-ov-fc"></div>
-        <div class="aqi-src">Source: IQAir World Air Quality Report 2024 · WHO Air Quality Guidelines · OpenAQ</div>
-      </div>
-
-      <!-- POLLUTANTS TAB -->
-      <div class="aqi-tab-section" id="aqi-sec-pollutants">
-        <div style="font-size:11px;color:#64748b;margin-bottom:12px;">All values in µg/m³ except CO (ppm) · WHO 24-hr guideline shown</div>
-        <div id="aqi-poll-bars"></div>
-        <div class="aqi-src" style="margin-top:6px;">WHO Air Quality Guidelines 2021 · PM2.5 ≤15 · PM10 ≤45 · NO₂ ≤25 · O₃ ≤100 · SO₂ ≤40 · CO ≤4ppm</div>
-      </div>
-
-      <!-- TRENDS TAB -->
-      <div class="aqi-tab-section" id="aqi-sec-trends">
-        <div style="font-size:12px;font-weight:700;color:#94a3b8;margin-bottom:6px;text-transform:uppercase;letter-spacing:.5px;">Past 5 Years — Annual AQI</div>
-        <div style="display:flex;gap:0;" id="aqi-trend-cols"></div>
-        <div style="display:flex;gap:0;" id="aqi-trend-yrs"></div>
-        <div class="aqi-hist-note" id="aqi-trend-note"></div>
-        <div style="margin-top:16px;font-size:12px;font-weight:700;color:#94a3b8;margin-bottom:6px;text-transform:uppercase;letter-spacing:.5px;">Next 3 Days Forecast</div>
-        <div class="fc-row" id="aqi-trend-fc"></div>
-        <div class="aqi-src">Historical: IQAir City Rankings 2020–2024 · Forecast: meteorological model blend</div>
-      </div>
-
-      <!-- HEALTH TAB -->
-      <div class="aqi-tab-section" id="aqi-sec-health">
-        <div class="risk-section">
-          <h4>⚠️ Health Risk Level</h4>
-          <div id="aqi-risk-level-block"></div>
-        </div>
-        <div class="risk-section">
-          <h4>👥 Guidance by Population Group</h4>
-          <div id="aqi-risk-groups"></div>
-        </div>
-        <div class="risk-section">
-          <h4>🩺 Health Effects at This AQI</h4>
-          <div id="aqi-health-effects" style="font-size:11px;color:#cbd5e1;line-height:1.7;"></div>
-        </div>
-        <div class="risk-section">
-          <h4>🛡 Protective Actions</h4>
-          <div id="aqi-protect" style="font-size:11px;color:#cbd5e1;line-height:1.7;"></div>
-        </div>
-        <div class="aqi-src">Source: US EPA AQI & Health Guide · WHO Ambient Air Quality Database · CDC Air Quality Resources</div>
-      </div>
-
-    </div><!-- /.aqi-tab-body -->
-  </div><!-- /#aqi-modal-box -->
-</div><!-- /#aqi-modal -->
-<!-- ══ END AQI MODAL ══ -->
-
-<div id="backend-status" class="bs-off">⏳ Checking backend…</div>
-
-<!-- TICKER -->
-<div id="ticker">
-  <div class="ticker-lbl">LIVE</div>
-  <div id="ticker-track"><span>Loading live news…</span></div>
-
   </div><!-- /crisis-sub-crisis -->
 
-  <!-- Sub: Recession Intelligence (merged from standalone recession tab) -->
+  <!-- Sub: Recession Intelligence (merged v3.31) -->
   <div id="crisis-sub-recession" class="crisis-sub" style="display:none">
 
 
@@ -2316,9 +2225,99 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:'Segoe 
     </div>
   
   </div><!-- /crisis-sub-recession -->
-</div>
 
-<script>
+  </div><!-- /page-crisis -->
+  <!-- ══════════════ END CRISIS MAP ══════════════ -->
+
+</div><!-- /#pages -->
+
+<!-- ══ AQI CITY DETAIL MODAL v3.4 ══ -->
+<div id="aqi-modal" onclick="if(event.target===this)closeAqiModal()">
+  <div id="aqi-modal-box">
+    <!-- Header -->
+    <div class="aqi-mhdr">
+      <div>
+        <div class="aqi-city-name" id="aqi-m-city">—</div>
+        <div class="aqi-city-sub" id="aqi-m-sub">—</div>
+      </div>
+      <div class="aqi-badge-big" id="aqi-m-badge">—</div>
+      <button class="aqi-close" onclick="closeAqiModal()" title="Close">✕</button>
+    </div>
+    <!-- Tabs -->
+    <div class="aqi-tabs-row">
+      <button class="aqi-tab-btn active" id="aqi-t-overview"  onclick="showAqiTab('overview')">🌐 Overview</button>
+      <button class="aqi-tab-btn"        id="aqi-t-pollutants" onclick="showAqiTab('pollutants')">🧪 Pollutants</button>
+      <button class="aqi-tab-btn"        id="aqi-t-trends"    onclick="showAqiTab('trends')">📈 Trends</button>
+      <button class="aqi-tab-btn"        id="aqi-t-health"    onclick="showAqiTab('health')">🏥 Health & Risk</button>
+    </div>
+    <!-- Body -->
+    <div class="aqi-tab-body">
+
+      <!-- OVERVIEW TAB -->
+      <div class="aqi-tab-section active" id="aqi-sec-overview">
+        <div class="aqi-overview-grid">
+          <div class="aqi-stat-card"><div class="aqi-stat-lbl">AQI Category</div><div class="aqi-stat-val" id="aqi-ov-cat">—</div><div class="aqi-stat-sub">US EPA Standard</div></div>
+          <div class="aqi-stat-card"><div class="aqi-stat-lbl">Dominant Pollutant</div><div class="aqi-stat-val" id="aqi-ov-dom">—</div><div class="aqi-stat-sub">Primary contributor</div></div>
+          <div class="aqi-stat-card"><div class="aqi-stat-lbl">Population Exposed</div><div class="aqi-stat-val" id="aqi-ov-pop">—</div><div class="aqi-stat-sub">City metro area</div></div>
+          <div class="aqi-stat-card"><div class="aqi-stat-lbl">5-Year Trend</div><div class="aqi-stat-val" id="aqi-ov-trend">—</div><div class="aqi-stat-sub">vs 2020 baseline</div></div>
+        </div>
+        <div style="font-size:12px;font-weight:700;color:#94a3b8;margin-bottom:8px;text-transform:uppercase;letter-spacing:.5px;">3-Day Forecast</div>
+        <div class="fc-row" id="aqi-ov-fc"></div>
+        <div class="aqi-src">Source: IQAir World Air Quality Report 2024 · WHO Air Quality Guidelines · OpenAQ</div>
+      </div>
+
+      <!-- POLLUTANTS TAB -->
+      <div class="aqi-tab-section" id="aqi-sec-pollutants">
+        <div style="font-size:11px;color:#64748b;margin-bottom:12px;">All values in µg/m³ except CO (ppm) · WHO 24-hr guideline shown</div>
+        <div id="aqi-poll-bars"></div>
+        <div class="aqi-src" style="margin-top:6px;">WHO Air Quality Guidelines 2021 · PM2.5 ≤15 · PM10 ≤45 · NO₂ ≤25 · O₃ ≤100 · SO₂ ≤40 · CO ≤4ppm</div>
+      </div>
+
+      <!-- TRENDS TAB -->
+      <div class="aqi-tab-section" id="aqi-sec-trends">
+        <div style="font-size:12px;font-weight:700;color:#94a3b8;margin-bottom:6px;text-transform:uppercase;letter-spacing:.5px;">Past 5 Years — Annual AQI</div>
+        <div style="display:flex;gap:0;" id="aqi-trend-cols"></div>
+        <div style="display:flex;gap:0;" id="aqi-trend-yrs"></div>
+        <div class="aqi-hist-note" id="aqi-trend-note"></div>
+        <div style="margin-top:16px;font-size:12px;font-weight:700;color:#94a3b8;margin-bottom:6px;text-transform:uppercase;letter-spacing:.5px;">Next 3 Days Forecast</div>
+        <div class="fc-row" id="aqi-trend-fc"></div>
+        <div class="aqi-src">Historical: IQAir City Rankings 2020–2024 · Forecast: meteorological model blend</div>
+      </div>
+
+      <!-- HEALTH TAB -->
+      <div class="aqi-tab-section" id="aqi-sec-health">
+        <div class="risk-section">
+          <h4>⚠️ Health Risk Level</h4>
+          <div id="aqi-risk-level-block"></div>
+        </div>
+        <div class="risk-section">
+          <h4>👥 Guidance by Population Group</h4>
+          <div id="aqi-risk-groups"></div>
+        </div>
+        <div class="risk-section">
+          <h4>🩺 Health Effects at This AQI</h4>
+          <div id="aqi-health-effects" style="font-size:11px;color:#cbd5e1;line-height:1.7;"></div>
+        </div>
+        <div class="risk-section">
+          <h4>🛡 Protective Actions</h4>
+          <div id="aqi-protect" style="font-size:11px;color:#cbd5e1;line-height:1.7;"></div>
+        </div>
+        <div class="aqi-src">Source: US EPA AQI & Health Guide · WHO Ambient Air Quality Database · CDC Air Quality Resources</div>
+      </div>
+
+    </div><!-- /.aqi-tab-body -->
+  </div><!-- /#aqi-modal-box -->
+</div><!-- /#aqi-modal -->
+<!-- ══ END AQI MODAL ══ -->
+
+<div id="backend-status" class="bs-off">⏳ Checking backend…</div>
+
+<!-- TICKER -->
+<div id="ticker">
+  <div class="ticker-lbl">LIVE</div>
+  <div id="ticker-track"><span>Loading live news…</span></div>
+
+  </div><!-- /ticker --><script>
 // ═══════════════════════════════════════════════════════
 // World Intelligence Platform
 // Author  : Muhammad Umer Lari
@@ -2358,6 +2357,7 @@ function showPage(id,el){
   }
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
   document.querySelectorAll('.mtab').forEach(t=>t.classList.remove('active'));
+  document.querySelectorAll('[id^="cb-adv-"]').forEach(function(p){p.style.display='none';});
   document.getElementById('page-'+id).classList.add('active');
   if(el) el.classList.add('active');
   if(!pageInited[id]){pageInited[id]=true;
