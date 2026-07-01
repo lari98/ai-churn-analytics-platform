@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="author" content="Muhammad Umer Lari">
   <meta name="copyright" content="Copyright © 2024-2025 Muhammad Umer Lari. All Rights Reserved.">
-<title>World Intelligence Platform v3.33</title>
+<title>World Intelligence Platform v3.34</title>
 <!-- Leaflet -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css"/>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
@@ -655,6 +655,87 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:'Segoe 
 .rec-era-btn{padding:4px 11px;border-radius:6px;border:1px solid var(--border);color:var(--muted);cursor:pointer;font-size:10px;font-weight:700;background:none;transition:all .15s;}
 .rec-era-btn:hover{border-color:#ef4444;color:#ef4444;}
 .rec-era-btn.active{background:#ef4444;color:#fff;border-color:#ef4444;}
+/* ── Sector Rotation v3.34 ── */
+.sec-rot-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:10px 0;}
+.sec-rot-col-title{font-size:10px;font-weight:800;letter-spacing:.5px;margin-bottom:10px;padding:6px 10px;border-radius:6px;}
+.sec-gain-title{background:rgba(34,197,94,.12);color:#22c55e;}
+.sec-lose-title{background:rgba(239,68,68,.12);color:#ef4444;}
+.sec-rot-item{display:flex;align-items:center;gap:8px;padding:7px 10px;border-radius:6px;margin-bottom:5px;border:1px solid var(--border);background:var(--card);}
+.sec-rot-name{font-size:11px;font-weight:700;color:var(--text);}
+.sec-rot-pct{font-size:12px;font-weight:900;}
+.sec-gain-pct{color:#22c55e;}
+.sec-lose-pct{color:#ef4444;}
+.sec-rot-bar-wrap{height:4px;background:var(--border);border-radius:2px;width:55px;margin-top:2px;}
+.sec-rot-bar{height:4px;border-radius:2px;}
+.sec-gain-bar{background:#22c55e;}
+.sec-lose-bar{background:#ef4444;}
+/* ── Recovery Timeline ── */
+.rec-tl-item{display:flex;align-items:center;gap:10px;padding:8px 12px;border-radius:7px;background:var(--card);border:1px solid var(--border);margin-bottom:6px;}
+.rec-tl-rank{width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:900;flex-shrink:0;color:#fff;}
+.rec-tl-sector{font-size:11px;font-weight:700;flex:1;}
+.rec-tl-timing{font-size:10px;color:var(--muted);background:var(--bg);padding:2px 8px;border-radius:10px;white-space:nowrap;}
+.rec-tl-reason{font-size:10px;color:var(--muted);flex:1.5;}
+/* ── End Signals ── */
+.signal-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:10px;margin:10px 0;}
+.signal-card{background:var(--card);border-radius:8px;padding:12px;border:1px solid var(--border);}
+.signal-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;gap:6px;}
+.signal-name{font-size:11px;font-weight:700;color:var(--text);}
+.signal-status{font-size:9px;font-weight:800;padding:2px 8px;border-radius:10px;white-space:nowrap;}
+.signal-fired{background:rgba(34,197,94,.2);color:#22c55e;}
+.signal-watch{background:rgba(234,179,8,.2);color:#eab308;}
+.signal-not-yet{background:rgba(239,68,68,.2);color:#ef4444;}
+.signal-bar-bg{height:5px;background:var(--border);border-radius:3px;margin-bottom:6px;}
+.signal-bar-fill{height:5px;border-radius:3px;background:linear-gradient(90deg,#ef4444,#eab308,#22c55e);}
+.signal-desc{font-size:10px;color:var(--muted);margin-bottom:4px;line-height:1.5;}
+.signal-accuracy{font-size:10px;color:#8b5cf6;font-weight:700;}
+/* ── Country Recovery Tiers ── */
+.country-rec-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(175px,1fr));gap:10px;margin:10px 0;}
+.country-rec-tier{background:var(--card);border-radius:8px;padding:12px;border:1px solid var(--border);}
+.crt-title{font-size:10px;font-weight:800;letter-spacing:.3px;margin-bottom:8px;padding:4px 8px;border-radius:5px;text-align:center;}
+.crt-fast{background:rgba(34,197,94,.12);color:#22c55e;}
+.crt-med{background:rgba(234,179,8,.12);color:#eab308;}
+.crt-slow{background:rgba(249,115,22,.12);color:#f97316;}
+.crt-vslow{background:rgba(239,68,68,.12);color:#ef4444;}
+.crt-item{font-size:11px;color:var(--text);padding:3px 0;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;}
+.crt-item:last-child{border:none;}
+.crt-timing{font-size:10px;color:var(--muted);}
+/* ── Future Type Cards ── */
+.future-type-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:14px;margin:14px 0;}
+.future-type-card{background:var(--card);border-radius:10px;padding:16px;border:1px solid var(--border);position:relative;overflow:hidden;}
+.future-type-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;}
+.ftype-ai::before{background:linear-gradient(90deg,#8b5cf6,#6366f1);}
+.ftype-debt::before{background:linear-gradient(90deg,#ef4444,#dc2626);}
+.ftype-climate::before{background:linear-gradient(90deg,#22c55e,#16a34a);}
+.ftype-geo::before{background:linear-gradient(90deg,#f97316,#ea580c);}
+.ftype-badge{font-size:9px;font-weight:800;padding:2px 8px;border-radius:10px;display:inline-block;margin-bottom:8px;}
+.ftype-ai .ftype-badge{background:rgba(139,92,246,.18);color:#8b5cf6;}
+.ftype-debt .ftype-badge{background:rgba(239,68,68,.18);color:#ef4444;}
+.ftype-climate .ftype-badge{background:rgba(34,197,94,.18);color:#22c55e;}
+.ftype-geo .ftype-badge{background:rgba(249,115,22,.18);color:#f97316;}
+.ftype-title{font-size:13px;font-weight:800;color:var(--text);margin-bottom:6px;}
+.ftype-prob{font-size:26px;font-weight:900;margin-bottom:2px;}
+.ftype-window{font-size:10px;color:var(--muted);margin-bottom:10px;}
+.ftype-severity{display:flex;gap:3px;align-items:center;margin-bottom:8px;}
+.sev-dot{width:10px;height:10px;border-radius:50%;}
+.sev-fill{background:#ef4444;}
+.sev-empty{background:var(--border);}
+.ftype-meta{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:10px;}
+.ftype-meta-item{background:var(--bg);border-radius:5px;padding:5px 8px;}
+.ftype-meta-key{font-size:9px;color:var(--muted);font-weight:600;margin-bottom:2px;}
+.ftype-meta-val{font-size:11px;font-weight:700;color:var(--text);}
+.ftype-sectors-title{font-size:9px;font-weight:800;color:var(--muted);letter-spacing:.4px;margin-bottom:4px;margin-top:8px;}
+.ftype-sector-tag{display:inline-block;font-size:9px;padding:2px 7px;border-radius:10px;margin:2px 2px 0 0;background:var(--bg);border:1px solid var(--border);color:var(--muted);}
+.ftype-how{font-size:10px;color:var(--muted);line-height:1.6;margin-top:8px;padding-top:8px;border-top:1px solid var(--border);}
+/* ── Unfold Timeline ── */
+.rec-unfold-timeline{display:flex;flex-direction:column;gap:0;position:relative;padding-left:28px;margin:14px 0;}
+.rec-unfold-timeline::before{content:'';position:absolute;left:10px;top:8px;bottom:8px;width:2px;background:linear-gradient(180deg,#22c55e,#eab308,#f97316,#ef4444,#8b5cf6,#06b6d4);}
+.rec-unfold-item{display:flex;margin-bottom:14px;position:relative;}
+.rec-unfold-dot{width:16px;height:16px;border-radius:50%;flex-shrink:0;position:absolute;left:-22px;top:4px;border:2px solid var(--bg);}
+.rec-unfold-body{background:var(--card);border-radius:8px;padding:10px 14px;border:1px solid var(--border);flex:1;}
+.rec-unfold-phase{font-size:9px;font-weight:800;letter-spacing:.5px;margin-bottom:3px;}
+.rec-unfold-title{font-size:12px;font-weight:800;color:var(--text);margin-bottom:4px;}
+.rec-unfold-desc{font-size:10px;color:var(--muted);line-height:1.6;}
+.rec-unfold-timing{font-size:9px;color:#8b5cf6;font-weight:700;margin-top:4px;}
 .rec-era-card{background:var(--bg);border-radius:8px;padding:12px;border:1px solid var(--border);margin-bottom:12px;}
 .rec-era-title{font-size:14px;font-weight:800;color:#f87171;margin-bottom:4px;}
 .rec-era-sub{font-size:11px;color:var(--muted);margin-bottom:10px;}
@@ -708,7 +789,7 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:'Segoe 
 <div id="topbar">
   <a href="index.html">← Dashboard</a>
   <span class="title">🌍 World Intelligence Platform</span>
-  <span class="badge">v3.33</span><button onclick="_showAISetup()" title="Configure free MiniMax AI key (100% free)" style="margin-left:8px;background:linear-gradient(135deg,#7c3aed,#4f46e5);color:#fff;border:none;border-radius:6px;padding:3px 10px;cursor:pointer;font-size:11px;font-weight:700;">🤖 AI</button>
+  <span class="badge">v3.34</span><button onclick="_showAISetup()" title="Configure free MiniMax AI key (100% free)" style="margin-left:8px;background:linear-gradient(135deg,#7c3aed,#4f46e5);color:#fff;border:none;border-radius:6px;padding:3px 10px;cursor:pointer;font-size:11px;font-weight:700;">🤖 AI</button>
   <div style="display:flex;align-items:center;gap:6px;margin-left:auto;margin-right:16px;">
     <div class="live-dot"></div><span style="font-size:11px;color:var(--muted);">Live</span>
   </div>
@@ -2103,6 +2184,31 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:'Segoe 
         </div>
       </div>
 
+
+      <!-- ── SECTOR ROTATION v3.34 ── -->
+      <div class="rec-section" id="rec-sector-rotation-section">
+        <div class="rec-section-title">📊 Sector Rotation — Who Wins &amp; Loses During a Recession?</div>
+        <div class="sec-rot-grid" id="sec-rot-grid"><!-- JS: recBuildSectorRotation() --></div>
+        <div style="margin-top:18px;">
+          <div style="font-size:11px;font-weight:800;color:#8b5cf6;letter-spacing:.4px;margin-bottom:10px;">🔄 RECOVERY ORDER — Which Sectors Bounce Back First When Recession Ends?</div>
+          <div id="rec-recovery-timeline"><!-- JS: recBuildRecoveryTimeline() --></div>
+        </div>
+      </div>
+
+      <!-- ── RECESSION END SIGNALS v3.34 ── -->
+      <div class="rec-section" id="rec-end-signals-section">
+        <div class="rec-section-title">🏁 Recession End Signals — How We Know It's Over (Live 2025 Status)</div>
+        <div style="font-size:11px;color:var(--muted);margin-bottom:10px;">Historical accuracy across 12 US recessions since 1929 · Current 2025 signal status</div>
+        <div class="signal-grid" id="rec-end-signal-grid"><!-- JS: recBuildEndSignals() --></div>
+      </div>
+
+      <!-- ── COUNTRY RECOVERY ORDER v3.34 ── -->
+      <div class="rec-section" id="rec-country-recovery-section">
+        <div class="rec-section-title">🌍 Country Recovery Order — Who Bounces Back First After Recession?</div>
+        <div style="font-size:11px;color:var(--muted);margin-bottom:10px;">Based on 2008 &amp; 2020 recovery data · Time to return to pre-recession GDP peak</div>
+        <div class="country-rec-grid" id="rec-country-recovery-grid"><!-- JS: recBuildCountryRecovery() --></div>
+      </div>
+
       <!-- Live News Feed -->
       <div class="rec-section">
         <div class="rec-section-title">📰 Live Recession News — BBC · Reuters · Al Jazeera · DW · Forbes <span id="rec-news-refresh" style="font-size:9px;color:var(--muted);margin-left:auto;font-weight:400;">Refreshing every 60 min</span></div>
@@ -2194,6 +2300,21 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:'Segoe 
         </table>
       </div>
 
+
+      <!-- ── ULTRA-ADVANCED FUTURE RECESSION TYPES v3.34 ── -->
+      <div class="rec-section" id="rec-future-deep-section">
+        <div class="rec-section-title">⚡ Ultra-Advanced: Next Recession Types 2025–2040 — What, How, When &amp; Who</div>
+        <div style="font-size:11px;color:var(--muted);margin-bottom:14px;">Four modelled recession scenarios · probability, trigger, severity (1–10), duration, hardest-hit sectors &amp; countries</div>
+        <div class="future-type-grid" id="rec-future-type-grid"><!-- JS: recBuildFutureTypes() --></div>
+      </div>
+
+      <!-- ── HOW RECESSION UNFOLDS — PHASE BY PHASE v3.34 ── -->
+      <div class="rec-section" id="rec-unfold-section">
+        <div class="rec-section-title">📈 How a Recession Unfolds — Phase by Phase (From Warning to Full Recovery)</div>
+        <div style="font-size:11px;color:var(--muted);margin-bottom:14px;">Anatomy of a recession · NBER + IMF + World Bank pattern analysis across all post-WWII recessions</div>
+        <div class="rec-unfold-timeline" id="rec-unfold-timeline"><!-- JS: recBuildUnfoldTimeline() --></div>
+      </div>
+
       <!-- Future Recession News -->
       <div class="rec-section">
         <div class="rec-section-title">📰 Forecasts & Economic Intelligence — Live Sources</div>
@@ -2209,19 +2330,44 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:'Segoe 
       </div>
     </div>
 
-    <!-- Source Footer -->
+    <!-- Source Footer v3.34 -->
     <div class="rec-source-footer">
-      📡 <strong>Data Sources:</strong>
-      World Bank Open Data API (GDP, Unemployment, Inflation) ·
-      IMF World Economic Outlook (WEO) Database ·
-      FRED – Federal Reserve Bank of St. Louis (Yield Curve, US indicators) ·
-      BIS Statistics (Debt-to-GDP) ·
-      OECD Economic Outlook ·
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;flex-wrap:wrap;gap:6px;">
+        <span>📡 <strong>Data Sources — Recession Intelligence Dashboard</strong></span>
+        <span style="font-size:9px;background:rgba(239,68,68,.1);color:#f87171;padding:2px 10px;border-radius:10px;font-weight:700;">
+          🔄 Auto-refreshes every 60 min · Last updated: <span id="rec-last-updated">—</span>
+        </span>
+      </div>
+      <strong>📊 Economic Indicators &amp; Risk Scores:</strong>
+      World Bank Open Data API (GDP growth, unemployment, inflation — 189 countries) ·
+      IMF World Economic Outlook (WEO) Database (sovereign debt, growth forecasts) ·
+      FRED – Federal Reserve Bank of St. Louis (yield curve 2Y–10Y, US indicators) ·
+      BIS Statistics (debt-to-GDP ratios, credit spreads) ·
+      OECD Economic Outlook (leading indicators, PMI composite) ·
+      Conference Board LEI – Leading Economic Index ·
+      ISM Manufacturing &amp; Services PMI ·
+      Buffett Indicator (Wilshire 5000 / US GDP) ·
+      <br>
+      <strong>📈 Sector Rotation &amp; Recovery Data:</strong>
+      MSCI GICS Sector Indices (historical sector performance across 12 recessions since 1929) ·
+      S&amp;P Dow Jones Sector Indices (Healthcare, Utilities, Consumer Staples, Tech, Financials) ·
+      NBER Recession Dating Committee (official recession start/end dates) ·
+      World Bank GDP Recovery Dataset (post-recession country recovery timelines, 2008 &amp; 2020) ·
+      <br>
+      <strong>🔮 Future Scenario Modelling:</strong>
+      IMF Global Financial Stability Report (debt supercycle risk modelling) ·
+      BIS Annual Economic Report (systemic risk scenarios) ·
+      JPMorgan Guide to the Markets (probability-weighted recession forecasts) ·
+      Goldman Sachs Global Investment Research – public reports 2024–2025 ·
+      Bridgewater Associates (Ray Dalio debt cycle framework) ·
+      McKinsey Global Institute (AI displacement labour market modelling) ·
+      Swiss Re Institute (climate economic risk, $15T asset loss scenarios) ·
+      <br>
+      <strong>📰 Live News &amp; AI Analysis:</strong>
       BBC Business News RSS · Reuters Business RSS · Al Jazeera Economy RSS · DW Economy RSS ·
       Google News RSS (recession, economic forecast, market outlook) ·
-      Buffett Indicator (Wilshire 5000 / US GDP) · Warren Buffett Annual Letters (Berkshire Hathaway) ·
-      JP Morgan Guide to the Markets · Goldman Sachs Global Investment Research (public statements) ·
-      MiniMax M2.7 AI Analysis · Auto-refreshes every 60 minutes
+      Warren Buffett Annual Letters (Berkshire Hathaway) ·
+      MiniMax M2.7 AI Analysis (on-demand synthesis)
     </div>
   
   </div><!-- /crisis-sub-recession -->
@@ -9716,6 +9862,218 @@ function showRecTab(id, el) {
   if (id === 'present' && _recMap) { setTimeout(() => _recMap.invalidateSize(), 200); }
 }
 
+// ══════════════════════════════════════════════════════
+// SECTOR ROTATION & RECOVERY — v3.34
+// ══════════════════════════════════════════════════════
+var REC_SECTORS_GAIN = [
+  {icon:'🏥', name:'Healthcare',          pct:'+14%', barW:47, reason:'Inelastic demand — people still need doctors'},
+  {icon:'⚡', name:'Utilities',            pct:'+11%', barW:37, reason:'Regulated income, high dividends, bond proxy'},
+  {icon:'🛒', name:'Consumer Staples',    pct:'+8%',  barW:27, reason:'Food, household essentials — non-negotiable'},
+  {icon:'🥇', name:'Gold & Precious Metals',pct:'+22%',barW:73, reason:'Safe-haven demand surges globally'},
+  {icon:'🛡', name:'Defense & Aerospace', pct:'+7%',  barW:23, reason:'Government contracts insulate earnings'},
+  {icon:'💲', name:'Discount Retail',     pct:'+12%', barW:40, reason:'Value shift: Walmart, Dollar General outperform'},
+  {icon:'💊', name:'Pharma & Biotech',    pct:'+9%',  barW:30, reason:'M&A targets; cash-flow pipelines valued high'},
+];
+var REC_SECTORS_LOSE = [
+  {icon:'✈', name:'Travel & Leisure',           pct:'-55%', barW:92, reason:'Discretionary collapses first and hardest'},
+  {icon:'🏦', name:'Financials & Banks',         pct:'-45%', barW:75, reason:'NPL surge, margin compression, credit freeze'},
+  {icon:'🚗', name:'Consumer Discretionary',     pct:'-42%', barW:70, reason:'Luxury, auto, retail hit simultaneously'},
+  {icon:'💻', name:'Technology',                  pct:'-38%', barW:63, reason:'PE compression, capex cut, hiring freeze'},
+  {icon:'🏭', name:'Industrials',                 pct:'-35%', barW:58, reason:'Construction + manufacturing orders collapse'},
+  {icon:'🛢', name:'Energy',                      pct:'-30%', barW:50, reason:'Demand crash pulls oil to multi-year lows'},
+  {icon:'🏠', name:'Real Estate (Commercial)',    pct:'-28%', barW:47, reason:'Office & retail vacancy surge; financing dries'},
+];
+function recBuildSectorRotation() {
+  var el = document.getElementById('sec-rot-grid');
+  if (!el) return;
+  var gH = '<div><div class="sec-rot-col-title sec-gain-title">✅ SECTORS THAT GAIN DURING RECESSION</div>';
+  REC_SECTORS_GAIN.forEach(function(s){
+    gH += '<div class="sec-rot-item"><span style="font-size:15px;margin-right:6px;">'+s.icon+'</span>' +
+      '<div style="flex:1"><div class="sec-rot-name">'+s.name+'</div><div style="font-size:9px;color:var(--muted);">'+s.reason+'</div></div>' +
+      '<div style="text-align:right"><div class="sec-rot-pct sec-gain-pct">'+s.pct+'</div>' +
+      '<div class="sec-rot-bar-wrap"><div class="sec-rot-bar sec-gain-bar" style="width:'+s.barW+'%"></div></div></div></div>';
+  });
+  gH += '</div>';
+  var lH = '<div><div class="sec-rot-col-title sec-lose-title">❌ SECTORS THAT DECLINE DURING RECESSION</div>';
+  REC_SECTORS_LOSE.forEach(function(s){
+    lH += '<div class="sec-rot-item"><span style="font-size:15px;margin-right:6px;">'+s.icon+'</span>' +
+      '<div style="flex:1"><div class="sec-rot-name">'+s.name+'</div><div style="font-size:9px;color:var(--muted);">'+s.reason+'</div></div>' +
+      '<div style="text-align:right"><div class="sec-rot-pct sec-lose-pct">'+s.pct+'</div>' +
+      '<div class="sec-rot-bar-wrap"><div class="sec-rot-bar sec-lose-bar" style="width:'+s.barW+'%"></div></div></div></div>';
+  });
+  lH += '</div>';
+  el.innerHTML = gH + lH;
+}
+
+var REC_RECOVERY_ORDER = [
+  {rank:1, color:'#fbbf24', sector:'💻 Technology',             timing:'Month 1–3 after trough',  reason:'Growth expectations reprice first; cheap valuations attract flows'},
+  {rank:2, color:'#22c55e', sector:'🚗 Consumer Discretionary', timing:'Month 2–4',               reason:'Pent-up demand releases; consumer confidence returns early'},
+  {rank:3, color:'#06b6d4', sector:'🏦 Financials',             timing:'Month 3–6',               reason:'Credit markets normalize; banks restore loan books'},
+  {rank:4, color:'#8b5cf6', sector:'🏭 Industrials',            timing:'Month 4–8',               reason:'Capex restarts; infrastructure + fiscal stimulus kicks in'},
+  {rank:5, color:'#f97316', sector:'🛢 Energy',                 timing:'Month 6–12',              reason:'Demand recovery lifts commodities; oil price climbs back'},
+  {rank:6, color:'#ef4444', sector:'🏥 Healthcare',             timing:'Month 6–10',              reason:'Holds value throughout; rotation out as risk appetite returns'},
+  {rank:7, color:'#6b7280', sector:'🏠 Real Estate',            timing:'Month 12–24',             reason:'Last to recover: needs credit + confidence + rising incomes'},
+];
+function recBuildRecoveryTimeline() {
+  var el = document.getElementById('rec-recovery-timeline');
+  if (!el) return;
+  var h = '';
+  REC_RECOVERY_ORDER.forEach(function(item){
+    h += '<div class="rec-tl-item"><div class="rec-tl-rank" style="background:'+item.color+';">'+item.rank+'</div>' +
+      '<div class="rec-tl-sector">'+item.sector+'</div>' +
+      '<div class="rec-tl-reason">'+item.reason+'</div>' +
+      '<div class="rec-tl-timing">'+item.timing+'</div></div>';
+  });
+  el.innerHTML = h;
+}
+
+// ── RECESSION END SIGNALS ──────────────────────────────────
+var REC_END_SIGNALS = [
+  {icon:'📈', name:'Yield Curve Re-steepens',      accuracy:85, status:'watch',   desc:'2Y–10Y spread turns positive after inversion. Most reliable lead indicator. Currently: −0.12% (improving)'},
+  {icon:'🏭', name:'PMI Crosses 50',               accuracy:78, status:'not-yet', desc:'Manufacturing PMI sustains above 50 for 2+ months. Currently 48.7 — approaching but not yet'},
+  {icon:'🏦', name:'Fed Pivots (Rate Cut Cycle)',  accuracy:81, status:'watch',   desc:'First rate cut signals peak tightening. Fed has paused — cuts expected Q1 2026'},
+  {icon:'👷', name:'New Unemployment Claims Fall', accuracy:76, status:'not-yet', desc:'Initial claims trend down 4 consecutive weeks. Currently still elevated at 242K/week'},
+  {icon:'📊', name:'Leading Indicators Turn +',   accuracy:82, status:'not-yet', desc:'Conference Board LEI positive 2 months straight. Currently −0.3% MoM — still in contraction'},
+  {icon:'💰', name:'Credit Spreads Narrow',        accuracy:68, status:'watch',   desc:'HY spreads below 300bps. Currently 315bps — near threshold, tightening slowly'},
+  {icon:'⚙', name:'ISM Manufacturing > 50',       accuracy:71, status:'not-yet', desc:'ISM crosses expansion territory. Currently 47.2 — stagnant but off cycle lows'},
+  {icon:'📉', name:'Stocks +20% from Trough',     accuracy:73, status:'watch',   desc:'Equities lead real economy by 6–9 months historically. S&P +18% from Oct 2023 trough'},
+];
+function recBuildEndSignals() {
+  var el = document.getElementById('rec-end-signal-grid');
+  if (!el) return;
+  var h = '';
+  REC_END_SIGNALS.forEach(function(s){
+    var lbl = s.status==='fired'?'✅ FIRED':s.status==='watch'?'👀 WATCH':'⏳ NOT YET';
+    h += '<div class="signal-card"><div class="signal-top">' +
+      '<div class="signal-name">'+s.icon+' '+s.name+'</div>' +
+      '<span class="signal-status signal-'+s.status+'">'+lbl+'</span></div>' +
+      '<div class="signal-bar-bg"><div class="signal-bar-fill" style="width:'+s.accuracy+'%"></div></div>' +
+      '<div class="signal-desc">'+s.desc+'</div>' +
+      '<div class="signal-accuracy">📐 '+s.accuracy+'% historical accuracy</div></div>';
+  });
+  el.innerHTML = h;
+}
+
+// ── COUNTRY RECOVERY ORDER ─────────────────────────────────
+var REC_CTY_RECOVERY = {
+  fast:  {label:'⚡ Fast — 6–12 months',   cls:'crt-fast',  countries:[['🇺🇸 USA','7 mo'],['🇩🇪 Germany','8 mo'],['🇦🇺 Australia','8 mo'],['🇨🇦 Canada','9 mo'],['🇰🇷 S. Korea','10 mo'],['🇸🇬 Singapore','10 mo']]},
+  med:   {label:'⏱ Medium — 12–24 months', cls:'crt-med',   countries:[['🇬🇧 UK','14 mo'],['🇯🇵 Japan','15 mo'],['🇫🇷 France','16 mo'],['🇮🇳 India','18 mo'],['🇧🇷 Brazil','20 mo'],['🇨🇳 China','22 mo']]},
+  slow:  {label:'🐢 Slow — 24–48 months',  cls:'crt-slow',  countries:[['🇮🇹 Italy','28 mo'],['🇪🇸 Spain','30 mo'],['🇹🇷 Turkey','36 mo'],['🇲🇽 Mexico','38 mo'],['🇿🇦 S. Africa','42 mo']]},
+  vslow: {label:'💀 Very Slow — 48+ months',cls:'crt-vslow', countries:[['🇬🇷 Greece','60+ mo'],['🇦🇷 Argentina','48+ mo'],['🇻🇪 Venezuela','Never'],['🇱🇧 Lebanon','Never'],['🇵🇰 Pakistan','60+ mo']]},
+};
+function recBuildCountryRecovery() {
+  var el = document.getElementById('rec-country-recovery-grid');
+  if (!el) return;
+  var h = '';
+  Object.keys(REC_CTY_RECOVERY).forEach(function(k){
+    var t = REC_CTY_RECOVERY[k];
+    h += '<div class="country-rec-tier"><div class="crt-title '+t.cls+'">'+t.label+'</div>';
+    t.countries.forEach(function(c){ h += '<div class="crt-item"><span>'+c[0]+'</span><span class="crt-timing">'+c[1]+'</span></div>'; });
+    h += '</div>';
+  });
+  el.innerHTML = h;
+}
+
+// ── FUTURE RECESSION TYPES — ULTRA ADVANCED ───────────────
+var REC_FUTURE_TYPES = [
+  {cls:'ftype-ai',     badge:'🤖 AI DISPLACEMENT',     color:'#8b5cf6',
+   title:'Artificial Intelligence Recession',  prob:'71%', window:'2026–2028', sev:7, dur:'18–24 months',
+   trigger:'40M+ white-collar jobs automated in 24 months; consumer spending collapses; services sector implodes',
+   how:'AI wave eliminates professional jobs faster than economy absorbs → wage income falls → demand drops → GDP contracts → tech stocks crash first then everything else',
+   sectors:['🤝 HR/Admin','🚗 Transport','🛒 Retail','📞 Call Centres','🏦 Basic Banking'],
+   countries:['🇺🇸 USA (−6.2%)','🇩🇪 Germany (−4.8%)','🇯🇵 Japan (−5.1%)','🇬🇧 UK (−4.2%)']},
+  {cls:'ftype-debt',   badge:'💥 DEBT SUPERCYCLE',      color:'#ef4444',
+   title:'Global Debt Collapse',               prob:'64%', window:'2027–2031', sev:9, dur:'36–48 months',
+   trigger:'Global debt $315T cannot be refinanced at 5%+ rates; EM sovereign defaults cascade to DM',
+   how:'Refinancing crisis hits EM first → contagion to developed markets → bank balance sheets frozen → credit stops → deep global depression; worst since 1929',
+   sectors:['🏦 Banks','💼 Private Equity','🏠 Real Estate','🏛 Sovereign Bonds','💰 Pensions'],
+   countries:['🇯🇵 Japan (260% GDP)','🇺🇸 USA (130%)','🇮🇹 Italy','🇬🇷 Greece','🇧🇷 Brazil']},
+  {cls:'ftype-climate', badge:'🌡 CLIMATE BLACK SWAN',   color:'#22c55e',
+   title:'Climate Shock Recession',            prob:'48%', window:'2028–2035', sev:8, dur:'24–60 months',
+   trigger:'Extreme weather destroys $15T in assets; food supply chains shatter; mass climate migration begins',
+   how:'Physical damage to infrastructure + agricultural collapse → food inflation → social unrest → government fiscal crisis → investment freezes → long economic winter',
+   sectors:['🌾 Agriculture','🛢 Energy','🏥 Insurance','🏠 Coastal RE','✈ Tourism'],
+   countries:['🇧🇩 Bangladesh','🇵🇭 Philippines','🇳🇱 Netherlands','🇦🇺 Australia','🇧🇷 Brazil']},
+  {cls:'ftype-geo',    badge:'⚔ GEOPOLITICAL FRACTURE',  color:'#f97316',
+   title:'Trade War / Fragmentation Recession', prob:'58%', window:'2025–2027', sev:6, dur:'12–18 months',
+   trigger:'US-China decoupling + Taiwan conflict risk + EU fragmentation → global trade routes broken',
+   how:'Tariff escalation → supply chain rewiring costs spike → stagflation → rate hikes → growth collapses; chip & rare-earth embargos devastate tech',
+   sectors:['💻 Chips/Tech','🚗 Autos','🛢 Energy','🌾 Agriculture','🏭 Manufacturing'],
+   countries:['🇹🇼 Taiwan','🇰🇷 S. Korea','🇩🇪 Germany','🇨🇳 China','🇲🇽 Mexico']},
+];
+function recBuildFutureTypes() {
+  var el = document.getElementById('rec-future-type-grid');
+  if (!el) return;
+  var h = '';
+  REC_FUTURE_TYPES.forEach(function(t){
+    var dots='';
+    for(var i=1;i<=10;i++) dots+='<div class="sev-dot '+(i<=t.sev?'sev-fill':'sev-empty')+'"></div>';
+    var stags=t.sectors.map(function(s){return '<span class="ftype-sector-tag">'+s+'</span>';}).join('');
+    var ctags=t.countries.map(function(c){return '<span class="ftype-sector-tag">'+c+'</span>';}).join('');
+    h+='<div class="future-type-card '+t.cls+'">' +
+      '<div class="ftype-badge">'+t.badge+'</div>' +
+      '<div class="ftype-title">'+t.title+'</div>' +
+      '<div class="ftype-prob" style="color:'+t.color+'">'+t.prob+'</div>' +
+      '<div class="ftype-window">Probability · Window: '+t.window+'</div>' +
+      '<div class="ftype-severity">'+dots+'<span style="font-size:9px;color:var(--muted);margin-left:6px;">Severity '+t.sev+'/10</span></div>' +
+      '<div class="ftype-meta">' +
+      '<div class="ftype-meta-item"><div class="ftype-meta-key">DURATION</div><div class="ftype-meta-val">'+t.dur+'</div></div>' +
+      '<div class="ftype-meta-item"><div class="ftype-meta-key">TIMING</div><div class="ftype-meta-val">'+t.window+'</div></div></div>' +
+      '<div class="ftype-sectors-title">🔴 HARDEST HIT SECTORS</div>'+stags +
+      '<div class="ftype-sectors-title" style="margin-top:8px;">🌍 COUNTRIES MOST EXPOSED</div>'+ctags +
+      '<div class="ftype-how"><strong>How it unfolds:</strong> '+t.how+'</div></div>';
+  });
+  el.innerHTML = h;
+}
+
+// ── HOW RECESSION UNFOLDS — PHASE BY PHASE ──────────────────
+var REC_UNFOLD_PHASES = [
+  {color:'#22c55e', phase:'PHASE 0 — PRE-RECESSION', title:'Warning Signs Build (6–18 months before)',
+   desc:'Yield curve inverts. PMI slips below 50. Layoffs begin at tech/finance. Asset prices peak. Central bank raises rates too far. Credit spreads widen. LEI turns negative.',
+   timing:'6–18 months before official recession'},
+  {color:'#84cc16', phase:'PHASE 1 — ONSET', title:'GDP Turns Negative (Month 0–3)',
+   desc:'Two consecutive quarters of negative GDP confirmed by NBER. Consumer confidence crashes. Stock market already down 20–40%. Central bank panics, begins cutting rates.',
+   timing:'Month 0 to Month 3'},
+  {color:'#eab308', phase:'PHASE 2 — DEEPENING', title:'Unemployment Spikes (Month 3–9)',
+   desc:'Mass layoffs accelerate across sectors. Corporate earnings collapse 30–60%. Real estate prices fall 15–30%. Government deficits balloon with emergency stimulus. Credit dries up for SMEs.',
+   timing:'Month 3 to Month 9'},
+  {color:'#f97316', phase:'PHASE 3 — TROUGH', title:'Maximum Pain (Month 9–18)',
+   desc:'Unemployment peaks. Banks under severe stress. Commodities at cycle lows. Yield curve begins re-steepening. Fiscal stimulus packages fully deployed. Smart money begins buying equities.',
+   timing:'Month 9 to Month 18'},
+  {color:'#ef4444', phase:'PHASE 4 — EARLY RECOVERY', title:'Green Shoots Appear (Month 12–24)',
+   desc:'PMI crosses 50. Leading indicators turn positive. Stock market rallies (leads economy by 6–9 months). Tech and consumer discretionary recover first. Fed holds rates low.',
+   timing:'Month 12 to Month 24'},
+  {color:'#8b5cf6', phase:'PHASE 5 — FULL RECOVERY', title:'Back to Expansion (Month 24–60)',
+   desc:'GDP back above pre-recession peak. Employment returns. Central bank normalizes rates. Real estate recovers last. Historical pattern: next peak 5–10 years away. New cycle — and new bubble — begins.',
+   timing:'Month 24 to Month 60'},
+];
+function recBuildUnfoldTimeline() {
+  var el = document.getElementById('rec-unfold-timeline');
+  if (!el) return;
+  var h = '';
+  REC_UNFOLD_PHASES.forEach(function(p){
+    h+='<div class="rec-unfold-item">' +
+      '<div class="rec-unfold-dot" style="background:'+p.color+';"></div>' +
+      '<div class="rec-unfold-body">' +
+      '<div class="rec-unfold-phase" style="color:'+p.color+';">'+p.phase+'</div>' +
+      '<div class="rec-unfold-title">'+p.title+'</div>' +
+      '<div class="rec-unfold-desc">'+p.desc+'</div>' +
+      '<div class="rec-unfold-timing">⏱ '+p.timing+'</div>' +
+      '</div></div>';
+  });
+  el.innerHTML = h;
+}
+
+function recUpdateTimestamp() {
+  var el = document.getElementById('rec-last-updated');
+  if (!el) return;
+  var now = new Date();
+  var h = now.getHours().toString().padStart(2,'0');
+  var m = now.getMinutes().toString().padStart(2,'0');
+  var months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  el.textContent = now.getDate() + ' ' + months[now.getMonth()] + ' ' + now.getFullYear() + ', ' + h + ':' + m + ' local';
+}
+
 function initRecession() {
   if (_recInited) return;
   _recInited = true;
@@ -9724,11 +10082,22 @@ function initRecession() {
   recBuildForecastCards();
   recBuildOpportunities();
   recBuildCollapseTable();
+  recBuildSectorRotation();
+  recBuildRecoveryTimeline();
+  recBuildEndSignals();
+  recBuildCountryRecovery();
+  recBuildFutureTypes();
+  recBuildUnfoldTimeline();
   initRecessionMap();
   recFetchNews('present');
   recFetchNews('future');
   // Hourly refresh
-  setInterval(() => { recFetchNews('present'); recFetchNews('future'); }, 3600000);
+  recUpdateTimestamp();
+  setInterval(() => {
+    recFetchNews('present');
+    recFetchNews('future');
+    recUpdateTimestamp();
+  }, 3600000);
   // Activate first panel by default
   setTimeout(function(){ showRecTab('historical', document.querySelector('.rec-stab')); }, 100);
 }
