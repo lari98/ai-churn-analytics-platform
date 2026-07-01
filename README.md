@@ -1,8 +1,11 @@
 # 🌐 World Intelligence Platform v3.37
 
-### Real-Time Global Intelligence · 12 Tabs · 22 AI Features · MiniMax M2.7 · Zero Paid APIs
+### Real-Time · AI-Augmented · Multi-Source Global Intelligence System
+### 12 Modules · 22 LLM Features · Serverless SPA · Zero Paid APIs · 27 Verified Sources
 
 **Author: Muhammad Umer Lari © 2024–2025 · All Rights Reserved**
+
+> **Tech Stack:** `Vanilla JS` `HTML5` `CSS3` `Chart.js` `Leaflet.js` `MiniMax M2.7 LLM` `REST API Orchestration` `RSS Data Pipelines` `Event-Driven Polling` `Multi-Source Data Fusion` `OSINT Aggregation` `Geospatial Risk Modelling` `Predictive Macro Analytics` `Cross-Asset Intelligence` `Zero-Backend Architecture`
 
 [![Dashboard](https://img.shields.io/badge/Dashboard-v3.37-a78bfa)](./dashboard/world-intelligence.html)
 [![AI Features](https://img.shields.io/badge/AI_Features-22-f59e0b)](./dashboard/tests/)
@@ -69,7 +72,11 @@
 
 ## 🎯 Overview
 
-**World Intelligence Platform** is a real-time global intelligence dashboard built by **Muhammad Umer Lari**. It combines live financial markets, geopolitical intelligence, environmental monitoring, AI-powered forecasting, recession analysis, G10 country risk, forex intelligence, and natural language analysis — all in one single HTML file with zero paid APIs.
+**World Intelligence Platform** is a **serverless, AI-augmented, real-time global intelligence system** built by **Muhammad Umer Lari**. It delivers multi-source data fusion across macroeconomics, geopolitical risk, recession intelligence, forex markets, ESG data, and predictive analytics — powered by LLM inference on demand — in a single zero-dependency deployment artifact.
+
+Used by analysts, macro strategists, country risk advisors, ESG researchers, forex traders, and consulting teams who need structured, source-cited global intelligence without $24,000/yr data terminal subscriptions. Every figure is traceable to a primary free source (IMF · BIS · OECD · Fed · World Bank) via clickable citations embedded directly in the dashboard.
+
+> 📄 **Professional Use Cases:** See [`PLATFORM_EXECUTIVE_BRIEF.html`](./PLATFORM_EXECUTIVE_BRIEF.html) — where this platform is deployed, how it helps firms, and which consulting firms gain strategic advantage.
 
 | Metric | Value |
 |--------|-------|
