@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>World Intelligence Platform — Muhammad Umer Lari</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background: #0a0a0f;
+    color: #e2e8f0;
+    min-height: 100vh;
+  }
+
+  /* ── HERO ── */
+  .hero {
+    background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+    padding: 80px 40px 60px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%234f46e5' fill-opacity='0.05'%3E%3Ccircle cx='30' cy='30' r='2'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+    opacity: .6;
+  }
+  .hero-badge {
+    display: inline-block;
+    background: rgba(99,102,241,.2);
+    border: 1px solid rgba(99,102,241,.4);
+    color: #a5b4fc;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    padding: 6px 18px;
+    border-radius: 20px;
+    margin-bottom: 24px;
+  }
+  .hero h1 {
+    font-size: 52px;
+    font-weight: 900;
+    background: linear-gradient(135deg, #ffffff, #a5b4fc, #60a5fa);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    line-height: 1.1;
+    margin-bottom: 16px;
+  }
+  .hero-sub {
+    font-size: 18px;
+    color: #94a3b8;
+    max-width: 640px;
+    margin: 0 auto 32px;
+    line-height: 1.6;
+  }
+  .hero-stats {
+    display: flex;
+    justify-content: center;
+    gap: 40px;
+    flex-wrap: wrap;
+    margin-top: 40px;
+  }
+  .hero-stat { text-align: center; }
+  .hero-stat-num {
+    font-size: 38px;
+    font-weight: 900;
+    background: linear-gradient(135deg, #60a5fa, #a78bfa);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  .hero-stat-lbl { font-size: 12px; color: #64748b; font-weight: 600; letter-spacing: .5px; margin-top: 4px; }
+
+  /* ── SECTION ── */
+  section { padding: 64px 40px; max-width: 1100px; margin: 0 auto; }
+  .section-label {
+    font-size: 11px; font-weight: 800; letter-spacing: 2px; text-transform: uppercase;
+    color: #6366f1; margin-bottom: 12px;
+  }
+  .section-title { font-size: 34px; font-weight: 800; color: #f1f5f9; margin-bottom: 12px; }
+  .section-desc { font-size: 15px; color: #94a3b8; max-width: 640px; line-height: 1.7; margin-bottom: 40px; }
+
+  /* ── FEATURE CARDS ── */
+  .features-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; }
+  .feat-card {
+    background: linear-gradient(135deg, #1e1e2e, #16162a);
+    border: 1px solid #2d2d4e;
+    border-radius: 14px;
+    padding: 24px;
+    transition: transform .2s, border-color .2s;
+  }
+  .feat-card:hover { transform: translateY(-4px); border-color: #6366f1; }
+  .feat-icon { font-size: 28px; margin-bottom: 12px; }
+  .feat-title { font-size: 16px; font-weight: 800; color: #f1f5f9; margin-bottom: 8px; }
+  .feat-desc { font-size: 13px; color: #94a3b8; line-height: 1.6; }
+  .feat-tag {
+    display: inline-block; margin-top: 12px;
+    background: rgba(99,102,241,.15); color: #a5b4fc;
+    font-size: 10px; font-weight: 700; padding: 3px 10px; border-radius: 8px;
+  }
+  .feat-tag.green { background: rgba(34,197,94,.15); color: #4ade80; }
+  .feat-tag.amber { background: rgba(251,191,36,.15); color: #fcd34d; }
+  .feat-tag.red { background: rgba(239,68,68,.15); color: #fca5a5; }
+
+  /* ── USE CASES ── */
+  .use-cases-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 16px; }
+  .use-card {
+    background: #111827;
+    border: 1px solid #1f2937;
+    border-left: 4px solid #6366f1;
+    border-radius: 10px;
+    padding: 20px 22px;
+  }
+  .use-card-title { font-size: 14px; font-weight: 800; color: #f1f5f9; margin-bottom: 6px; }
+  .use-card-body { font-size: 13px; color: #6b7280; line-height: 1.6; }
+
+  /* ── ADVANTAGE TABLE ── */
+  .adv-table { width: 100%; border-collapse: collapse; }
+  .adv-table th {
+    background: #1e1e2e; color: #a5b4fc; font-size: 11px; font-weight: 800;
+    letter-spacing: 1px; text-transform: uppercase; padding: 14px 18px; text-align: left;
+  }
+  .adv-table td { padding: 12px 18px; font-size: 13px; border-bottom: 1px solid #1f2937; }
+  .adv-table tr:last-child td { border: none; }
+  .adv-table td:first-child { color: #f87171; }
+  .adv-table td:last-child { color: #4ade80; }
+  .adv-table tr:nth-child(even) td { background: rgba(255,255,255,.02); }
+
+  /* ── TECH STACK ── */
+  .tech-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 12px; }
+  .tech-pill {
+    background: #1e1e2e; border: 1px solid #2d2d4e; border-radius: 10px;
+    padding: 14px 16px; text-align: center;
+  }
+  .tech-pill-icon { font-size: 22px; margin-bottom: 6px; }
+  .tech-pill-name { font-size: 12px; font-weight: 700; color: #e2e8f0; }
+  .tech-pill-note { font-size: 10px; color: #475569; margin-top: 2px; }
+
+  /* ── SOURCES STRIP ── */
+  .sources-strip {
+    background: #0f172a;
+    border-top: 1px solid #1e293b;
+    border-bottom: 1px solid #1e293b;
+    padding: 28px 40px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    justify-content: center;
+    align-items: center;
+  }
+  .source-chip {
+    background: #1e293b; border: 1px solid #334155;
+    color: #94a3b8; font-size: 11px; font-weight: 600;
+    padding: 5px 14px; border-radius: 20px;
+  }
+  .sources-label { font-size: 11px; color: #475569; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; width: 100%; text-align: center; margin-bottom: 4px; }
+
+  /* ── G10 PREVIEW ── */
+  .g10-preview { display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; }
+  .g10-mini {
+    background: #1e1e2e; border: 1px solid #2d2d4e; border-radius: 10px; padding: 14px;
+    text-align: center;
+  }
+  .g10-mini-flag { font-size: 24px; }
+  .g10-mini-name { font-size: 10px; font-weight: 700; color: #94a3b8; margin: 4px 0 2px; }
+  .g10-mini-gdp { font-size: 14px; font-weight: 900; }
+  .g10-mini-neg { color: #f87171; }
+  .g10-mini-pos { color: #4ade80; }
+  .g10-mini-badge {
+    font-size: 8px; font-weight: 800; padding: 2px 8px; border-radius: 8px;
+    margin-top: 6px; display: inline-block;
+  }
+  .badge-rec { background: rgba(239,68,68,.15); color: #fca5a5; }
+  .badge-risk { background: rgba(249,115,22,.15); color: #fdba74; }
+  .badge-watch { background: rgba(234,179,8,.15); color: #fde68a; }
+  .badge-ok { background: rgba(34,197,94,.15); color: #86efac; }
+
+  /* ── FOOTER ── */
+  .page-footer {
+    background: #050508;
+    border-top: 1px solid #1e1e2e;
+    padding: 40px;
+    text-align: center;
+  }
+  .footer-name { font-size: 20px; font-weight: 800; color: #f1f5f9; margin-bottom: 6px; }
+  .footer-sub { font-size: 13px; color: #475569; margin-bottom: 16px; }
+  .footer-links { display: flex; justify-content: center; gap: 20px; flex-wrap: wrap; }
+  .footer-link {
+    color: #6366f1; font-size: 13px; font-weight: 600; text-decoration: none;
+    padding: 6px 16px; border: 1px solid #3730a3; border-radius: 8px;
+    transition: background .15s;
+  }
+  .footer-link:hover { background: rgba(99,102,241,.1); }
+  .footer-copy { font-size: 11px; color: #374151; margin-top: 24px; }
+
+  /* ── DIVIDER ── */
+  .divider { border: none; border-top: 1px solid #1e1e2e; margin: 0 40px; }
+</style>
+</head>
+<body>
+
+<!-- HERO -->
+<div class="hero">
+  <div style="position:relative;z-index:1;">
+    <div class="hero-badge">🚀 Open for Portfolio Review · v3.37</div>
+    <h1>World Intelligence<br>Platform</h1>
+    <p class="hero-sub">
+      A single-file, zero-subscription intelligence dashboard aggregating live economic, geopolitical,
+      environmental, and financial signals from 27+ authoritative global data sources — with on-demand AI analysis.
+    </p>
+    <div style="display:flex;justify-content:center;gap:12px;flex-wrap:wrap;">
+      <span style="background:rgba(99,102,241,.2);border:1px solid rgba(99,102,241,.4);color:#a5b4fc;font-size:12px;font-weight:700;padding:8px 20px;border-radius:8px;">🤖 MiniMax M2.7 AI</span>
+      <span style="background:rgba(34,197,94,.15);border:1px solid rgba(34,197,94,.3);color:#4ade80;font-size:12px;font-weight:700;padding:8px 20px;border-radius:8px;">✅ 100% Free APIs</span>
+      <span style="background:rgba(251,191,36,.15);border:1px solid rgba(251,191,36,.3);color:#fcd34d;font-size:12px;font-weight:700;padding:8px 20px;border-radius:8px;">📊 27+ Data Sources</span>
+      <span style="background:rgba(239,68,68,.15);border:1px solid rgba(239,68,68,.3);color:#fca5a5;font-size:12px;font-weight:700;padding:8px 20px;border-radius:8px;">🔴 Live · Hourly Refresh</span>
+    </div>
+    <div class="hero-stats">
+      <div class="hero-stat"><div class="hero-stat-num">12</div><div class="hero-stat-lbl">Intelligence Modules</div></div>
+      <div class="hero-stat"><div class="hero-stat-num">37+</div><div class="hero-stat-lbl">Versions Shipped</div></div>
+      <div class="hero-stat"><div class="hero-stat-num">27</div><div class="hero-stat-lbl">Cited Data Sources</div></div>
+      <div class="hero-stat"><div class="hero-stat-num">0</div><div class="hero-stat-lbl">Paid APIs Used</div></div>
+    </div>
+  </div>
+</div>
+
+<hr class="divider">
+
+<!-- G10 PREVIEW -->
+<section>
+  <div class="section-label">Featured Module · v3.37</div>
+  <div class="section-title">🌐 G10 & World Impact — Recession Intelligence</div>
+  <div class="section-desc">Real-time recession status, GDP trajectory, forex impact, and policy response for every G10 economy. Click any country for a full drill-down with Chart.js time series spanning 2008, 2020, and the 2025 forecast scenario.</div>
+  <div class="g10-preview">
+    <div class="g10-mini"><div class="g10-mini-flag">🇺🇸</div><div class="g10-mini-name">USA</div><div class="g10-mini-gdp g10-mini-neg">-2.1%</div><div class="g10-mini-badge badge-risk">AT RISK</div></div>
+    <div class="g10-mini"><div class="g10-mini-flag">🇯🇵</div><div class="g10-mini-name">Japan</div><div class="g10-mini-gdp g10-mini-neg">-1.8%</div><div class="g10-mini-badge badge-rec">RECESSION</div></div>
+    <div class="g10-mini"><div class="g10-mini-flag">🇩🇪</div><div class="g10-mini-name">Germany</div><div class="g10-mini-gdp g10-mini-neg">-2.4%</div><div class="g10-mini-badge badge-rec">RECESSION</div></div>
+    <div class="g10-mini"><div class="g10-mini-flag">🇬🇧</div><div class="g10-mini-name">UK</div><div class="g10-mini-gdp g10-mini-neg">-1.9%</div><div class="g10-mini-badge badge-risk">AT RISK</div></div>
+    <div class="g10-mini"><div class="g10-mini-flag">🇨🇭</div><div class="g10-mini-name">Switzerland</div><div class="g10-mini-gdp g10-mini-neg">-0.8%</div><div class="g10-mini-badge badge-ok">STABLE</div></div>
+    <div class="g10-mini"><div class="g10-mini-flag">🇫🇷</div><div class="g10-mini-name">France</div><div class="g10-mini-gdp g10-mini-neg">-1.6%</div><div class="g10-mini-badge badge-watch">MONITORING</div></div>
+    <div class="g10-mini"><div class="g10-mini-flag">🇨🇦</div><div class="g10-mini-name">Canada</div><div class="g10-mini-gdp g10-mini-neg">-1.7%</div><div class="g10-mini-badge badge-risk">AT RISK</div></div>
+    <div class="g10-mini"><div class="g10-mini-flag">🇮🇹</div><div class="g10-mini-name">Italy</div><div class="g10-mini-gdp g10-mini-neg">-2.8%</div><div class="g10-mini-badge badge-rec">RECESSION</div></div>
+    <div class="g10-mini"><div class="g10-mini-flag">🇸🇪</div><div class="g10-mini-name">Sweden</div><div class="g10-mini-gdp g10-mini-neg">-1.5%</div><div class="g10-mini-badge badge-risk">AT RISK</div></div>
+    <div class="g10-mini"><div class="g10-mini-flag">🇪🇺</div><div class="g10-mini-name">Eurozone</div><div class="g10-mini-gdp g10-mini-neg">-2.1%</div><div class="g10-mini-badge badge-risk">AT RISK</div></div>
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- FEATURES -->
+<section>
+  <div class="section-label">Capabilities</div>
+  <div class="section-title">What's Inside the Platform</div>
+  <div class="section-desc">Every module is built on free, verifiable, primary-source data. Every source is cited and clickable. Every figure can be traced back to IMF, World Bank, BIS, Fed, or OECD publications.</div>
+  <div class="features-grid">
+    <div class="feat-card">
+      <div class="feat-icon">📉</div>
+      <div class="feat-title">Recession Intelligence</div>
+      <div class="feat-desc">Historical atlas (1929–2024), Global Radar 2025, Forecast 2025–2040 with 4 macro scenarios, G10 country deep-dives, sector rotation, forex impact, and trader playbooks.</div>
+      <span class="feat-tag red">Ultra-Advanced</span>
+    </div>
+    <div class="feat-card">
+      <div class="feat-icon">🌍</div>
+      <div class="feat-title">Rising Powers Intelligence</div>
+      <div class="feat-desc">15+ ascending and neutral nations tracked with AI Oracle analysis, Power Race cards, Next China, Future Migration, Passport Power, New Nations, and Future Currencies.</div>
+      <span class="feat-tag">Geopolitical</span>
+    </div>
+    <div class="feat-card">
+      <div class="feat-icon">🗺</div>
+      <div class="feat-title">World Map & Geopolitics</div>
+      <div class="feat-desc">Interactive Leaflet.js map with alliance overlays, population density, geopolitical risk layers, and a Future Geopolitics sub-tab for 2030–2050 scenario modelling.</div>
+      <span class="feat-tag">Interactive</span>
+    </div>
+    <div class="feat-card">
+      <div class="feat-icon">💱</div>
+      <div class="feat-title">Forex & Safe Haven Analysis</div>
+      <div class="feat-desc">10 major currency pairs with recession behaviour: USD/DXY, JPY, CHF, Gold, GBP, EUR, AUD, EM FX. Historical move data from BIS and Fed. Visual bar chart comparison.</div>
+      <span class="feat-tag amber">Traders</span>
+    </div>
+    <div class="feat-card">
+      <div class="feat-icon">📊</div>
+      <div class="feat-title">Markets & Crypto</div>
+      <div class="feat-desc">Live CoinGecko crypto prices, global stock exchange tracker (NYSE, Nasdaq, LSE, DAX, TSE, Shanghai), real-time market AI pulse, and per-asset AI analysis.</div>
+      <span class="feat-tag green">Live Data</span>
+    </div>
+    <div class="feat-card">
+      <div class="feat-icon">🌱</div>
+      <div class="feat-title">Environment & Climate</div>
+      <div class="feat-desc">Real-time AQI for 500+ cities via OpenAQ, top-10 most polluted/cleanest rankings, city comparison chart, and deforestation tracker with satellite data citations.</div>
+      <span class="feat-tag green">ESG</span>
+    </div>
+    <div class="feat-card">
+      <div class="feat-icon">📰</div>
+      <div class="feat-title">Global News Intelligence</div>
+      <div class="feat-desc">10 parallel live news tabs (World, Markets, Environment, Geopolitics, Middle East, Asia, Europe, Americas, Tech) with BBC, Reuters, Al Jazeera, DW. Auto-refresh 90s.</div>
+      <span class="feat-tag green">Live</span>
+    </div>
+    <div class="feat-card">
+      <div class="feat-icon">🤖</div>
+      <div class="feat-title">AI Analysis Engine</div>
+      <div class="feat-desc">On-demand MiniMax M2.7 AI synthesis across every major module. Generates intelligence summaries, scenario analysis, forex forecasts, and trading signals — all free.</div>
+      <span class="feat-tag">MiniMax M2.7</span>
+    </div>
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- DATA SOURCES STRIP -->
+<div class="sources-strip">
+  <div class="sources-label">Verified Free Data Sources — Every Figure Traceable</div>
+  <span class="source-chip">IMF WEO</span>
+  <span class="source-chip">World Bank</span>
+  <span class="source-chip">FRED (Fed)</span>
+  <span class="source-chip">BIS Statistics</span>
+  <span class="source-chip">OECD</span>
+  <span class="source-chip">ECB Data</span>
+  <span class="source-chip">Bank of Japan</span>
+  <span class="source-chip">Bank of England</span>
+  <span class="source-chip">NBER</span>
+  <span class="source-chip">World Gold Council</span>
+  <span class="source-chip">JPMorgan Research</span>
+  <span class="source-chip">OpenAQ</span>
+  <span class="source-chip">CoinGecko</span>
+  <span class="source-chip">Google News RSS</span>
+  <span class="source-chip">BBC RSS</span>
+  <span class="source-chip">Reuters RSS</span>
+  <span class="source-chip">Al Jazeera RSS</span>
+  <span class="source-chip">IIF Debt Monitor</span>
+  <span class="source-chip">UNCTAD</span>
+  <span class="source-chip">Swiss Re Sigma</span>
+  <span class="source-chip">MiniMax M2.7 AI</span>
+</div>
+
+<hr class="divider">
+
+<!-- USE CASES -->
+<section>
+  <div class="section-label">Professional Use Cases</div>
+  <div class="section-title">Where This Platform Delivers Value</div>
+  <div class="section-desc">Built for intelligence professionals across investment management, consulting, research, and policy — where speed and source credibility matter equally.</div>
+  <div class="use-cases-grid">
+    <div class="use-card">
+      <div class="use-card-title">🏦 Investment Management & Trading Desks</div>
+      <div class="use-card-body">Portfolio managers use the G10 Recession Radar and Forex panel to position ahead of central bank pivots. The STRONG/MODERATE/WATCH trader setup ratings replace hours of manual research.</div>
+    </div>
+    <div class="use-card">
+      <div class="use-card-title">📋 Macro Research & Strategy Teams</div>
+      <div class="use-card-body">Analysts use the Historical Atlas and 2025–2040 Forecast scenarios to produce country risk memos and sector rotation models. Every source is cited and clickable — audit-ready.</div>
+    </div>
+    <div class="use-card">
+      <div class="use-card-title">🏢 Management Consulting Firms</div>
+      <div class="use-card-body">Consultants use Rising Powers and World Map modules to brief clients on geopolitical risk and supply chain exposure — replacing $24,000/yr Bloomberg subscriptions for qualitative briefings.</div>
+    </div>
+    <div class="use-card">
+      <div class="use-card-title">🌍 Country Risk & Sovereign Advisory</div>
+      <div class="use-card-body">Risk analysts use the G10 deep-dive modals and Developed vs. Developing comparison to model contagion risk, debt sustainability, and currency crisis probability across 40+ countries.</div>
+    </div>
+    <div class="use-card">
+      <div class="use-card-title">♻️ ESG & Sustainability Research</div>
+      <div class="use-card-body">The Environment module provides real-time AQI, deforestation rates, and climate data for ESG scoring, country-level sustainability assessments, and regulatory compliance reporting.</div>
+    </div>
+    <div class="use-card">
+      <div class="use-card-title">🏛 Government & Policy Research</div>
+      <div class="use-card-body">Policy researchers use the Recession Intelligence and Rising Powers modules for structured, source-cited briefings, economic scenario planning, and budget stress-testing exercises.</div>
+    </div>
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- ADVANTAGE TABLE -->
+<section>
+  <div class="section-label">Competitive Advantage</div>
+  <div class="section-title">Why Firms Using This Platform Win</div>
+  <div class="section-desc">This platform replaces tools that cost tens of thousands of dollars per year — without compromising on source quality or analytical depth.</div>
+  <div style="overflow-x:auto;border-radius:12px;border:1px solid #1e1e2e;">
+    <table class="adv-table">
+      <thead>
+        <tr>
+          <th style="border-radius:12px 0 0 0;">❌ Without This Platform</th>
+          <th style="border-radius:0 12px 0 0;">✅ With This Platform</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>4–6 hours researching IMF, OECD, BIS separately</td><td>All 27+ sources unified in one dashboard, loaded in seconds</td></tr>
+        <tr><td>$24,000+/yr Bloomberg or Refinitiv subscription</td><td>Free, open, always updated — zero vendor dependency</td></tr>
+        <tr><td>Manual sector rotation analysis using Excel</td><td>14-sector cards with historical %, reasoning, and recovery order</td></tr>
+        <tr><td>Static PDF country risk memos, months out of date</td><td>Live G10 drill-downs with policy response, forex impact, green signals</td></tr>
+        <tr><td>Generic recession playbooks with no trade ratings</td><td>Structured setups rated STRONG / MODERATE / WATCH</td></tr>
+        <tr><td>Junior analyst research taking 3–5 business days</td><td>Senior-grade intelligence synthesis in under 60 seconds</td></tr>
+        <tr><td>No AI layer — all analysis is manual</td><td>MiniMax M2.7 on-demand AI in every major module</td></tr>
+        <tr><td>News monitored reactively via email alerts</td><td>10 parallel live news tabs, auto-refresh every 90 seconds</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- TECH STACK -->
+<section>
+  <div class="section-label">Technology</div>
+  <div class="section-title">Built to Last. Zero Dependencies.</div>
+  <div class="section-desc">A single HTML file with no build step, no backend, no framework, and no subscription — yet it outperforms most enterprise intelligence dashboards.</div>
+  <div class="tech-grid">
+    <div class="tech-pill"><div class="tech-pill-icon">🌐</div><div class="tech-pill-name">HTML5 / CSS3</div><div class="tech-pill-note">Pure vanilla</div></div>
+    <div class="tech-pill"><div class="tech-pill-icon">⚡</div><div class="tech-pill-name">Vanilla JS</div><div class="tech-pill-note">No framework</div></div>
+    <div class="tech-pill"><div class="tech-pill-icon">📈</div><div class="tech-pill-name">Chart.js</div><div class="tech-pill-note">Time series</div></div>
+    <div class="tech-pill"><div class="tech-pill-icon">🗺</div><div class="tech-pill-name">Leaflet.js</div><div class="tech-pill-note">World maps</div></div>
+    <div class="tech-pill"><div class="tech-pill-icon">🤖</div><div class="tech-pill-name">MiniMax M2.7</div><div class="tech-pill-note">AI engine</div></div>
+    <div class="tech-pill"><div class="tech-pill-icon">📰</div><div class="tech-pill-name">RSS Feeds</div><div class="tech-pill-note">Live news</div></div>
+    <div class="tech-pill"><div class="tech-pill-icon">🌱</div><div class="tech-pill-name">OpenAQ API</div><div class="tech-pill-note">AQI data</div></div>
+    <div class="tech-pill"><div class="tech-pill-icon">💰</div><div class="tech-pill-name">CoinGecko</div><div class="tech-pill-note">Crypto prices</div></div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<div class="page-footer">
+  <div class="footer-name">Muhammad Umer Lari</div>
+  <div class="footer-sub">Business Intelligence &amp; Global Analytics · World Intelligence Platform</div>
+  <div class="footer-links">
+    <a class="footer-link" href="https://github.com/lari98" target="_blank">🔗 GitHub</a>
+    <a class="footer-link" href="mailto:umerlari1998@gmail.com">📧 Contact</a>
+    <a class="footer-link" href="https://github.com/lari98/ai-churn-analytics-platform" target="_blank">📂 Repository</a>
+  </div>
+  <div class="footer-copy">
+    Copyright © 2024–2025 Muhammad Umer Lari · All Rights Reserved · Private Repository<br>
+    This platform is built entirely on free, publicly verifiable data sources. Not financial advice.
+  </div>
+</div>
+
+</body>
+</html>

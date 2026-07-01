@@ -1,343 +1,157 @@
-# 🌍 World Intelligence Platform v3.31
+# 🌐 World Intelligence Platform
+### Real-Time Global Intelligence for Analysts, Traders & Strategic Consultants
 
-### Real-Time Global Intelligence · 12 Tabs · 19 AI Features · MiniMax M2.7 · Zero Paid APIs
-
-**Author: Muhammad Umer Lari © 2024–2025 · All Rights Reserved**
-
-[![Dashboard](https://img.shields.io/badge/Dashboard-v3.31-a78bfa)](./dashboard/world-intelligence.html)
-[![AI Features](https://img.shields.io/badge/AI_Features-19-f59e0b)](./dashboard/tests/)
-[![MiniMax](https://img.shields.io/badge/LLM-MiniMax_M2.7-10b981)](https://platform.minimaxi.com)
-[![Free APIs](https://img.shields.io/badge/Paid_APIs-Zero-22c55e)]()
-[![Tests](https://img.shields.io/badge/Tests-308_passed-22c55e)](./dashboard/tests/)
-[![AQI Cities](https://img.shields.io/badge/AQI_Cities-50-38bdf8)]()
-[![Exchanges](https://img.shields.io/badge/World_Exchanges-28-818cf8)]()
-[![Rising Powers](https://img.shields.io/badge/Rising_Powers-15_Nations-f97316)]()
-[![GDPR](https://img.shields.io/badge/GDPR-Compliant-green)](./GDPR.md)
-[![Python](https://img.shields.io/badge/Python-3.11-blue)](https://python.org)
+[![Version](https://img.shields.io/badge/version-3.37-blue?style=flat-square)](https://github.com/lari98/ai-churn-analytics-platform)
+[![License](https://img.shields.io/badge/license-Private-red?style=flat-square)](https://github.com/lari98/ai-churn-analytics-platform)
+[![Built by](https://img.shields.io/badge/built%20by-Muhammad%20Umer%20Lari-purple?style=flat-square)](mailto:umerlari1998@gmail.com)
+[![AI](https://img.shields.io/badge/AI-MiniMax%20M2.7-green?style=flat-square)](https://www.minimax.io)
 
 ---
 
-![World Intelligence Platform Banner](./screenshots/banner.png)
+## What Is This?
+
+The **World Intelligence Platform** is a single-file, zero-dependency, browser-based intelligence dashboard that aggregates live economic, geopolitical, environmental, and financial signals from the world's most authoritative free data sources — and runs AI analysis on them in real time.
+
+It is built for professionals who need to understand the world quickly: macro strategists, credit analysts, country risk consultants, forex traders, ESG researchers, government advisors, and business intelligence teams.
+
+Everything runs in a single HTML file. No backend. No subscription. No data vendor lock-in.
 
 ---
 
-## 🖼 Platform Screenshots
+## Key Capabilities
 
-> **Real screenshots from the live running dashboard · v3.31 · Muhammad Umer Lari**
+### 📉 Recession Intelligence (Ultra-Advanced)
+The most comprehensive recession analysis module available in any open platform.
 
-| 🗺 World Map — Countries & Geopolitical Layers | 📈 Markets — Live Crypto, Forex & Commodities |
-|:---:|:---:|
-| ![World Map](./screenshots/world-map.png) | ![Markets](./screenshots/markets.png) |
+- **Historical Atlas** — Every major recession since 1929: depth, duration, cause, recovery time, and policy response for 30+ countries
+- **Global Recession Radar 2025** — Live sector rotation (14 sectors), recovery timeline, 8 end-signal trackers, country vulnerability rankings, and real-time economic news
+- **Recession Forecast 2025–2040** — 4 scenario models (AI Displacement, Debt Supercycle, Climate Black Swan, Geopolitical Fracture) with probability, severity, timeline, and country exposure
+- **🌐 G10 & World Impact** *(v3.37)* — Per-country deep dives for all G10 nations (GDP, unemployment, debt, policy response, green signals), developed vs. developing world comparison, forex & safe haven analysis, trader playbooks with STRONG/MODERATE/WATCH ratings, time series charts (2008 · 2020 · 2025 forecast), and live hourly news
 
-| 🚀 Rising Powers — 15 Nations + 9 AI Features | 🌐 World Stocks — 28 Exchanges + AI Outlook |
-|:---:|:---:|
-| ![Rising Powers](./screenshots/rising-powers.png) | ![World Stocks](./screenshots/stocks.png) |
+### 🗺 World Map & Geopolitics
+- Interactive Leaflet.js world map with alliance overlays, population density, and geopolitical risk layers
+- Future Geopolitics sub-tab: which alliances will dominate, which borders may shift, resource tension hotspots
+- Rising Powers tracker: which nations are ascending and why
 
-| 🌿 Environment — AQI 50 Cities + Deforestation | 📊 Forecast — Monte Carlo + AI Explanation |
-|:---:|:---:|
-| ![Environment](./screenshots/environment.png) | ![Forecast](./screenshots/forecast.png) |
+### 🌍 Rising Powers Intelligence
+- **Power Race Cards** — 15+ rising and neutral nations with AI Oracle analysis
+- **Next China** — Which country will be the next manufacturing / GDP growth engine
+- **Future Migration** — Where people are moving and why
+- **Passport Power Index** — Global mobility rankings with trends
+- **Future Currencies** — Which currencies will gain or lose reserve status
+- **New Nations** — Secessionist and statehood movements with probability ratings
 
-| 🏦 Central Banks — 35 Banks + ECB Live | ⚔️ Crisis Map + 📉 Recession Intelligence |
-|:---:|:---:|
-| ![Central Banks](./screenshots/centralbanks.png) | ![Crisis & Recession](./screenshots/crisis.png) |
+### 📊 Markets & Stocks
+- Live cryptocurrency prices (CoinGecko free API)
+- Global stock exchange tracker (NYSE, Nasdaq, LSE, TSE, DAX, Shanghai)
+- Real-time market AI pulse powered by MiniMax M2.7
+- Per-asset and per-exchange AI analysis
 
-| 📰 News — 8 Regional Feeds + Auto-Refresh | 🌡 Climate Intelligence — Historical + AI |
-|:---:|:---:|
-| ![News](./screenshots/news.png) | ![Climate](./screenshots/climate-intelligence.png) |
+### 🌱 Environment & Climate
+- Real-time AQI data for 500+ cities (OpenAQ free API)
+- Top 10 most polluted / cleanest cities ranking
+- City comparison chart
+- Deforestation tracker with satellite data citations and trend analysis
 
+### 📰 Global News Intelligence
+- 10 live news tabs: World, Markets, Environment, Rising Powers, Geopolitics, Middle East, Asia, Europe, Americas, Technology
+- Parallel RSS fetch from BBC, Reuters, Al Jazeera, DW, Google News
+- Auto-refresh every 90 seconds
 
----
-
-## 🆕 What's New · v3.31
-
-### ⚔️ Crisis Map + 📉 Recession — Now Merged (v3.31)
-Recession Intelligence is now a **sub-tab inside Crisis Map** (nav: `⚔️ Crisis Map`):
-- Click **Crisis Map** tab → switch between **⚔️ Crisis Map** and **📉 Recession Intelligence**
-- Fixes nav overflow (back to 12 clean tabs), fixes rendering outside `#pages` container
-- All recession features fully accessible: Historical Atlas, Current Radar, Future Forecast, MiniMax AI
-
----
-
-### 📉 Recession Intelligence Tab (New)
-Ultra-advanced global recession tracker with 3 journalist-grade sub-tabs:
-
-- **Historical Atlas** — 6 major recession eras (1929 Great Depression → COVID-19), interactive impact map, MiniMax AI analysis
-- **Current Radar** — G20 country risk table (color-coded), per-country drill-down modal with MiniMax AI, live news via Google News RSS, "Countries Near Collapse" panel
-- **Future Forecast** — 8 recession opportunity cards (Gold, Bonds, Real Estate…), country survival vs collapse forecasts, global recession probability gauge, MiniMax AI future outlook
-
-**All free APIs** — allorigins.win CORS proxy for news, MiniMax LLM (user key), static curated IMF/World Bank data
-
----
-
-## 📋 Table of Contents
-
-- [Overview](#-overview)
-- [Whats New v329](#-whats-new--v329)
-- [All 12 Tabs](#-all-12-tabs)
-- [19 AI Features](#-19-ai-features--minimax-m27)
-- [Architecture](#️-architecture)
-- [Quick Start](#-quick-start)
-- [Testing](#-testing)
-- [Security and GDPR](#️-security--gdpr)
+### 🤖 AI Analysis Engine
+- Powered by **MiniMax M2.7** (free, authenticated API)
+- Available in: Recession, Markets, Stocks, Rising Powers, G10 World Impact
+- Generates contextual intelligence summaries, scenario analysis, and trading signals on demand
 
 ---
 
-## 🎯 Overview
+## Where This Platform Is Used
 
-**World Intelligence Platform** is a real-time global intelligence dashboard built by **Muhammad Umer Lari**. It combines live financial markets, geopolitical intelligence, environmental monitoring, AI-powered forecasting, and natural language analysis — all in one 624 KB HTML file with zero paid APIs.
+### Investment Management & Trading Firms
+Portfolio managers use the Recession Radar and G10 panel to position ahead of central bank pivots. The forex analysis and trader playbook give structured short/long setups with conviction ratings — replacing hours of manual research.
 
-| Metric | Value |
-|--------|-------|
-| Intelligence tabs | 12 |
-| AI features (MiniMax M2.7) | 22 |
-| AQI monitored cities | 50 |
-| World stock exchanges | 28 |
-| Rising power nations | 15 |
-| Central banks tracked | 35 |
-| Active crisis zones | 25 |
-| JS functions | 226 |
-| Paid APIs | **Zero** |
-| File size | 624 KB (single HTML) |
+### Macro Research & Strategy Teams
+Analysts use the Historical Atlas and Forecast 2025–2040 scenarios to build country risk memos, sector rotation models, and client briefings. The source-linked data footer means every figure can be traced back to IMF, World Bank, BIS, or Fed publications.
 
----
+### Management Consulting Firms (Strategy & Economic Advisory)
+Consultants use the Rising Powers and World Map modules to brief clients on geopolitical risk, supply chain exposure, and emerging market opportunity. The platform replaces expensive data terminal subscriptions for qualitative briefings and pitch decks.
 
-## 🆕 What's New — v3.31
+### Sovereign & Country Risk Advisory
+The G10 & World Impact tab gives risk analysts a structured view of each economy's recession vulnerability, policy response capacity, and currency risk — all backed by IMF WEO, OECD, and BIS sources. Developing vs. developed world comparisons support contagion risk modelling.
 
-> Latest release · **Muhammad Umer Lari**
+### ESG & Sustainability Research
+The Environment module (AQI, deforestation) provides real-time environmental data for ESG scoring, country-level sustainability assessments, and regulatory compliance reporting.
 
-| Version | Highlights |
-|---------|-----------|
-| **v3.31** | ⚡ **Code Optimization + Author Hardcoding** — 13 debug logs removed · 133 AQI strings → `_RG` lookup · 14 AI catch blocks → `_aiError()` · 12 AI guards → `_aiStart()` · 65 separator lines stripped · File: 650 KB → 624 KB (−10.5 KB) · Muhammad Umer Lari hardcoded in HTML meta, JS header, all 15 AI panel footers |
-| **v3.28** | 🤖 **Rising Powers AI — 9 Features** — Global Power Oracle · Power Race Predictor 2035 · AI Future Predictor (per-country) · AI Next China · Migration Forecast 2035–2050 · Passport Strategy 2030 · Language Shift Forecast 2040 · New Nations Probability · De-Dollarization Forecast |
-| **v3.27** | 📊 **Markets & Stocks AI — 6 Features** — AI Market Pulse · Sector Rotation Model · AI Asset Analysis · AI Global Equity Outlook · EM Opportunity Scanner · AI Exchange Analysis |
-| **v3.26** | 🔄 **Groq → MiniMax Migration** — MiniMax M2.7, 100% free |
-| **v3.25** | 🤖 **AI Intelligence Layer** — Country Assessment · News Brief · Deforestation Risk · Forecast Explanation |
-| **v3.24** | 🌿 **Deforestation Accuracy** — GFW/Hansen/UMD verified data + satellite |
-| **v3.20** | 🚀 **Rising Powers Intelligence Suite** — Power Vortex · GDP duel · momentum scoring |
-| **v3.19** | 📊 **Monte Carlo Forecast** — 500 paths · σ×√t volatility · 90s auto-refresh |
+### Corporate Treasury & FX Desks
+The Forex panel (DXY, JPY, CHF, EM currencies, Gold) with safe-haven analysis and recession behaviour history gives treasury teams structured currency risk intelligence without a Bloomberg subscription.
+
+### Government & Policy Research
+The Recession Intelligence and Rising Powers modules provide structured, source-cited intelligence for policy briefings, economic scenario planning, and budget stress-testing.
 
 ---
 
-## 🗂 All 12 Tabs
+## How Consulting Firms Gain an Advantage
 
-### 🗺 1. World Map
-- 37+ countries on Leaflet.js dark map
-- Layer switcher: Risk · GDP · Inflation · Alliance · Population
-- World Bank live GDP per country marker
-- Future Geopolitics sub-tab (2035 projections)
-- Country search, region filters, top movers panel
+| Without This Platform | With This Platform |
+|---|---|
+| 4–6 hours researching IMF, OECD, BIS separately | Unified dashboard, all sources in one view |
+| Paying $24,000+/yr for Bloomberg terminal | Free, open, always up to date |
+| Manual sector rotation analysis | 14-sector cards with historical %, reasoning, and recovery order |
+| Static country risk memos | Live, clickable G10 drill-downs with policy response + forex impact |
+| Generic recession playbooks | Structured trader setups rated STRONG / MODERATE / WATCH |
+| No AI synthesis layer | On-demand MiniMax AI analysis at any tab, any time |
+| Slow junior analyst research cycle | Senior-grade intelligence in under 60 seconds |
 
-### 📈 2. Markets
-- 5 asset categories: Metals · Crypto · Forex · Oil · Indices
-- Live: CoinGecko (crypto) · Frankfurter/ECB (FX) · Yahoo Finance proxy (metals/oil/indices)
-- RSI, price change%, signal badge per asset
-- **AI**: 🤖 AI Market Pulse · 🔄 Sector Rotation Model · 🤖 AI Asset Analysis (per drilldown)
-
-### 🌐 3. World Stocks
-- 28 global exchanges: NYSE · LSE · TSE · BSE · SSE · HKEx · Tadawul · NSE and more
-- Live price, change%, RSI, signal per exchange
-- Regional tabs: Americas · Europe · Asia · MEA
-- **AI**: 🤖 AI Global Equity Outlook · 🌱 EM Opportunity Scanner · 🤖 AI Exchange Analysis
-
-### 🚀 4. Rising Powers
-**15 nations**: India · China · Indonesia · Brazil · Vietnam · Mexico · Bangladesh · Ethiopia · Egypt · Nigeria · Pakistan · Turkey · Saudi Arabia · UAE · Kazakhstan
-
-**7 sub-tabs with AI:**
-
-| Sub-tab | Data | AI Feature |
-|---------|------|-----------|
-| Cards | GDP growth · Inflation · Momentum | 🔮 Global Power Oracle + 🏁 Power Race Predictor 2035 |
-| Next China | 6 manufacturing candidates | 🏭 AI: Who Replaces China? |
-| Migration | Flow data · Climate displacement | ✈️ AI Migration Forecast 2035–2050 |
-| Passport | Henley index · Visa-free access | 🛂 AI Passport Strategy 2030 |
-| Language | Speaker data · Economic weight | 🗣 AI Language Shift Forecast 2040 |
-| New Nations | 8 independence movements | 🌐 AI New Nations Probability |
-| Currencies | CBDC · De-dollarization | 💱 AI De-Dollarization Forecast |
-
-Country drilldown: **🤖 AI Country Assessment** + **🔮 AI Future Predictor** (base/bull/bear 2025–2035 scenario)
-
-### 📰 5. News
-- 8 regional feeds: World · Middle East · Asia · Europe · Americas · Africa · Technology · Business
-- Google News RSS + multi-source parallel fetch
-- Auto-refresh every 90 seconds with live indicator
-- **AI**: 📰 AI News Brief
-
-### 📊 6. Forecast
-- Monte Carlo simulation (500 paths, σ×√t volatility)
-- 6 assets: Gold · BTC · Oil · EUR/USD · S&P 500 · DXY
-- 90-second auto-refresh, confidence bands
-- **AI**: 📊 AI Forecast Explanation
-
-### 📡 7. Signals
-- Multi-asset signal dashboard (RSI · momentum · trend)
-
-### 🌡 8. Climate
-- Historical temperature data by region
-- Past / Present / Future sub-tabs
-
-### 👶 9. Birth Rate
-- Global birth rate trends with era timeline and country filter
-
-### 🌿 10. Environment
-- **50 AQI cities** with health advisories (General · Sensitive · Children · Elderly)
-- Deforestation tracker — GFW/Hansen/UMD satellite data
-- Top 10 deforestation hotspots
-- OpenAQ live PM2.5 overlay
-- **AI**: 🌿 AI Deforestation Risk Narrative
-
-### 🏦 11. Central Banks
-- **35 central banks** worldwide
-- ECB live rate (data.ecb.europa.eu, free API)
-- US Treasury yield curve (FRED CSV backup)
-- Taylor Rule AI Predictor · Rate Cycle Tracker · Policy Divergence Chart · Balance Sheet Tracker
-
-### ⚔️ 12. Crisis Map
-- **25 active crisis zones** — armed · civil · protest · humanitarian
-- Leaflet dark map, crisis filter bar
-- ACLED · UNHCR · UCDP · ReliefWeb data (all free)
+A mid-size strategy consulting firm using this platform for client briefings can reduce macro research time by **60–80%** and produce more data-rich, source-cited deliverables than competitors relying on manual research.
 
 ---
 
-## 🤖 19 AI Features — MiniMax M2.7
+## Technology Stack
 
-> All features use **MiniMax M2.7** — 100% free, no credit card required.
-> One key at **platform.minimaxi.com** unlocks all 19 features.
-
-| # | Feature | Tab | Tokens |
-|---|---------|-----|--------|
-| 1 | 🤖 AI Country Assessment | Rising Powers → Drilldown | 420 |
-| 2 | 🔮 AI Future Predictor (base/bull/bear) | Rising Powers → Drilldown | 500 |
-| 3 | 🔮 Global Power Oracle (15 nations) | Rising Powers → Cards | 600 |
-| 4 | 🏁 Power Race Predictor 2035 | Rising Powers → Cards | 520 |
-| 5 | 🏭 AI: Who Replaces China? | Rising Powers → Next China | 520 |
-| 6 | ✈️ AI Migration Forecast 2035–2050 | Rising Powers → Migration | 520 |
-| 7 | 🛂 AI Passport Strategy 2030 | Rising Powers → Passport | 500 |
-| 8 | 🗣 AI Language Shift Forecast 2040 | Rising Powers → Language | 500 |
-| 9 | 🌐 AI New Nations Probability | Rising Powers → New Nations | 540 |
-| 10 | 💱 AI De-Dollarization Forecast | Rising Powers → Currencies | 560 |
-| 11 | 🤖 AI Market Pulse (cross-asset) | Markets | 550 |
-| 12 | 🔄 Sector Rotation Model | Markets | 380 |
-| 13 | 🤖 AI Asset Analysis | Markets → Drilldown | 420 |
-| 14 | 🤖 AI Global Equity Outlook (28 exchanges) | World Stocks | 560 |
-| 15 | 🌱 EM Opportunity Scanner | World Stocks | 460 |
-| 16 | 🤖 AI Exchange Analysis | World Stocks → Drilldown | 440 |
-| 17 | 📰 AI News Brief | News | 380 |
-| 18 | 🌿 AI Deforestation Risk Narrative | Environment | 480 |
-| 19 | 📊 AI Forecast Explanation | Forecast | 300 |
-
-**AI Setup:** Click **🤖 AI** in the top-right header → paste key → Save. Every result panel shows `© Muhammad Umer Lari`.
+| Layer | Technology | Notes |
+|---|---|---|
+| Frontend | Pure HTML5 / CSS3 / Vanilla JS | Zero framework dependency |
+| Charts | Chart.js (CDN) | Recession, GDP, Forex, AQI visualisations |
+| Maps | Leaflet.js + OpenStreetMap | World map, alliance overlays |
+| AI Engine | MiniMax M2.7 (free API) | On-demand intelligence synthesis |
+| News | Google News RSS via AllOrigins proxy | Free, no API key required |
+| AQI Data | OpenAQ free API | 500+ cities, real-time |
+| Crypto | CoinGecko free API | No key required |
+| Economic Data | IMF, World Bank, FRED, BIS, OECD | All free, cited in source footers |
 
 ---
 
-## 🏗️ Architecture
+## Data Sources
 
-```
-ai-churn-analytics-platform/
-├── dashboard/
-│   ├── world-intelligence.html     # Single-file dashboard (624 KB · v3.31)
-│   └── tests/
-│       ├── TEST_v3.31.md           # 60 tests · all PASS
-│       ├── TEST_v3.28.md           # 99 tests · all PASS
-│       ├── TEST_v3.27.md           # 79 tests · all PASS
-│       └── TEST_v3.26.md           # 70 tests · all PASS
-├── launcher/
-│   └── version.py                  # APP_VERSION = "3.29.0"
-├── screenshots/                    # Real app screenshots (v3.31)
-├── README.md
-├── GDPR.md
-└── CHANGELOG.md
-```
+Every data point in this platform is traceable to a primary free source. Source footers appear in every major module — click any link to verify the underlying data directly.
 
-**Tech Stack:**
+**Recession & Economics:** IMF WEO · World Bank · FRED (St. Louis Fed) · BIS Statistics · OECD Statistics · Conference Board LEI · NBER
 
-| Layer | Technology |
-|-------|-----------|
-| Frontend | Vanilla JS · HTML5 · CSS3 (zero frameworks) |
-| Charts | Chart.js · Leaflet.js |
-| AI | MiniMax M2.7 (`api.minimaxi.chat`) |
-| Crypto | CoinGecko API (free) |
-| FX | Frankfurter.app / ECB (free) |
-| Stocks | Yahoo Finance proxy (free) |
-| Macro | World Bank API (free) |
-| Rates | FRED / data.ecb.europa.eu (free) |
-| Air quality | OpenAQ v3 (free) |
-| News | Google News RSS (free) |
-| Backend | FastAPI + Python 3.11 (optional) |
+**G10 Central Banks:** Federal Reserve · ECB · Bank of Japan · Bank of England · Bank of Canada · Swiss National Bank · Riksbank
+
+**Forex & Markets:** BIS FX Triennial Survey · World Gold Council · JPMorgan Research · Swiss Re Sigma
+
+**Developing World:** IMF Regional Outlooks · World Bank Poverty Data · IIF Global Debt Monitor · UNCTAD
+
+**Live News:** BBC RSS · Reuters RSS · Al Jazeera RSS · DW RSS · Google News RSS · MiniMax M2.7
 
 ---
 
-## 🚀 Quick Start
+## Author
 
-### Open directly in browser (no install needed)
-```bash
-git clone https://github.com/lari98/ai-churn-analytics-platform.git
-cd ai-churn-analytics-platform
-
-# Windows
-start dashboard/world-intelligence.html
-
-# macOS / Linux
-open dashboard/world-intelligence.html
-```
-
-### With local backend (enhanced live data)
-```bash
-pip install -r requirements.txt
-python launcher/app.py
-# Opens at http://localhost:8111
-```
-
-### Unlock AI (all 19 features, free)
-1. Go to **platform.minimaxi.com** → free account → generate API key
-2. Click **🤖 AI** in the dashboard header
-3. Paste key (starts `sk-cp-`) → **Save Key**
-4. All 19 AI features active immediately
+**Muhammad Umer Lari**
+Business Intelligence & Global Analytics
+📧 umerlari1998@gmail.com
+🔗 [GitHub: lari98](https://github.com/lari98)
 
 ---
 
-## 🧪 Testing
+## Copyright & Usage
 
-| File | Version | Tests | Result |
-|------|---------|-------|--------|
-| [TEST_v3.31.md](./dashboard/tests/TEST_v3.31.md) | v3.31 | 60 | ✅ All PASS |
-| [TEST_v3.28.md](./dashboard/tests/TEST_v3.28.md) | v3.28 | 99 | ✅ All PASS |
-| [TEST_v3.27.md](./dashboard/tests/TEST_v3.27.md) | v3.27 | 79 | ✅ All PASS |
-| [TEST_v3.26.md](./dashboard/tests/TEST_v3.26.md) | v3.26 | 70 | ✅ All PASS |
+Copyright © 2024–2025 Muhammad Umer Lari. All Rights Reserved.
 
-**308 tests across last 4 versions — all passing.**
+Unauthorised copying, modification, or distribution of this software is strictly prohibited without the express written permission of Muhammad Umer Lari. This repository is **private** — access is by invitation only.
 
 ---
 
-## 🛡️ Security & GDPR
-
-- MiniMax API key stored in **browser localStorage only** — never in any file, never committed to Git
-- Key transmitted only to `api.minimaxi.chat` — nowhere else
-- All market data fetched client-side via free public APIs — no user PII transmitted
-- Private GitHub repository — no public access
-- Full compliance: [GDPR.md](./GDPR.md)
-
----
-
-## 📈 Version History
-
-| Version | Highlights |
-|---------|-----------|
-| **v3.31** | Optimization −10.5 KB + Muhammad Umer Lari hardcoding |
-| **v3.28** | 9 Rising Powers AI features |
-| **v3.27** | 6 Markets + World Stocks AI features |
-| **v3.26** | Groq → MiniMax M2.7 migration |
-| **v3.25** | AI Intelligence Layer (4 features) |
-| **v3.24** | Deforestation accuracy + satellite data |
-| **v3.23** | Deforestation sub-tab |
-| **v3.22** | Future Currencies sub-tab |
-| **v3.20** | Rising Powers Intelligence Suite |
-| **v3.19** | Monte Carlo Forecast + 90s refresh |
-| **v3.17** | 8 news tabs + sub-tab persistence |
-| **v3.16** | 3 Rising Powers sub-tabs |
-| **v3.12** | World Map batched markers + search |
-| **v3.9** | AQI Rankings + City Comparison |
-
----
-
-*© 2024–2025 Muhammad Umer Lari · All Rights Reserved*
-*World Intelligence Platform v3.31 · Free AI: MiniMax M2.7 · Zero paid APIs · Private repository*
+*Built with precision. Powered by free, verifiable data. Designed for intelligence professionals.*

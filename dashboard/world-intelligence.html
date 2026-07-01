@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="author" content="Muhammad Umer Lari">
   <meta name="copyright" content="Copyright © 2024-2025 Muhammad Umer Lari. All Rights Reserved.">
-<title>World Intelligence Platform v3.36</title>
+<title>World Intelligence Platform v3.37</title>
 <!-- Leaflet -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css"/>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
@@ -855,7 +855,7 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:'Segoe 
 <div id="topbar">
   <a href="index.html">← Dashboard</a>
   <span class="title">🌍 World Intelligence Platform</span>
-  <span class="badge">v3.36</span><button onclick="_showAISetup()" title="Configure free MiniMax AI key (100% free)" style="margin-left:8px;background:linear-gradient(135deg,#7c3aed,#4f46e5);color:#fff;border:none;border-radius:6px;padding:3px 10px;cursor:pointer;font-size:11px;font-weight:700;">🤖 AI</button>
+  <span class="badge">v3.37</span><button onclick="_showAISetup()" title="Configure free MiniMax AI key (100% free)" style="margin-left:8px;background:linear-gradient(135deg,#7c3aed,#4f46e5);color:#fff;border:none;border-radius:6px;padding:3px 10px;cursor:pointer;font-size:11px;font-weight:700;">🤖 AI</button>
   <div style="display:flex;align-items:center;gap:6px;margin-left:auto;margin-right:16px;">
     <div class="live-dot"></div><span style="font-size:11px;color:var(--muted);">Live</span>
   </div>
@@ -2543,6 +2543,70 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:'Segoe 
         <button class="rec-ai-btn" onclick="recAI('g10world')">⚡ Generate G10 Recession Impact &amp; Forex Forecast</button>
         <div class="rec-ai-output" id="rec-ai-g10world"></div>
       </div>
+
+
+    <!-- G10 SOURCE FOOTER -->
+    <div id="g10-source-footer-block" style="margin-top:28px;padding:18px 20px;background:var(--bg);border-radius:10px;border:1px solid var(--border);border-top:3px solid #60a5fa;">
+      <div style="font-size:10px;font-weight:800;color:#60a5fa;letter-spacing:.5px;margin-bottom:14px;">📚 DATA SOURCES — WHERE THIS INTELLIGENCE COMES FROM</div>
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:16px;">
+
+        <div>
+          <div style="font-size:9px;font-weight:800;color:var(--muted);letter-spacing:.5px;margin-bottom:8px;padding-bottom:4px;border-bottom:1px solid var(--border);">🏦 G10 CENTRAL BANKS</div>
+          <div style="display:flex;flex-direction:column;gap:4px;">
+            <a href="https://www.federalreserve.gov/releases/h15/" target="_blank" style="font-size:10px;color:#60a5fa;text-decoration:none;" title="Federal Reserve interest rate & monetary data">Federal Reserve (FRED)</a>
+            <a href="https://www.ecb.europa.eu/stats/html/index.en.html" target="_blank" style="font-size:10px;color:#60a5fa;text-decoration:none;" title="European Central Bank statistics">ECB Statistical Data</a>
+            <a href="https://www.boj.or.jp/en/statistics/" target="_blank" style="font-size:10px;color:#60a5fa;text-decoration:none;" title="Bank of Japan statistics portal">Bank of Japan</a>
+            <a href="https://www.bankofengland.co.uk/statistics" target="_blank" style="font-size:10px;color:#60a5fa;text-decoration:none;" title="Bank of England statistics">Bank of England</a>
+            <a href="https://www.bankofcanada.ca/rates/" target="_blank" style="font-size:10px;color:#60a5fa;text-decoration:none;" title="Bank of Canada rates and data">Bank of Canada</a>
+            <a href="https://www.snb.ch/en/iabout/stat/statpub" target="_blank" style="font-size:10px;color:#60a5fa;text-decoration:none;" title="Swiss National Bank publications">Swiss National Bank</a>
+            <a href="https://www.riksbank.se/en-gb/statistics/" target="_blank" style="font-size:10px;color:#60a5fa;text-decoration:none;" title="Riksbank Sweden statistics">Riksbank (Sweden)</a>
+          </div>
+        </div>
+
+        <div>
+          <div style="font-size:9px;font-weight:800;color:var(--muted);letter-spacing:.5px;margin-bottom:8px;padding-bottom:4px;border-bottom:1px solid var(--border);">📊 GDP & MACRO INDICATORS</div>
+          <div style="display:flex;flex-direction:column;gap:4px;">
+            <a href="https://www.imf.org/en/Publications/WEO" target="_blank" style="font-size:10px;color:#60a5fa;text-decoration:none;" title="IMF World Economic Outlook">IMF World Economic Outlook</a>
+            <a href="https://data.worldbank.org/indicator/NY.GDP.MKTP.KD.ZG" target="_blank" style="font-size:10px;color:#60a5fa;text-decoration:none;" title="World Bank GDP growth data">World Bank GDP Growth</a>
+            <a href="https://stats.oecd.org/" target="_blank" style="font-size:10px;color:#60a5fa;text-decoration:none;" title="OECD economic statistics portal">OECD Statistics</a>
+            <a href="https://www.bis.org/statistics/index.htm" target="_blank" style="font-size:10px;color:#60a5fa;text-decoration:none;" title="Bank for International Settlements stats">BIS Statistics</a>
+            <a href="https://eurostat.ec.europa.eu/" target="_blank" style="font-size:10px;color:#60a5fa;text-decoration:none;" title="Eurostat EU statistics">Eurostat</a>
+            <a href="https://www.oecd.org/economy/economicoutlook.htm" target="_blank" style="font-size:10px;color:#60a5fa;text-decoration:none;" title="OECD Economic Outlook publication">OECD Economic Outlook</a>
+            <a href="https://www.nber.org/research/data" target="_blank" style="font-size:10px;color:#60a5fa;text-decoration:none;" title="NBER recession dating and data">NBER Recession Data</a>
+          </div>
+        </div>
+
+        <div>
+          <div style="font-size:9px;font-weight:800;color:var(--muted);letter-spacing:.5px;margin-bottom:8px;padding-bottom:4px;border-bottom:1px solid var(--border);">💱 FOREX &amp; SAFE HAVENS</div>
+          <div style="display:flex;flex-direction:column;gap:4px;">
+            <a href="https://www.bis.org/statistics/rpfx22.htm" target="_blank" style="font-size:10px;color:#60a5fa;text-decoration:none;" title="BIS Triennial Central Bank Survey of FX">BIS FX Triennial Survey</a>
+            <a href="https://fred.stlouisfed.org/series/DTWEXBGS" target="_blank" style="font-size:10px;color:#60a5fa;text-decoration:none;" title="US Dollar Index (DXY) - FRED">USD Dollar Index (FRED)</a>
+            <a href="https://www.gold.org/goldhub/data/gold-prices" target="_blank" style="font-size:10px;color:#60a5fa;text-decoration:none;" title="World Gold Council price data">World Gold Council</a>
+            <a href="https://fred.stlouisfed.org/series/T10Y2Y" target="_blank" style="font-size:10px;color:#60a5fa;text-decoration:none;" title="US Treasury 10Y-2Y Yield Spread">FRED Yield Spread T10Y2Y</a>
+            <a href="https://www.imf.org/en/Publications/GFSR" target="_blank" style="font-size:10px;color:#60a5fa;text-decoration:none;" title="IMF Global Financial Stability Report">IMF GFSR</a>
+            <a href="https://www.jpmorgan.com/insights/research/market-outlook" target="_blank" style="font-size:10px;color:#60a5fa;text-decoration:none;" title="JPMorgan Guide to the Markets">JPMorgan Research</a>
+            <a href="https://www.swissre.com/institute/research/sigma-research.html" target="_blank" style="font-size:10px;color:#60a5fa;text-decoration:none;" title="Swiss Re Sigma economic research">Swiss Re Sigma</a>
+          </div>
+        </div>
+
+        <div>
+          <div style="font-size:9px;font-weight:800;color:var(--muted);letter-spacing:.5px;margin-bottom:8px;padding-bottom:4px;border-bottom:1px solid var(--border);">🌍 DEVELOPING &amp; EM WORLD</div>
+          <div style="display:flex;flex-direction:column;gap:4px;">
+            <a href="https://www.imf.org/en/Publications/REO" target="_blank" style="font-size:10px;color:#60a5fa;text-decoration:none;" title="IMF Regional Economic Outlooks">IMF Regional Outlooks</a>
+            <a href="https://www.worldbank.org/en/topic/poverty" target="_blank" style="font-size:10px;color:#60a5fa;text-decoration:none;" title="World Bank poverty & developing data">World Bank Poverty Data</a>
+            <a href="https://iif.com/Research/Publications/article/Global-Debt-Monitor" target="_blank" style="font-size:10px;color:#60a5fa;text-decoration:none;" title="Institute of International Finance debt monitor">IIF Global Debt Monitor</a>
+            <a href="https://unctad.org/topic/macroeconomic-policy/economic-analysis" target="_blank" style="font-size:10px;color:#60a5fa;text-decoration:none;" title="UNCTAD economic analysis for developing nations">UNCTAD Economic Analysis</a>
+            <a href="https://news.google.com/rss/search?q=G10+recession+economy&hl=en" target="_blank" style="font-size:10px;color:#60a5fa;text-decoration:none;" title="Live Google News RSS — G10 economy">Google News RSS (Live)</a>
+            <a href="https://www.reuters.com/business/finance/" target="_blank" style="font-size:10px;color:#60a5fa;text-decoration:none;" title="Reuters Finance news">Reuters Finance</a>
+            <a href="https://www.ft.com/global-economy" target="_blank" style="font-size:10px;color:#60a5fa;text-decoration:none;" title="Financial Times global economy coverage">Financial Times</a>
+          </div>
+        </div>
+
+      </div>
+      <div style="margin-top:12px;padding-top:10px;border-top:1px solid var(--border);font-size:9px;color:var(--muted);line-height:1.6;">
+        ⚠️ <strong>Disclaimer:</strong> All G10 GDP figures = IMF/World Bank historical recession averages (2008, 2020) + 2025 scenario projections. Forex moves = BIS/Fed historical data from equivalent recession episodes. Trader setups = educational analysis only, not financial advice. Country status assessments based on Q2 2025 data from central bank publications. Not investment advice.
+      </div>
+    </div>
 
     </div><!-- /rec-g10world -->
 
