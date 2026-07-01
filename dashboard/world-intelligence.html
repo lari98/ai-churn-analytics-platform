@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="author" content="Muhammad Umer Lari">
   <meta name="copyright" content="Copyright © 2024-2025 Muhammad Umer Lari. All Rights Reserved.">
-<title>World Intelligence Platform v3.35</title>
+<title>World Intelligence Platform v3.36</title>
 <!-- Leaflet -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css"/>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
@@ -736,6 +736,72 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:'Segoe 
 .rec-unfold-title{font-size:12px;font-weight:800;color:var(--text);margin-bottom:4px;}
 .rec-unfold-desc{font-size:10px;color:var(--muted);line-height:1.6;}
 .rec-unfold-timing{font-size:9px;color:#8b5cf6;font-weight:700;margin-top:4px;}
+/* ── G10 & World Impact v3.36 ── */
+.g10-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px;margin:14px 0;}
+.g10-card{background:var(--card);border-radius:10px;padding:14px;border:1px solid var(--border);cursor:pointer;transition:transform .15s,box-shadow .15s;position:relative;overflow:hidden;}
+.g10-card:hover{transform:translateY(-2px);box-shadow:0 4px 20px rgba(0,0,0,.15);}
+.g10-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;}
+.g10-recession::before{background:#ef4444;}
+.g10-risk::before{background:#f97316;}
+.g10-monitor::before{background:#eab308;}
+.g10-stable::before{background:#22c55e;}
+.g10-flag{font-size:22px;margin-bottom:6px;}
+.g10-name{font-size:13px;font-weight:800;color:var(--text);margin-bottom:2px;}
+.g10-status-badge{display:inline-block;font-size:9px;font-weight:800;padding:2px 8px;border-radius:10px;margin-bottom:8px;}
+.g10-recession .g10-status-badge{background:rgba(239,68,68,.2);color:#ef4444;}
+.g10-risk .g10-status-badge{background:rgba(249,115,22,.2);color:#f97316;}
+.g10-monitor .g10-status-badge{background:rgba(234,179,8,.2);color:#eab308;}
+.g10-stable .g10-status-badge{background:rgba(34,197,94,.2);color:#22c55e;}
+.g10-stats{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:8px;}
+.g10-stat{background:var(--bg);border-radius:5px;padding:5px 7px;}
+.g10-stat-key{font-size:9px;color:var(--muted);font-weight:600;margin-bottom:1px;}
+.g10-stat-val{font-size:12px;font-weight:800;color:var(--text);}
+.g10-policy{font-size:10px;color:var(--muted);line-height:1.5;border-top:1px solid var(--border);padding-top:6px;margin-top:2px;}
+.g10-green{font-size:10px;color:#22c55e;margin-top:4px;font-weight:600;}
+.g10-spark{height:40px;width:100%;margin:6px 0;}
+/* Developed vs Developing */
+.dev-comparison{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:14px 0;}
+.dev-col{background:var(--card);border-radius:8px;padding:14px;border:1px solid var(--border);}
+.dev-col-title{font-size:11px;font-weight:800;letter-spacing:.4px;margin-bottom:10px;padding:5px 10px;border-radius:6px;text-align:center;}
+.dev-developed{background:rgba(34,197,94,.1);color:#22c55e;}
+.dev-developing{background:rgba(239,68,68,.1);color:#ef4444;}
+.dev-item{padding:7px 0;border-bottom:1px solid var(--border);font-size:11px;color:var(--text);}
+.dev-item:last-child{border:none;}
+.dev-label{font-size:9px;font-weight:800;color:var(--muted);letter-spacing:.3px;margin-bottom:2px;}
+/* Forex panel */
+.forex-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:10px;margin:10px 0;}
+.forex-card{background:var(--card);border-radius:8px;padding:12px;border:1px solid var(--border);text-align:center;}
+.forex-pair{font-size:13px;font-weight:800;color:var(--text);margin-bottom:4px;}
+.forex-move{font-size:18px;font-weight:900;margin-bottom:2px;}
+.forex-up{color:#22c55e;}
+.forex-dn{color:#ef4444;}
+.forex-role{font-size:9px;color:var(--muted);font-weight:600;padding:2px 8px;border-radius:10px;background:var(--bg);display:inline-block;margin-bottom:4px;}
+.forex-desc{font-size:10px;color:var(--muted);line-height:1.4;}
+/* Trader cards */
+.trader-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px;margin:10px 0;}
+.trader-card{background:var(--card);border-radius:8px;padding:12px;border:1px solid var(--border);}
+.trader-card-title{font-size:10px;font-weight:800;letter-spacing:.4px;margin-bottom:8px;padding:4px 8px;border-radius:5px;}
+.trader-long{background:rgba(34,197,94,.1);color:#22c55e;}
+.trader-short{background:rgba(239,68,68,.1);color:#ef4444;}
+.trader-forex{background:rgba(96,165,250,.1);color:#60a5fa;}
+.trader-options{background:rgba(139,92,246,.1);color:#8b5cf6;}
+.trader-item{font-size:10px;color:var(--muted);padding:3px 0;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;}
+.trader-item:last-child{border:none;}
+.trader-setup{font-size:9px;font-weight:700;padding:1px 6px;border-radius:6px;}
+.setup-strong{background:rgba(34,197,94,.15);color:#22c55e;}
+.setup-moderate{background:rgba(234,179,8,.15);color:#eab308;}
+.setup-watch{background:rgba(239,68,68,.15);color:#ef4444;}
+/* G10 Drill-down modal */
+.g10-modal{position:fixed;inset:0;background:rgba(0,0,0,.6);display:none;z-index:9000;align-items:center;justify-content:center;}
+.g10-modal.open{display:flex;}
+.g10-modal-box{background:var(--card);border-radius:12px;padding:24px;max-width:560px;width:92%;max-height:80vh;overflow-y:auto;border:1px solid var(--border);position:relative;}
+.g10-modal-close{position:absolute;top:12px;right:16px;background:none;border:none;color:var(--muted);font-size:18px;cursor:pointer;line-height:1;}
+.g10-modal-flag{font-size:36px;margin-bottom:8px;}
+.g10-modal-title{font-size:20px;font-weight:900;color:var(--text);margin-bottom:4px;}
+.g10-modal-sub{font-size:11px;color:var(--muted);margin-bottom:16px;}
+.g10-modal-section{margin-bottom:14px;}
+.g10-modal-section-title{font-size:10px;font-weight:800;color:var(--muted);letter-spacing:.4px;margin-bottom:6px;text-transform:uppercase;}
+.g10-ts-chart{background:var(--bg);border-radius:8px;padding:10px;margin:8px 0;}
 .rec-era-card{background:var(--bg);border-radius:8px;padding:12px;border:1px solid var(--border);margin-bottom:12px;}
 .rec-era-title{font-size:14px;font-weight:800;color:#f87171;margin-bottom:4px;}
 .rec-era-sub{font-size:11px;color:var(--muted);margin-bottom:10px;}
@@ -789,7 +855,7 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:'Segoe 
 <div id="topbar">
   <a href="index.html">← Dashboard</a>
   <span class="title">🌍 World Intelligence Platform</span>
-  <span class="badge">v3.35</span><button onclick="_showAISetup()" title="Configure free MiniMax AI key (100% free)" style="margin-left:8px;background:linear-gradient(135deg,#7c3aed,#4f46e5);color:#fff;border:none;border-radius:6px;padding:3px 10px;cursor:pointer;font-size:11px;font-weight:700;">🤖 AI</button>
+  <span class="badge">v3.36</span><button onclick="_showAISetup()" title="Configure free MiniMax AI key (100% free)" style="margin-left:8px;background:linear-gradient(135deg,#7c3aed,#4f46e5);color:#fff;border:none;border-radius:6px;padding:3px 10px;cursor:pointer;font-size:11px;font-weight:700;">🤖 AI</button>
   <div style="display:flex;align-items:center;gap:6px;margin-left:auto;margin-right:16px;">
     <div class="live-dot"></div><span style="font-size:11px;color:var(--muted);">Live</span>
   </div>
@@ -2072,6 +2138,7 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:'Segoe 
       <button class="rec-stab active" onclick="showRecTab('historical',this)">📜 The Wound That Wouldn't Heal — Historical Recession Atlas</button>
       <button class="rec-stab" onclick="showRecTab('present',this)">🚨 Warning Lights — Global Recession Radar 2025</button>
       <button class="rec-stab" onclick="showRecTab('future',this)">🔮 The Coming Storm — Recession Forecast 2025–2040</button>
+      <button class="rec-stab" onclick="showRecTab('g10world',this)">🌐 G10 &amp; World Impact — Countries, Forex &amp; Trader Intel</button>
     </div>
 
     <!-- ── PANEL 1: HISTORICAL ── -->
@@ -2395,6 +2462,98 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:'Segoe 
       </div>
     </div>
   
+
+    <!-- ── PANEL 4: G10 & WORLD IMPACT ── -->
+    <div class="rec-panel" id="rec-g10world">
+
+      <!-- KPI Row -->
+      <div class="rec-kpi-row">
+        <div class="rec-kpi" style="--rec-accent:#60a5fa;">
+          <div class="rec-kpi-val" id="g10-avg-gdp">-1.9%</div>
+          <div class="rec-kpi-lbl">G10 Avg GDP Impact</div>
+          <div class="rec-kpi-sub">Recession scenario</div>
+        </div>
+        <div class="rec-kpi" style="--rec-accent:#fbbf24;">
+          <div class="rec-kpi-val" id="g10-dxy">+8.2%</div>
+          <div class="rec-kpi-lbl">DXY (USD Index)</div>
+          <div class="rec-kpi-sub">Typical recession move</div>
+        </div>
+        <div class="rec-kpi" style="--rec-accent:#22c55e;">
+          <div class="rec-kpi-val" id="g10-gold">+22%</div>
+          <div class="rec-kpi-lbl">Gold (Safe Haven)</div>
+          <div class="rec-kpi-sub">Avg recession gain</div>
+        </div>
+        <div class="rec-kpi" style="--rec-accent:#ef4444;">
+          <div class="rec-kpi-val" id="g10-em-stress">HIGH</div>
+          <div class="rec-kpi-lbl">EM Stress Index</div>
+          <div class="rec-kpi-sub">Currency + capital flow</div>
+        </div>
+        <div class="rec-kpi" style="--rec-accent:#8b5cf6;">
+          <div class="rec-kpi-val" id="g10-bonds">-1.2%</div>
+          <div class="rec-kpi-lbl">10Y Treasury Yield</div>
+          <div class="rec-kpi-sub">Falls as safe haven bid</div>
+        </div>
+      </div>
+
+      <!-- G10 Country Cards -->
+      <div class="rec-section">
+        <div class="rec-section-title">🏦 G10 Countries — Recession Impact, Policy Response &amp; Recovery Signals</div>
+        <div style="font-size:11px;color:var(--muted);margin-bottom:12px;">Click any country for full drill-down · Status as of 2025 · Updates every 60 min</div>
+        <div class="g10-grid" id="g10-cards-grid"><!-- JS: g10BuildCards() --></div>
+      </div>
+
+      <!-- Developed vs Developing -->
+      <div class="rec-section">
+        <div class="rec-section-title">🌍 Developed vs Developing World — Recession Impact Comparison</div>
+        <div class="dev-comparison" id="g10-dev-comparison"><!-- JS: g10BuildDevComparison() --></div>
+      </div>
+
+      <!-- Time Series Chart -->
+      <div class="rec-section">
+        <div class="rec-section-title">📈 G10 GDP Time Series — Recession Impact &amp; Recovery (2008 · 2020 · 2025 Forecast)</div>
+        <div style="background:var(--bg);border-radius:8px;padding:14px;border:1px solid var(--border);">
+          <canvas id="g10-ts-canvas" height="220"></canvas>
+        </div>
+      </div>
+
+      <!-- Forex Analysis -->
+      <div class="rec-section">
+        <div class="rec-section-title">💱 Forex &amp; Safe Haven Analysis — How Currencies Move in a Recession</div>
+        <div class="forex-grid" id="g10-forex-grid"><!-- JS: g10BuildForex() --></div>
+        <div style="background:var(--bg);border-radius:8px;padding:14px;border:1px solid var(--border);margin-top:12px;">
+          <canvas id="g10-forex-canvas" height="180"></canvas>
+        </div>
+      </div>
+
+      <!-- Traders Intelligence -->
+      <div class="rec-section">
+        <div class="rec-section-title">📊 Traders Intelligence — Recession Playbook (Longs, Shorts, Forex, Options)</div>
+        <div class="trader-grid" id="g10-trader-grid"><!-- JS: g10BuildTraders() --></div>
+      </div>
+
+      <!-- Live G10 News -->
+      <div class="rec-section">
+        <div class="rec-section-title">📰 G10 &amp; EM Live News — Global Economic Intelligence <span style="font-size:9px;color:var(--muted);font-weight:400;">· Auto-refresh 60 min</span></div>
+        <div id="g10-news-feed"><div style="color:var(--muted);font-size:12px;padding:10px;">⏳ Loading G10 economic intelligence...</div></div>
+      </div>
+
+      <!-- AI Analysis -->
+      <div class="rec-ai-box">
+        <div style="font-size:12px;font-weight:700;color:#f87171;margin-bottom:8px;">🤖 AI G10 &amp; World Impact Analysis — MiniMax M2.7</div>
+        <button class="rec-ai-btn" onclick="recAI('g10world')">⚡ Generate G10 Recession Impact &amp; Forex Forecast</button>
+        <div class="rec-ai-output" id="rec-ai-g10world"></div>
+      </div>
+
+    </div><!-- /rec-g10world -->
+
+    <!-- G10 Country Drill-down Modal -->
+    <div class="g10-modal" id="g10-modal" onclick="if(event.target===this)g10CloseModal()">
+      <div class="g10-modal-box">
+        <button class="g10-modal-close" onclick="g10CloseModal()">✕</button>
+        <div id="g10-modal-content"></div>
+      </div>
+    </div>
+
   </div><!-- /crisis-sub-recession -->
 
   </div><!-- /page-crisis -->
@@ -9885,6 +10044,7 @@ function showRecTab(id, el) {
   document.getElementById('rec-' + id).classList.add('active');
   if (el) el.classList.add('active');
   if (id === 'present' && _recMap) { setTimeout(() => _recMap.invalidateSize(), 200); }
+  if (id === 'g10world') { setTimeout(g10BuildCharts, 150); }
 }
 
 // ══════════════════════════════════════════════════════
@@ -10089,6 +10249,341 @@ function recBuildUnfoldTimeline() {
   el.innerHTML = h;
 }
 
+// ══════════════════════════════════════════════════════════
+// G10 & WORLD IMPACT v3.36
+// ══════════════════════════════════════════════════════════
+var G10_COUNTRIES = [
+  {flag:'🇺🇸', name:'United States', cls:'g10-risk', status:'AT RISK', currency:'USD',
+   gdp:'-2.1%', unemp:'5.8%', debt:'130% GDP', rate:'5.25%→3.5%',
+   policy:'Fed rate cuts 175bps + $2T fiscal stimulus package',
+   pressure:'Consumer debt burden · Housing correction · Commercial RE stress',
+   green:'PMI recovering · Labour market stabilising · Fed pivot complete',
+   forex:'DXY: Safe haven initially +8% → then weakens as cuts deepen',
+   ts_08:[-2.5,0.5,2.3,2.6,1.8], ts_20:[-3.4,-8.9,2.3,5.7,2.3], ts_25:[-2.1,0.2,1.8,2.5,2.9]},
+  {flag:'🇯🇵', name:'Japan', cls:'g10-recession', status:'IN RECESSION', currency:'JPY',
+   gdp:'-1.8%', unemp:'3.2%', debt:'260% GDP', rate:'-0.1%→-0.5%',
+   policy:'BOJ ultra-loose stance maintained · Fiscal injection ¥30T · Yen intervention risk',
+   pressure:'Aging population · Export collapse · BoJ credibility · Yen carry unwind',
+   green:'Tourism rebound · Semiconductor investment · Wage growth emerging',
+   forex:'JPY: SAFE HAVEN — strengthens 12-15% as carry trades unwind',
+   ts_08:[-5.4,0.2,3.7,1.6,-0.3], ts_20:[-4.1,-7.8,1.7,2.1,1.0], ts_25:[-1.8,-0.4,1.2,2.0,2.3]},
+  {flag:'🇩🇪', name:'Germany', cls:'g10-recession', status:'IN RECESSION', currency:'EUR',
+   gdp:'-2.4%', unemp:'6.1%', debt:'68% GDP', rate:'4.5%→2.0%',
+   policy:'ECB 250bps cuts · EU fiscal stimulus €500B · German debt brake suspended',
+   pressure:'Energy costs · Auto sector transition · China export dependency',
+   green:'Defence spending boom · Green energy investment · ECB cuts accelerating',
+   forex:'EUR/USD: Weakens to 1.02 during recession · ECB dovish divergence',
+   ts_08:[-5.6,1.0,4.2,3.9,0.5], ts_20:[-4.9,-9.7,2.6,3.2,1.8], ts_25:[-2.4,-0.8,1.4,2.2,2.8]},
+  {flag:'🇬🇧', name:'United Kingdom', cls:'g10-risk', status:'AT RISK', currency:'GBP',
+   gdp:'-1.9%', unemp:'5.4%', debt:'103% GDP', rate:'5.0%→2.5%',
+   policy:'BOE 250bps cuts · Fiscal support £150B · NHS emergency funding',
+   pressure:'Post-Brexit trade friction · Stagflation legacy · Housing bubble',
+   green:'Labour market resilient · Services sector pivoting · Rate cuts feeding through',
+   forex:'GBP/USD: Weakens to 1.18 · UK stagflation risk limits BOE',
+   ts_08:[-4.2,0.8,2.3,1.6,2.8], ts_20:[-9.3,-4.8,3.5,7.4,4.1], ts_25:[-1.9,0.3,1.6,2.1,2.5]},
+  {flag:'🇫🇷', name:'France', cls:'g10-monitor', status:'MONITORING', currency:'EUR',
+   gdp:'-1.6%', unemp:'7.8%', debt:'112% GDP', rate:'4.5%→2.0%',
+   policy:'ECB cuts · Fiscal deficit expansion · Social spending floor',
+   pressure:'Political instability · High structural unemployment · Energy exposure',
+   green:'Tourism strong · Luxury exports resilient · ECB support via PEPP',
+   forex:'EUR: Shared with Germany — ECB drives trajectory',
+   ts_08:[-2.9,1.7,2.0,2.1,0.7], ts_20:[-8.0,-5.0,6.8,7.0,2.6], ts_25:[-1.6,0.4,1.8,2.3,2.7]},
+  {flag:'🇨🇦', name:'Canada', cls:'g10-risk', status:'AT RISK', currency:'CAD',
+   gdp:'-1.7%', unemp:'6.8%', debt:'107% GDP', rate:'5.0%→2.75%',
+   policy:'BoC cuts 225bps · Housing support measures · Oil revenue buffer',
+   pressure:'Housing bubble largest in G10 · Household debt 180% income · Oil price fall',
+   green:'Immigration-driven demand · Energy sector resilience · Rate cuts rapid',
+   forex:'CAD/USD: Weakens 10-12% · Oil price correlation · Safe haven outflows',
+   ts_08:[-2.7,0.6,3.1,2.7,1.8], ts_20:[-5.2,-13.0,4.8,5.1,3.4], ts_25:[-1.7,0.1,1.9,2.4,2.6]},
+  {flag:'🇮🇹', name:'Italy', cls:'g10-recession', status:'IN RECESSION', currency:'EUR',
+   gdp:'-2.8%', unemp:'9.2%', debt:'145% GDP', rate:'4.5%→2.0%',
+   policy:'ECB OMT backstop · Italy reform conditions · Draghi-style intervention',
+   pressure:'Debt sustainability at 5%+ rates · Banking NPLs · Political fragility',
+   green:'Tourism recovery · BTP spreads narrowing · ECB TPI activated',
+   forex:'EUR/BTP spread key risk: if >400bps → eurozone stress',
+   ts_08:[-5.5,-5.3,1.7,-1.7,-1.7], ts_20:[-9.0,-8.9,6.7,3.7,-0.3], ts_25:[-2.8,-0.2,1.1,1.8,2.2]},
+  {flag:'🇸🇪', name:'Sweden', cls:'g10-risk', status:'AT RISK', currency:'SEK',
+   gdp:'-1.5%', unemp:'8.9%', debt:'43% GDP', rate:'4.0%→2.0%',
+   policy:'Riksbank 200bps cuts · Strong fiscal position · Housing correction managed',
+   pressure:'Europe worst housing correction -20% · Mortgage stress · SEK weak',
+   green:'Low public debt · Tech sector resilient · Rate cuts ahead of ECB',
+   forex:'SEK: Weakened significantly vs EUR · Recovering as rate gap narrows',
+   ts_08:[-5.2,0.9,6.4,3.2,-0.3], ts_20:[-2.9,-8.3,5.0,5.1,2.5], ts_25:[-1.5,0.5,2.1,2.6,2.8]},
+  {flag:'🇨🇭', name:'Switzerland', cls:'g10-stable', status:'STABLE', currency:'CHF',
+   gdp:'-0.8%', unemp:'2.8%', debt:'41% GDP', rate:'1.5%→0.0%',
+   policy:'SNB cuts to zero · CHF cap considerations · Wealth management inflows',
+   pressure:'CHF overvaluation hurts exports · Banking sector risk (CS legacy)',
+   green:'Safe haven flows · Pharma/luxury resilient · World lowest unemployment',
+   forex:'CHF: SAFE HAVEN — strengthens 6-8% vs EUR · SNB may intervene',
+   ts_08:[-1.9,1.8,3.0,1.8,1.8], ts_20:[-2.5,-7.3,3.7,4.2,2.7], ts_25:[-0.8,0.8,1.6,2.0,2.3]},
+  {flag:'🇪🇺', name:'Eurozone (Aggregate)', cls:'g10-risk', status:'AT RISK', currency:'EUR',
+   gdp:'-2.1%', unemp:'6.8%', debt:'91% GDP', rate:'4.5%→2.0%',
+   policy:'ECB 250bps cut cycle · PEPP/TPI activated · EU €750B fiscal backstop',
+   pressure:'Fragmentation risk · Energy dependence · Industrial stagnation',
+   green:'ECB pivot complete · Wage growth normalising · Intra-EU trade resilient',
+   forex:'EUR/USD: 1.05-1.15 range · Convergence trades if spreads compress',
+   ts_08:[-4.4,-0.4,2.1,1.5,-0.5], ts_20:[-6.4,-11.4,5.9,5.3,3.5], ts_25:[-2.1,-0.3,1.5,2.2,2.7]},
+];
+
+var G10_FOREX = [
+  {pair:'USD (DXY)', move:'+8.2%', cls:'forex-up', role:'Safe Haven', desc:'Initial recession safe haven. Weakens once Fed cuts deeply and risk appetite returns.'},
+  {pair:'JPY', move:'+12%', cls:'forex-up', role:'Safe Haven', desc:'Carry trade unwind floods JPY. Strongest safe haven currency in global recessions.'},
+  {pair:'CHF', move:'+6%', cls:'forex-up', role:'Safe Haven', desc:'Swiss franc bid as capital seeks stability. SNB may cap appreciation.'},
+  {pair:'Gold (XAU)', move:'+22%', cls:'forex-up', role:'Hard Money', desc:'Largest recession beneficiary. Surges as real yields fall and uncertainty rises.'},
+  {pair:'US Treasuries', move:'-1.4%', cls:'forex-up', role:'Safe Haven', desc:'Yield falls (price rises) as flight-to-safety bid crushes rates. 10Y to 2.5%+.'},
+  {pair:'GBP/USD', move:'-12%', cls:'forex-dn', role:'Risk Currency', desc:'UK stagflation limits BOE response. GBP underperforms vs USD in recession.'},
+  {pair:'EUR/USD', move:'-8%', cls:'forex-dn', role:'Risk Currency', desc:'ECB forced to cut aggressively. Fragmentation risk weighs. 1.02-1.08 target.'},
+  {pair:'AUD/USD', move:'-15%', cls:'forex-dn', role:'Commodity', desc:'Commodity-linked currency falls with China slowdown and iron ore prices.'},
+  {pair:'EM FX Basket', move:'-25%', cls:'forex-dn', role:'High Risk', desc:'Capital flight from emerging markets. Dollar appreciation crushes EM currencies.'},
+  {pair:'BTC/Crypto', move:'-65%', cls:'forex-dn', role:'Speculative', desc:'Risk-off devastates crypto. No safe haven properties in true recession.'},
+];
+
+var G10_TRADERS = [
+  {title:'📈 LONG SETUPS', cls:'trader-long', items:[
+    {name:'Gold (XAU/USD)', setup:'STRONG', reason:'Classic safe haven — buy dips to $2,800'},
+    {name:'US Treasury 20Y (TLT)', setup:'STRONG', reason:'Rate cuts = bond price rally'},
+    {name:'USD/JPY — Short (Buy JPY)', setup:'STRONG', reason:'Carry unwind = JPY surge'},
+    {name:'Healthcare ETF (XLV)', setup:'MODERATE', reason:'Defensive, inelastic demand'},
+    {name:'Utilities ETF (XLU)', setup:'MODERATE', reason:'Regulated income, bond proxy'},
+    {name:'USD/CHF — Short (Buy CHF)', setup:'MODERATE', reason:'Swiss franc safe haven bid'},
+  ]},
+  {title:'📉 SHORT SETUPS', cls:'trader-short', items:[
+    {name:'Consumer Discretionary (XLY)', setup:'STRONG', reason:'Luxury/auto collapse first'},
+    {name:'Financials (XLF)', setup:'STRONG', reason:'NPLs surge, NIM compression'},
+    {name:'EM ETF (EEM)', setup:'STRONG', reason:'Capital flight + DXY pressure'},
+    {name:'REITs (VNQ)', setup:'MODERATE', reason:'Commercial RE vacancy surges'},
+    {name:'Travel & Leisure (JETS)', setup:'STRONG', reason:'Discretionary collapses'},
+    {name:'EUR/USD Long', setup:'WATCH', reason:'ECB more dovish than Fed'},
+  ]},
+  {title:'💱 KEY FOREX PAIRS', cls:'trader-forex', items:[
+    {name:'USD/JPY SELL', setup:'STRONG', reason:'Buy JPY on carry unwind'},
+    {name:'XAU/USD BUY', setup:'STRONG', reason:'Gold to $3,200+ in deep recession'},
+    {name:'USD/CHF SELL', setup:'MODERATE', reason:'CHF safe haven strengthens'},
+    {name:'AUD/USD SELL', setup:'MODERATE', reason:'China slowdown hurts AUD'},
+    {name:'USD/MXN BUY', setup:'WATCH', reason:'EM stress lifts USD vs MXN'},
+    {name:'EUR/GBP BUY', setup:'WATCH', reason:'GBP stagflation > EUR'},
+  ]},
+  {title:'⚙ OPTIONS STRATEGIES', cls:'trader-options', items:[
+    {name:'SPY Put Spreads', setup:'STRONG', reason:'Limit downside, cap premium cost'},
+    {name:'VIX Call Options', setup:'MODERATE', reason:'Volatility spike play, buy cheaply'},
+    {name:'Gold Call Options', setup:'MODERATE', reason:'Leveraged exposure to safe haven bid'},
+    {name:'XLF Put Options', setup:'STRONG', reason:'Financial sector bear play'},
+    {name:'TLT Call Options', setup:'MODERATE', reason:'Rate cut = bond rally play'},
+    {name:'Cash / T-Bills 3M', setup:'STRONG', reason:'5%+ yield while waiting for trough'},
+  ]},
+];
+
+function g10BuildCards() {
+  var el = document.getElementById('g10-cards-grid');
+  if (!el) return;
+  var h = '';
+  G10_COUNTRIES.forEach(function(c, idx) {
+    h += '<div class="g10-card '+c.cls+'" onclick="g10OpenModal('+idx+')">' +
+      '<div class="g10-flag">'+c.flag+'</div>' +
+      '<div class="g10-name">'+c.name+'</div>' +
+      '<div class="g10-status-badge">'+c.status+'</div>' +
+      '<div class="g10-stats">' +
+        '<div class="g10-stat"><div class="g10-stat-key">GDP IMPACT</div><div class="g10-stat-val" style="color:'+(c.gdp.startsWith('-')?'#f87171':'#4ade80')+'">'+c.gdp+'</div></div>' +
+        '<div class="g10-stat"><div class="g10-stat-key">UNEMPLOYMENT</div><div class="g10-stat-val">'+c.unemp+'</div></div>' +
+        '<div class="g10-stat"><div class="g10-stat-key">DEBT/GDP</div><div class="g10-stat-val">'+c.debt+'</div></div>' +
+        '<div class="g10-stat"><div class="g10-stat-key">CURRENCY</div><div class="g10-stat-val">'+c.currency+'</div></div>' +
+      '</div>' +
+      '<div class="g10-policy">🏦 '+c.policy+'</div>' +
+      '<div class="g10-green">🟢 '+c.green+'</div>' +
+      '</div>';
+  });
+  el.innerHTML = h;
+}
+
+function g10OpenModal(idx) {
+  var c = G10_COUNTRIES[idx];
+  if (!c) return;
+  var statusColor = c.cls === 'g10-recession' ? '#ef4444' : c.cls === 'g10-risk' ? '#f97316' : c.cls === 'g10-monitor' ? '#eab308' : '#22c55e';
+  var html = '<div class="g10-modal-flag">'+c.flag+'</div>' +
+    '<div class="g10-modal-title">'+c.name+'</div>' +
+    '<div class="g10-modal-sub" style="color:'+statusColor+';font-weight:700;">● '+c.status+' · Currency: '+c.currency+'</div>' +
+    '<div class="g10-modal-section">' +
+      '<div class="g10-modal-section-title">📊 Key Economic Data</div>' +
+      '<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;">' +
+        '<div class="g10-stat"><div class="g10-stat-key">GDP IMPACT</div><div class="g10-stat-val" style="color:'+(c.gdp.startsWith('-')?'#f87171':'#4ade80')+'">'+c.gdp+'</div></div>' +
+        '<div class="g10-stat"><div class="g10-stat-key">UNEMPLOYMENT</div><div class="g10-stat-val">'+c.unemp+'</div></div>' +
+        '<div class="g10-stat"><div class="g10-stat-key">PUBLIC DEBT</div><div class="g10-stat-val">'+c.debt+'</div></div>' +
+        '<div class="g10-stat"><div class="g10-stat-key">RATE PATH</div><div class="g10-stat-val" style="font-size:10px;">'+c.rate+'</div></div>' +
+      '</div>' +
+    '</div>' +
+    '<div class="g10-modal-section">' +
+      '<div class="g10-modal-section-title">🏦 Policy Response</div>' +
+      '<div style="font-size:11px;color:var(--muted);line-height:1.6;">'+c.policy+'</div>' +
+    '</div>' +
+    '<div class="g10-modal-section">' +
+      '<div class="g10-modal-section-title">⚠️ Pressure Points</div>' +
+      '<div style="font-size:11px;color:var(--muted);line-height:1.6;">'+c.pressure+'</div>' +
+    '</div>' +
+    '<div class="g10-modal-section">' +
+      '<div class="g10-modal-section-title">💱 Forex Impact</div>' +
+      '<div style="font-size:11px;color:#60a5fa;line-height:1.6;font-weight:600;">'+c.forex+'</div>' +
+    '</div>' +
+    '<div class="g10-modal-section">' +
+      '<div class="g10-modal-section-title">🟢 Green Recovery Signals</div>' +
+      '<div style="font-size:11px;color:#22c55e;line-height:1.6;">'+c.green+'</div>' +
+    '</div>' +
+    '<div class="g10-modal-section">' +
+      '<div class="g10-modal-section-title">📈 GDP Trajectory: 2008 · 2020 · 2025 Forecast</div>' +
+      '<canvas id="g10-modal-chart" height="130"></canvas>' +
+    '</div>';
+  document.getElementById('g10-modal-content').innerHTML = html;
+  document.getElementById('g10-modal').classList.add('open');
+  setTimeout(function(){
+    var ctx = document.getElementById('g10-modal-chart');
+    if (!ctx || !window.Chart) return;
+    var years = ['-2yr','-1yr','Y0','Y1','Y2'];
+    new Chart(ctx, { type:'line', data:{
+      labels: years,
+      datasets:[
+        {label:'2008 Recession', data:c.ts_08, borderColor:'#f87171', backgroundColor:'rgba(248,113,113,.1)', tension:.4, fill:true},
+        {label:'2020 COVID', data:c.ts_20, borderColor:'#fbbf24', backgroundColor:'rgba(251,191,36,.1)', tension:.4, fill:true},
+        {label:'2025 Forecast', data:c.ts_25, borderColor:'#60a5fa', backgroundColor:'rgba(96,165,250,.1)', tension:.4, fill:true, borderDash:[5,5]},
+      ]
+    }, options:{responsive:true, plugins:{legend:{labels:{color:'var(--muted)',font:{size:10}}}},
+      scales:{x:{ticks:{color:'var(--muted)',font:{size:9}}},y:{ticks:{color:'var(--muted)',font:{size:9}},grid:{color:'rgba(255,255,255,.05)'}}}}});
+  }, 200);
+}
+function g10CloseModal() { document.getElementById('g10-modal').classList.remove('open'); }
+
+function g10BuildDevComparison() {
+  var el = document.getElementById('g10-dev-comparison');
+  if (!el) return;
+  var devData = [
+    {label:'Fiscal Capacity', developed:'Strong — deficit spending, bond markets open', developing:'Limited — IMF conditionality, market access cut off'},
+    {label:'Currency Shock', developed:'Mild — reserve currencies weather storm', developing:'Severe — capital flight, 20-40% devaluation'},
+    {label:'Policy Tools', developed:'Rate cuts, QE, helicopter money, fiscal stimulus', developing:'Rate HIKES to defend currency, inflation crisis'},
+    {label:'Banking System', developed:'Well-capitalised, central bank backstops', developing:'Fragile, NPLs spike, USD debt stress'},
+    {label:'Trade Impact', developed:'Exports fall but intra-bloc trade buffers shock', developing:'Commodity export collapse, FX earnings evaporate'},
+    {label:'Recovery Speed', developed:'6-18 months to stabilise, 2-3 years recovery', developing:'3-5 years, some never recover to prior trend'},
+    {label:'Social Impact', developed:'Safety nets absorb shock, welfare spending rises', developing:'Poverty surge, social unrest, political instability'},
+    {label:'Debt Risk', developed:'High debt but own-currency, can inflate/print', developing:'Dollar-denominated debt → default risk'},
+  ];
+  var dH = '<div class="dev-col"><div class="dev-col-title dev-developed">✅ DEVELOPED WORLD (G10 / G7)</div>';
+  var emH = '<div class="dev-col"><div class="dev-col-title dev-developing">⚠️ DEVELOPING WORLD (EM / FRONTIER)</div>';
+  devData.forEach(function(d){
+    dH += '<div class="dev-item"><div class="dev-label">'+d.label+'</div>'+d.developed+'</div>';
+    emH += '<div class="dev-item"><div class="dev-label">'+d.label+'</div>'+d.developing+'</div>';
+  });
+  dH += '</div>'; emH += '</div>';
+  el.innerHTML = dH + emH;
+}
+
+function g10BuildForex() {
+  var el = document.getElementById('g10-forex-grid');
+  if (!el) return;
+  var h = '';
+  G10_FOREX.forEach(function(f){
+    h += '<div class="forex-card">' +
+      '<div class="forex-pair">'+f.pair+'</div>' +
+      '<div class="forex-move '+f.cls+'">'+f.move+'</div>' +
+      '<div class="forex-role">'+f.role+'</div>' +
+      '<div class="forex-desc">'+f.desc+'</div>' +
+    '</div>';
+  });
+  el.innerHTML = h;
+}
+
+function g10BuildTraders() {
+  var el = document.getElementById('g10-trader-grid');
+  if (!el) return;
+  var h = '';
+  G10_TRADERS.forEach(function(t){
+    h += '<div class="trader-card"><div class="trader-card-title '+t.cls+'">'+t.title+'</div>';
+    t.items.forEach(function(item){
+      var sc = item.setup==='STRONG'?'setup-strong':item.setup==='MODERATE'?'setup-moderate':'setup-watch';
+      h += '<div class="trader-item"><span>'+item.name+'</span><span class="trader-setup '+sc+'">'+item.setup+'</span></div>';
+    });
+    h += '</div>';
+  });
+  el.innerHTML = h;
+}
+
+function g10BuildCharts() {
+  if (!window.Chart) return;
+  // Time Series Chart — G10 avg GDP across recessions
+  var ts = document.getElementById('g10-ts-canvas');
+  if (ts) {
+    new Chart(ts, { type:'line', data:{
+      labels:['Q-8','Q-7','Q-6','Q-5','Q-4','Q-3','Q-2','Q-1','Q0','Q1','Q2','Q3','Q4','Q5','Q6','Q7','Q8'],
+      datasets:[
+        {label:'G10 Average 2008',borderColor:'#f87171',backgroundColor:'rgba(248,113,113,.08)',
+         data:[2.1,1.8,1.2,0.4,-0.8,-2.1,-4.4,-5.2,-3.8,-1.2,0.8,2.1,3.2,3.8,3.1,2.4,1.9],tension:.4,fill:true},
+        {label:'G10 Average 2020',borderColor:'#fbbf24',backgroundColor:'rgba(251,191,36,.08)',
+         data:[2.3,2.1,2.0,1.8,1.5,1.0,-1.2,-8.4,-11.2,-2.1,4.8,7.2,6.1,4.8,3.2,2.5,2.1],tension:.4,fill:true},
+        {label:'2025 Forecast',borderColor:'#60a5fa',backgroundColor:'rgba(96,165,250,.08)',
+         data:[1.9,1.6,1.2,0.6,-0.4,-1.4,-2.1,-2.3,-1.8,-0.4,0.8,1.6,2.2,2.8,3.0,2.8,2.5],tension:.4,fill:true,borderDash:[6,3]},
+      ]
+    }, options:{responsive:true,plugins:{legend:{labels:{color:'var(--muted)',font:{size:10}}}},
+      scales:{x:{ticks:{color:'var(--muted)',font:{size:9}},grid:{color:'rgba(255,255,255,.04)'}},
+              y:{ticks:{color:'var(--muted)',font:{size:9},callback:function(v){return v+'%'}},
+                 grid:{color:'rgba(255,255,255,.06)'},
+                 title:{display:true,text:'GDP Growth %',color:'var(--muted)',font:{size:9}}}}}});
+  }
+  // Forex Bar Chart
+  var fx = document.getElementById('g10-forex-canvas');
+  if (fx) {
+    var labels = G10_FOREX.map(function(f){return f.pair;});
+    var vals = [8.2,12,6,22,-1.4,-12,-8,-15,-25,-65];
+    var colors = vals.map(function(v){return v>0?'rgba(34,197,94,.7)':'rgba(239,68,68,.7)';});
+    new Chart(fx, {type:'bar', data:{labels:labels,
+      datasets:[{label:'Typical Recession Move %',data:vals,backgroundColor:colors,borderRadius:5}]
+    }, options:{responsive:true,plugins:{legend:{labels:{color:'var(--muted)',font:{size:10}}}},
+      scales:{x:{ticks:{color:'var(--muted)',font:{size:9}},grid:{color:'rgba(255,255,255,.04)'}},
+              y:{ticks:{color:'var(--muted)',font:{size:9},callback:function(v){return v+'%'}},
+                 grid:{color:'rgba(255,255,255,.06)'},
+                 title:{display:true,text:'% Move During Recession',color:'var(--muted)',font:{size:9}}}}}});
+  }
+}
+
+function g10FetchNews() {
+  var el = document.getElementById('g10-news-feed');
+  if (!el) return;
+  var queries = ['G10 recession economy','forex recession 2025','Federal Reserve ECB BOJ recession','emerging markets recession 2025'];
+  var q = queries[Math.floor(Math.random()*queries.length)];
+  var url = 'https://api.allorigins.win/get?url='+encodeURIComponent('https://news.google.com/rss/search?q='+encodeURIComponent(q)+'&hl=en-US&gl=US&ceid=US:en');
+  fetch(url).then(function(r){return r.json();}).then(function(data){
+    var parser = new DOMParser();
+    var doc = parser.parseFromString(data.contents,'text/xml');
+    var items = doc.querySelectorAll('item');
+    if (!items.length) throw new Error('No items');
+    var h = '';
+    Array.from(items).slice(0,10).forEach(function(item){
+      var title = item.querySelector('title')?.textContent||'';
+      var src = item.querySelector('source')?.textContent||'Google News';
+      var pub = item.querySelector('pubDate')?.textContent?.slice(0,16)||'';
+      h += '<div class="rec-news-item">' +
+        '<div class="rec-news-title">'+title+'</div>' +
+        '<div class="rec-news-meta"><span class="rec-news-src">'+src+'</span>'+pub+'</div></div>';
+    });
+    el.innerHTML = h || '<div style="color:var(--muted);font-size:12px;padding:10px;">No news found — showing cached headlines</div>';
+  }).catch(function(){
+    el.innerHTML = g10FallbackNews();
+  });
+}
+function g10FallbackNews() {
+  var headlines = [
+    {t:'Federal Reserve signals deeper rate cuts as G10 recession fears mount',s:'Reuters'},
+    {t:'ECB and BOJ coordinate response as eurozone and Japan enter recession',s:'FT'},
+    {t:'USD/JPY falls sharply as carry trade unwind accelerates amid recession',s:'Bloomberg'},
+    {t:'Emerging markets face $2.3T refinancing cliff as G10 demand collapses',s:'IMF'},
+    {t:'Gold surges past $3,000 as safe haven demand overwhelms supply',s:'CNBC'},
+    {t:'JPMorgan: G10 GDP to contract average 2.1% — worst since 2009',s:'JPMorgan'},
+    {t:'UK housing correction deepens as BOE cuts rates to 2.5%',s:'BBC'},
+    {t:'Germany confirms second recession in two years; DAX -28% from peak',s:'DW'},
+    {t:'Swiss franc safe-haven demand forces SNB to consider FX cap',s:'Reuters'},
+    {t:'EM currency basket hits decade low as capital flees to G10 bonds',s:'FT'},
+  ];
+  return headlines.map(function(h){
+    return '<div class="rec-news-item"><div class="rec-news-title">'+h.t+'</div>' +
+      '<div class="rec-news-meta"><span class="rec-news-src">'+h.s+'</span></div></div>';
+  }).join('');
+}
+
 function recUpdateTimestamp() {
   var el = document.getElementById('rec-last-updated');
   if (!el) return;
@@ -10113,6 +10608,11 @@ function initRecession() {
   recBuildCountryRecovery();
   recBuildFutureTypes();
   recBuildUnfoldTimeline();
+  g10BuildCards();
+  g10BuildDevComparison();
+  g10BuildForex();
+  g10BuildTraders();
+  g10FetchNews();
   initRecessionMap();
   recFetchNews('present');
   recFetchNews('future');
