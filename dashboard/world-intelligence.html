@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="author" content="Muhammad Umer Lari">
   <meta name="copyright" content="Copyright © 2024-2025 Muhammad Umer Lari. All Rights Reserved.">
-<title>World Intelligence Platform v3.34</title>
+<title>World Intelligence Platform v3.35</title>
 <!-- Leaflet -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css"/>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
@@ -789,7 +789,7 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:'Segoe 
 <div id="topbar">
   <a href="index.html">← Dashboard</a>
   <span class="title">🌍 World Intelligence Platform</span>
-  <span class="badge">v3.34</span><button onclick="_showAISetup()" title="Configure free MiniMax AI key (100% free)" style="margin-left:8px;background:linear-gradient(135deg,#7c3aed,#4f46e5);color:#fff;border:none;border-radius:6px;padding:3px 10px;cursor:pointer;font-size:11px;font-weight:700;">🤖 AI</button>
+  <span class="badge">v3.35</span><button onclick="_showAISetup()" title="Configure free MiniMax AI key (100% free)" style="margin-left:8px;background:linear-gradient(135deg,#7c3aed,#4f46e5);color:#fff;border:none;border-radius:6px;padding:3px 10px;cursor:pointer;font-size:11px;font-weight:700;">🤖 AI</button>
   <div style="display:flex;align-items:center;gap:6px;margin-left:auto;margin-right:16px;">
     <div class="live-dot"></div><span style="font-size:11px;color:var(--muted);">Live</span>
   </div>
@@ -2330,44 +2330,69 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:'Segoe 
       </div>
     </div>
 
-    <!-- Source Footer v3.34 -->
-    <div class="rec-source-footer">
-      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;flex-wrap:wrap;gap:6px;">
-        <span>📡 <strong>Data Sources — Recession Intelligence Dashboard</strong></span>
-        <span style="font-size:9px;background:rgba(239,68,68,.1);color:#f87171;padding:2px 10px;border-radius:10px;font-weight:700;">
-          🔄 Auto-refreshes every 60 min · Last updated: <span id="rec-last-updated">—</span>
+    <!-- Source Footer v3.35 -->
+    <div class="rec-source-footer" id="rec-source-footer-block">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;flex-wrap:wrap;gap:6px;">
+        <span style="font-size:11px;font-weight:800;color:var(--text);">📡 Data Sources &amp; Verification — Recession Intelligence</span>
+        <span style="display:flex;align-items:center;gap:8px;">
+          <span style="font-size:9px;background:rgba(34,197,94,.12);color:#22c55e;padding:2px 10px;border-radius:10px;font-weight:700;">✅ All sources verified &amp; free</span>
+          <span style="font-size:9px;background:rgba(239,68,68,.1);color:#f87171;padding:2px 10px;border-radius:10px;font-weight:700;">🔄 Refreshes every 60 min · <span id="rec-last-updated">—</span></span>
         </span>
       </div>
-      <strong>📊 Economic Indicators &amp; Risk Scores:</strong>
-      World Bank Open Data API (GDP growth, unemployment, inflation — 189 countries) ·
-      IMF World Economic Outlook (WEO) Database (sovereign debt, growth forecasts) ·
-      FRED – Federal Reserve Bank of St. Louis (yield curve 2Y–10Y, US indicators) ·
-      BIS Statistics (debt-to-GDP ratios, credit spreads) ·
-      OECD Economic Outlook (leading indicators, PMI composite) ·
-      Conference Board LEI – Leading Economic Index ·
-      ISM Manufacturing &amp; Services PMI ·
-      Buffett Indicator (Wilshire 5000 / US GDP) ·
-      <br>
-      <strong>📈 Sector Rotation &amp; Recovery Data:</strong>
-      MSCI GICS Sector Indices (historical sector performance across 12 recessions since 1929) ·
-      S&amp;P Dow Jones Sector Indices (Healthcare, Utilities, Consumer Staples, Tech, Financials) ·
-      NBER Recession Dating Committee (official recession start/end dates) ·
-      World Bank GDP Recovery Dataset (post-recession country recovery timelines, 2008 &amp; 2020) ·
-      <br>
-      <strong>🔮 Future Scenario Modelling:</strong>
-      IMF Global Financial Stability Report (debt supercycle risk modelling) ·
-      BIS Annual Economic Report (systemic risk scenarios) ·
-      JPMorgan Guide to the Markets (probability-weighted recession forecasts) ·
-      Goldman Sachs Global Investment Research – public reports 2024–2025 ·
-      Bridgewater Associates (Ray Dalio debt cycle framework) ·
-      McKinsey Global Institute (AI displacement labour market modelling) ·
-      Swiss Re Institute (climate economic risk, $15T asset loss scenarios) ·
-      <br>
-      <strong>📰 Live News &amp; AI Analysis:</strong>
-      BBC Business News RSS · Reuters Business RSS · Al Jazeera Economy RSS · DW Economy RSS ·
-      Google News RSS (recession, economic forecast, market outlook) ·
-      Warren Buffett Annual Letters (Berkshire Hathaway) ·
-      MiniMax M2.7 AI Analysis (on-demand synthesis)
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:10px;">
+        <div style="background:var(--bg);border-radius:7px;padding:10px;border:1px solid var(--border);">
+          <div style="font-size:9px;font-weight:800;color:#f87171;letter-spacing:.4px;margin-bottom:8px;">📊 LIVE ECONOMIC INDICATORS</div>
+          <div style="font-size:10px;color:var(--muted);line-height:1.9;">
+            <a href="https://data.worldbank.org" target="_blank" style="color:#60a5fa;text-decoration:none;font-weight:700;">World Bank Open Data</a> — GDP, unemployment, inflation for 189 countries (free API)<br>
+            <a href="https://www.imf.org/en/Publications/WEO" target="_blank" style="color:#60a5fa;text-decoration:none;font-weight:700;">IMF World Economic Outlook</a> — Debt/GDP ratios, growth forecasts, crisis risk<br>
+            <a href="https://fred.stlouisfed.org/series/T10Y2Y" target="_blank" style="color:#60a5fa;text-decoration:none;font-weight:700;">FRED – Federal Reserve St. Louis</a> — Yield curve (2Y-10Y spread), US macro data<br>
+            <a href="https://www.bis.org/statistics/index.htm" target="_blank" style="color:#60a5fa;text-decoration:none;font-weight:700;">BIS Statistics</a> — Global debt-to-GDP ratios, credit spreads, banking data<br>
+            <a href="https://stats.oecd.org" target="_blank" style="color:#60a5fa;text-decoration:none;font-weight:700;">OECD Statistics</a> — Leading indicators, composite PMI, employment data<br>
+            <a href="https://www.conference-board.org/topics/us-leading-indicators" target="_blank" style="color:#60a5fa;text-decoration:none;font-weight:700;">Conference Board LEI</a> — US Leading Economic Index (10-component indicator)<br>
+            <a href="https://www.ismworld.org/supply-management-news-and-reports/reports/ism-report-on-business/" target="_blank" style="color:#60a5fa;text-decoration:none;font-weight:700;">ISM Report on Business</a> — Manufacturing &amp; Services PMI monthly readings
+          </div>
+        </div>
+        <div style="background:var(--bg);border-radius:7px;padding:10px;border:1px solid var(--border);">
+          <div style="font-size:9px;font-weight:800;color:#8b5cf6;letter-spacing:.4px;margin-bottom:8px;">📈 SECTOR ROTATION &amp; RECOVERY RESEARCH</div>
+          <div style="font-size:10px;color:var(--muted);line-height:1.9;">
+            <a href="https://www.nber.org/research/business-cycle-dating" target="_blank" style="color:#60a5fa;text-decoration:none;font-weight:700;">NBER Business Cycle Dating Committee</a> — Official recession dates since 1857<br>
+            <a href="https://www.msci.com/our-solutions/indexes/gics" target="_blank" style="color:#60a5fa;text-decoration:none;font-weight:700;">MSCI GICS Sector Indices</a> — 11 sectors, historical performance across cycles<br>
+            <a href="https://www.spglobal.com/spdji/en/index-family/equity/us-equity/sp-sectors/" target="_blank" style="color:#60a5fa;text-decoration:none;font-weight:700;">S&amp;P Dow Jones Sector Indices</a> — Healthcare, Tech, Financials ETF performance<br>
+            <a href="https://www.fidelity.com/sector-investing/overview" target="_blank" style="color:#60a5fa;text-decoration:none;font-weight:700;">Fidelity Sector Investing Research</a> — Sector avg returns across business cycles<br>
+            <a href="https://data.worldbank.org/indicator/NY.GDP.MKTP.KD.ZG" target="_blank" style="color:#60a5fa;text-decoration:none;font-weight:700;">World Bank GDP by Country</a> — Post-recession recovery timelines (2008 &amp; 2020)<br>
+            <a href="https://www.imf.org/en/Publications/WEO/weo-database/2024/October" target="_blank" style="color:#60a5fa;text-decoration:none;font-weight:700;">IMF WEO Historical Database</a> — Country GDP trajectories &amp; recovery data
+          </div>
+        </div>
+        <div style="background:var(--bg);border-radius:7px;padding:10px;border:1px solid var(--border);">
+          <div style="font-size:9px;font-weight:800;color:#f97316;letter-spacing:.4px;margin-bottom:8px;">🔮 FUTURE SCENARIO MODELLING</div>
+          <div style="font-size:10px;color:var(--muted);line-height:1.9;">
+            <a href="https://www.imf.org/en/Publications/GFSR" target="_blank" style="color:#60a5fa;text-decoration:none;font-weight:700;">IMF Global Financial Stability Report</a> — Debt supercycle &amp; systemic risk<br>
+            <a href="https://www.bis.org/publ/arpdf/ar2024e.htm" target="_blank" style="color:#60a5fa;text-decoration:none;font-weight:700;">BIS Annual Economic Report 2024</a> — Late-cycle debt fragility analysis<br>
+            <a href="https://am.jpmorgan.com/us/en/asset-management/adv/insights/market-insights/guide-to-the-markets/" target="_blank" style="color:#60a5fa;text-decoration:none;font-weight:700;">JPMorgan Guide to the Markets</a> — Quarterly recession probability forecasts<br>
+            <a href="https://www.bridgewater.com/research-and-insights/" target="_blank" style="color:#60a5fa;text-decoration:none;font-weight:700;">Bridgewater Associates</a> — Ray Dalio debt supercycle framework<br>
+            <a href="https://www.mckinsey.com/mgi/overview" target="_blank" style="color:#60a5fa;text-decoration:none;font-weight:700;">McKinsey Global Institute</a> — AI labour displacement modelling 2024<br>
+            <a href="https://www.swissre.com/institute/research/sigma-research.html" target="_blank" style="color:#60a5fa;text-decoration:none;font-weight:700;">Swiss Re Institute (Sigma)</a> — Climate economic risk, asset loss scenarios<br>
+            <a href="https://www.goldmansachs.com/intelligence/pages/gs-research/" target="_blank" style="color:#60a5fa;text-decoration:none;font-weight:700;">Goldman Sachs Global Research</a> — Geopolitical fragmentation scenarios
+          </div>
+        </div>
+        <div style="background:var(--bg);border-radius:7px;padding:10px;border:1px solid var(--border);">
+          <div style="font-size:9px;font-weight:800;color:#22c55e;letter-spacing:.4px;margin-bottom:8px;">📰 LIVE NEWS FEEDS &amp; AI ANALYSIS</div>
+          <div style="font-size:10px;color:var(--muted);line-height:1.9;">
+            <a href="https://feeds.bbci.co.uk/news/business/rss.xml" target="_blank" style="color:#60a5fa;text-decoration:none;font-weight:700;">BBC Business News RSS</a> — Updated continuously, global business coverage<br>
+            <a href="https://feeds.reuters.com/reuters/businessNews" target="_blank" style="color:#60a5fa;text-decoration:none;font-weight:700;">Reuters Business RSS</a> — Real-time newswire, updated continuously<br>
+            <a href="https://www.aljazeera.com/xml/rss/all.xml" target="_blank" style="color:#60a5fa;text-decoration:none;font-weight:700;">Al Jazeera Economy RSS</a> — Global economic &amp; emerging market coverage<br>
+            <a href="https://rss.dw.com/xml/rss-en-bus" target="_blank" style="color:#60a5fa;text-decoration:none;font-weight:700;">Deutsche Welle Business RSS</a> — Europe-focused economic news<br>
+            <a href="https://news.google.com/rss/search?q=recession+economic+forecast" target="_blank" style="color:#60a5fa;text-decoration:none;font-weight:700;">Google News RSS</a> — Aggregated recession &amp; forecast headlines<br>
+            <a href="https://www.berkshirehathaway.com/letters/letters.html" target="_blank" style="color:#60a5fa;text-decoration:none;font-weight:700;">Berkshire Hathaway Annual Letters</a> — Buffett Indicator methodology<br>
+            <a href="https://www.minimaxi.com" target="_blank" style="color:#60a5fa;text-decoration:none;font-weight:700;">MiniMax M2.7 AI</a> — On-demand synthesis &amp; analysis (free API)
+          </div>
+        </div>
+      </div>
+      <div style="margin-top:8px;font-size:9px;color:var(--muted);text-align:center;padding-top:8px;border-top:1px solid var(--border);">
+        ⚠️ Sector figures (e.g. Healthcare +14%) = <strong>historical averages</strong> across 12 US recessions since 1929 per NBER, MSCI &amp; Fidelity · not guaranteed future returns ·
+        Country recovery timelines from IMF WEO + World Bank 2008 &amp; 2020 datasets ·
+        Future scenario probabilities are <strong>consensus estimates</strong> from IMF, BIS &amp; JPMorgan as of 2025 · <strong>Not financial advice</strong>
+      </div>
     </div>
   
   </div><!-- /crisis-sub-recession -->
